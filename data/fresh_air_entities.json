@@ -1,0 +1,388 @@
+{
+  "nodes": [
+    {
+      "id": "Fresh Air Episode",
+      "type": "podcast",
+      "date": "April 2016",
+      "mentions": 1,
+      "details": {
+        "host": "David Bianculli",
+        "guest": "Jon Caramanica",
+        "topic": "Merle Haggard Obituary",
+        "duration": "8 minutes"
+      }
+    },
+    {
+      "id": "My House of Memories",
+      "type": "book",
+      "year": 1999,
+      "mentions": 15,
+      "details": {
+        "author": "Merle Haggard",
+        "coauthor": "Tom Carter",
+        "publisher": "HarperCollins",
+        "pages": 352
+      }
+    },
+    {
+      "id": "David Bianculli",
+      "type": "person",
+      "role": "Host",
+      "mentions": 3
+    },
+    {
+      "id": "Jon Caramanica",
+      "type": "person",
+      "role": "NYT Music Critic",
+      "mentions": 2
+    },
+    {
+      "id": "Willie Nelson",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 4
+    },
+    {
+      "id": "Bob Dylan",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 2
+    },
+    {
+      "id": "Billy Joel",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 1
+    },
+    {
+      "id": "Bonnie Raitt",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 1
+    },
+    {
+      "id": "Tom Petty",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 1
+    },
+    {
+      "id": "B.B. King",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 1
+    },
+    {
+      "id": "Loretta Lynn",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 2
+    },
+    {
+      "id": "Roy Orbison",
+      "type": "person",
+      "role": "Musician",
+      "mentions": 1
+    },
+    {
+      "id": "Farm Aid 1985",
+      "type": "event",
+      "date": "September 22, 1985",
+      "location": "Champaign, Illinois",
+      "mentions": 1
+    },
+    {
+      "id": "Country Music Hall of Fame Induction",
+      "type": "event",
+      "date": "1994",
+      "location": "Nashville",
+      "mentions": 1
+    },
+    {
+      "id": "Kennedy Center Honor",
+      "type": "event",
+      "date": "2010",
+      "location": "Washington D.C.",
+      "mentions": 1
+    },
+    {
+      "id": "San Quentin Concert",
+      "type": "event",
+      "date": "1958",
+      "location": "",
+      "mentions": 1
+    },
+    {
+      "id": "Grammy Lifetime Achievement Award",
+      "type": "event",
+      "date": "2006",
+      "location": "Los Angeles",
+      "mentions": 1
+    },
+    {
+      "id": "Natural High",
+      "type": "song",
+      "year": 1985,
+      "context": "Farm Aid performance",
+      "mentions": 1
+    },
+    {
+      "id": "Mama Tried",
+      "type": "song",
+      "year": 1968,
+      "context": "Autobiographical #1 hit",
+      "mentions": 1
+    },
+    {
+      "id": "Okie from Muskogee",
+      "type": "song",
+      "year": 1969,
+      "context": "Cultural phenomenon",
+      "mentions": 1
+    },
+    {
+      "id": "Today I Started Loving You Again",
+      "type": "song",
+      "year": 1968,
+      "context": "Most covered song",
+      "mentions": 1
+    },
+    {
+      "id": "Sing Me Back Home",
+      "type": "song",
+      "year": 1967,
+      "context": "Prison song",
+      "mentions": 1
+    },
+    {
+      "id": "The Fightin' Side of Me",
+      "type": "song",
+      "year": 1970,
+      "context": "Political anthem",
+      "mentions": 1
+    },
+    {
+      "id": "If We Make It Through December",
+      "type": "song",
+      "year": 1973,
+      "context": "Christmas classic",
+      "mentions": 1
+    },
+    {
+      "id": "Big City",
+      "type": "song",
+      "year": 1982,
+      "context": "Urban commentary",
+      "mentions": 1
+    },
+    {
+      "id": "Bakersfield",
+      "type": "place",
+      "state": "California",
+      "significance": "Bakersfield Sound center",
+      "mentions": 1
+    },
+    {
+      "id": "San Quentin State Prison",
+      "type": "place",
+      "state": "California",
+      "significance": "Incarceration site",
+      "mentions": 1
+    },
+    {
+      "id": "Nashville",
+      "type": "place",
+      "state": "Tennessee",
+      "significance": "Country music capital",
+      "mentions": 1
+    },
+    {
+      "id": "Oildale",
+      "type": "place",
+      "state": "California",
+      "significance": "Birthplace",
+      "mentions": 1
+    },
+    {
+      "id": "Muskogee",
+      "type": "place",
+      "state": "Oklahoma",
+      "significance": "Song subject",
+      "mentions": 1
+    }
+  ],
+  "links": [
+    {
+      "source": "Fresh Air Episode",
+      "target": "Merle Haggard",
+      "type": "discussed",
+      "context": "Obituary tribute"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "David Bianculli",
+      "type": "hosted_by"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Jon Caramanica",
+      "type": "features",
+      "context": "NYT music critic"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Farm Aid 1985",
+      "type": "mentions",
+      "timestamp": "2:15"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Willie Nelson",
+      "type": "mentions",
+      "context": "Farm Aid collaboration"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Mama Tried",
+      "type": "analyzes",
+      "context": "Autobiographical elements"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "San Quentin State Prison",
+      "type": "discusses",
+      "timestamp": "4:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bakersfield",
+      "type": "explains",
+      "context": "Musical influence"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "Merle Haggard",
+      "type": "authored_by"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "San Quentin State Prison",
+      "type": "chapters_3_5",
+      "context": "Prison years"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "Mama Tried",
+      "type": "chapter_7",
+      "context": "Song origins"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "Farm Aid 1985",
+      "type": "chapter_12",
+      "context": "Performance details"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "Johnny Cash",
+      "type": "mentions",
+      "context": "Prison concert influence"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "Buck Owens",
+      "type": "chapter_9",
+      "context": "Bakersfield Sound"
+    },
+    {
+      "source": "My House of Memories",
+      "target": "Willie Nelson",
+      "type": "chapter_12",
+      "context": "Outlaw movement"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Bakersfield",
+      "type": "lived_in",
+      "years": "1951-2016"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "San Quentin State Prison",
+      "type": "incarcerated",
+      "years": "1958-1960"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Mama Tried",
+      "type": "wrote_performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Okie from Muskogee",
+      "type": "wrote_performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Farm Aid 1985",
+      "type": "performed_at"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Country Music Hall of Fame Induction",
+      "type": "honored_at"
+    },
+    {
+      "source": "Johnny Cash",
+      "target": "San Quentin State Prison",
+      "type": "performed_at",
+      "date": "1958"
+    },
+    {
+      "source": "Willie Nelson",
+      "target": "Farm Aid 1985",
+      "type": "organized"
+    },
+    {
+      "source": "Buck Owens",
+      "target": "Bakersfield",
+      "type": "pioneered_sound"
+    },
+    {
+      "source": "Mama Tried",
+      "target": "San Quentin State Prison",
+      "type": "inspired_by"
+    },
+    {
+      "source": "Sing Me Back Home",
+      "target": "San Quentin State Prison",
+      "type": "about"
+    },
+    {
+      "source": "Okie from Muskogee",
+      "target": "Muskogee",
+      "type": "references"
+    },
+    {
+      "source": "Farm Aid 1985",
+      "target": "Willie Nelson",
+      "type": "organized_by"
+    },
+    {
+      "source": "San Quentin Concert",
+      "target": "Johnny Cash",
+      "type": "performed_by"
+    },
+    {
+      "source": "San Quentin Concert",
+      "target": "San Quentin State Prison",
+      "type": "located_at"
+    }
+  ],
+  "metadata": {
+    "fresh_air_date": "April 7, 2016",
+    "transcript_length": "8 minutes",
+    "entities_extracted": 30,
+    "connections_found": 30
+  }
+}

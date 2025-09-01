@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Chapter Navigation</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #e0e0e0; }
+        .status { padding: 15px; background-color: #f0f0f0; margin: 20px 0; border-radius: 5px; }
+        .chapter-list { display: grid; gap: 10px; }
+        .chapter-card { padding: 15px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; }
+        .chapter-card:hover { background-color: #f5f5f5; }
+        .current { background-color: #e3f2fd; border-color: #2196F3; }
+        .log { background-color: #263238; color: #4CAF50; padding: 10px; font-family: monospace; height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chapter Navigation Test</h1>
+        
+        <div class="status">
+            <h3>Current Status:</h3>
+            <p>Chapter: <span id="current-chapter">Loading...</span></p>
+            <p>Time: <span id="current-time">0:00</span></p>
+            <p>Player Ready: <span id="player-ready">Checking...</span></p>
+        </div>
+        
+        <div>
+            <h3>Navigation Controls:</h3>
+            <button onclick="testPreviousChapter()">← Previous Chapter</button>
+            <button onclick="testNextChapter()">Next Chapter →</button>
+            <button onclick="toggleChapterList()">Show/Hide All Chapters</button>
+        </div>
+        
+        <div id="chapter-list" class="chapter-list" style="display:none;">
+            <h3>All Chapters:</h3>
+        </div>
+        
+        <div>
+            <h3>Console Log:</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+    
+    <script>
+        let currentChapterIndex = 0;
+        const chapters = [];
+        let playerReady = false;
+        
+        // Load chapters
+        async function loadChapters() {
+            try {
+                const response = await fetch('/chapters-PSN8N2v4oq0.json');
+                const data = await response.json();
+                chapters.push(...data.chapters);
+                log(`Loaded ${chapters.length} chapters`);
+                renderChapterList();
+                updateStatus();
+            } catch (error) {
+                log(`Error loading chapters: ${error.message}`, 'error');
+            }
+        }
+        
+        // Check if player is ready
+        function checkPlayer() {
+            const interval = setInterval(() => {
+                if (window.audioSync) {
+                    playerReady = true;
+                    document.getElementById('player-ready').textContent = '✅ Ready';
+                    document.getElementById('player-ready').style.color = 'green';
+                    log('Player is ready!');
+                    clearInterval(interval);
+                } else {
+                    document.getElementById('player-ready').textContent = '⏳ Waiting...';
+                }
+            }, 500);
+            
+            // Stop checking after 10 seconds
+            setTimeout(() => clearInterval(interval), 10000);
+        }
+        
+        // Test navigation functions
+        function testPreviousChapter() {
+            if (currentChapterIndex > 0) {
+                currentChapterIndex--;
+                jumpToChapter(chapters[currentChapterIndex]);
+            } else {
+                log('Already at first chapter', 'warn');
+            }
+        }
+        
+        function testNextChapter() {
+            if (currentChapterIndex < chapters.length - 1) {
+                currentChapterIndex++;
+                jumpToChapter(chapters[currentChapterIndex]);
+            } else {
+                log('Already at last chapter', 'warn');
+            }
+        }
+        
+        function jumpToChapter(chapter) {
+            if (!chapter) return;
+            
+            log(`Jumping to Chapter ${chapter.number}: ${chapter.title}`);
+            log(`Target time: ${chapter.start_time} seconds (${formatTime(chapter.start_time)})`);
+            
+            currentChapterIndex = chapter.number - 1;
+            
+            if (window.audioSync && window.audioSync.seekTo) {
+                window.audioSync.seekTo(chapter.start_time);
+                log('✅ Seek command sent to player');
+            } else {
+                log('⚠️ Player not ready, seek will happen when ready', 'warn');
+            }
+            
+            updateStatus();
+        }
+        
+        function toggleChapterList() {
+            const list = document.getElementById('chapter-list');
+            list.style.display = list.style.display === 'none' ? 'block' : 'none';
+            log(`Chapter list ${list.style.display === 'none' ? 'hidden' : 'shown'}`);
+        }
+        
+        function renderChapterList() {
+            const container = document.getElementById('chapter-list');
+            chapters.forEach((chapter, index) => {
+                const card = document.createElement('div');
+                card.className = 'chapter-card';
+                if (index === currentChapterIndex) card.classList.add('current');
+                card.innerHTML = `
+                    <strong>Chapter ${chapter.number}: ${chapter.title}</strong><br>
+                    <small>${formatTime(chapter.start_time)} - ${formatTime(chapter.end_time)} 
+                    (${chapter.duration_minutes.toFixed(1)} min)</small><br>
+                    <small>${chapter.word_count} words</small>
+                `;
+                card.onclick = () => jumpToChapter(chapter);
+                container.appendChild(card);
+            });
+        }
+        
+        function updateStatus() {
+            const chapter = chapters[currentChapterIndex];
+            if (chapter) {
+                document.getElementById('current-chapter').textContent = 
+                    `Chapter ${chapter.number}: ${chapter.title}`;
+            }
+            
+            // Update chapter cards
+            document.querySelectorAll('.chapter-card').forEach((card, index) => {
+                card.classList.toggle('current', index === currentChapterIndex);
+            });
+        }
+        
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f44336' : type === 'warn' ? '#ff9800' : '#4CAF50';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+        
+        // Monitor current time
+        setInterval(() => {
+            if (window.audioSync && window.audioSync.getCurrentTime) {
+                const time = window.audioSync.getCurrentTime();
+                document.getElementById('current-time').textContent = formatTime(time);
+                
+                // Check if we've moved to a different chapter
+                const newChapter = chapters.find(ch => 
+                    time >= ch.start_time && time < ch.end_time
+                );
+                if (newChapter && newChapter.number - 1 !== currentChapterIndex) {
+                    currentChapterIndex = newChapter.number - 1;
+                    updateStatus();
+                    log(`Auto-updated to Chapter ${newChapter.number} based on playback time`);
+                }
+            }
+        }, 1000);
+        
+        // Initialize
+        loadChapters();
+        checkPlayer();
+        log('Test page initialized. Navigate to /chapters page first to load the player.');
+    </script>
+</body>
+</html>

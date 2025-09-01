@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Media Discovery Interface - Merle Haggard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .left-panel {
+            flex: 0 0 300px;
+        }
+        
+        .main-panel {
+            flex: 1;
+            min-height: 600px;
+        }
+        
+        .right-panel {
+            flex: 0 0 350px;
+        }
+        
+        .entity-filter {
+            margin-bottom: 20px;
+        }
+        
+        .entity-type {
+            margin-bottom: 15px;
+        }
+        
+        .entity-type h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .entity-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .entity-item:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+        }
+        
+        .entity-item.selected {
+            background: #667eea;
+            color: white;
+        }
+        
+        .mention-count {
+            font-size: 12px;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        #graph-container {
+            width: 100%;
+            height: 600px;
+            position: relative;
+        }
+        
+        .node {
+            cursor: pointer;
+        }
+        
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+        
+        .node text {
+            font-size: 12px;
+            pointer-events: none;
+        }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            stroke-width: 1px;
+        }
+        
+        .link.highlighted {
+            stroke: #667eea;
+            stroke-width: 3px;
+            stroke-opacity: 1;
+        }
+        
+        .discovery-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .discovery-item h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .discovery-item p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .media-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .media-type.book { background: #4CAF50; color: white; }
+        .media-type.podcast { background: #FF9800; color: white; }
+        .media-type.song { background: #2196F3; color: white; }
+        .media-type.video { background: #f44336; color: white; }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎵 Cross-Media Discovery Interface</h1>
+        <div class="subtitle">Explore connections across Merle Haggard's autobiography, music, and media appearances</div>
+    </div>
+    
+    <div class="container">
+        <div class="panel left-panel">
+            <h2>Entities</h2>
+            <input type="text" class="search-box" placeholder="Search entities..." id="entity-search">
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-entities">73</div>
+                    <div class="stat-label">Entities</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-connections">42</div>
+                    <div class="stat-label">Links</div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>📚 Book</h3>
+                <div class="entity-item selected" data-entity="My House of Memories" data-type="book">
+                    My House of Memories
+                    <span class="mention-count">1</span>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>👤 People</h3>
+                <div id="people-list">
+                    <div class="entity-item" data-entity="Merle Haggard" data-type="person">
+                        Merle Haggard
+                        <span class="mention-count">15</span>
+                    </div>
+                    <div class="entity-item" data-entity="Johnny Cash" data-type="person">
+                        Johnny Cash
+                        <span class="mention-count">5</span>
+                    </div>
+                    <div class="entity-item" data-entity="Buck Owens" data-type="person">
+                        Buck Owens
+                        <span class="mention-count">7</span>
+                    </div>
+                    <div class="entity-item" data-entity="Willie Nelson" data-type="person">
+                        Willie Nelson
+                        <span class="mention-count">2</span>
+                    </div>
+                    <div class="entity-item" data-entity="Bonnie Owens" data-type="person">
+                        Bonnie Owens
+                        <span class="mention-count">6</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>📍 Places</h3>
+                <div id="places-list">
+                    <div class="entity-item" data-entity="Bakersfield" data-type="place">
+                        Bakersfield
+                        <span class="mention-count">55</span>
+                    </div>
+                    <div class="entity-item" data-entity="San Quentin" data-type="place">
+                        San Quentin Prison
+                        <span class="mention-count">36</span>
+                    </div>
+                    <div class="entity-item" data-entity="Nashville" data-type="place">
+                        Nashville
+                        <span class="mention-count">7</span>
+                    </div>
+                    <div class="entity-item" data-entity="Oildale" data-type="place">
+                        Oildale
+                        <span class="mention-count">10</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>🎵 Songs</h3>
+                <div id="songs-list">
+                    <div class="entity-item" data-entity="Mama Tried" data-type="song">
+                        Mama Tried
+                        <span class="mention-count">3</span>
+                    </div>
+                    <div class="entity-item" data-entity="Okie from Muskogee" data-type="song">
+                        Okie from Muskogee
+                        <span class="mention-count">1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel main-panel">
+            <h2>Discovery Network</h2>
+            <div id="graph-container">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4CAF50"></div>
+                        <span>Book</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2196F3"></div>
+                        <span>Person</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FF9800"></div>
+                        <span>Place</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9C27B0"></div>
+                        <span>Song</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel right-panel">
+            <h2>Discovery Paths</h2>
+            <div id="discovery-paths">
+                <div class="discovery-item">
+                    <h4>📚 From Book to Podcast</h4>
+                    <span class="media-type book">BOOK</span>
+                    <span class="media-type podcast">PODCAST</span>
+                    <p>Chapter 3 mentions San Quentin concert → Fresh Air interview discusses same event</p>
+                </div>
+                
+                <div class="discovery-item">
+                    <h4>🎵 From Song to Story</h4>
+                    <span class="media-type song">SONG</span>
+                    <span class="media-type book">BOOK</span>
+                    <p>"Mama Tried" lyrics → Book reveals personal story behind the song</p>
+                </div>
+                
+                <div class="discovery-item">
+                    <h4>👤 Person Connections</h4>
+                    <span class="media-type book">BOOK</span>
+                    <span class="media-type book">BOOK</span>
+                    <p>Johnny Cash mentioned → Link to "Cash: The Autobiography"</p>
+                </div>
+                
+                <div class="discovery-item">
+                    <h4>📍 Place-Based Discovery</h4>
+                    <span class="media-type book">BOOK</span>
+                    <span class="media-type video">VIDEO</span>
+                    <p>Bakersfield Sound → Documentary "The Bakersfield Sound: Buck Owens, Merle Haggard"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for the network graph
+        const graphData = {
+            nodes: [
+                // Books
+                { id: "My House of Memories", type: "book", mentions: 1, x: 400, y: 300 },
+                { id: "Cash: The Autobiography", type: "book", mentions: 1 },
+                
+                // People
+                { id: "Merle Haggard", type: "person", mentions: 15 },
+                { id: "Johnny Cash", type: "person", mentions: 5 },
+                { id: "Buck Owens", type: "person", mentions: 7 },
+                { id: "Willie Nelson", type: "person", mentions: 2 },
+                { id: "Bonnie Owens", type: "person", mentions: 6 },
+                { id: "Tom Carter", type: "person", mentions: 1 },
+                { id: "Lefty Frizzell", type: "person", mentions: 8 },
+                { id: "Bob Wills", type: "person", mentions: 8 },
+                
+                // Places
+                { id: "Bakersfield", type: "place", mentions: 55 },
+                { id: "San Quentin", type: "place", mentions: 36 },
+                { id: "Nashville", type: "place", mentions: 7 },
+                { id: "Oildale", type: "place", mentions: 10 },
+                { id: "California", type: "place", mentions: 34 },
+                { id: "Texas", type: "place", mentions: 17 },
+                
+                // Songs
+                { id: "Mama Tried", type: "song", mentions: 3 },
+                { id: "Okie from Muskogee", type: "song", mentions: 1 },
+                { id: "Sing Me Back Home", type: "song", mentions: 1 },
+                
+                // Media
+                { id: "Fresh Air Interview", type: "podcast", mentions: 1 }
+            ],
+            links: [
+                // Book connections
+                { source: "My House of Memories", target: "Merle Haggard", type: "author" },
+                { source: "My House of Memories", target: "Tom Carter", type: "co-author" },
+                { source: "My House of Memories", target: "Bakersfield", type: "describes" },
+                { source: "My House of Memories", target: "San Quentin", type: "describes" },
+                { source: "My House of Memories", target: "Johnny Cash", type: "mentions" },
+                { source: "My House of Memories", target: "Buck Owens", type: "mentions" },
+                { source: "My House of Memories", target: "Willie Nelson", type: "mentions" },
+                { source: "My House of Memories", target: "Bonnie Owens", type: "mentions" },
+                { source: "My House of Memories", target: "Mama Tried", type: "discusses" },
+                { source: "My House of Memories", target: "Oildale", type: "describes" },
+                
+                // Person connections
+                { source: "Merle Haggard", target: "Bakersfield", type: "lived_in" },
+                { source: "Merle Haggard", target: "San Quentin", type: "incarcerated_at" },
+                { source: "Merle Haggard", target: "Bonnie Owens", type: "married_to" },
+                { source: "Merle Haggard", target: "Buck Owens", type: "collaborated_with" },
+                { source: "Merle Haggard", target: "Willie Nelson", type: "collaborated_with" },
+                { source: "Merle Haggard", target: "Mama Tried", type: "performed" },
+                { source: "Merle Haggard", target: "Okie from Muskogee", type: "performed" },
+                { source: "Merle Haggard", target: "Fresh Air Interview", type: "featured_in" },
+                
+                // Cross-references
+                { source: "Johnny Cash", target: "San Quentin", type: "performed_at" },
+                { source: "Johnny Cash", target: "Cash: The Autobiography", type: "author" },
+                { source: "Buck Owens", target: "Bakersfield", type: "associated_with" },
+                
+                // Song connections
+                { source: "Mama Tried", target: "San Quentin", type: "inspired_by" },
+                { source: "Sing Me Back Home", target: "San Quentin", type: "about" }
+            ]
+        };
+        
+        // Color scheme for node types
+        const colorMap = {
+            book: "#4CAF50",
+            person: "#2196F3",
+            place: "#FF9800",
+            song: "#9C27B0",
+            podcast: "#FF5722"
+        };
+        
+        // Set up the SVG
+        const width = document.getElementById('graph-container').offsetWidth;
+        const height = 600;
+        
+        const svg = d3.select("#graph-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        
+        // Create force simulation
+        const simulation = d3.forceSimulation(graphData.nodes)
+            .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(d => Math.sqrt(d.mentions) * 5 + 20));
+        
+        // Create links
+        const link = svg.append("g")
+            .selectAll("line")
+            .data(graphData.links)
+            .enter().append("line")
+            .attr("class", "link")
+            .style("stroke-width", d => d.type === "author" ? 3 : 1);
+        
+        // Create nodes
+        const node = svg.append("g")
+            .selectAll("g")
+            .data(graphData.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+        
+        // Add circles to nodes
+        node.append("circle")
+            .attr("r", d => Math.sqrt(d.mentions) * 3 + 10)
+            .style("fill", d => colorMap[d.type]);
+        
+        // Add labels to nodes
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", 4)
+            .text(d => d.id)
+            .style("font-size", d => d.mentions > 10 ? "14px" : "12px");
+        
+        // Update positions on tick
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+            
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Handle entity selection
+        document.querySelectorAll('.entity-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove previous selection
+                document.querySelectorAll('.entity-item').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // Add selection to clicked item
+                this.classList.add('selected');
+                
+                // Highlight connected nodes and links
+                const selectedEntity = this.dataset.entity;
+                highlightConnections(selectedEntity);
+                
+                // Update discovery paths
+                updateDiscoveryPaths(selectedEntity);
+            });
+        });
+        
+        function highlightConnections(entityName) {
+            // Reset all links
+            link.classed("highlighted", false);
+            
+            // Highlight links connected to the selected entity
+            link.classed("highlighted", d => 
+                d.source.id === entityName || d.target.id === entityName
+            );
+            
+            // Update node opacity
+            node.style("opacity", d => {
+                const isConnected = graphData.links.some(l => 
+                    (l.source.id === entityName && l.target.id === d.id) ||
+                    (l.target.id === entityName && l.source.id === d.id) ||
+                    d.id === entityName
+                );
+                return isConnected ? 1 : 0.3;
+            });
+        }
+        
+        function updateDiscoveryPaths(entityName) {
+            const pathsContainer = document.getElementById('discovery-paths');
+            
+            // Sample discovery paths based on entity
+            const paths = {
+                "Merle Haggard": [
+                    { from: "Book", to: "Podcast", description: "Autobiography details → Fresh Air interview topics" },
+                    { from: "Book", to: "Music", description: "Life stories → Song inspirations" },
+                    { from: "Person", to: "Media", description: "Collaborations → Related documentaries" }
+                ],
+                "San Quentin": [
+                    { from: "Place", to: "Event", description: "Prison location → Johnny Cash concert 1958" },
+                    { from: "Book", to: "Song", description: "Incarceration story → 'Sing Me Back Home'" },
+                    { from: "Place", to: "Media", description: "Historical site → Documentary footage" }
+                ],
+                "Bakersfield": [
+                    { from: "Place", to: "Music", description: "Bakersfield Sound → Music genre evolution" },
+                    { from: "Book", to: "Culture", description: "Local stories → Cultural movement" },
+                    { from: "Place", to: "People", description: "Music scene → Artist network" }
+                ]
+            };
+            
+            const selectedPaths = paths[entityName] || paths["Merle Haggard"];
+            
+            pathsContainer.innerHTML = `
+                <h3>Connections for: ${entityName}</h3>
+                ${selectedPaths.map(path => `
+                    <div class="discovery-item">
+                        <h4>${path.from} → ${path.to}</h4>
+                        <p>${path.description}</p>
+                    </div>
+                `).join('')}
+            `;
+        }
+        
+        // Search functionality
+        document.getElementById('entity-search').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.entity-item').forEach(item => {
+                const entityName = item.dataset.entity.toLowerCase();
+                item.style.display = entityName.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+        
+        // Initialize with book selected
+        highlightConnections("My House of Memories");
+    </script>
+</body>
+</html>

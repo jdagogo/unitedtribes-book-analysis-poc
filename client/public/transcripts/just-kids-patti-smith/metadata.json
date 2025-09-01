@@ -1,0 +1,1067 @@
+{
+  "id": "just-kids-patti-smith",
+  "title": "just kids patti smith",
+  "source": "just-kids-patti-smith.pdf",
+  "fileSize": 764649,
+  "fileSizeFormatted": "746.73 KB",
+  "uploadDate": "2025-08-30T22:59:35.828Z",
+  "processingTime": 0,
+  "wordCount": 79435,
+  "estimatedPages": 132,
+  "processingStatus": "processing",
+  "entityCount": 114,
+  "creativeEntityCount": 90,
+  "analysisComplete": true,
+  "metadata": {
+    "pdfVersion": "1.10.100",
+    "info": {
+      "PDFFormatVersion": "1.3",
+      "IsAcroFormPresent": false,
+      "IsXFAPresent": false,
+      "Title": "Just Kids",
+      "Author": "Patti Smith",
+      "Creator": "calibre 0.8.67 [http://calibre-ebook.com]",
+      "Producer": "PoDoFo - http://podofo.sf.net",
+      "CreationDate": "D:20131127163138+05'00'"
+    },
+    "metadata": null,
+    "numpages": 132
+  },
+  "entities": [
+    {
+      "name": "Bob Dylan",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 68,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Jimi Hendrix",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 56,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Andy Warhol",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 52,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Chelsea Hotel",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 52,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Brian Jones",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 48,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "The Loft",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 44,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Cream",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 40,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "The Band",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 40,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "The Factory",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 40,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Jim Morrison",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 36,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Area",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 36,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "The Doors",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 32,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Lenny Kaye",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 32,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Easter",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 32,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Janis Joplin",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 28,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Edie Sedgwick",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 28,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "CBGB",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 28,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Horses",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 28,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Land",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 28,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Richard Sohl",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 24,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "John Lennon",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 24,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Arthur Rimbaud",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 24,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Allen Ginsberg",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 24,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "The East Village",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 24,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "The Bowery",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 24,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "The Rolling Stones",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 20,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "The Velvet Underground",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 20,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Television",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 20,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Jackson Pollock",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 20,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "William Burroughs",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 20,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Twelve",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 20,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Just Kids",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 20,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Tim Buckley",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 16,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Tim Hardin",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 16,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Tom Verlaine",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 16,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Jean Genet",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 16,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Gregory Corso",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 16,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "The Fillmore East",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 16,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Wave",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 16,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Lou Reed",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 12,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "John Coltrane",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 12,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Mick Jagger",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 12,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Robert Mapplethorpe",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 12,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "William Blake",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 12,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Diego Rivera",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 12,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Jack Kerouac",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 12,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Anne Waldman",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 12,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Walt Whitman",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 12,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "The Kitchen",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 12,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Devotion",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 12,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Blonde on Blonde",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 12,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Blue Öyster Cult",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 9,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Richard Hell",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "The New York Dolls",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Wayne County",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Keith Richards",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Marianne Faithfull",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Harry Smith",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Marvin Gaye",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 8,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Man Ray",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 8,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Frida Kahlo",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 8,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Diane Arbus",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 8,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Paul Strand",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 8,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Sam Shepard",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 8,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Birdland",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 8,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "The Electric Circus",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 8,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "The Poetry Project",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 8,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Loaded",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 8,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Berlin",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 8,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Arista Records",
+      "type": "label",
+      "category": "Record Labels",
+      "mentions": 8,
+      "context": "Music labels",
+      "importance": 1,
+      "creativeType": "label"
+    },
+    {
+      "name": "Columbia Records",
+      "type": "label",
+      "category": "Record Labels",
+      "mentions": 8,
+      "context": "Music labels",
+      "importance": 1,
+      "creativeType": "label"
+    },
+    {
+      "name": "New Wave",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 8,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "Motown",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 8,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "Neil Young",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Jay Dee Daugherty",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Ivan Kral",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Nico",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Yoko Ono",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Buddy Holly",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "James Brown",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Jefferson Airplane",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "The Byrds",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Van Morrison",
+      "type": "musician",
+      "category": "Musicians & Bands",
+      "mentions": 4,
+      "context": "Music to explore",
+      "importance": 1,
+      "creativeType": "musician"
+    },
+    {
+      "name": "Willem de Kooning",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Marcel Duchamp",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Edward Hopper",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Irving Penn",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Alfred Stieglitz",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Cecil Beaton",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Helmut Newton",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 4,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Sylvia Plath",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 4,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Samuel Beckett",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 4,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Tennessee Williams",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 4,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "Charles Ludlam",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 4,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "The Village Gate",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 4,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "The Mercer Arts Center",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 4,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Lincoln Center",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 4,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "The Metropolitan Museum",
+      "type": "venue",
+      "category": "Venues & Places",
+      "mentions": 4,
+      "context": "Cultural locations",
+      "importance": 1,
+      "creativeType": "venue"
+    },
+    {
+      "name": "Dream of Life",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "The Coral Sea",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Babel",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Auguries of Innocence",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Woolgathering",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Early Work",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Strange Messenger",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Coney Island Baby",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 4,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Beggars Banquet",
+      "type": "label",
+      "category": "Record Labels",
+      "mentions": 4,
+      "context": "Music labels",
+      "importance": 1,
+      "creativeType": "label"
+    },
+    {
+      "name": "Abstract Expressionism",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 4,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "The Warhol Factory",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 4,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "The Lower East Side",
+      "type": "movement",
+      "category": "Movements & Scenes",
+      "mentions": 4,
+      "context": "Cultural movements",
+      "importance": 1,
+      "creativeType": "movement"
+    },
+    {
+      "name": "Anaïs Nin",
+      "type": "author",
+      "category": "Writers & Poets",
+      "mentions": 3,
+      "context": "Literature to read",
+      "importance": 1,
+      "creativeType": "author"
+    },
+    {
+      "name": "L.A. Woman",
+      "type": "work",
+      "category": "Albums & Books",
+      "mentions": 3,
+      "context": "Creative works",
+      "importance": 1,
+      "creativeType": "work"
+    },
+    {
+      "name": "Salvador Dalí",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 2,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    },
+    {
+      "name": "Brassaï",
+      "type": "artist",
+      "category": "Visual Artists",
+      "mentions": 1,
+      "context": "Art to discover",
+      "importance": 1,
+      "creativeType": "artist"
+    }
+  ],
+  "entityBreakdown": {
+    "musicians": 37,
+    "artists": 17,
+    "authors": 15,
+    "venues": 14,
+    "works": 21,
+    "labels": 3,
+    "movements": 7
+  }
+}

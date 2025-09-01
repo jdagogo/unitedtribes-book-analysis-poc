@@ -1,0 +1,74 @@
+entity_type,entity_name,mentions,confidence,source
+person,Merle Haggard,15,1.0,known_entity
+person,Lefty Frizzell,8,1.0,known_entity
+person,Bob Wills,8,1.0,known_entity
+person,Buck Owens,7,1.0,known_entity
+person,Bonnie Owens,6,1.0,known_entity
+person,Johnny Cash,5,1.0,known_entity
+person,George Jones,4,1.0,known_entity
+person,Dolly Parton,2,1.0,known_entity
+person,Willie Nelson,2,1.0,known_entity
+person,Waylon Jennings,1,1.0,known_entity
+person,Tom Carter,1,1.0,known_entity
+person,Kris Kristofferson,1,1.0,known_entity
+person,Ernest Tubb,1,1.0,known_entity
+person,Northern California,1,0.7,pattern_match
+person,Lake Shasta,1,0.7,pattern_match
+person,Silverthorne Resort,1,0.7,pattern_match
+person,Jones Valley,1,0.7,pattern_match
+person,Teacup Poodle,1,0.7,pattern_match
+person,Freddie Powers,1,0.7,pattern_match
+person,Jimmy Buffett,1,0.7,pattern_match
+person,California Freddy,1,0.7,pattern_match
+person,Southern California,1,0.7,pattern_match
+person,Listening Room,1,0.7,pattern_match
+person,Number One,1,0.7,pattern_match
+person,Country Music Association,1,0.7,pattern_match
+person,White House,1,0.7,pattern_match
+person,Interstate Highway,1,0.7,pattern_match
+person,Motion Pictures,1,0.7,pattern_match
+person,Clint Eastwood,1,0.7,pattern_match
+person,Kern General Hospital,1,0.7,pattern_match
+person,Bakersfield California,1,0.7,pattern_match
+person,James Haggard,1,0.7,pattern_match
+person,The Boxcar,1,0.7,pattern_match
+person,Harold Granger,1,0.7,pattern_match
+person,Fox Terrier,1,0.7,pattern_match
+person,German Shepherd,1,0.7,pattern_match
+person,Kern River,1,0.7,pattern_match
+person,Santa Fe,1,0.7,pattern_match
+person,Santa Fe Hospital,1,0.7,pattern_match
+person,Los Santos,1,0.7,pattern_match
+person,Fran Mom Dad,1,0.7,pattern_match
+person,San Antonio Rose,1,0.7,pattern_match
+person,Houston California,1,0.7,pattern_match
+person,Uncle Esther,1,0.7,pattern_match
+person,Billy Thorpe,1,0.7,pattern_match
+person,Detention Center,1,0.7,pattern_match
+person,Mildred Carr,1,0.7,pattern_match
+person,Mildred Copeland,1,0.7,pattern_match
+person,Carol Sloss,1,0.7,pattern_match
+person,Bakersfield Public Schools,1,0.7,pattern_match
+place,Bakersfield,55,1.0,known_entity
+place,San Quentin,36,1.0,known_entity
+place,California,34,1.0,known_entity
+place,Texas,17,1.0,known_entity
+place,Las Vegas,13,1.0,known_entity
+place,Oildale,10,1.0,known_entity
+place,Nashville,7,1.0,known_entity
+place,Oklahoma,7,1.0,known_entity
+place,Los Angeles,5,1.0,known_entity
+place,Fresno,2,1.0,known_entity
+place,Austin,2,1.0,known_entity
+place,Muskogee,1,1.0,known_entity
+place,Tennessee,1,1.0,known_entity
+place,Eastwood,1,0.7,pattern_match
+place,Houston,1,0.7,pattern_match
+place,Allendale,1,0.7,pattern_match
+place,Copeland,1,0.7,pattern_match
+place,Hilton,1,0.7,pattern_match
+song,Mama Tried,3,1.0,known_entity
+song,Sing Me Back Home,2,1.0,known_entity
+song,Okie from Muskogee,1,1.0,known_entity
+song,If We Make It Through December,1,1.0,known_entity
+institution,Hospital,1,0.7,pattern_match

@@ -1,0 +1,964 @@
+{
+  "nodes": [
+    {
+      "id": "Fresh Air Episode",
+      "type": "podcast",
+      "date": "April 7, 2016",
+      "host": "David Bianculli",
+      "guest": "Jon Caramanica",
+      "duration": "8 minutes",
+      "url": "https://www.npr.org/2016/04/07/473307918/fresh-air-remembers-country-legend-merle-haggard"
+    },
+    {
+      "id": "David Bianculli",
+      "type": "person",
+      "role": "Fresh Air TV Critic",
+      "timestamp": "0:00",
+      "context": "Introduces segment",
+      "mentions": 1
+    },
+    {
+      "id": "Jon Caramanica",
+      "type": "person",
+      "role": "NYT Pop Music Critic",
+      "timestamp": "0:45",
+      "context": "Wrote obituary",
+      "mentions": 1
+    },
+    {
+      "id": "Terry Gross",
+      "type": "person",
+      "role": "Fresh Air Host",
+      "timestamp": "0:05",
+      "context": "Regular host (mentioned)",
+      "mentions": 1
+    },
+    {
+      "id": "Merle Haggard",
+      "type": "person",
+      "role": "Country Music Legend",
+      "timestamp": "throughout",
+      "context": "Subject of tribute",
+      "mentions": 50
+    },
+    {
+      "id": "Willie Nelson",
+      "type": "person",
+      "role": "Farm Aid Co-founder",
+      "timestamp": "2:15",
+      "context": "Farm Aid performance partner",
+      "mentions": 1
+    },
+    {
+      "id": "Bob Dylan",
+      "type": "person",
+      "role": "Folk/Rock Icon",
+      "timestamp": "2:20",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "Billy Joel",
+      "type": "person",
+      "role": "Pop/Rock Star",
+      "timestamp": "2:22",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "B.B. King",
+      "type": "person",
+      "role": "Blues Legend",
+      "timestamp": "2:25",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "Bonnie Raitt",
+      "type": "person",
+      "role": "Blues/Rock Singer",
+      "timestamp": "2:27",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "Tom Petty",
+      "type": "person",
+      "role": "Rock Star",
+      "timestamp": "2:30",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "Loretta Lynn",
+      "type": "person",
+      "role": "Country Legend",
+      "timestamp": "2:32",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "Roy Orbison",
+      "type": "person",
+      "role": "Rock Pioneer",
+      "timestamp": "2:35",
+      "context": "Farm Aid performer",
+      "mentions": 1
+    },
+    {
+      "id": "Johnny Cash",
+      "type": "person",
+      "role": "Country Icon",
+      "timestamp": "4:30",
+      "context": "San Quentin concert influence",
+      "mentions": 1
+    },
+    {
+      "id": "Buck Owens",
+      "type": "person",
+      "role": "Bakersfield Sound Pioneer",
+      "timestamp": "3:20",
+      "context": "Musical influence",
+      "mentions": 1
+    },
+    {
+      "id": "George Strait",
+      "type": "person",
+      "role": "Country Star",
+      "timestamp": "5:45",
+      "context": "Influenced by Haggard",
+      "mentions": 1
+    },
+    {
+      "id": "Kris Kristofferson",
+      "type": "person",
+      "role": "Singer-Songwriter",
+      "timestamp": "3:45",
+      "context": "Outlaw country peer",
+      "mentions": 1
+    },
+    {
+      "id": "Waylon Jennings",
+      "type": "person",
+      "role": "Outlaw Country",
+      "timestamp": "3:50",
+      "context": "Outlaw movement",
+      "mentions": 1
+    },
+    {
+      "id": "Flossie Haggard",
+      "type": "person",
+      "role": "Mother",
+      "timestamp": "5:10",
+      "context": "Mama Tried inspiration",
+      "mentions": 1
+    },
+    {
+      "id": "James Haggard",
+      "type": "person",
+      "role": "Father",
+      "timestamp": "5:15",
+      "context": "Died when Merle was 9",
+      "mentions": 1
+    },
+    {
+      "id": "Merle Haggard's Death",
+      "type": "event",
+      "date": "April 6, 2016",
+      "location": "California",
+      "timestamp": "0:10",
+      "context": "Died on 79th birthday"
+    },
+    {
+      "id": "Farm Aid 40th Anniversary",
+      "type": "event",
+      "date": "2025",
+      "location": "",
+      "timestamp": "2:00",
+      "context": "Upcoming milestone mentioned"
+    },
+    {
+      "id": "Farm Aid 1985",
+      "type": "event",
+      "date": "September 22, 1985",
+      "location": "Champaign, Illinois",
+      "timestamp": "2:15",
+      "context": "First Farm Aid concert"
+    },
+    {
+      "id": "San Quentin Concert",
+      "type": "event",
+      "date": "January 1, 1958",
+      "location": "",
+      "timestamp": "4:30",
+      "context": "Haggard in audience"
+    },
+    {
+      "id": "Country Music Hall of Fame Induction",
+      "type": "event",
+      "date": "1994",
+      "location": "Nashville",
+      "timestamp": "6:30",
+      "context": "Major honor"
+    },
+    {
+      "id": "Kennedy Center Honor",
+      "type": "event",
+      "date": "2010",
+      "location": "Washington D.C.",
+      "timestamp": "6:35",
+      "context": "Lifetime achievement"
+    },
+    {
+      "id": "Grammy Lifetime Achievement",
+      "type": "event",
+      "date": "2006",
+      "location": "",
+      "timestamp": "6:40",
+      "context": "Recording Academy honor"
+    },
+    {
+      "id": "Prison Release",
+      "type": "event",
+      "date": "1960",
+      "location": "",
+      "timestamp": "4:45",
+      "context": "Released from San Quentin"
+    },
+    {
+      "id": "California Governor's Pardon",
+      "type": "event",
+      "date": "1972",
+      "location": "",
+      "timestamp": "4:50",
+      "context": "Ronald Reagan pardon"
+    },
+    {
+      "id": "Natural High",
+      "type": "song",
+      "year": 1985,
+      "timestamp": "2:30",
+      "context": "New song performed at Farm Aid",
+      "chart": ""
+    },
+    {
+      "id": "Mama Tried",
+      "type": "song",
+      "year": 1968,
+      "timestamp": "5:10",
+      "context": "Autobiographical #1 hit",
+      "chart": "#1 Country"
+    },
+    {
+      "id": "Okie from Muskogee",
+      "type": "song",
+      "year": 1969,
+      "timestamp": "6:00",
+      "context": "Cultural phenomenon, controversial",
+      "chart": "#1 Country/Pop crossover"
+    },
+    {
+      "id": "Today I Started Loving You Again",
+      "type": "song",
+      "year": 1968,
+      "timestamp": "5:50",
+      "context": "Most covered Haggard song",
+      "chart": ""
+    },
+    {
+      "id": "Sing Me Back Home",
+      "type": "song",
+      "year": 1967,
+      "timestamp": "4:55",
+      "context": "Prison song",
+      "chart": ""
+    },
+    {
+      "id": "The Fightin' Side of Me",
+      "type": "song",
+      "year": 1970,
+      "timestamp": "6:10",
+      "context": "Political anthem",
+      "chart": "#1 Country"
+    },
+    {
+      "id": "If We Make It Through December",
+      "type": "song",
+      "year": 1973,
+      "timestamp": "5:30",
+      "context": "Christmas classic",
+      "chart": "#1 Country"
+    },
+    {
+      "id": "Big City",
+      "type": "song",
+      "year": 1982,
+      "timestamp": "5:35",
+      "context": "Later career hit",
+      "chart": "#1 Country"
+    },
+    {
+      "id": "Branded Man",
+      "type": "song",
+      "year": 1967,
+      "timestamp": "4:58",
+      "context": "Ex-convict anthem",
+      "chart": ""
+    },
+    {
+      "id": "I Think I'll Just Stay Here and Drink",
+      "type": "song",
+      "year": 1980,
+      "timestamp": "5:40",
+      "context": "Drinking song classic",
+      "chart": ""
+    },
+    {
+      "id": "Champaign, Illinois",
+      "type": "place",
+      "location_type": "city",
+      "timestamp": "2:15",
+      "context": "Farm Aid 1985 location",
+      "significance": "First Farm Aid"
+    },
+    {
+      "id": "Bakersfield, California",
+      "type": "place",
+      "location_type": "city",
+      "timestamp": "3:00",
+      "context": "Musical movement center",
+      "significance": "Bakersfield Sound origin"
+    },
+    {
+      "id": "San Quentin State Prison",
+      "type": "place",
+      "location_type": "institution",
+      "timestamp": "4:30",
+      "context": "Incarceration 1958-1960",
+      "significance": ""
+    },
+    {
+      "id": "Oildale, California",
+      "type": "place",
+      "location_type": "city",
+      "timestamp": "3:10",
+      "context": "Haggard's birthplace",
+      "significance": "Dust Bowl refugee camp"
+    },
+    {
+      "id": "Nashville, Tennessee",
+      "type": "place",
+      "location_type": "city",
+      "timestamp": "3:05",
+      "context": "Country music capital",
+      "significance": "Industry center"
+    },
+    {
+      "id": "Muskogee, Oklahoma",
+      "type": "place",
+      "location_type": "city",
+      "timestamp": "6:00",
+      "context": "Song subject",
+      "significance": "Okie from Muskogee"
+    },
+    {
+      "id": "California",
+      "type": "place",
+      "location_type": "state",
+      "timestamp": "throughout",
+      "context": "Home state",
+      "significance": "Lifetime residence"
+    },
+    {
+      "id": "Oklahoma",
+      "type": "place",
+      "location_type": "state",
+      "timestamp": "3:12",
+      "context": "Parents' origin",
+      "significance": "Dust Bowl migration"
+    },
+    {
+      "id": "Farm Aid",
+      "type": "institution",
+      "inst_type": "organization",
+      "timestamp": "2:00",
+      "context": ""
+    },
+    {
+      "id": "Country Music Hall of Fame",
+      "type": "institution",
+      "inst_type": "institution",
+      "timestamp": "6:30",
+      "context": ""
+    },
+    {
+      "id": "Kennedy Center",
+      "type": "institution",
+      "inst_type": "institution",
+      "timestamp": "6:35",
+      "context": ""
+    },
+    {
+      "id": "The New York Times",
+      "type": "institution",
+      "inst_type": "publication",
+      "timestamp": "0:45",
+      "context": "Jon Caramanica's employer"
+    },
+    {
+      "id": "NPR",
+      "type": "institution",
+      "inst_type": "broadcaster",
+      "timestamp": "0:00",
+      "context": "Broadcasting organization"
+    },
+    {
+      "id": "Recording Academy",
+      "type": "institution",
+      "inst_type": "organization",
+      "timestamp": "6:40",
+      "context": ""
+    },
+    {
+      "id": "Capitol Records",
+      "type": "institution",
+      "inst_type": "label",
+      "timestamp": "3:30",
+      "context": "Record label"
+    },
+    {
+      "id": "MCA Records",
+      "type": "institution",
+      "inst_type": "label",
+      "timestamp": "3:35",
+      "context": "Later record label"
+    }
+  ],
+  "links": [
+    {
+      "source": "Fresh Air Episode",
+      "target": "David Bianculli",
+      "type": "mentions",
+      "timestamp": "0:00",
+      "context": "Introduces segment"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Jon Caramanica",
+      "type": "mentions",
+      "timestamp": "0:45",
+      "context": "Wrote obituary"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Terry Gross",
+      "type": "mentions",
+      "timestamp": "0:05",
+      "context": "Regular host (mentioned)"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Merle Haggard",
+      "type": "mentions",
+      "timestamp": "throughout",
+      "context": "Subject of tribute"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Willie Nelson",
+      "type": "mentions",
+      "timestamp": "2:15",
+      "context": "Farm Aid performance partner"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bob Dylan",
+      "type": "mentions",
+      "timestamp": "2:20",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Billy Joel",
+      "type": "mentions",
+      "timestamp": "2:22",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "B.B. King",
+      "type": "mentions",
+      "timestamp": "2:25",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bonnie Raitt",
+      "type": "mentions",
+      "timestamp": "2:27",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Tom Petty",
+      "type": "mentions",
+      "timestamp": "2:30",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Loretta Lynn",
+      "type": "mentions",
+      "timestamp": "2:32",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Roy Orbison",
+      "type": "mentions",
+      "timestamp": "2:35",
+      "context": "Farm Aid performer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Johnny Cash",
+      "type": "mentions",
+      "timestamp": "4:30",
+      "context": "San Quentin concert influence"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Buck Owens",
+      "type": "mentions",
+      "timestamp": "3:20",
+      "context": "Musical influence"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "George Strait",
+      "type": "mentions",
+      "timestamp": "5:45",
+      "context": "Influenced by Haggard"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Kris Kristofferson",
+      "type": "mentions",
+      "timestamp": "3:45",
+      "context": "Outlaw country peer"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Waylon Jennings",
+      "type": "mentions",
+      "timestamp": "3:50",
+      "context": "Outlaw movement"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Flossie Haggard",
+      "type": "mentions",
+      "timestamp": "5:10",
+      "context": "Mama Tried inspiration"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "James Haggard",
+      "type": "mentions",
+      "timestamp": "5:15",
+      "context": "Died when Merle was 9"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Merle Haggard's Death",
+      "type": "discusses",
+      "timestamp": "0:10"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Farm Aid 40th Anniversary",
+      "type": "discusses",
+      "timestamp": "2:00"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Farm Aid 1985",
+      "type": "discusses",
+      "timestamp": "2:15"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "San Quentin Concert",
+      "type": "discusses",
+      "timestamp": "4:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Country Music Hall of Fame Induction",
+      "type": "discusses",
+      "timestamp": "6:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Kennedy Center Honor",
+      "type": "discusses",
+      "timestamp": "6:35"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Grammy Lifetime Achievement",
+      "type": "discusses",
+      "timestamp": "6:40"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Prison Release",
+      "type": "discusses",
+      "timestamp": "4:45"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "California Governor's Pardon",
+      "type": "discusses",
+      "timestamp": "4:50"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Natural High",
+      "type": "analyzes",
+      "timestamp": "2:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Mama Tried",
+      "type": "analyzes",
+      "timestamp": "5:10"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Okie from Muskogee",
+      "type": "analyzes",
+      "timestamp": "6:00"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Today I Started Loving You Again",
+      "type": "analyzes",
+      "timestamp": "5:50"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Sing Me Back Home",
+      "type": "analyzes",
+      "timestamp": "4:55"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The Fightin' Side of Me",
+      "type": "analyzes",
+      "timestamp": "6:10"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "If We Make It Through December",
+      "type": "analyzes",
+      "timestamp": "5:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Big City",
+      "type": "analyzes",
+      "timestamp": "5:35"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Branded Man",
+      "type": "analyzes",
+      "timestamp": "4:58"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "I Think I'll Just Stay Here and Drink",
+      "type": "analyzes",
+      "timestamp": "5:40"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Champaign, Illinois",
+      "type": "references",
+      "timestamp": "2:15"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bakersfield, California",
+      "type": "references",
+      "timestamp": "3:00"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "San Quentin State Prison",
+      "type": "references",
+      "timestamp": "4:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Oildale, California",
+      "type": "references",
+      "timestamp": "3:10"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Nashville, Tennessee",
+      "type": "references",
+      "timestamp": "3:05"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Muskogee, Oklahoma",
+      "type": "references",
+      "timestamp": "6:00"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "California",
+      "type": "references",
+      "timestamp": "throughout"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Oklahoma",
+      "type": "references",
+      "timestamp": "3:12"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Farm Aid",
+      "type": "mentions",
+      "timestamp": "2:00"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Country Music Hall of Fame",
+      "type": "mentions",
+      "timestamp": "6:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Kennedy Center",
+      "type": "mentions",
+      "timestamp": "6:35"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The New York Times",
+      "type": "mentions",
+      "timestamp": "0:45"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Recording Academy",
+      "type": "mentions",
+      "timestamp": "6:40"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Capitol Records",
+      "type": "mentions",
+      "timestamp": "3:30"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "MCA Records",
+      "type": "mentions",
+      "timestamp": "3:35"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "San Quentin State Prison",
+      "type": "incarcerated_at",
+      "years": "1958-1960"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Bakersfield, California",
+      "type": "lived_in"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Oildale, California",
+      "type": "born_in"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Mama Tried",
+      "type": "wrote_performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Okie from Muskogee",
+      "type": "wrote_performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Natural High",
+      "type": "performed",
+      "context": "Farm Aid 1985"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Country Music Hall of Fame",
+      "type": "inducted",
+      "year": "1994"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Farm Aid 1985",
+      "type": "performed_at"
+    },
+    {
+      "source": "Farm Aid 1985",
+      "target": "Willie Nelson",
+      "type": "organized_by"
+    },
+    {
+      "source": "Farm Aid 1985",
+      "target": "Champaign, Illinois",
+      "type": "located_at"
+    },
+    {
+      "source": "San Quentin Concert",
+      "target": "Johnny Cash",
+      "type": "performed_by"
+    },
+    {
+      "source": "San Quentin Concert",
+      "target": "San Quentin State Prison",
+      "type": "located_at"
+    },
+    {
+      "source": "Mama Tried",
+      "target": "Flossie Haggard",
+      "type": "inspired_by"
+    },
+    {
+      "source": "Sing Me Back Home",
+      "target": "San Quentin State Prison",
+      "type": "about"
+    },
+    {
+      "source": "Okie from Muskogee",
+      "target": "Muskogee, Oklahoma",
+      "type": "references"
+    }
+  ],
+  "metadata": {
+    "show": "Fresh Air",
+    "date": "April 7, 2016",
+    "host": "David Bianculli",
+    "guest": "Jon Caramanica",
+    "topic": "Merle Haggard Obituary",
+    "duration": "8 minutes",
+    "npr_url": "https://www.npr.org/2016/04/07/473307918/fresh-air-remembers-country-legend-merle-haggard"
+  },
+  "quotes": [
+    {
+      "text": "A country music titan who most resists easy categorization",
+      "speaker": "Jon Caramanica",
+      "timestamp": "1:00",
+      "context": "NYT obituary description",
+      "significance": "Captures Haggard's complexity"
+    },
+    {
+      "text": "He was both a prisoner and a poet",
+      "speaker": "David Bianculli",
+      "timestamp": "0:30",
+      "context": "Introduction",
+      "significance": "Duality of Haggard's life"
+    },
+    {
+      "text": "His songs came from real experience",
+      "speaker": "Jon Caramanica",
+      "timestamp": "5:00",
+      "context": "Discussing authenticity",
+      "significance": "Autobiographical songwriting"
+    },
+    {
+      "text": "The working man's Shakespeare",
+      "speaker": "mentioned",
+      "timestamp": "1:30",
+      "context": "Common description",
+      "significance": "Literary comparison"
+    }
+  ],
+  "themes": [
+    {
+      "theme": "Authenticity",
+      "timestamp": "throughout",
+      "context": "Real-life experiences in songs"
+    },
+    {
+      "theme": "Prison Experience",
+      "timestamp": "4:30",
+      "context": "San Quentin influence"
+    },
+    {
+      "theme": "Working Class",
+      "timestamp": "3:40",
+      "context": "Blue-collar perspective"
+    },
+    {
+      "theme": "Bakersfield Sound",
+      "timestamp": "3:00",
+      "context": "Musical innovation"
+    },
+    {
+      "theme": "Outlaw Country",
+      "timestamp": "3:45",
+      "context": "Movement participant"
+    },
+    {
+      "theme": "Political Commentary",
+      "timestamp": "6:00",
+      "context": "Conservative anthems"
+    },
+    {
+      "theme": "Redemption",
+      "timestamp": "4:50",
+      "context": "Post-prison success"
+    }
+  ],
+  "statistics": [
+    {
+      "stat": "38 #1 Country Hits",
+      "timestamp": "1:45",
+      "context": "Career achievement"
+    },
+    {
+      "stat": "600+ Songs Written",
+      "timestamp": "1:50",
+      "context": "Prolific songwriter"
+    },
+    {
+      "stat": "70+ Albums",
+      "timestamp": "1:55",
+      "context": "Recording output"
+    },
+    {
+      "stat": "79 Years Old",
+      "timestamp": "0:10",
+      "context": "Age at death"
+    },
+    {
+      "stat": "1958-1960",
+      "timestamp": "4:30",
+      "context": "Prison years"
+    },
+    {
+      "stat": "40 Years",
+      "timestamp": "2:00",
+      "context": "Farm Aid anniversary"
+    }
+  ],
+  "total_entities": 55,
+  "total_connections": 68
+}

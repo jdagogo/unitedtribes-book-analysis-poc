@@ -1,0 +1,2972 @@
+{
+  "nodes": [
+    {
+      "id": "Fresh Air Episode",
+      "type": "podcast",
+      "title": "Merle Haggard On Hopping Trains And Doing Time",
+      "date": "April 25, 2025",
+      "duration": "45 minutes",
+      "host": "David Bianculli",
+      "guest": "Terry Gross",
+      "url": "https://www.npr.org/podcasts/381444908/fresh-air"
+    },
+    {
+      "id": "Farm Aid",
+      "type": "event",
+      "category": "music festival",
+      "description": "Country music concert founded by Willie Nelson to benefit farmers",
+      "sentiment": "positive",
+      "importance": 85
+    },
+    {
+      "id": "Farm Aid 1985",
+      "type": "event",
+      "category": "historical event",
+      "description": "The inaugural Farm Aid concert held in Champaign, Illinois on September 22, 1985",
+      "sentiment": "positive",
+      "importance": 90
+    },
+    {
+      "id": "Oildale",
+      "type": "place",
+      "category": "location",
+      "description": "Oil community where Haggard grew up near railroad tracks",
+      "sentiment": "nostalgic",
+      "importance": 90
+    },
+    {
+      "id": "Mama Tried",
+      "type": "song",
+      "category": "music",
+      "description": "Autobiographical song about Haggard's troubled youth",
+      "sentiment": "bittersweet",
+      "importance": 88
+    },
+    {
+      "id": "San Quentin State Prison",
+      "type": "place",
+      "category": "location",
+      "description": "Prison where Haggard served time and planned escape",
+      "sentiment": "transformative",
+      "importance": 82
+    },
+    {
+      "id": "House of Memories",
+      "type": "song",
+      "category": "music",
+      "description": "Central song sharing title with Haggard's autobiography",
+      "sentiment": "nostalgic",
+      "importance": 90
+    },
+    {
+      "id": "Natural High",
+      "type": "song",
+      "category": "music",
+      "description": "",
+      "sentiment": "neutral",
+      "importance": 50
+    },
+    {
+      "id": "Lefty Frizzell",
+      "type": "person",
+      "category": "musician",
+      "description": "Country music legend and Merle Haggard's greatest influence",
+      "sentiment": "reverent",
+      "importance": 95
+    },
+    {
+      "id": "Buck Owens",
+      "type": "person",
+      "category": "musician",
+      "description": "Bakersfield country music pioneer who first recorded House of Memories",
+      "sentiment": "collaborative",
+      "importance": 85
+    },
+    {
+      "id": "Santa Fe Railroad",
+      "type": "organization",
+      "category": "transportation",
+      "description": "Railroad company where Haggard's father worked",
+      "sentiment": "bittersweet",
+      "importance": 75
+    },
+    {
+      "id": "Willie Nelson",
+      "type": "person",
+      "category": "musician",
+      "description": "Country music legend and Farm Aid founder who performed alongside Merle Haggard. Both artists are connected through classic songs like Okie from Muskogee and their shared outlaw country heritage.",
+      "sentiment": "positive",
+      "importance": 88
+    },
+    {
+      "id": "Bob Dylan",
+      "type": "person",
+      "category": "musician",
+      "description": "Legendary singer-songwriter who performed at Farm Aid",
+      "sentiment": "reverent",
+      "importance": 82
+    },
+    {
+      "id": "Tom Petty",
+      "type": "person",
+      "category": "musician",
+      "description": "Rock musician who performed at the first Farm Aid concert",
+      "sentiment": "reverent",
+      "importance": 78
+    },
+    {
+      "id": "B.B. King",
+      "type": "person",
+      "category": "musician",
+      "description": "Blues legend who performed at the first Farm Aid concert",
+      "sentiment": "reverent",
+      "importance": 85
+    },
+    {
+      "id": "Loretta Lynn",
+      "type": "person",
+      "category": "musician",
+      "description": "Country music queen who performed at the first Farm Aid concert",
+      "sentiment": "reverent",
+      "importance": 83
+    },
+    {
+      "id": "Roy Orbison",
+      "type": "person",
+      "category": "musician",
+      "description": "Rock and country legend who performed at the first Farm Aid concert",
+      "sentiment": "reverent",
+      "importance": 82
+    },
+    {
+      "id": "Waylon Jennings",
+      "type": "person",
+      "category": "musician",
+      "description": "Outlaw country legend who performed 'Folsom Prison Blues' duet with Johnny Cash",
+      "sentiment": "reverent",
+      "importance": 86
+    },
+    {
+      "id": "Johnny Cash",
+      "type": "person",
+      "category": "musician",
+      "description": "The Man in Black who performed Folsom Prison Blues duet with Waylon Jennings",
+      "sentiment": "reverent",
+      "importance": 92
+    },
+    {
+      "id": "Billy Joel",
+      "type": "person",
+      "category": "musician",
+      "description": "Piano rock legend who performed at the first Farm Aid concert",
+      "sentiment": "reverent",
+      "importance": 80
+    },
+    {
+      "id": "Bonnie Raitt",
+      "type": "person",
+      "category": "musician",
+      "description": "Blues and rock guitarist who performed at the first Farm Aid concert",
+      "sentiment": "reverent",
+      "importance": 81
+    },
+    {
+      "id": "Neil Young",
+      "type": "person",
+      "category": "musician",
+      "description": "Farm Aid co-founder and rock legend",
+      "sentiment": "reverent",
+      "importance": 88
+    },
+    {
+      "id": "John Mellencamp",
+      "type": "person",
+      "category": "musician",
+      "description": "Farm Aid co-founder and heartland rock musician",
+      "sentiment": "reverent",
+      "importance": 85
+    },
+    {
+      "id": "Jon Caramanica",
+      "type": "person",
+      "category": "journalist",
+      "description": "New York Times music critic who described Haggard's versatility",
+      "sentiment": "analytical",
+      "importance": 70
+    },
+    {
+      "id": "Country Music Hall of Fame",
+      "type": "organization",
+      "category": "institution",
+      "description": "Prestigious institution that inducted Haggard in 1994",
+      "sentiment": "prestigious",
+      "importance": 88
+    },
+    {
+      "id": "Outlaw Country",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Country music subgenre that Haggard helped define with rebellious themes",
+      "sentiment": "rebellious",
+      "importance": 85
+    },
+    {
+      "id": "Ballads",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Emotional storytelling songs that showcased Haggard's vulnerability",
+      "sentiment": "emotional",
+      "importance": 75
+    },
+    {
+      "id": "Bakersfield Sound",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Country music style pioneered in Bakersfield, California featuring electric instruments",
+      "sentiment": "innovative",
+      "importance": 90
+    },
+    {
+      "id": "Western Swing",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Dance-oriented country music style blending jazz and swing elements",
+      "sentiment": "energetic",
+      "importance": 80
+    },
+    {
+      "id": "Jazz",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Complex musical style that influenced Haggard's sophisticated songwriting",
+      "sentiment": "sophisticated",
+      "importance": 78
+    },
+    {
+      "id": "Natural High",
+      "type": "song",
+      "category": "music",
+      "description": "Merle Haggard's then-new song that stole the show at Farm Aid 1985",
+      "sentiment": "triumphant",
+      "importance": 82
+    },
+    {
+      "id": "Jimmie Rodgers",
+      "type": "person",
+      "category": "musician",
+      "description": "Country music pioneer whose songs Haggard reissued",
+      "sentiment": "reverent",
+      "importance": 85
+    },
+    {
+      "id": "Waiting For A Train",
+      "type": "song",
+      "category": "music",
+      "description": "Jimmie Rodgers classic that Haggard recorded",
+      "sentiment": "nostalgic",
+      "importance": 80
+    },
+    {
+      "id": "Waiting For A Train (Merle Haggard)",
+      "type": "song",
+      "category": "music",
+      "description": "Merle Haggard's version of the Jimmie Rodgers classic",
+      "sentiment": "nostalgic",
+      "importance": 80
+    },
+    {
+      "id": "Hank Williams",
+      "type": "person",
+      "category": "musician",
+      "description": "Country music giant referenced for skill and career comparison",
+      "sentiment": "reverent",
+      "importance": 85
+    },
+    {
+      "id": "Bob Wills and the Texas Playboys",
+      "type": "band",
+      "category": "music",
+      "description": "Legendary Western swing band that shaped Haggard's musical sensibility",
+      "sentiment": "influential",
+      "importance": 75
+    },
+    {
+      "id": "Terry Gross",
+      "type": "person",
+      "category": "journalist",
+      "description": "Fresh Air host who interviewed Merle Haggard",
+      "sentiment": "professional",
+      "importance": 70
+    },
+    {
+      "id": "Okie From Muskogee",
+      "type": "song",
+      "category": "music",
+      "description": "Haggard's controversial patriotic anthem",
+      "sentiment": "controversial",
+      "importance": 90
+    },
+    {
+      "id": "Today I Started Loving You Again",
+      "type": "song",
+      "category": "music",
+      "description": "One of Haggard's best-known love songs",
+      "sentiment": "romantic",
+      "importance": 85
+    },
+    {
+      "id": "The Bottle Let Me Down",
+      "type": "song",
+      "category": "music",
+      "description": "Classic drinking song from Haggard's catalog",
+      "sentiment": "melancholy",
+      "importance": 83
+    },
+    {
+      "id": "Merle Haggard",
+      "type": "person",
+      "category": "musician",
+      "description": "Country music legend and subject of this interview",
+      "sentiment": "legendary",
+      "importance": 100
+    },
+    {
+      "id": "Outlaw Country",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Country music subgenre that rejected Nashville conventions",
+      "sentiment": "rebellious",
+      "importance": 88
+    },
+    {
+      "id": "Ballads",
+      "type": "genre",
+      "category": "music genre",
+      "description": "Slow, emotional songs that showcase storytelling",
+      "sentiment": "emotional",
+      "importance": 85
+    },
+    {
+      "id": "Virginia Scenic Railway",
+      "type": "organization",
+      "category": "transportation",
+      "description": "Railway company that now operates Haggard's observation car",
+      "sentiment": "nostalgic",
+      "importance": 75
+    },
+    {
+      "id": "Billy Joel",
+      "type": "person",
+      "category": "musician",
+      "description": "Legendary pianist who performed at Farm Aid",
+      "sentiment": "positive",
+      "importance": 82
+    },
+    {
+      "id": "Bonnie Raitt",
+      "type": "person",
+      "category": "musician",
+      "description": "Blues and rock legend who performed at Farm Aid",
+      "sentiment": "positive",
+      "importance": 80
+    },
+    {
+      "id": "Kennedy Center Honor",
+      "type": "award",
+      "category": "recognition",
+      "description": "Prestigious cultural award received by Haggard in 2010",
+      "sentiment": "honored",
+      "importance": 85
+    },
+    {
+      "id": "Country Music Hall of Fame",
+      "type": "institution",
+      "category": "recognition",
+      "description": "Hall of Fame where Haggard was inducted in 1994",
+      "sentiment": "prestigious",
+      "importance": 88
+    },
+    {
+      "id": "Dire Straits",
+      "type": "music",
+      "category": "musician",
+      "description": "British rock band known for 'Sultans of Swing' who performed at Farm Aid 1985",
+      "sentiment": "positive",
+      "importance": 78
+    },
+    {
+      "id": "Joni Mitchell",
+      "type": "person",
+      "category": "musician",
+      "description": "Legendary folk singer-songwriter who brought poetic depth to Farm Aid 1985",
+      "sentiment": "artistic",
+      "importance": 85
+    },
+    {
+      "id": "David Bianculli",
+      "type": "person",
+      "category": "journalist",
+      "description": "Fresh Air guest host introducing the Haggard interview",
+      "sentiment": "professional",
+      "importance": 65
+    },
+    {
+      "id": "Bakersfield Sound",
+      "type": "genre",
+      "category": "music",
+      "description": "Country music subgenre associated with Haggard and Buck Owens",
+      "sentiment": "influential",
+      "importance": 85
+    },
+    {
+      "id": "Freight Trains",
+      "type": "concept",
+      "category": "transportation",
+      "description": "Railroad cars that Haggard rode as a youth",
+      "sentiment": "adventurous",
+      "importance": 78
+    },
+    {
+      "id": "Oil Fields",
+      "type": "place",
+      "category": "location",
+      "description": "Industrial area near Oildale where trains transported workers",
+      "sentiment": "working-class",
+      "importance": 72
+    },
+    {
+      "id": "Planned Prison Escape",
+      "type": "event",
+      "category": "incident",
+      "description": "Escape plan at San Quentin that Haggard abandoned",
+      "sentiment": "pivotal",
+      "importance": 82
+    },
+    {
+      "id": "Father's Death at Age 9",
+      "type": "event",
+      "category": "personal",
+      "description": "Traumatic loss that shaped Haggard's troubled youth",
+      "sentiment": "tragic",
+      "importance": 90
+    },
+    {
+      "id": "Single Mother Raising Merle",
+      "type": "person",
+      "category": "family",
+      "description": "Haggard's mother who struggled to raise him alone after father's death",
+      "sentiment": "loving-struggle",
+      "importance": 88
+    },
+    {
+      "id": "Troubled Youth",
+      "type": "concept",
+      "category": "personal",
+      "description": "Haggard's rebellious teenage years leading to prison",
+      "sentiment": "regretful",
+      "importance": 85
+    },
+    {
+      "id": "97% Autobiographical Accuracy",
+      "type": "concept",
+      "category": "artistic",
+      "description": "Haggard's claim about the truth in his autobiographical songs",
+      "sentiment": "authentic",
+      "importance": 80
+    },
+    {
+      "id": "Railroad Cultural Influence",
+      "type": "concept",
+      "category": "cultural",
+      "description": "How railroad culture shaped Haggard's music and identity",
+      "sentiment": "formative",
+      "importance": 85
+    },
+    {
+      "id": "Country Music Legacy",
+      "type": "concept",
+      "category": "cultural",
+      "description": "Haggard's lasting impact on country music",
+      "sentiment": "enduring",
+      "importance": 95
+    },
+    {
+      "id": "Working Class Identity",
+      "type": "concept",
+      "category": "social",
+      "description": "Haggard's authentic connection to blue-collar America",
+      "sentiment": "authentic",
+      "importance": 88
+    },
+    {
+      "id": "Prison as Transformation",
+      "type": "concept",
+      "category": "personal",
+      "description": "How prison experience changed Haggard's life direction",
+      "sentiment": "transformative",
+      "importance": 92
+    },
+    {
+      "id": "California Working Culture",
+      "type": "concept",
+      "category": "regional",
+      "description": "Central Valley work culture that shaped Haggard",
+      "sentiment": "formative",
+      "importance": 82
+    },
+    {
+      "id": "Musical Storytelling",
+      "type": "concept",
+      "category": "artistic",
+      "description": "Haggard's gift for narrative songwriting",
+      "sentiment": "masterful",
+      "importance": 90
+    },
+    {
+      "id": "Honky-tonk Culture",
+      "type": "concept",
+      "category": "social",
+      "description": "Barroom culture reflected in Haggard's music",
+      "sentiment": "authentic",
+      "importance": 78
+    },
+    {
+      "id": "Patriotic Song Controversy",
+      "type": "concept",
+      "category": "political",
+      "description": "Debate around Okie From Muskogee's political message",
+      "sentiment": "divisive",
+      "importance": 85
+    },
+    {
+      "id": "Vocal Style from Lefty Frizzell",
+      "type": "concept",
+      "category": "musical",
+      "description": "How Lefty Frizzell shaped Haggard's singing approach",
+      "sentiment": "formative",
+      "importance": 88
+    },
+    {
+      "id": "Fresh Air Interview Legacy",
+      "type": "concept",
+      "category": "media",
+      "description": "Importance of this 1995 interview in preserving Haggard's story",
+      "sentiment": "valuable",
+      "importance": 75
+    },
+    {
+      "id": "My House of Memories",
+      "type": "book",
+      "category": "media",
+      "description": "Merle Haggard's autobiography published by HarperCollins, featuring personal stories and memories",
+      "sentiment": "reflective",
+      "importance": 92
+    },
+    {
+      "id": "The Strangers",
+      "type": "group",
+      "category": "musician",
+      "description": "Merle Haggard's legendary backing band that defined the Bakersfield sound with their Telecaster guitars and steel guitar",
+      "sentiment": "collaborative",
+      "importance": 92
+    },
+    {
+      "id": "Arkansas Traveler",
+      "type": "song",
+      "category": "music",
+      "description": "Traditional American folk song with deep roots in country music heritage, part of the foundational repertoire that influenced Haggard's musical development",
+      "sentiment": "nostalgic",
+      "importance": 88
+    },
+    {
+      "id": "Bonnie Owens",
+      "type": "person",
+      "category": "musician",
+      "description": "Country singer and key figure in the Bakersfield sound, former wife of both Buck Owens and Merle Haggard, connecting the two musical legends",
+      "sentiment": "complex",
+      "importance": 90
+    },
+    {
+      "id": "Glen Campbell",
+      "type": "person",
+      "category": "musician",
+      "description": "Country and pop crossover artist mentioned in autobiography",
+      "sentiment": "professional",
+      "importance": 75
+    },
+    {
+      "id": "Wynn Stewart",
+      "type": "person",
+      "category": "musician",
+      "description": "Bakersfield country pioneer who influenced the scene",
+      "sentiment": "influential",
+      "importance": 72
+    },
+    {
+      "id": "Tommy Collins",
+      "type": "person",
+      "category": "musician",
+      "description": "Songwriter and Bakersfield contemporary of Haggard",
+      "sentiment": "collaborative",
+      "importance": 70
+    },
+    {
+      "id": "If We Make It Through December",
+      "type": "song",
+      "category": "music",
+      "description": "Haggard's Christmas-themed working-class anthem",
+      "sentiment": "hopeful-struggle",
+      "importance": 82
+    },
+    {
+      "id": "Sing Me Back Home",
+      "type": "song",
+      "category": "music",
+      "description": "Prison-inspired song about a condemned man's last request",
+      "sentiment": "tragic",
+      "importance": 85
+    },
+    {
+      "id": "Branded Man",
+      "type": "song",
+      "category": "music",
+      "description": "Song about the stigma of being an ex-convict",
+      "sentiment": "resigned",
+      "importance": 80
+    },
+    {
+      "id": "The Strangers",
+      "type": "band",
+      "category": "music",
+      "description": "Haggard's backing band throughout his career",
+      "sentiment": "loyal",
+      "importance": 78
+    },
+    {
+      "id": "Bonnie Owens",
+      "type": "person",
+      "category": "musician",
+      "description": "Singer and Haggard's former wife, Buck Owens' ex-wife",
+      "sentiment": "complex",
+      "importance": 76
+    },
+    {
+      "id": "Leona Williams",
+      "type": "person",
+      "category": "musician",
+      "description": "Country singer and one of Haggard's wives",
+      "sentiment": "personal",
+      "importance": 72
+    },
+    {
+      "id": "Nashville Sound",
+      "type": "genre",
+      "category": "music",
+      "description": "Polished country style that Bakersfield sound rebelled against",
+      "sentiment": "contrasting",
+      "importance": 75
+    },
+    {
+      "id": "Dust Bowl Refugees",
+      "type": "concept",
+      "category": "social",
+      "description": "Depression-era migrants who shaped California's character",
+      "sentiment": "resilient",
+      "importance": 82
+    },
+    {
+      "id": "Great Depression",
+      "type": "event",
+      "category": "historical",
+      "description": "Economic crisis that drove Haggard's family west",
+      "sentiment": "formative",
+      "importance": 85
+    },
+    {
+      "id": "Route 66",
+      "type": "place",
+      "category": "location",
+      "description": "Historic highway traveled by migrant families",
+      "sentiment": "symbolic",
+      "importance": 78
+    },
+    {
+      "id": "Kern County",
+      "type": "place",
+      "category": "location",
+      "description": "California county where Oildale and Bakersfield are located",
+      "sentiment": "rooted",
+      "importance": 80
+    },
+    {
+      "id": "Central Valley",
+      "type": "place",
+      "category": "location",
+      "description": "Agricultural region where Haggard grew up",
+      "sentiment": "formative",
+      "importance": 78
+    },
+    {
+      "id": "California Honky-tonks",
+      "type": "concept",
+      "category": "social",
+      "description": "Working-class bars where Bakersfield sound was born",
+      "sentiment": "authentic",
+      "importance": 75
+    },
+    {
+      "id": "Fender Telecaster",
+      "type": "instrument",
+      "category": "music",
+      "description": "Electric guitar that defined the Bakersfield sound",
+      "sentiment": "innovative",
+      "importance": 72
+    },
+    {
+      "id": "Carnie Wilson",
+      "type": "person",
+      "category": "musician",
+      "description": "Beach Boys member's daughter mentioned in context",
+      "sentiment": "respectful",
+      "importance": 65
+    },
+    {
+      "id": "Pete Anderson",
+      "type": "person",
+      "category": "musician",
+      "description": "Guitarist associated with West Coast country scene",
+      "sentiment": "professional",
+      "importance": 68
+    },
+    {
+      "id": "Flossie Mae Haggard",
+      "type": "person",
+      "category": "family",
+      "description": "Merle's devoted mother who inspired 'Mama Tried'",
+      "sentiment": "loving",
+      "importance": 88
+    },
+    {
+      "id": "James Francis Haggard",
+      "type": "person",
+      "category": "family",
+      "description": "Merle's father who died when he was nine",
+      "sentiment": "tragic-loss",
+      "importance": 85
+    },
+    {
+      "id": "Silver Wings",
+      "type": "song",
+      "category": "music",
+      "description": "Haggard's airplane-themed heartbreak song",
+      "sentiment": "melancholy",
+      "importance": 78
+    },
+    {
+      "id": "Lonesome Fugitive",
+      "type": "song",
+      "category": "music",
+      "description": "Song about being on the run from the law",
+      "sentiment": "outlaw",
+      "importance": 80
+    },
+    {
+      "id": "Swinging Doors",
+      "type": "song",
+      "category": "music",
+      "description": "Honky-tonk classic about barroom life",
+      "sentiment": "honky-tonk",
+      "importance": 76
+    },
+    {
+      "id": "Today I Started Loving You Again",
+      "type": "song",
+      "category": "music",
+      "description": "Love song co-written with Bonnie Owens",
+      "sentiment": "romantic",
+      "importance": 75
+    },
+    {
+      "id": "The Way I Am",
+      "type": "song",
+      "category": "music",
+      "description": "Self-reflective song about personal identity",
+      "sentiment": "introspective",
+      "importance": 74
+    },
+    {
+      "id": "Working Man Blues",
+      "type": "song",
+      "category": "music",
+      "description": "Blue-collar anthem about economic struggle",
+      "sentiment": "working-class-pride",
+      "importance": 82
+    },
+    {
+      "id": "Hungry Eyes",
+      "type": "song",
+      "category": "music",
+      "description": "Song about growing up poor during the Depression",
+      "sentiment": "nostalgic-hardship",
+      "importance": 79
+    },
+    {
+      "id": "Big City",
+      "type": "song",
+      "category": "music",
+      "description": "Song about escaping urban life for rural simplicity",
+      "sentiment": "rural-yearning",
+      "importance": 77
+    },
+    {
+      "id": "Twinkle Twinkle Lucky Star",
+      "type": "song",
+      "category": "music",
+      "description": "Upbeat song about hope and luck",
+      "sentiment": "optimistic",
+      "importance": 70
+    },
+    {
+      "id": "Footlights",
+      "type": "song",
+      "category": "music",
+      "description": "Song about the entertainment industry",
+      "sentiment": "show-business",
+      "importance": 68
+    },
+    {
+      "id": "California Cotton Fields",
+      "type": "song",
+      "category": "music",
+      "description": "Song about migrant agricultural work",
+      "sentiment": "migrant-experience",
+      "importance": 76
+    },
+    {
+      "id": "Leonard Haggard",
+      "type": "person",
+      "category": "family",
+      "description": "Merle's brother mentioned in family context",
+      "sentiment": "familial",
+      "importance": 65
+    },
+    {
+      "id": "Lowell Haggard",
+      "type": "person",
+      "category": "family",
+      "description": "Another of Merle's siblings",
+      "sentiment": "familial",
+      "importance": 65
+    },
+    {
+      "id": "Oklahoma Hills",
+      "type": "place",
+      "category": "location",
+      "description": "Ancestral homeland before Dust Bowl migration",
+      "sentiment": "nostalgic-homeland",
+      "importance": 75
+    },
+    {
+      "id": "Arkansas Traveler",
+      "type": "concept",
+      "category": "cultural",
+      "description": "Traditional folk tune representing migrant culture",
+      "sentiment": "traditional",
+      "importance": 68
+    },
+    {
+      "id": "Steel Guitar",
+      "type": "instrument",
+      "category": "music",
+      "description": "Instrument central to Bakersfield sound",
+      "sentiment": "signature-sound",
+      "importance": 74
+    },
+    {
+      "id": "Fiddle Music",
+      "type": "genre",
+      "category": "music",
+      "description": "Traditional string music from Haggard's heritage",
+      "sentiment": "heritage",
+      "importance": 71
+    },
+    {
+      "id": "Gospel Music Influence",
+      "type": "concept",
+      "category": "musical",
+      "description": "Religious music that shaped Haggard's style",
+      "sentiment": "spiritual",
+      "importance": 73
+    },
+    {
+      "id": "Western Swing Influence",
+      "type": "concept",
+      "category": "musical",
+      "description": "Musical style from Bob Wills that influenced Bakersfield sound",
+      "sentiment": "influential",
+      "importance": 76
+    },
+    {
+      "id": "1994 Hall of Fame Induction",
+      "type": "event",
+      "category": "recognition",
+      "description": "Ceremony inducting Haggard into Country Music Hall of Fame",
+      "sentiment": "triumphant",
+      "importance": 88
+    },
+    {
+      "id": "George Jones",
+      "type": "person",
+      "category": "music",
+      "description": "Country music legend and duet partner with Merle Haggard",
+      "sentiment": "legendary-peer",
+      "importance": 85
+    },
+    {
+      "id": "He Stopped Loving Her Today",
+      "type": "song",
+      "category": "music",
+      "description": "George Jones' signature ballad, often called the greatest country song ever written",
+      "sentiment": "heartbreaking-masterpiece",
+      "importance": 92
+    },
+    {
+      "id": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "documentary",
+      "category": "music",
+      "description": "Documentary exploring the creation and impact of George Jones' masterpiece",
+      "sentiment": "documentary-insight",
+      "importance": 88
+    },
+    {
+      "id": "House of Memories (Buck Owens Version)",
+      "type": "song",
+      "category": "music",
+      "description": "Buck Owens' interpretation of Merle Haggard's classic song",
+      "sentiment": "bakersfield-classic",
+      "importance": 78
+    },
+    {
+      "id": "Bakersfield Sound",
+      "type": "musical-movement",
+      "category": "music",
+      "description": "Revolutionary country music movement pioneered by Buck Owens and Merle Haggard",
+      "sentiment": "revolutionary",
+      "importance": 92
+    },
+    {
+      "id": "Hungry Eyes",
+      "type": "song",
+      "category": "music",
+      "description": "Classic Merle Haggard song showcasing his emotional depth",
+      "sentiment": "yearning",
+      "importance": 84
+    },
+    {
+      "id": "Big City",
+      "type": "song",
+      "category": "music",
+      "description": "Merle Haggard song about urban life and its contrasts with small-town values",
+      "sentiment": "contemplative",
+      "importance": 81
+    },
+    {
+      "id": "Twinkle Twinkle Lucky Star",
+      "type": "song",
+      "category": "music",
+      "description": "Merle Haggard song about hope and optimism despite life's challenges",
+      "sentiment": "hopeful",
+      "importance": 79
+    },
+    {
+      "id": "Johnny Cash",
+      "type": "person",
+      "category": "musician",
+      "description": "Legendary country music artist who performed at San Quentin Prison, inspiring Merle Haggard",
+      "sentiment": "reverential",
+      "importance": 85
+    },
+    {
+      "id": "Footlights",
+      "type": "song",
+      "category": "music",
+      "description": "Merle Haggard song about the entertainment industry and performing life",
+      "sentiment": "reflective",
+      "importance": 77
+    },
+    {
+      "id": "California Cotton Fields",
+      "type": "song",
+      "category": "music",
+      "description": "Merle Haggard song about agricultural work and California's farming life",
+      "sentiment": "nostalgic",
+      "importance": 80
+    }
+  ],
+  "links": [
+    {
+      "source": "Fresh Air Episode",
+      "target": "Farm Aid",
+      "type": "mentions",
+      "category": "music festival"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Farm Aid 1985",
+      "type": "mentions",
+      "category": "historical event"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Oildale",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Mama Tried",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "San Quentin State Prison",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "House of Memories",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Natural High",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Lefty Frizzell",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Buck Owens",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Santa Fe Railroad",
+      "type": "mentions",
+      "category": "transportation"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Willie Nelson",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bob Dylan",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Tom Petty",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "B.B. King",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Loretta Lynn",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Roy Orbison",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Waylon Jennings",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Johnny Cash",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Billy Joel",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bonnie Raitt",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Neil Young",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "John Mellencamp",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Jon Caramanica",
+      "type": "mentions",
+      "category": "journalist"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Country Music Hall of Fame",
+      "type": "mentions",
+      "category": "institution"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Outlaw Country",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Ballads",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bakersfield Sound",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Western Swing",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Jazz",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Natural High",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Jimmie Rodgers",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Waiting For A Train",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Hank Williams",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Terry Gross",
+      "type": "mentions",
+      "category": "journalist"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Okie From Muskogee",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Today I Started Loving You Again",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The Bottle Let Me Down",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Merle Haggard",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Outlaw Country",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Ballads",
+      "type": "mentions",
+      "category": "music genre"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Virginia Scenic Railway",
+      "type": "mentions",
+      "category": "transportation"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Billy Joel",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bonnie Raitt",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Kennedy Center Honor",
+      "type": "mentions",
+      "category": "recognition"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Country Music Hall of Fame",
+      "type": "mentions",
+      "category": "recognition"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Dire Straits",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Joni Mitchell",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "David Bianculli",
+      "type": "mentions",
+      "category": "journalist"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bakersfield Sound",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Freight Trains",
+      "type": "mentions",
+      "category": "transportation"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Oil Fields",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Planned Prison Escape",
+      "type": "mentions",
+      "category": "incident"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Father's Death at Age 9",
+      "type": "mentions",
+      "category": "personal"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Single Mother Raising Merle",
+      "type": "mentions",
+      "category": "family"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Troubled Youth",
+      "type": "mentions",
+      "category": "personal"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "97% Autobiographical Accuracy",
+      "type": "mentions",
+      "category": "artistic"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Railroad Cultural Influence",
+      "type": "mentions",
+      "category": "cultural"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Country Music Legacy",
+      "type": "mentions",
+      "category": "cultural"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Working Class Identity",
+      "type": "mentions",
+      "category": "social"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Prison as Transformation",
+      "type": "mentions",
+      "category": "personal"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "California Working Culture",
+      "type": "mentions",
+      "category": "regional"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Musical Storytelling",
+      "type": "mentions",
+      "category": "artistic"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Honky-tonk Culture",
+      "type": "mentions",
+      "category": "social"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Patriotic Song Controversy",
+      "type": "mentions",
+      "category": "political"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Vocal Style from Lefty Frizzell",
+      "type": "mentions",
+      "category": "musical"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Fresh Air Interview Legacy",
+      "type": "mentions",
+      "category": "media"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "My House of Memories",
+      "type": "mentions",
+      "category": "media"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The Strangers",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Arkansas Traveler",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bonnie Owens",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Glen Campbell",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Wynn Stewart",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Tommy Collins",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "If We Make It Through December",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Sing Me Back Home",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Branded Man",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The Strangers",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bonnie Owens",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Leona Williams",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Nashville Sound",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Dust Bowl Refugees",
+      "type": "mentions",
+      "category": "social"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Great Depression",
+      "type": "mentions",
+      "category": "historical"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Route 66",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Kern County",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Central Valley",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "California Honky-tonks",
+      "type": "mentions",
+      "category": "social"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Fender Telecaster",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Carnie Wilson",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Pete Anderson",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Flossie Mae Haggard",
+      "type": "mentions",
+      "category": "family"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "James Francis Haggard",
+      "type": "mentions",
+      "category": "family"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Silver Wings",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Lonesome Fugitive",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Swinging Doors",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Today I Started Loving You Again",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The Way I Am",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Working Man Blues",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Hungry Eyes",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Big City",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Footlights",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "California Cotton Fields",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Leonard Haggard",
+      "type": "mentions",
+      "category": "family"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Lowell Haggard",
+      "type": "mentions",
+      "category": "family"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Oklahoma Hills",
+      "type": "mentions",
+      "category": "location"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Arkansas Traveler",
+      "type": "mentions",
+      "category": "cultural"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Steel Guitar",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Fiddle Music",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Gospel Music Influence",
+      "type": "mentions",
+      "category": "musical"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Western Swing Influence",
+      "type": "mentions",
+      "category": "musical"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "1994 Hall of Fame Induction",
+      "type": "mentions",
+      "category": "recognition"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "George Jones",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "He Stopped Loving Her Today",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Bakersfield Sound",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Hungry Eyes",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Big City",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Johnny Cash",
+      "type": "mentions",
+      "category": "musician"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "Footlights",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Fresh Air Episode",
+      "target": "California Cotton Fields",
+      "type": "mentions",
+      "category": "music"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Mama Tried",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "House of Memories",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Waiting For A Train",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Okie From Muskogee",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "The Bottle Let Me Down",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Arkansas Traveler",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "If We Make It Through December",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Sing Me Back Home",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Branded Man",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Nashville Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Fender Telecaster",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Silver Wings",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Lonesome Fugitive",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Swinging Doors",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "The Way I Am",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Working Man Blues",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Steel Guitar",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Fiddle Music",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "George Jones",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "He Stopped Loving Her Today",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Merle Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Mama Tried",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "House of Memories",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Waiting For A Train",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Okie From Muskogee",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "The Bottle Let Me Down",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Arkansas Traveler",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "If We Make It Through December",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Sing Me Back Home",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Branded Man",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Nashville Sound",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Fender Telecaster",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Silver Wings",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Lonesome Fugitive",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Swinging Doors",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "The Way I Am",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Working Man Blues",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Steel Guitar",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Fiddle Music",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "George Jones",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "He Stopped Loving Her Today",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "The Strangers",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Mama Tried",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "House of Memories",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Waiting For A Train",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Okie From Muskogee",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "The Bottle Let Me Down",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Arkansas Traveler",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "If We Make It Through December",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Sing Me Back Home",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Branded Man",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Nashville Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Fender Telecaster",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Silver Wings",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Lonesome Fugitive",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Swinging Doors",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "The Way I Am",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Working Man Blues",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Steel Guitar",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Fiddle Music",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "George Jones",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "He Stopped Loving Her Today",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Flossie Mae Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Mama Tried",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "House of Memories",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Waiting For A Train",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Okie From Muskogee",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "The Bottle Let Me Down",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Arkansas Traveler",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "If We Make It Through December",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Sing Me Back Home",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Branded Man",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Nashville Sound",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Fender Telecaster",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Silver Wings",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Lonesome Fugitive",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Swinging Doors",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "The Way I Am",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Working Man Blues",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Steel Guitar",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Fiddle Music",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "George Jones",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "He Stopped Loving Her Today",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "James Francis Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Mama Tried",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "House of Memories",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Waiting For A Train",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Okie From Muskogee",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "The Bottle Let Me Down",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Arkansas Traveler",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "If We Make It Through December",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Sing Me Back Home",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Branded Man",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Nashville Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Fender Telecaster",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Silver Wings",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Lonesome Fugitive",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Swinging Doors",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "The Way I Am",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Working Man Blues",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Steel Guitar",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Fiddle Music",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "George Jones",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "He Stopped Loving Her Today",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Leonard Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Mama Tried",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "House of Memories",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Natural High",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Waiting For A Train",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Waiting For A Train (Merle Haggard)",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Bob Wills and the Texas Playboys",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Okie From Muskogee",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "The Bottle Let Me Down",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Arkansas Traveler",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "If We Make It Through December",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Sing Me Back Home",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Branded Man",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Nashville Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Fender Telecaster",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Silver Wings",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Lonesome Fugitive",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Swinging Doors",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Today I Started Loving You Again",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "The Way I Am",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Working Man Blues",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Steel Guitar",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Fiddle Music",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "George Jones",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "He Stopped Loving Her Today",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "The Story Behind 'He Stopped Loving Her Today'",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "House of Memories (Buck Owens Version)",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Bakersfield Sound",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Hungry Eyes",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Big City",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Twinkle Twinkle Lucky Star",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "Footlights",
+      "type": "performed"
+    },
+    {
+      "source": "Lowell Haggard",
+      "target": "California Cotton Fields",
+      "type": "performed"
+    }
+  ],
+  "metadata": {
+    "title": "Merle Haggard On Hopping Trains And Doing Time",
+    "showName": "Fresh Air",
+    "date": "April 25, 2025",
+    "duration": "45 minutes",
+    "transcript_accuracy": 95,
+    "overall_sentiment": "reflective",
+    "total_entities": 124,
+    "total_mentions": 131,
+    "people_count": 34,
+    "music_count": 42
+  },
+  "stats": {
+    "entities_found": 124,
+    "people_mentioned": 34,
+    "music_mentioned": 42,
+    "total_mentions": 131,
+    "transcription_accuracy": 95,
+    "overall_sentiment": "reflective"
+  }
+}

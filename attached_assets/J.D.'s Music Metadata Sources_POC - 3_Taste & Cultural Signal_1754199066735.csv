@@ -1,0 +1,15 @@
+3/Taste & Cultural Signal,,,,,,,
+Source,Description,Source Link,Sabrina Carpenter Example,Example Link,API Link,J.D.'s Notes,Team Notes/Feedback
+Official Charts,Chart databases and industry stats provide a measure of an artist’s popular impact.,https://www.officialcharts.com/,"Sabrina Carpenter’s Official Charts page details her breakthrough in the UK, including her first Number 1 single “Espresso”.",https://www.officialcharts.com/artist/47469/sabrina-carpenter/,N/A,,
+Last.fm,Platforms that track listening habits and fan communities can reveal taste correlations and popularity metrics.,https://www.last.fm/,"On Last.fm, Sabrina Carpenter ranks in the global Top Artists with over 2.5 million listeners and 367 million scrobbles to date. Also lists “Similar Artists” (e.g. Olivia Rodrigo, Gracie Abrams, Tate McRae).",https://www.last.fm/music/Sabrina+Carpenter,https://www.last.fm/api,,
+TikTok,The primary viral music discovery platform with over 1 billion users.,https://www.tiktok.com/,The hashtag #sabrinacarpenter has over 38.2 billion views.,https://www.tiktok.com/@sabrinacarpenter,https://developers.tiktok.com/,"35M followers, so much signal in the comments, 10k, 20k, 70k comments. I've spoken to my friend at ByteDance - longshot but we could ask if you guys can't scrape.  Announced 8/1 Rolling out TikTok Footnotes in the US
+Author: Adam Presser, Head of Operations and Trust & Safety
+
+Earlier this year we announced the pilot of Footnotes, a new feature that will help bring more context to content on TikTok. Footnotes draws on the collective knowledge of the TikTok community by allowing people to add relevant information to content on our platform. Starting today, U.S. users in the Footnotes pilot program can start to write and rate footnotes on short videos, and our U.S. community will begin to see the ones rated as helpful - and rate them, too.
+
+What are Footnotes?
+
+Footnotes bring additional written context to videos. A footnote might share a researcher's view on a complex STEM-related topic, while  https://newsroom.tiktok.com/en-us/rolling-out-tiktok-footnotes-in-the-us.    ",
+Reddit,Provides in-depth fan analysis and taste-making discussions in communities like r/popheads and r/Music.,https://www.redditt.com ,Album release threads and daily discussions about Sabrina Carpenter can be found on r/popheads.,https://www.reddit.com/r/SabrinaCarpenter/,https://www.reddit.com/dev/api/,Jacqui! She says she'll be helpful if we want to ask,
+Billboard,"A music industry publication that provides chart data, news, and year-end lists.",https://www.billboard.com/,"""Espresso"" ranked #5 on the 2024 Hot 100 Songs year-end chart.",https://www.billboard.com/charts/year-end/,N/A,,
+Rate Your Music,A sophisticated music rating platform with a large user base and detailed rating data.,https://rateyourmusic.com/,"The Sabrina Carpenter page includes genre votes, user lists, and rating distributions.",https://rateyourmusic.com/artist/sabrina-carpenter,N/A,,

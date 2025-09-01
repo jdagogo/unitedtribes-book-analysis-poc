@@ -1,0 +1,29 @@
+{
+  "entity_counts": {
+    "people": 19,
+    "events": 9,
+    "songs": 10,
+    "places": 8,
+    "institutions": 8,
+    "quotes": 4,
+    "total": 55
+  },
+  "key_timestamps": {
+    "0:00": "Introduction by David Bianculli",
+    "0:45": "Jon Caramanica introduction",
+    "2:15": "Farm Aid 1985 discussion",
+    "3:00": "Bakersfield Sound",
+    "4:30": "San Quentin and Johnny Cash",
+    "5:10": "Mama Tried analysis",
+    "6:00": "Okie from Muskogee"
+  },
+  "metadata": {
+    "show": "Fresh Air",
+    "date": "April 7, 2016",
+    "host": "David Bianculli",
+    "guest": "Jon Caramanica",
+    "topic": "Merle Haggard Obituary",
+    "duration": "8 minutes",
+    "npr_url": "https://www.npr.org/2016/04/07/473307918/fresh-air-remembers-country-legend-merle-haggard"
+  }
+}
