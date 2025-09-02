@@ -746,25 +746,22 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     return 'Unknown';
   };
 
-  // Show entity occurrences with cultural context
+  // Show entity occurrences using Search & Discover modal
   const showEntityOccurrences = useCallback((entityName: string) => {
-    const entity = DISCOVERABLE_ENTITIES.find(e => e.name === entityName);
-    const context = ENTITY_CONTEXTS[entityName];
+    // Handle potential entity name mapping
+    // For example, if "Chelsea Hotel" is stored in ENTITY_CONTEXTS but the display/search should be "Hotel Chelsea"
+    let searchTerm = entityName;
     
-    if (entity && context) {
-      const mentions = entity.pages.map(page => ({
-        page,
-        chapter: getChapterForPage(page),
-        context: `View occurrence on page ${page}`
-      }));
-      
-      setSelectedEntity({
-        name: entity.name,
-        type: entity.type,
-        mentions,
-        culturalContext: context
-      });
+    // Special handling for Hotel Chelsea (entity stored as "Chelsea Hotel" but should search as "Hotel Chelsea")
+    if (entityName === "Chelsea Hotel") {
+      searchTerm = "Hotel Chelsea";
     }
+    
+    // Open Search & Discover modal with the entity name pre-populated
+    setInitialSearchTerm(searchTerm);
+    setShowSearch(true);
+    // Clear the old selectedEntity state to prevent the old modal from showing
+    setSelectedEntity(null);
   }, []);
 
   // Navigate to specific page from entity mentions
@@ -1026,6 +1023,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           100% { box-shadow: 0 2px 4px rgba(var(--color-rgb), 0.2); }
         }
         
+        /* Entity hover tooltip removed - clicking entities opens Search & Discover modal instead
         .entity-highlight:hover::after {
           content: attr(data-entity);
           position: absolute;
@@ -1044,6 +1042,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           animation: fadeIn 0.2s forwards;
           pointer-events: none;
         }
+        */
         
         @keyframes fadeIn {
           to { opacity: 1; }
@@ -1419,7 +1418,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         </ul>
       </div>
 
-      {/* Entity Occurrences Popup */}
+      {/* Entity Occurrences Popup - Deprecated: Now using Search & Discover modal */}
+      {/* Keeping this commented in case we need to reference the old implementation
       {selectedEntity && (
         <>
           <div className="entity-popup-overlay" onClick={() => setSelectedEntity(null)} />
@@ -1465,6 +1465,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           </div>
         </>
       )}
+      */}
 
       {/* Main Content */}
       <div className="book-content">

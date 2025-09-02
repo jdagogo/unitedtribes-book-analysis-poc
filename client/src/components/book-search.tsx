@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Search, X, ChevronRight, BookOpen } from 'lucide-react';
+import { Search, X, ChevronRight, BookOpen, Sparkles } from 'lucide-react';
+import { DiscoveryCard } from './discovery-card';
 import '../styles/book-search.css';
 
 interface SearchResult {
@@ -34,6 +35,12 @@ export const BookSearch: React.FC<BookSearchProps> = ({
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState<number | null>(null);
+  const [showDiscoveryCard, setShowDiscoveryCard] = useState(false);
+
+  // Define entity aliases - maps entity names to their variants
+  const entityAliases: Record<string, string[]> = {
+    'Hotel Chelsea': ['Hotel Chelsea', 'Chelsea Hotel']
+  };
 
   // When initialSearchTerm changes (e.g., from entity pill click), update the search
   useEffect(() => {
@@ -61,81 +68,91 @@ export const BookSearch: React.FC<BookSearchProps> = ({
     
     setIsSearching(true);
     const searchResults: SearchResult[] = [];
-    const lowerTerm = term.toLowerCase();
-    const lowerText = fullText.toLowerCase();
     
-    // Find all occurrences
-    let startIndex = 0;
-    while (startIndex < lowerText.length) {
-      const matchIndex = lowerText.indexOf(lowerTerm, startIndex);
-      if (matchIndex === -1) break;
+    // Check if the search term has aliases
+    const searchTerms = entityAliases[term] || [term];
+    
+    // Search for each variant
+    searchTerms.forEach(searchVariant => {
+      const lowerTerm = searchVariant.toLowerCase();
+      const lowerText = fullText.toLowerCase();
       
-      // Get more context (150 chars before and after for better readability)
-      const contextStart = Math.max(0, matchIndex - 150);
-      const contextEnd = Math.min(fullText.length, matchIndex + term.length + 150);
-      let context = fullText.substring(contextStart, contextEnd);
+      // Find all occurrences
+      let startIndex = 0;
+      while (startIndex < lowerText.length) {
+        const matchIndex = lowerText.indexOf(lowerTerm, startIndex);
+        if (matchIndex === -1) break;
       
-      // Track how much we trim from the start for accurate highlighting
-      let trimmedFromStart = 0;
-      
-      // Clean up context - trim to word boundaries
-      if (contextStart > 0) {
-        const firstSpace = context.indexOf(' ');
-        if (firstSpace > 0 && firstSpace < 20) {
-          trimmedFromStart = firstSpace + 1;
-          context = context.substring(firstSpace + 1);
-        }
-      }
-      if (contextEnd < fullText.length) {
-        const lastSpace = context.lastIndexOf(' ');
-        if (lastSpace > context.length - 20) {
-          context = context.substring(0, lastSpace);
-        }
-      }
-      
-      // Find which page this match is on
-      let currentPosition = 0;
-      let foundPage = null;
-      
-      for (let i = 0; i < pages.length; i++) {
-        const page = pages[i];
-        const pageLength = page.content.length;
+        // Get more context (150 chars before and after for better readability)
+        const contextStart = Math.max(0, matchIndex - 150);
+        const contextEnd = Math.min(fullText.length, matchIndex + searchVariant.length + 150);
+        let context = fullText.substring(contextStart, contextEnd);
         
-        if (currentPosition + pageLength > matchIndex) {
-          foundPage = {
-            pageNumber: page.pageNumber,
-            chapter: page.chapter,
-            chapterTitle: page.chapterTitle,
-            pageIndex: i
-          };
-          break;
-        }
-        currentPosition += pageLength;
-      }
-      
-      if (foundPage) {
-        // Calculate match position within context, accounting for trimming
-        const matchStartInContext = matchIndex - contextStart - trimmedFromStart;
-        const matchEndInContext = matchStartInContext + term.length;
+        // Track how much we trim from the start for accurate highlighting
+        let trimmedFromStart = 0;
         
-        searchResults.push({
-          pageNumber: foundPage.pageNumber,
-          chapter: foundPage.chapter,
-          chapterTitle: foundPage.chapterTitle,
-          context: context,
-          startIndex: contextStart,
-          endIndex: contextEnd,
-          matchStart: matchStartInContext,
-          matchEnd: matchEndInContext
-        });
+        // Clean up context - trim to word boundaries
+        if (contextStart > 0) {
+          const firstSpace = context.indexOf(' ');
+          if (firstSpace > 0 && firstSpace < 20) {
+            trimmedFromStart = firstSpace + 1;
+            context = context.substring(firstSpace + 1);
+          }
+        }
+        if (contextEnd < fullText.length) {
+          const lastSpace = context.lastIndexOf(' ');
+          if (lastSpace > context.length - 20) {
+            context = context.substring(0, lastSpace);
+          }
+        }
+        
+        // Find which page this match is on
+        let currentPosition = 0;
+        let foundPage = null;
+        
+        for (let i = 0; i < pages.length; i++) {
+          const page = pages[i];
+          const pageLength = page.content.length;
+          
+          if (currentPosition + pageLength > matchIndex) {
+            foundPage = {
+              pageNumber: page.pageNumber,
+              chapter: page.chapter,
+              chapterTitle: page.chapterTitle,
+              pageIndex: i
+            };
+            break;
+          }
+          currentPosition += pageLength;
+        }
+        
+        if (foundPage) {
+          // Calculate match position within context, accounting for trimming
+          const matchStartInContext = matchIndex - contextStart - trimmedFromStart;
+          const matchEndInContext = matchStartInContext + searchVariant.length;
+          
+          searchResults.push({
+            pageNumber: foundPage.pageNumber,
+            chapter: foundPage.chapter,
+            chapterTitle: foundPage.chapterTitle,
+            context: context,
+            startIndex: contextStart,
+            endIndex: contextEnd,
+            matchStart: matchStartInContext,
+            matchEnd: matchEndInContext
+          });
+        }
+        
+        startIndex = matchIndex + 1;
       }
-      
-      startIndex = matchIndex + 1;
-    }
+    });
+    
+    // Sort results by page number to maintain chronological order
+    searchResults.sort((a, b) => a.pageNumber - b.pageNumber);
     
     setResults(searchResults);
     setIsSearching(false);
-  }, [fullText, pages]);
+  }, [fullText, pages, entityAliases]);
 
   const handleResultClick = (result: SearchResult, index: number) => {
     // Find the page index
@@ -171,7 +188,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
+    <>
+      <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -181,7 +199,7 @@ export const BookSearch: React.FC<BookSearchProps> = ({
       {/* Search Modal - Beautiful styling matching text selection modal */}
       <div className="relative bg-white rounded-3xl shadow-2xl w-[750px] max-w-[90vw] max-h-[80vh] flex flex-col animate-slideDown border border-gray-100">
         {/* Gradient Header - Match text selection modal */}
-        <div className="relative bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 px-8 pt-8 pb-6 rounded-t-3xl overflow-hidden">
+        <div className="relative flex-shrink-0 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 px-8 pt-8 pb-6 rounded-t-3xl">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -193,8 +211,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
 
           {/* Title with Icon */}
           <div className="flex items-center gap-4 text-white">
-            <div className="p-3 bg-white/25 rounded-xl backdrop-blur-sm shadow-lg">
-              <Search size={24} className="drop-shadow-lg" />
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-white/25 rounded-xl backdrop-blur-sm shadow-lg">
+              <Search size={24} className="text-white drop-shadow-lg" />
             </div>
             <h3 className="text-2xl font-bold tracking-tight drop-shadow-lg">
               Search & Discover
@@ -231,6 +249,19 @@ export const BookSearch: React.FC<BookSearchProps> = ({
               )}
             </div>
           </div>
+          
+          {/* Discovery Button - Opens Cultural Discovery modal */}
+          {searchTerm.length > 0 && (
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={() => setShowDiscoveryCard(true)}
+                className="group flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+                <span>Discover "{searchTerm}"</span>
+              </button>
+            </div>
+          )}
           
           {/* Quick Discovery Pills - Beautiful styling */}
           <div className="mt-5">
@@ -313,7 +344,17 @@ export const BookSearch: React.FC<BookSearchProps> = ({
         </div>
         
       </div>
-    </div>
+      </div>
+
+      {/* Discovery Card Modal */}
+      {showDiscoveryCard && (
+        <DiscoveryCard
+          selectedText={searchTerm}
+          userContext=""
+          onClose={() => setShowDiscoveryCard(false)}
+        />
+      )}
+    </>
   );
 };
 
