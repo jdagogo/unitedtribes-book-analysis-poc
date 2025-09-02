@@ -1,48 +1,47 @@
-# UnitedTribes Book Analysis POC
+# Just Kids Digital Reader
 
-A proof-of-concept application for analyzing and exploring cultural references in literature, currently focused on Patti Smith's "Just Kids" memoir.
+A web application for reading Patti Smith's "Just Kids" with integrated search and discovery features.
 
-## Current Status
+## Current Features
 
-This is an experimental POC exploring different approaches to text analysis and cultural entity discovery. The project has evolved through multiple iterations with varying degrees of success.
+### Book Reader (`/paginated`)
+- 304-page digital version of "Just Kids"
+- Chapter navigation sidebar (19 chapters)
+- Previous/Next page navigation
+- Direct page jump functionality
+- Keyboard navigation (arrow keys for page turning, Ctrl/Cmd+F for search)
+- Responsive text sizing (22px for comfortable reading)
 
-## What's Working
+### Search & Discover System
+- Full-text search across entire book (79,435 words)
+- Search modal with contextual results (shows 150 characters around matches)
+- Quick discovery buttons for common entities (Robert, Dylan, Warhol, Chelsea Hotel, Rimbaud)
+- Search term highlighting on pages after navigation
+- Unified "Search & Discover" interface in navigation bar
 
-### Paginated Book Reader (`/paginated`)
-- Basic pagination system for reading "Just Kids"
-- Chapter navigation sidebar  
-- Entity highlighting for cultural references (musicians, artists, authors, venues)
-- Entity information popups with cultural context
-- Basic search functionality for discovering entities
-- Consolidated entity aliases (e.g., "Robert" and "Mapplethorpe" map to "Robert Mapplethorpe")
+### Text Selection & Analysis
+- Text selection triggers discovery modal (10+ character minimum)
+- User can provide context for selected passages
+- Cultural entity database with ~60 key figures/locations from the book
+- Entity highlighting in book text with color coding by type (musicians, artists, authors, venues)
 
-### Audio Synchronization (`/chapters`) 
-- YouTube audio player integration for Merle Haggard audiobook
-- Word-level timestamp synchronization
-- Chapter-based navigation
-- Real-time word highlighting during playback
+### Audio Features (`/chapters`)
+- Separate audiobook player for Merle Haggard content
+- Word-level synchronization with YouTube audio
+- Not integrated with Just Kids reader
 
-*Note: Audio sync features were developed for a different book and are not integrated with the "Just Kids" reader*
+## Technical Implementation
 
-## Known Issues & Ongoing Challenges
+### Frontend
+- React with TypeScript
+- Vite build system
+- Tailwind CSS for styling
+- Responsive design with media queries
 
-### Entity Detection
-- Currently using a manually curated list of ~60 entities
-- Attempted automated extraction has had limited success
-- Entity highlighting sometimes creates display issues with overlapping matches
-- Many cultural references still missing from the curated list
-
-### Technical Issues
-- Performance degrades with large numbers of entities
-- Text display occasionally shows HTML artifacts
-- Mobile experience needs significant improvement
-- Integration between different book systems is incomplete
-
-### Unresolved Goals
-- Automated entity extraction using NLP (multiple attempts, limited success)
-- Cross-media discovery connections (partially implemented)
-- Reliable audio-text synchronization for commercial audiobooks
-- Comprehensive cultural reference mapping
+### Backend  
+- Express server with TypeScript
+- Smart analysis endpoint with cultural database
+- Routes for discovery and search functionality
 
 ## Tech Stack
 

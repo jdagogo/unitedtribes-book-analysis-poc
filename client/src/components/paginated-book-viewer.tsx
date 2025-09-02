@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft, Search } from 'lucide-react';
+import TextSelectionModal from './text-selection-modal';
+import BookSearch from './book-search';
 
 interface BookPage {
   pageNumber: number;
@@ -68,8 +70,78 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     mentions: Array<{ page: number; chapter: string; context: string }>;
     culturalContext?: any;
   } | null>(null);
-  const [entitySearchTerm, setEntitySearchTerm] = useState('');
-  const [showEntitySearch, setShowEntitySearch] = useState(false);
+  const [selectedText, setSelectedText] = useState('');
+  const [showSelectionModal, setShowSelectionModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [highlightedSearchTerm, setHighlightedSearchTerm] = useState('');
+  const [initialSearchTerm, setInitialSearchTerm] = useState('');
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+F or Cmd+F to open search
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        setShowSearch(true);
+      }
+      // Escape to close search
+      if (e.key === 'Escape' && showSearch) {
+        setShowSearch(false);
+      }
+      // Left arrow for previous page
+      if (e.key === 'ArrowLeft' && currentPageIndex > 0) {
+        e.preventDefault();
+        setCurrentPageIndex(prev => prev - 1);
+        window.scrollTo(0, 0);
+      }
+      // Right arrow for next page
+      if (e.key === 'ArrowRight' && currentPageIndex < pages.length - 1) {
+        e.preventDefault();
+        setCurrentPageIndex(prev => prev + 1);
+        window.scrollTo(0, 0);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showSearch, currentPageIndex, pages.length]);
+
+  // Handle text selection
+  useEffect(() => {
+    const handleTextSelection = () => {
+      const selection = window.getSelection();
+      const text = selection?.toString().trim() || '';
+      
+      // Only show modal for meaningful selections (10+ characters)
+      if (text.length >= 10 && contentRef.current?.contains(selection?.anchorNode as Node)) {
+        setSelectedText(text);
+        setShowSelectionModal(true);
+        // Clear the selection after capturing it
+        selection?.removeAllRanges();
+      }
+    };
+
+    // Add event listeners for text selection
+    const handleMouseUp = () => {
+      // Small delay to ensure selection is complete
+      setTimeout(handleTextSelection, 100);
+    };
+
+    // Add event listener to the document
+    document.addEventListener('mouseup', handleMouseUp);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
+  // Close selection modal
+  const handleCloseSelectionModal = useCallback(() => {
+    setShowSelectionModal(false);
+    setSelectedText('');
+  }, []);
 
   // Load transcript
   useEffect(() => {
@@ -560,7 +632,27 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   // Highlight entities in page content
   const highlightEntitiesInText = useCallback((text: string): string => {
     // Track positions that have already been highlighted to avoid overlaps
-    const replacements: Array<{start: number, end: number, entity: any, match: string}> = [];
+    const replacements: Array<{start: number, end: number, entity: any, match: string, isSearchTerm?: boolean}> = [];
+    
+    // First, highlight search terms if present
+    if (highlightedSearchTerm && highlightedSearchTerm.length >= 2) {
+      const escapedSearchTerm = highlightedSearchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const searchRegex = new RegExp(`(${escapedSearchTerm})`, 'gi');
+      
+      let match;
+      while ((match = searchRegex.exec(text)) !== null) {
+        const start = match.index;
+        const end = match.index + match[0].length;
+        
+        replacements.push({
+          start,
+          end,
+          entity: null,
+          match: match[0],
+          isSearchTerm: true
+        });
+      }
+    }
     
     DISCOVERABLE_ENTITIES.forEach(entity => {
       // Create list of all names to match (main name + aliases)
@@ -618,17 +710,31 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     // Apply replacements
     let result = text;
     filteredReplacements.forEach(r => {
-      const replacement = `<span class="entity-highlight entity-${r.entity.type}" 
+      let replacement;
+      if (r.isSearchTerm) {
+        // Highlight search terms with a different style
+        replacement = `<span class="search-highlight" 
+                            style="background-color: #fef3c7; 
+                                   font-weight: 600; 
+                                   padding: 2px 4px; 
+                                   border-radius: 3px;
+                                   box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);">
+                          ${r.match}
+                        </span>`;
+      } else {
+        // Highlight entities as before
+        replacement = `<span class="entity-highlight entity-${r.entity.type}" 
                                 data-entity="${r.entity.name}" 
                                 data-type="${r.entity.type}"
                                 data-mentions="${r.entity.totalMentions}">
                           ${r.match}
                         </span>`;
+      }
       result = result.slice(0, r.start) + replacement + result.slice(r.end);
     });
     
     return result;
-  }, []);
+  }, [highlightedSearchTerm]);
 
   // Get chapter for a given page
   const getChapterForPage = (pageNumber: number): string => {
@@ -671,6 +777,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     }
   }, [pages]);
 
+  // Handle search navigation
+  const handleSearchNavigate = useCallback((pageIndex: number, searchTerm?: string) => {
+    setCurrentPageIndex(pageIndex);
+    setHighlightedSearchTerm(searchTerm || '');
+    // Scroll to top of page viewer
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   if (isLoading) {
     return (
       <div className="paginated-book-viewer loading">
@@ -700,12 +814,26 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   return (
     <div className="paginated-book-viewer">
       <style>{`
+        /* Base responsive design */
         .paginated-book-viewer {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
           padding: 2rem;
           min-height: 100vh;
           position: relative;
+          font-size: 16px;
+        }
+        
+        @media (max-width: 1200px) {
+          .paginated-book-viewer {
+            padding: 1.5rem;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .paginated-book-viewer {
+            padding: 1rem;
+          }
         }
 
         .book-header {
@@ -736,15 +864,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.85rem 1.5rem;
+          padding: 0.75rem 1.25rem;
           background: #1e3a8a;
           color: white;
           border: none;
           border-radius: 8px;
-          font-size: 1.15rem !important;
+          font-size: 16px;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
+          min-height: 44px;
         }
 
         .nav-button:hover:not(:disabled) {
@@ -759,13 +888,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .page-info {
-          font-size: 1.25rem !important;
+          font-size: 18px;
           font-weight: 600;
           color: #111827;
-          padding: 0.7rem 1.3rem;
+          padding: 0.6rem 1rem;
           background: #f3f4f6;
           border-radius: 6px;
-          min-width: 160px;
+          min-width: 140px;
           text-align: center;
         }
 
@@ -776,12 +905,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .page-jump input {
-          width: 110px;
-          padding: 0.8rem;
+          width: 90px;
+          padding: 0.6rem;
           border: 2px solid #e5e7eb;
           border-radius: 6px;
-          font-size: 1.1rem !important;
+          font-size: 16px;
           text-align: center;
+          min-height: 40px;
         }
 
         .page-jump input:focus {
@@ -790,15 +920,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .jump-btn {
-          padding: 0.8rem 1.3rem;
+          padding: 0.6rem 1rem;
           background: #60a5fa;
           color: white;
           border: none;
           border-radius: 6px;
           font-weight: 500;
-          font-size: 1.1rem !important;
+          font-size: 16px;
           cursor: pointer;
           transition: all 0.2s;
+          min-height: 40px;
         }
 
         .jump-btn:hover {
@@ -806,13 +937,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .chapter-context {
-          flex: 1;
-          min-width: 200px;
-          padding: 0.8rem 1.3rem;
+          width: 100%;
+          padding: 1rem 1.5rem;
           background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
           border-radius: 8px;
           border: 1px solid #fbbf24;
-          font-size: 1.15rem !important;
+          font-size: 18px;
+          margin-top: 1rem;
         }
 
         .chapter-context strong {
@@ -1023,24 +1154,52 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
         .page-content {
           background: white;
-          padding: 3rem 4rem;
+          padding: 2.5rem 3rem;
           border-radius: 12px;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          min-height: 600px;
-          font-size: 1.575rem !important;
-          line-height: 1.75;
-          color: #000000 !important;
+          min-height: 500px;
+          font-size: 22px !important;
+          line-height: 1.6;
+          color: #1a1a1a;
+          user-select: text;
+          cursor: text;
           font-family: Georgia, 'Times New Roman', serif;
-          max-width: 1100px;
+          max-width: 1020px;
           margin: 0 auto;
+        }
+        
+        @media (max-width: 1200px) {
+          .page-content {
+            padding: 2rem 2.5rem;
+            font-size: 21px !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .page-content {
+            padding: 1.5rem;
+            font-size: 20px !important;
+            max-width: 100%;
+          }
+        }
+        
+        .page-content ::selection {
+          background-color: #6366f1;
+          color: white;
+        }
+        
+        .page-content ::-moz-selection {
+          background-color: #6366f1;
+          color: white;
         }
 
         .page-content p {
-          margin-bottom: 1.5rem;
+          margin-bottom: 1.4rem;
           text-align: left;
-          text-indent: 2rem;
-          color: #000000 !important;
-          font-size: 1.575rem !important;
+          text-indent: 2em;
+          color: #1a1a1a;
+          font-size: 22px !important;
+          line-height: 1.6 !important;
         }
         
         .page-content p:first-of-type {
@@ -1233,15 +1392,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
           .page-content {
             padding: 2rem 1.5rem;
-            font-size: 1.35rem !important;
             line-height: 1.65;
-            color: #000000 !important;
           }
           
           .page-content p {
             text-indent: 1.5rem;
-            color: #000000 !important;
-            font-size: 1.35rem !important;
+            font-size: 20px !important;
           }
         }
       `}</style>
@@ -1261,121 +1417,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
             </li>
           ))}
         </ul>
-        
-        {/* Entity Search */}
-        <div className="entity-search-section" style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '2px solid #e5e7eb' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem', color: '#1e293b' }}>
-            🔍 Discover Entities
-          </h3>
-          <input
-            type="text"
-            placeholder="Search cultural references..."
-            value={entitySearchTerm}
-            onChange={(e) => setEntitySearchTerm(e.target.value)}
-            onFocus={() => setShowEntitySearch(true)}
-            style={{
-              width: '100%',
-              padding: '0.6rem',
-              borderRadius: '8px',
-              border: '2px solid #e5e7eb',
-              fontSize: '0.9rem',
-              outline: 'none',
-              transition: 'all 0.2s'
-            }}
-          />
-          
-          {showEntitySearch && entitySearchTerm && (
-            <div style={{
-              marginTop: '0.5rem',
-              maxHeight: '300px',
-              overflowY: 'auto',
-              background: 'white',
-              borderRadius: '8px',
-              border: '1px solid #e5e7eb',
-              padding: '0.5rem'
-            }}>
-              {Object.keys(ENTITY_CONTEXTS)
-                .filter(name => name.toLowerCase().includes(entitySearchTerm.toLowerCase()))
-                .slice(0, 10)
-                .map(name => {
-                  const entity = ENTITY_CONTEXTS[name];
-                  return (
-                    <div
-                      key={name}
-                      onClick={() => {
-                        showEntityOccurrences(name);
-                        setShowEntitySearch(false);
-                        setEntitySearchTerm('');
-                      }}
-                      style={{
-                        padding: '0.5rem',
-                        cursor: 'pointer',
-                        borderRadius: '6px',
-                        marginBottom: '0.25rem',
-                        transition: 'all 0.2s',
-                        background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)';
-                        e.currentTarget.style.transform = 'translateX(4px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)';
-                        e.currentTarget.style.transform = 'translateX(0)';
-                      }}
-                    >
-                      <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.95rem' }}>
-                        {name}
-                      </div>
-                      <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.2rem' }}>
-                        {entity.type} • {entity.period}
-                      </div>
-                    </div>
-                  );
-                })}
-              {Object.keys(ENTITY_CONTEXTS)
-                .filter(name => name.toLowerCase().includes(entitySearchTerm.toLowerCase())).length === 0 && (
-                <div style={{ padding: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
-                  No entities found matching "{entitySearchTerm}"
-                </div>
-              )}
-            </div>
-          )}
-          
-          {/* Quick Discovery Links */}
-          <div style={{ marginTop: '1rem' }}>
-            <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>
-              Quick Discovery:
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
-              {['Robert', 'Dylan', 'Warhol', 'Chelsea Hotel', 'Rimbaud'].map(entity => (
-                <button
-                  key={entity}
-                  onClick={() => showEntityOccurrences(entity)}
-                  style={{
-                    padding: '0.3rem 0.6rem',
-                    fontSize: '0.8rem',
-                    borderRadius: '12px',
-                    border: '1px solid #e5e7eb',
-                    background: 'white',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f3f4f6';
-                    e.currentTarget.style.borderColor = '#8b5cf6';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'white';
-                    e.currentTarget.style.borderColor = '#e5e7eb';
-                  }}
-                >
-                  {entity}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Entity Occurrences Popup */}
@@ -1466,13 +1507,59 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
               </button>
             </div>
 
-            <div className="chapter-context">
+          </div>
+          
+          {/* Yellow Bar - Spans Full Width */}
+          <div className="chapter-context" style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            marginTop: '1rem'
+          }}>
+            <div style={{ fontSize: '18px' }}>
               Currently reading: <strong>{currentPage?.chapterTitle}</strong>
             </div>
+            
+            {/* Search & Discover Button - Right Side */}
+            <button 
+              onClick={() => setShowSearch(true)}
+              className="search-button"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.75rem 1.25rem',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontWeight: '600',
+                fontSize: '16px',
+                cursor: 'pointer',
+                boxShadow: '0 3px 10px rgba(102, 126, 234, 0.3)',
+                transition: 'all 0.3s ease',
+                minHeight: '44px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 3px 10px rgba(102, 126, 234, 0.3)';
+              }}
+            >
+              <Search size={18} />
+              <span>Search & Discover</span>
+            </button>
           </div>
         </div>
 
-        <div className={`page-content ${isChapterStart(currentPage?.pageNumber) ? 'chapter-start' : ''}`}>
+        <div 
+          ref={contentRef}
+          className={`page-content ${isChapterStart(currentPage?.pageNumber) ? 'chapter-start' : ''}`}
+        >
           {currentPage && (
             <>
               {currentPage.content.split('\n\n').map((paragraph, index) => (
@@ -1521,6 +1608,27 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           </div>
         </div>
       </div>
+
+      {/* Text Selection Modal */}
+      {showSelectionModal && (
+        <TextSelectionModal
+          selectedText={selectedText}
+          onClose={handleCloseSelectionModal}
+        />
+      )}
+
+      {/* Book Search Modal */}
+      <BookSearch
+        fullText={fullTranscript}
+        pages={pages}
+        onNavigate={handleSearchNavigate}
+        isOpen={showSearch}
+        onClose={() => {
+          setShowSearch(false);
+          setInitialSearchTerm(''); // Reset initial search term
+        }}
+        initialSearchTerm={initialSearchTerm}
+      />
     </div>
   );
 };

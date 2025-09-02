@@ -13,6 +13,11 @@ import path from 'path';
 import fs from 'fs/promises';
 import { createReadStream } from 'fs';
 import multer from 'multer';
+import discoveryRouter from './routes/discovery';
+import hybridDiscoveryRouter from './routes/hybrid-discovery';
+import simpleHybridRouter from './routes/simple-hybrid';
+import workingHybridRouter from './routes/working-hybrid';
+import smartAnalysisRouter from './routes/smart-analysis';
 
 // In-memory book storage for immediate access
 const bookStore = new Map<string, any>();
@@ -73,6 +78,13 @@ const upload = multer({
 const progressTracker = new ProgressTracker();
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register discovery routes
+  app.use(discoveryRouter);
+  app.use(hybridDiscoveryRouter);
+  app.use(simpleHybridRouter);
+  app.use(workingHybridRouter);
+  app.use(smartAnalysisRouter);
+  
   // Simple polling endpoint for progress
   app.get("/api/progress-status/:sessionId", (req, res) => {
     const { sessionId } = req.params;
