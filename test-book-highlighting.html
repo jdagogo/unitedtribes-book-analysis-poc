@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Highlighting Test</title>
+    <style>
+        body { 
+            padding: 20px; 
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            background: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #666;
+            padding-bottom: 5px;
+        }
+        .book-list {
+            columns: 2;
+            column-gap: 30px;
+        }
+        .book-item {
+            break-inside: avoid;
+            margin-bottom: 10px;
+            padding: 5px;
+            background: white;
+            border-left: 3px solid #8b5cf6;
+        }
+        .status {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .success { color: green; }
+        .partial { color: orange; }
+        .failed { color: red; }
+    </style>
+</head>
+<body>
+    <h1>📚 Book Highlighting Verification Dashboard</h1>
+    
+    <div class="test-section">
+        <h2>Instructions</h2>
+        <ol>
+            <li>Open this page at: http://localhost:3000/test-book-highlighting.html</li>
+            <li>Open the browser console (Cmd+Option+J)</li>
+            <li>Run this command: <code>fetch('/verify-44-books.js').then(r => r.text()).then(eval);</code></li>
+            <li>Then run: <code>bookVerification.verifyAll()</code></li>
+            <li>Check the console for the complete verification report</li>
+        </ol>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Paragraphs with All 44 Books</h2>
+        <p>This section contains mentions of all books for testing:</p>
+        
+        <div class="book-list">
+            <div class="book-item">1. I was reading <strong>Book of Martyrs</strong> by John Foxe yesterday.</div>
+            <div class="book-item">2. Morris L. West wrote <strong>The Shoes of the Fisherman</strong> brilliantly.</div>
+            <div class="book-item">3. Barbara Bazilian's <strong>Red Shoes</strong> was fascinating.</div>
+            <div class="book-item">4. Robert Louis Stevenson created <strong>A Child's Garden of Verses</strong>.</div>
+            <div class="book-item">5. <strong>Little Women</strong> by Louisa May Alcott is a classic.</div>
+            <div class="book-item">6. Bertram D. Wolfe wrote <strong>The Fabulous Life of Diego Rivera</strong>.</div>
+            <div class="book-item">7. Arthur Rimbaud's <strong>Illuminations</strong> changed poetry.</div>
+            <div class="book-item">8. Ed van der Elsken captured <strong>Love on the Left Bank</strong>.</div>
+            <div class="book-item">9. Anaïs Nin created <strong>Collages</strong> experimentally.</div>
+            <div class="book-item">10. William Blake's <strong>Songs of Innocence</strong> inspire.</div>
+            <div class="book-item">11. Blake also wrote <strong>America: A Prophecy</strong>.</div>
+            <div class="book-item">12. And Blake's <strong>Milton</strong> is profound.</div>
+            <div class="book-item">13. Tennessee Williams penned <strong>The Glass Menagerie</strong>.</div>
+            <div class="book-item">14. Timothy Leary's <strong>Psychedelic Prayers</strong> expanded minds.</div>
+            <div class="book-item">15. Tom Wolfe wrote <strong>The Electric Kool-Aid Acid Test</strong>.</div>
+            <div class="book-item">16. Jean Genet's <strong>Miracle of the Rose</strong> is powerful.</div>
+            <div class="book-item">17. Anne Frank's <strong>Diary of a Young Girl</strong> moves hearts.</div>
+            <div class="book-item">18. Sylvia Plath's <strong>Ariel</strong> soars.</div>
+            <div class="book-item">19. H.G. Wells wrote <strong>Love and Mr. Lewisham</strong>.</div>
+            <div class="book-item">20. Andy Warhol created <strong>Andy Warhol's Index</strong>.</div>
+            <div class="book-item">21. John Steinbeck's <strong>East of Eden</strong> is epic.</div>
+            <div class="book-item">22. William S. Burroughs wrote <strong>Junky</strong>.</div>
+            <div class="book-item">23. William Faulkner's <strong>Doctor Martino</strong> intrigues.</div>
+            <div class="book-item">24. Mari Sandoz wrote about <strong>Crazy Horse</strong>.</div>
+            <div class="book-item">25. Graham Greene's <strong>Brighton Rock</strong> is dark.</div>
+            <div class="book-item">26. Bertolt Brecht created <strong>Mahagonny</strong>.</div>
+            <div class="book-item">27. James George Frazer's <strong>The Golden Bough</strong> explores myth.</div>
+            <div class="book-item">28. Aleister Crowley's <strong>Diary of a Drug Fiend</strong> shocks.</div>
+            <div class="book-item">29. Raymond Roussel's <strong>Locus Solus</strong> mystifies.</div>
+            <div class="book-item">30. Lewis Carroll's <strong>Alice in Wonderland</strong> delights.</div>
+            <div class="book-item">31. Gregory Corso's <strong>Happy Birthday of Death</strong> celebrates.</div>
+            <div class="book-item">32. Alexander Trocchi wrote <strong>Cain's Book</strong>.</div>
+            <div class="book-item">33. Mark Twain's <strong>Huckleberry Finn</strong> adventures.</div>
+            <div class="book-item">34. Nancy Milford wrote <strong>Zelda</strong>.</div>
+            <div class="book-item">35. Lawrence Lipton's <strong>The Holy Barbarians</strong> documents.</div>
+            <div class="book-item">36. Gene Feldman's <strong>Protest</strong> captures an era.</div>
+            <div class="book-item">37. Jonathan Eisen edited <strong>The Age of Rock II</strong>.</div>
+            <div class="book-item">38. Patti Smith's <strong>Seventh Heaven</strong> transcends.</div>
+            <div class="book-item">39. Jean Cocteau's <strong>Les Enfants Terribles</strong> haunts.</div>
+            <div class="book-item">40. Ruth Kligman's <strong>Love Affair</strong> reveals.</div>
+            <div class="book-item">41. Patti Smith's <strong>Witt</strong> illuminates.</div>
+            <div class="book-item">42. Arthur Rimbaud's <strong>Season in Hell</strong> burns.</div>
+            <div class="book-item">43. Gérard de Nerval's <strong>Women of Cairo</strong> explores.</div>
+            <div class="book-item">44. Thomas Mann's <strong>Death in Venice</strong> mesmerizes.</div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console Commands</h2>
+        <pre>
+// Load verification script
+fetch('/verify-44-books.js').then(r => r.text()).then(eval);
+
+// Run full verification
+bookVerification.verifyAll()
+
+// Check specific book (1-44)
+bookVerification.find(1)  // For Foxe's Book of Martyrs
+bookVerification.find(37) // For Age of Rock II
+
+// View complete list
+bookVerification.list
+        </pre>
+    </div>
+    
+    <div class="test-section" id="results">
+        <h2>Verification Results</h2>
+        <p>Run the console commands above to see results here and in the console.</p>
+    </div>
+</body>
+</html>

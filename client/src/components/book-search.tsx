@@ -12,12 +12,13 @@ interface SearchResult {
   endIndex: number;
   matchStart: number;
   matchEnd: number;
+  originalSearchTerm?: string; // Track what the user originally searched for
 }
 
 interface BookSearchProps {
   fullText: string;
   pages: any[];
-  onNavigate: (pageIndex: number, highlightText?: string) => void;
+  onNavigate: (pageIndex: number, highlightText?: string, context?: string) => void;
   isOpen: boolean;
   onClose: () => void;
   initialSearchTerm?: string;
@@ -32,20 +33,43 @@ export const BookSearch: React.FC<BookSearchProps> = ({
   initialSearchTerm = ''
 }) => {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const [originalSearchTerm, setOriginalSearchTerm] = useState(initialSearchTerm); // Store the original user input
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState<number | null>(null);
   const [showDiscoveryCard, setShowDiscoveryCard] = useState(false);
 
   // Define entity aliases - maps entity names to their variants
+  // Note: We handle Robert Mapplethorpe specially to avoid duplicates
   const entityAliases: Record<string, string[]> = {
-    'Hotel Chelsea': ['Hotel Chelsea', 'Chelsea Hotel']
+    'Hotel Chelsea': ['Hotel Chelsea', 'Chelsea Hotel', 'the Chelsea'],
+    'Chelsea Hotel': ['Hotel Chelsea', 'Chelsea Hotel', 'the Chelsea'],
+    'the Chelsea': ['Hotel Chelsea', 'Chelsea Hotel', 'the Chelsea']
+  };
+  
+  // Map search terms to proper entity names for Discovery functionality
+  const getDiscoveryTerm = (term: string): string => {
+    const lowerTerm = term.toLowerCase();
+    // Max's always refers to Max's Kansas City in Just Kids context
+    if (lowerTerm === "max's" || lowerTerm === "maxs") {
+      return "Max's Kansas City";
+    }
+    // Map various Robert references to full name for discovery
+    if (lowerTerm === "robert" || lowerTerm === "bobby" || lowerTerm === "mapplethorpe") {
+      return "Robert Mapplethorpe";
+    }
+    // Map all Chelsea Hotel variants to the standard name
+    if (lowerTerm === "the chelsea" || lowerTerm === "chelsea hotel") {
+      return "Hotel Chelsea";
+    }
+    return term;
   };
 
   // When initialSearchTerm changes (e.g., from entity pill click), update the search
   useEffect(() => {
     if (initialSearchTerm && isOpen) {
       setSearchTerm(initialSearchTerm);
+      setOriginalSearchTerm(initialSearchTerm);
     }
   }, [initialSearchTerm, isOpen]);
 
@@ -61,28 +85,179 @@ export const BookSearch: React.FC<BookSearchProps> = ({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchTerm, fullText]);
+  }, [searchTerm, pages]);
 
   const performSearch = useCallback((term: string) => {
-    if (!fullText || !term) return;
+    if (!pages || pages.length === 0 || !term) return;
+    
+    // Store the original search term when user performs a search
+    console.log('🔎 PERFORMING SEARCH FOR:', term);
+    setOriginalSearchTerm(term);
     
     setIsSearching(true);
     const searchResults: SearchResult[] = [];
     
-    // Check if the search term has aliases
-    const searchTerms = entityAliases[term] || [term];
+    // Build the full text from actual page contents to ensure positions match
+    const fullText = pages.map(p => p.content).join(' ');
+    
+    // Normalize apostrophes and special characters in search term
+    const normalizeText = (text: string) => {
+      return text
+        .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'") // Convert smart quotes to straight apostrophe
+        .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"') // Convert smart double quotes to straight quotes
+        .toLowerCase();
+    };
+    
+    // Helper function to check if a "Robert" instance refers to Mapplethorpe
+    // Note: In "Just Kids", most "Robert" references ARE Robert Mapplethorpe
+    // So we should include by default unless it's clearly someone else
+    const isRobertMapplethorpe = (text: string, position: number) => {
+      const lowerText = text.toLowerCase();
+      // Get context around the match to check for other Roberts
+      const start = Math.max(0, position - 200);
+      const end = Math.min(lowerText.length, position + 200);
+      const nearbyText = lowerText.substring(start, end);
+      
+      // Explicitly exclude if it's a different Robert
+      const otherRoberts = [
+        'robert frost', 
+        'robert kennedy', 
+        'robert rauschenberg', 
+        'robert wilson',
+        'robert louis stevenson',
+        'robert de niro',
+        'robert redford',
+        'robert plant',
+        'robert johnson',
+        'robert burns'
+      ];
+      
+      for (const otherRobert of otherRoberts) {
+        if (nearbyText.includes(otherRobert)) return false;
+      }
+      
+      // In "Just Kids", assume Robert means Mapplethorpe unless proven otherwise
+      return true;
+    };
+    
+    // Helper function to check if "the Chelsea" refers to the hotel
+    const isChelseaHotel = (text: string, position: number) => {
+      const lowerText = text.toLowerCase();
+      // Get surrounding context (200 chars each direction)
+      const start = Math.max(0, position - 200);
+      const end = Math.min(lowerText.length, position + 200);
+      const nearbyText = lowerText.substring(start, end);
+      
+      // Hotel-related keywords that indicate "the Chelsea" means the hotel
+      const hotelKeywords = ['hotel', 'room', 'lobby', 'floor', 'elevator', 'resident', 'lived', 'stay', 'moved', 'building'];
+      // Neighborhood keywords that indicate it's NOT the hotel
+      const neighborhoodKeywords = ['neighborhood', 'area', 'district', 'streets of', 'avenue'];
+      
+      // Check for hotel indicators
+      const hasHotelContext = hotelKeywords.some(keyword => nearbyText.includes(keyword));
+      const hasNeighborhoodContext = neighborhoodKeywords.some(keyword => nearbyText.includes(keyword));
+      
+      return hasHotelContext && !hasNeighborhoodContext;
+    };
+    
+    // Determine search strategy based on the term
+    const normalizedInputTerm = normalizeText(term);
+    let searchTerms: string[] = [];
+    
+    // Check for entity aliases with case-insensitive lookup
+    let aliasMatch = null;
+    for (const [key, value] of Object.entries(entityAliases)) {
+      if (normalizeText(key) === normalizedInputTerm) {
+        aliasMatch = value;
+        break;
+      }
+    }
+    
+    // Special handling for Robert Mapplethorpe and related searches
+    if (normalizedInputTerm === 'robert mapplethorpe') {
+      // Search for all variations: full name, just Robert, just Mapplethorpe, and Bobby
+      searchTerms = ['Robert Mapplethorpe', 'Mapplethorpe', 'Robert', 'Bobby'];
+    } else if (normalizedInputTerm === 'mapplethorpe') {
+      // Search for Mapplethorpe and full name
+      searchTerms = ['Mapplethorpe', 'Robert Mapplethorpe'];
+    } else if (normalizedInputTerm === 'bobby') {
+      // Bobby is a nickname for Robert in this context
+      searchTerms = ['Bobby', 'Robert'];
+    } else if (aliasMatch) {
+      searchTerms = aliasMatch;
+    } else {
+      searchTerms = [term];
+    }
     
     // Search for each variant
     searchTerms.forEach(searchVariant => {
-      const lowerTerm = searchVariant.toLowerCase();
-      const lowerText = fullText.toLowerCase();
+      const normalizedSearchTerm = normalizeText(searchVariant);
+      const normalizedFullText = normalizeText(fullText);
+      
+      // Create a version without apostrophes for flexible matching
+      const searchTermNoApostrophe = normalizedSearchTerm.replace(/'/g, '');
+      const fullTextNoApostrophe = normalizedFullText.replace(/'/g, '');
       
       // Find all occurrences
       let startIndex = 0;
-      while (startIndex < lowerText.length) {
-        const matchIndex = lowerText.indexOf(lowerTerm, startIndex);
+      while (startIndex < normalizedFullText.length) {
+        let matchIndex = -1;
+        
+        // First try exact normalized match
+        matchIndex = normalizedFullText.indexOf(normalizedSearchTerm, startIndex);
+        
+        // If no exact match and search term doesn't have apostrophes, try flexible search
+        if (matchIndex === -1 && !normalizedSearchTerm.includes("'")) {
+          // Calculate the flexible start index by removing apostrophes before startIndex
+          let flexStartIndex = 0;
+          for (let i = 0; i < startIndex && i < normalizedFullText.length; i++) {
+            if (normalizedFullText[i] !== "'") {
+              flexStartIndex++;
+            }
+          }
+          
+          let flexIndex = fullTextNoApostrophe.indexOf(searchTermNoApostrophe, flexStartIndex);
+          
+          if (flexIndex !== -1) {
+            // Found a match in the no-apostrophe text
+            // Now find the actual position in the original normalized text
+            let realIndex = 0;
+            let flexCount = 0;
+            
+            // Map flexible index back to real index by counting characters
+            while (flexCount < flexIndex && realIndex < normalizedFullText.length) {
+              if (normalizedFullText[realIndex] !== "'") {
+                flexCount++;
+              }
+              realIndex++;
+            }
+            matchIndex = realIndex;
+          }
+        }
+        
         if (matchIndex === -1) break;
-      
+        
+        // Apply contextual filtering for special cases
+        // For "Robert Mapplethorpe" search, exclude other Roberts
+        if (normalizedInputTerm === 'robert mapplethorpe' && normalizedSearchTerm === 'robert') {
+          // Check if this "Robert" is actually a different Robert
+          if (!isRobertMapplethorpe(fullText, matchIndex)) {
+            startIndex = matchIndex + 1;
+            continue; // Skip this match
+          }
+        } 
+        // For any Hotel Chelsea related search, apply context filtering to "the Chelsea"
+        else if ((normalizedInputTerm === 'hotel chelsea' || 
+                  normalizedInputTerm === 'chelsea hotel' || 
+                  normalizedInputTerm === 'the chelsea') && 
+                 normalizedSearchTerm === 'the chelsea') {
+          // Check if this "the Chelsea" refers to the hotel (not neighborhood)
+          if (!isChelseaHotel(fullText, matchIndex)) {
+            startIndex = matchIndex + 1;
+            continue; // Skip this match
+          }
+        }
+        
         // Get more context (150 chars before and after for better readability)
         const contextStart = Math.max(0, matchIndex - 150);
         const contextEnd = Math.min(fullText.length, matchIndex + searchVariant.length + 150);
@@ -112,7 +287,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
         
         for (let i = 0; i < pages.length; i++) {
           const page = pages[i];
-          const pageLength = page.content.length;
+          // Add 1 for the space we added when joining pages
+          const pageLength = page.content.length + (i < pages.length - 1 ? 1 : 0);
           
           if (currentPosition + pageLength > matchIndex) {
             foundPage = {
@@ -129,7 +305,22 @@ export const BookSearch: React.FC<BookSearchProps> = ({
         if (foundPage) {
           // Calculate match position within context, accounting for trimming
           const matchStartInContext = matchIndex - contextStart - trimmedFromStart;
-          const matchEndInContext = matchStartInContext + searchVariant.length;
+          let matchLength = searchVariant.length;
+          
+          // Special handling for Max's -> Max's Kansas City
+          const normalizedSearch = normalizedSearchTerm;
+          if (normalizedSearch === "max's" || normalizedSearch === "maxs") {
+            // Check if "Kansas City" follows within the context itself
+            const contextFromMatch = context.substring(matchStartInContext);
+            // Use flexible pattern that matches any apostrophe variant
+            const kansasCityMatch = contextFromMatch.match(/^Max.s\s+Kansas\s+City/i);
+            if (kansasCityMatch) {
+              // Use the full matched length for highlighting
+              matchLength = kansasCityMatch[0].length;
+            }
+          }
+          
+          const matchEndInContext = matchStartInContext + matchLength;
           
           searchResults.push({
             pageNumber: foundPage.pageNumber,
@@ -139,7 +330,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
             startIndex: contextStart,
             endIndex: contextEnd,
             matchStart: matchStartInContext,
-            matchEnd: matchEndInContext
+            matchEnd: matchEndInContext,
+            originalSearchTerm: term // Store the original search term with each result
           });
         }
         
@@ -147,23 +339,61 @@ export const BookSearch: React.FC<BookSearchProps> = ({
       }
     });
     
-    // Sort results by page number to maintain chronological order
-    searchResults.sort((a, b) => a.pageNumber - b.pageNumber);
+    // Remove duplicate results (same position found by different search terms)
+    const uniqueResults = searchResults.filter((result, index, self) => {
+      // Keep only the first occurrence of each unique position
+      return index === self.findIndex(r => 
+        r.pageNumber === result.pageNumber && 
+        r.startIndex === result.startIndex &&
+        r.endIndex === result.endIndex
+      );
+    });
     
-    setResults(searchResults);
+    // Sort results by page number to maintain chronological order
+    uniqueResults.sort((a, b) => a.pageNumber - b.pageNumber);
+    
+    setResults(uniqueResults);
     setIsSearching(false);
-  }, [fullText, pages, entityAliases]);
+  }, [pages, entityAliases]);
 
   const handleResultClick = (result: SearchResult, index: number) => {
     // Find the page index
     const pageIndex = pages.findIndex(p => p.pageNumber === result.pageNumber);
+    
     if (pageIndex !== -1) {
       setSelectedResultIndex(index);
-      onNavigate(pageIndex, searchTerm);
-      // Don't close immediately - let user see where they're going
+      
+      // Debug logging to track what context is being passed
+      console.log('🔍 Search Result Click:', {
+        originalSearchTerm: originalSearchTerm,  // This is what the user actually searched for
+        currentSearchTerm: searchTerm,  // Current value in search box
+        pageNumber: result.pageNumber,
+        contextPreview: result.context.substring(0, 100),
+        fullContext: result.context
+      });
+      
+      // Extra debugging
+      if (originalSearchTerm !== searchTerm) {
+        console.warn('⚠️ MISMATCH: originalSearchTerm differs from searchTerm!', {
+          original: originalSearchTerm,
+          current: searchTerm
+        });
+      }
+      
+      // IMPORTANT: Pass the ORIGINAL search term that the user typed,
+      // not the variant that was found. This ensures proper highlighting.
+      // For example, if user searched "Bob Dylan", pass "Bob Dylan" not "bob dy"
+      // ALWAYS use the current search term in the search box when clicking
+      // This ensures we use the full term the user typed, not a truncated version from an earlier search
+      const searchTermToUse = searchTerm; // Use current value in search box
+      console.log('🎯 NAVIGATING WITH SEARCH TERM:', searchTermToUse);
+      console.log('📝 Result was from search for:', result.originalSearchTerm);
+      onNavigate(pageIndex, searchTermToUse, result.context);
+      
+      // Close the modal after navigation but keep search term for highlighting
       setTimeout(() => {
         onClose();
-        setSearchTerm('');
+        // Don't clear search term here - let the destination page handle it
         setResults([]);
       }, 500);
     }
@@ -233,7 +463,14 @@ export const BookSearch: React.FC<BookSearchProps> = ({
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSearchTerm(value);
+                // When user types, update both search term and original
+                if (value) {
+                  setOriginalSearchTerm(value);
+                }
+              }}
               placeholder="Search for any word, phrase, or name..."
               className="w-full px-5 py-3 pr-12 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-300 text-[16px] shadow-sm hover:shadow-md"
               autoFocus
@@ -258,7 +495,7 @@ export const BookSearch: React.FC<BookSearchProps> = ({
                 className="group flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
-                <span>Discover "{searchTerm}"</span>
+                <span>Discover "{getDiscoveryTerm(searchTerm)}"</span>
               </button>
             </div>
           )}
@@ -349,7 +586,7 @@ export const BookSearch: React.FC<BookSearchProps> = ({
       {/* Discovery Card Modal */}
       {showDiscoveryCard && (
         <DiscoveryCard
-          selectedText={searchTerm}
+          selectedText={getDiscoveryTerm(searchTerm)}
           userContext=""
           onClose={() => setShowDiscoveryCard(false)}
         />

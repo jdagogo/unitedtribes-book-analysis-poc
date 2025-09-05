@@ -9,7 +9,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-block;
+  display: inline;
   position: relative;
 }
 
@@ -28,7 +28,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-block;
+  display: inline;
   position: relative;
 }
 
@@ -47,7 +47,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-block;
+  display: inline;
   position: relative;
 }
 
@@ -66,7 +66,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-block;
+  display: inline;
   position: relative;
 }
 
@@ -85,7 +85,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-block;
+  display: inline;
   position: relative;
 }
 
@@ -104,7 +104,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-block;
+  display: inline;
   position: relative;
 }
 
@@ -182,7 +182,7 @@
 
 /* Entity count badge */
 .entity-count {
-  display: inline-block;
+  display: inline;
   background: rgba(0, 0, 0, 0.1);
   padding: 2px 8px;
   border-radius: 12px;

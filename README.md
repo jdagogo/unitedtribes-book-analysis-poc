@@ -91,7 +91,39 @@ The application will be available at `http://localhost:3000`
 /entity-extraction # Python scripts for entity extraction attempts
 ```
 
-## Recent Work
+## Recent Work (December 2024 Session)
+
+### Attempted Improvements with Mixed Results
+
+#### Book Title Recognition (C- Grade)
+- Implemented fuzzy matching for 44 book titles from Goodreads list
+- **Major Failure**: "Love and Mr. Lewisham" consistently fails to highlight as complete title
+- Partial matches work for some titles
+- Multi-line book titles break the matching logic
+- Regex patterns became overly complex and fragile
+- Multiple attempts to fix resulted in HTML corruption issues
+
+#### Author Recognition (Passable)
+- Added recognition for 44 authors with name variations
+- Last names generally work (e.g., "Rimbaud" → Arthur Rimbaud)
+- Blue highlighting distinguishes authors from book titles
+- No smart context awareness implemented
+- Basic functionality without sophistication
+
+#### Bug Fixes (Eventually Successful After Multiple Attempts)
+- Fixed extra spaces around entity highlighting (took 4+ attempts)
+- Resolved HTML attributes appearing as visible text
+- Fixed context highlighting selecting wrong paragraphs (partially)
+- Addressed search term truncation issues
+
+### Known Unresolved Issues
+- "Love and Mr. Lewisham" book title recognition completely broken
+- Context highlighting unreliable for multi-line text
+- Search navigation sometimes highlights wrong content
+- Fuzzy matching patterns fail with line breaks
+- No comprehensive testing framework
+
+## Recent Work (Previous Sessions)
 
 ### Entity System for "Just Kids"
 - Manually curated 60+ cultural entities from 1960s-70s NYC scene

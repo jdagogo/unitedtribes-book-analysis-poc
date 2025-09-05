@@ -2,6 +2,13 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft, Search } from 'lucide-react';
 import TextSelectionModal from './text-selection-modal';
 import BookSearch from './book-search';
+import { findBookTitles } from '../data/book-titles-fuzzy';
+import { findAuthors } from '../data/author-recognition';
+import '../styles/literary-highlighting.css';
+import '../styles/entity-spacing-fix.css';
+import '../styles/book-search.css';
+import '../styles/entity-highlighting.css';
+import '../styles/author-highlighting.css';
 
 interface BookPage {
   pageNumber: number;
@@ -76,6 +83,248 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [highlightedSearchTerm, setHighlightedSearchTerm] = useState('');
   const [initialSearchTerm, setInitialSearchTerm] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Apply dual highlighting: entity (yellow) and context (light blue)
+  const applyDualHighlighting = useCallback((searchTerm: string, context?: string, pageText?: string) => {
+    console.log('🎨 applyDualHighlighting called:', { searchTerm, context: context?.substring(0, 50) });
+    
+    if (!contentRef.current) {
+      console.log('❌ No contentRef.current');
+      return;
+    }
+    
+    // Check URL parameters to determine if we arrived from search
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromSearch = urlParams.get('fromSearch') === 'true';
+    
+    console.log('📍 URL check:', { fromSearch, url: window.location.search });
+    
+    // ONLY apply context highlighting if we arrived from search
+    // Regular page navigation should not trigger this
+    if (!fromSearch) {
+      console.log('⏭️ Not from search, skipping context highlighting');
+      // Just scroll to search term if it exists, no context highlighting
+      const firstHighlight = document.querySelector('.search-highlight');
+      if (firstHighlight) {
+        firstHighlight.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest' 
+        });
+      }
+      return;
+    }
+    
+    // Get page content - use the provided pageText or the current page content
+    let pageContent = pageText || '';
+    
+    // If no pageText provided, get it from the current page data
+    if (!pageContent && pages[currentPageIndex]) {
+      pageContent = pages[currentPageIndex].content;
+    }
+    
+    // Fallback to DOM if still no content (shouldn't happen)
+    if (!pageContent && contentRef.current) {
+      // Get original text without HTML tags by looking at original paragraphs
+      const paragraphs = contentRef.current.querySelectorAll('p');
+      const textParts: string[] = [];
+      paragraphs.forEach(p => {
+        // Try to get text without HTML entities
+        const clone = p.cloneNode(true) as HTMLElement;
+        // Remove all span elements to get clean text
+        clone.querySelectorAll('span').forEach(span => {
+          span.replaceWith(span.textContent || '');
+        });
+        textParts.push(clone.textContent || '');
+      });
+      pageContent = textParts.join(' ');
+    }
+    
+    console.log('📖 Page content sample:', pageContent.substring(0, 100));
+    
+    // First, find and highlight the context if provided (only when from search)
+    if (context && fromSearch && searchTerm) {
+      console.log('✅ Applying context highlighting for search term:', searchTerm);
+      
+      // Normalize both context and page content for matching
+      const normalizeText = (text: string) => {
+        return text
+          .toLowerCase()
+          .replace(/['']/g, "'")
+          .replace(/[""]/g, '"')
+          .replace(/\s+/g, ' ')
+          .trim();
+      };
+      
+      const normalizedSearchTerm = normalizeText(searchTerm);
+      const normalizedContext = normalizeText(context);
+      const normalizedPageContent = normalizeText(pageContent);
+      
+      console.log('🔎 Search term:', normalizedSearchTerm);
+      console.log('📝 Context preview:', normalizedContext.substring(0, 100));
+      console.log('📄 Page content length:', normalizedPageContent.length);
+      
+      // Find the paragraph that contains the search term
+      // This is more reliable than trying to match the entire context
+      const paragraphs = contentRef.current.querySelectorAll('p');
+      let foundParagraph = null;
+      let searchTermFoundInContext = false;
+      
+      // First, verify the search term is actually in the provided context
+      if (normalizedContext.includes(normalizedSearchTerm)) {
+        searchTermFoundInContext = true;
+        console.log('✅ Search term found in context');
+      } else {
+        console.log('⚠️ Search term NOT found in provided context - context may be incorrect');
+      }
+      
+      // Search each paragraph for the one that best matches our search
+      let bestMatch = null;
+      let bestScore = 0;
+      
+      for (const p of paragraphs) {
+        const pText = normalizeText(p.textContent || '');
+        let score = 0;
+        
+        // Highest priority: paragraph contains the exact search term
+        if (pText.includes(normalizedSearchTerm)) {
+          score += 100;
+          console.log('📍 Paragraph contains search term:', normalizedSearchTerm);
+        }
+        
+        // Second priority: paragraph contains significant portion of context
+        if (normalizedContext.length > 20) {
+          // Check how much of the context is in this paragraph
+          const contextWords = normalizedContext.split(' ');
+          let matchedWords = 0;
+          
+          for (const word of contextWords) {
+            if (word.length > 2 && pText.includes(word)) {
+              matchedWords++;
+            }
+          }
+          
+          // Calculate percentage of context words found
+          const contextMatchPercentage = (matchedWords / contextWords.length) * 100;
+          score += contextMatchPercentage;
+          
+          if (contextMatchPercentage > 50) {
+            console.log(`📊 Paragraph matches ${contextMatchPercentage.toFixed(0)}% of context words`);
+          }
+        }
+        
+        // Track the best matching paragraph
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = p;
+          console.log(`🎯 New best match with score: ${score}`);
+        }
+      }
+      
+      foundParagraph = bestMatch;
+      if (foundParagraph) {
+        console.log(`✅ Selected best paragraph with score: ${bestScore}`);
+      }
+      
+      if (foundParagraph) {
+        console.log('✅ Found context paragraph, applying highlight');
+        // Apply context highlighting to the paragraph
+        foundParagraph.classList.add('search-context-highlight');
+        foundParagraph.classList.add('search-context-highlight-enter');
+        
+        // Now find and enhance the search term within the context
+        setTimeout(() => {
+          const searchHighlights = document.querySelectorAll('.search-highlight');
+          if (searchHighlights.length > 0) {
+            // Find the highlight within or near the context
+            const firstHighlight = searchHighlights[0];
+            firstHighlight.classList.add('search-highlight-pulse');
+            firstHighlight.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center',
+              inline: 'nearest' 
+            });
+            
+            setTimeout(() => {
+              firstHighlight.classList.remove('search-highlight-pulse');
+            }, 2000);
+          }
+        }, 100);
+      } else {
+        console.log('❌ Could not find context paragraph');
+      }
+    } else if (searchTerm) {
+      // Fallback: If we can't find the context, just highlight around the search term
+      console.log('🔄 Fallback: Highlighting around search term');
+      const searchHighlights = document.querySelectorAll('.search-highlight');
+      if (searchHighlights.length > 0) {
+        const firstHighlight = searchHighlights[0];
+        // Add context highlighting to the parent paragraph or container
+        const parent = firstHighlight.closest('p') || firstHighlight.parentElement;
+        if (parent) {
+          parent.classList.add('search-context-highlight');
+          parent.classList.add('search-context-highlight-enter');
+          console.log('✅ Applied context highlight to parent element');
+        }
+        
+        firstHighlight.classList.add('search-highlight-pulse');
+        firstHighlight.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest' 
+        });
+        
+        setTimeout(() => {
+          firstHighlight.classList.remove('search-highlight-pulse');
+        }, 2000);
+      }
+    }
+  }, [highlightedSearchTerm, pages, currentPageIndex]);
+
+  // Handle URL parameters and context highlighting after page changes
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromSearch = urlParams.get('fromSearch') === 'true';
+    const searchTerm = urlParams.get('searchTerm');
+    const context = urlParams.get('context');
+    
+    console.log('🔄 URL param check effect:', { 
+      fromSearch, 
+      searchTerm,  // This should be the full search term
+      searchTermLength: searchTerm?.length,
+      hasContext: !!context, 
+      hasPage: !!pages[currentPageIndex] 
+    });
+    
+    // Only apply highlighting if we came from search and have a search term
+    if (fromSearch && searchTerm && pages[currentPageIndex]) {
+      console.log('📌 Applying highlighting from URL params');
+      // Set the search term for highlighting
+      setHighlightedSearchTerm(searchTerm);
+      
+      // Apply dual highlighting with a small delay to ensure DOM is ready
+      setTimeout(() => {
+        console.log('⏰ Delayed call to applyDualHighlighting');
+        // Pass the clean page content to avoid HTML tags in text
+        const currentPageContent = pages[currentPageIndex]?.content || '';
+        applyDualHighlighting(searchTerm, context || undefined, currentPageContent);
+        
+        // Clear URL parameters after applying highlighting to prevent re-application
+        setTimeout(() => {
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, '', cleanUrl);
+          console.log('🧹 Cleared URL parameters after highlighting');
+        }, 1000);
+      }, 500);
+    } else if (!fromSearch) {
+      // Clear any existing context highlighting when not from search
+      const contextHighlights = document.querySelectorAll('.search-context-highlight');
+      contextHighlights.forEach(el => {
+        el.classList.remove('search-context-highlight');
+        el.classList.remove('search-context-highlight-enter');
+      });
+    }
+  }, [currentPageIndex, pages, applyDualHighlighting]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -629,18 +878,138 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     aliases: ENTITY_CONTEXTS[name].aliases || []
   }));
 
-  // Highlight entities in page content
+  // Highlight entities in page content (including literary works)
   const highlightEntitiesInText = useCallback((text: string): string => {
-    // Track positions that have already been highlighted to avoid overlaps
-    const replacements: Array<{start: number, end: number, entity: any, match: string, isSearchTerm?: boolean}> = [];
+    // First, normalize multiple spaces to single spaces to prevent spacing issues
+    const normalizedText = text.replace(/\s+/g, ' ').trim();
     
-    // First, highlight search terms if present
+    // Track positions that have already been highlighted to avoid overlaps
+    const replacements: Array<{start: number, end: number, entity: any, match: string, isSearchTerm?: boolean, type?: string}> = [];
+    
+    // Define important entities to highlight
+    const importantEntities = [
+      {
+        name: 'Robert Mapplethorpe',
+        aliases: ['Robert Mapplethorpe', 'Mapplethorpe', 'Robert', 'Bobby'],
+        type: 'person'
+      },
+      {
+        name: 'Hotel Chelsea',
+        aliases: ['Hotel Chelsea', 'Chelsea Hotel', 'the Chelsea'],
+        type: 'place'
+      }
+    ];
+    
+    // Collect matches for important entities (Robert Mapplethorpe, Hotel Chelsea, etc.)
+    const entityMatches: Array<{start: number, end: number, entity: any, match: string, type: string}> = [];
+    
+    importantEntities.forEach(entity => {
+      entity.aliases.forEach(alias => {
+        // Special handling for "Robert" - only highlight if it's likely referring to Mapplethorpe
+        if (alias === 'Robert') {
+          // Only highlight "Robert" if it appears alone or in specific contexts
+          const robertRegex = /\bRobert\b(?!\s+(Louis\s+)?Stevenson|\s+Frost|\s+Burns|\s+Lowell)/gi;
+          let robertMatch;
+          while ((robertMatch = robertRegex.exec(normalizedText)) !== null) {
+            entityMatches.push({
+              start: robertMatch.index,
+              end: robertMatch.index + robertMatch[0].length,
+              entity: { name: entity.name, type: entity.type },
+              match: robertMatch[0],
+              type: entity.type
+            });
+          }
+        } else {
+          const aliasRegex = new RegExp(`\\b${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+          let aliasMatch;
+          while ((aliasMatch = aliasRegex.exec(normalizedText)) !== null) {
+            entityMatches.push({
+              start: aliasMatch.index,
+              end: aliasMatch.index + aliasMatch[0].length,
+              entity: { name: entity.name, type: entity.type },
+              match: aliasMatch[0],
+              type: entity.type
+            });
+          }
+        }
+      });
+    });
+    
+    // Sort entity matches by length (longest first) to prefer complete names
+    entityMatches.sort((a, b) => (b.end - b.start) - (a.end - a.start));
+    
+    // Add non-overlapping entity matches to replacements
+    entityMatches.forEach(em => {
+      const overlaps = replacements.some(r => 
+        (em.start >= r.start && em.start < r.end) || 
+        (em.end > r.start && em.end <= r.end) ||
+        (em.start <= r.start && em.end >= r.end)
+      );
+      
+      if (!overlaps) {
+        replacements.push(em);
+      }
+    });
+    
+    // Use fuzzy matching to find all book titles in the text
+    const bookMatches = findBookTitles(normalizedText);
+    
+    // Convert book matches to our replacement format
+    const literaryMatches: Array<{start: number, end: number, entity: any, match: string, type: string}> = [];
+    
+    bookMatches.forEach(bookMatch => {
+      literaryMatches.push({
+        start: bookMatch.startIndex,
+        end: bookMatch.endIndex,
+        entity: { 
+          title: bookMatch.title,
+          author: bookMatch.author,
+          bookId: bookMatch.bookId
+        },
+        match: bookMatch.matchedText,
+        type: 'literary'
+      });
+    });
+    
+    // Use comprehensive author recognition
+    const authorMatches = findAuthors(normalizedText);
+    
+    authorMatches.forEach(authorMatch => {
+      literaryMatches.push({
+        start: authorMatch.startIndex,
+        end: authorMatch.endIndex,
+        entity: { 
+          name: authorMatch.fullName,
+          authorId: authorMatch.authorId
+        },
+        match: authorMatch.matchedText,
+        type: 'author'
+      });
+    });
+    
+    // Sort literary matches by length (longest first) to prefer complete titles
+    literaryMatches.sort((a, b) => (b.end - b.start) - (a.end - a.start));
+    
+    // Add non-overlapping literary matches to replacements
+    literaryMatches.forEach(lm => {
+      const overlaps = replacements.some(r => 
+        (lm.start >= r.start && lm.start < r.end) || 
+        (lm.end > r.start && lm.end <= r.end) ||
+        (lm.start <= r.start && lm.end >= r.end)
+      );
+      
+      if (!overlaps) {
+        replacements.push(lm);
+      }
+    });
+    
+    // Then, highlight search terms if present
     if (highlightedSearchTerm && highlightedSearchTerm.length >= 2) {
       const escapedSearchTerm = highlightedSearchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const searchRegex = new RegExp(`(${escapedSearchTerm})`, 'gi');
       
       let match;
-      while ((match = searchRegex.exec(text)) !== null) {
+      while ((match = searchRegex.exec(normalizedText)) !== null) {
         const start = match.index;
         const end = match.index + match[0].length;
         
@@ -664,7 +1033,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         const regex = new RegExp(`\\b(${escapedName})\\b`, 'gi');
         
         let match;
-        while ((match = regex.exec(text)) !== null) {
+        while ((match = regex.exec(normalizedText)) !== null) {
           const start = match.index;
           const end = match.index + match[0].length;
           
@@ -704,34 +1073,46 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       return true;
     });
     
-    // Sort by position (reverse order to maintain indices when replacing)
-    filteredReplacements.sort((a, b) => b.start - a.start);
+    // Sort by position (forward order to build result correctly)
+    filteredReplacements.sort((a, b) => a.start - b.start);
     
-    // Apply replacements
-    let result = text;
+    // Apply replacements by building a new string
+    let result = '';
+    let lastEnd = 0;
+    
     filteredReplacements.forEach(r => {
+      // Add the text before this replacement
+      result += normalizedText.slice(lastEnd, r.start);
+      
+      // Add the replacement
       let replacement;
       if (r.isSearchTerm) {
         // Highlight search terms with a different style
-        replacement = `<span class="search-highlight" 
-                            style="background-color: #fef3c7; 
-                                   font-weight: 600; 
-                                   padding: 2px 4px; 
-                                   border-radius: 3px;
-                                   box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);">
-                          ${r.match}
-                        </span>`;
+        replacement = `<span class="search-highlight" style="background-color: #fef3c7; font-weight: 600; padding: 2px 0; border-radius: 3px; box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);">${r.match}</span>`;
+      } else if (r.type === 'literary') {
+        // Highlight literary works with purple/violet theme - make them clickable like other entities
+        const work = r.entity;
+        // Use consistent entity-literary class for all books
+        replacement = `<span class="entity-highlight entity-literary literary-highlight" data-entity="${work.title}" data-author="${work.author}" data-type="literary" data-bookid="${work.bookId || ''}">${r.match}</span>`;
+      } else if (r.type === 'author') {
+        // Highlight authors with orange theme when near their books
+        const authorEntity = r.entity;
+        replacement = `<span class="entity-highlight entity-author author-highlight" data-entity="${authorEntity.name || authorEntity.author}" data-type="author" data-relatedbook="${authorEntity.relatedBook || ''}">${r.match}</span>`;
+      } else if (r.type === 'person' || r.type === 'place') {
+        // Highlight persons and places with appropriate styles
+        const entityClass = r.type === 'person' ? 'entity-person' : 'entity-place';
+        replacement = `<span class="entity-highlight ${entityClass}" data-entity="${r.entity.name}" data-type="${r.type}">${r.match}</span>`;
       } else {
-        // Highlight entities as before
-        replacement = `<span class="entity-highlight entity-${r.entity.type}" 
-                                data-entity="${r.entity.name}" 
-                                data-type="${r.entity.type}"
-                                data-mentions="${r.entity.totalMentions}">
-                          ${r.match}
-                        </span>`;
+        // Highlight other entities as before
+        replacement = `<span class="entity-highlight entity-${r.entity.type}" data-entity="${r.entity.name}" data-type="${r.entity.type}" data-mentions="${r.entity.totalMentions || ''}">${r.match}</span>`;
       }
-      result = result.slice(0, r.start) + replacement + result.slice(r.end);
+      
+      result += replacement;
+      lastEnd = r.end;
     });
+    
+    // Add any remaining text after the last replacement
+    result += normalizedText.slice(lastEnd);
     
     return result;
   }, [highlightedSearchTerm]);
@@ -774,13 +1155,33 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     }
   }, [pages]);
 
-  // Handle search navigation
-  const handleSearchNavigate = useCallback((pageIndex: number, searchTerm?: string) => {
+  // Handle search navigation with context highlighting using URL parameters
+  const handleSearchNavigate = useCallback((pageIndex: number, searchTerm?: string, context?: string) => {
+    console.log('🔍 handleSearchNavigate called:', { pageIndex, searchTerm, hasContext: !!context });
+    
+    // Set URL parameters to trigger context highlighting after page loads
+    if (searchTerm && context) {
+      // Ensure the full search term is properly encoded
+      const params = new URLSearchParams();
+      params.set('fromSearch', 'true');
+      params.set('searchTerm', searchTerm); // Full search term, properly encoded
+      params.set('context', context.substring(0, 200)); // Limit context length for URL
+      
+      console.log('📝 Setting URL params with search term:', searchTerm);
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    }
+    
+    // Navigate to the page
     setCurrentPageIndex(pageIndex);
-    setHighlightedSearchTerm(searchTerm || '');
-    // Scroll to top of page viewer
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+    
+    // Don't set search term here - let the URL parameter effect handle it
+    // This ensures proper timing with page render
+    if (searchTerm) {
+      // Don't call applyDualHighlighting here - let the useEffect handle it
+      // based on URL parameters to avoid duplicate calls
+      console.log('📝 Search navigation triggered, URL params set');
+    }
+  }, [pages]);
 
   if (isLoading) {
     return (

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Entity Highlighting Test</title>
+    <style>
+        body { 
+            padding: 20px; 
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            background: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #666;
+            padding-bottom: 5px;
+        }
+        .test-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-left: 3px solid #8b5cf6;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Entity and Context Highlighting Test Dashboard</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <ol>
+            <li>Open the paginated reader at: <code>http://localhost:3000/paginated-reader</code></li>
+            <li>Open browser console (Cmd+Option+J on Mac)</li>
+            <li>Run the tests below and check the results</li>
+        </ol>
+    </div>
+    
+    <div class="test-section">
+        <h2>1. Search Functionality Tests</h2>
+        
+        <div class="test-item">
+            <h3>Test Robert Mapplethorpe Recognition</h3>
+            <p>Press Ctrl+F (or Cmd+F) and search for "Robert"</p>
+            <p>Expected: Should find 650+ matches (including instances of "Robert", "Mapplethorpe", "Robert Mapplethorpe")</p>
+            <p>Each match should be highlighted in blue (person entity)</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>Test Hotel Chelsea Recognition</h3>
+            <p>Search for "Chelsea"</p>
+            <p>Expected: Should find all variations ("Hotel Chelsea", "Chelsea Hotel", "the Chelsea")</p>
+            <p>Each match should be highlighted in green (place entity)</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>Test Context Highlighting</h3>
+            <p>Search for any term, click on a search result</p>
+            <p>Expected:</p>
+            <ul>
+                <li>Should navigate to the correct page</li>
+                <li>The search term should be highlighted in yellow</li>
+                <li>The surrounding context (about 100 characters) should have light blue background</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Entity Highlighting on Page</h2>
+        
+        <div class="test-item">
+            <h3>Check Current Page</h3>
+            <p>On any page, look for these entities:</p>
+            <ul>
+                <li><strong>Robert/Mapplethorpe</strong> - Blue highlight with underline</li>
+                <li><strong>Hotel Chelsea</strong> - Green highlight with underline</li>
+                <li><strong>Literary works</strong> - Purple/violet gradient</li>
+                <li><strong>Authors</strong> - Orange gradient when near their books</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Console Commands for Testing</h2>
+        <pre>
+// Check if entities are being highlighted
+document.querySelectorAll('.entity-person').length  // Should be > 0 if Robert is on page
+document.querySelectorAll('.entity-place').length   // Should be > 0 if Chelsea is on page
+
+// Check context highlighting after search
+document.querySelectorAll('.search-context-highlight').length
+
+// Check search term highlighting
+document.querySelectorAll('.search-highlight').length
+
+// Test navigation from search
+// 1. Open search (Ctrl+F)
+// 2. Search for "Robert"
+// 3. Click any result
+// 4. Check URL params
+new URLSearchParams(window.location.search).get('fromSearch')  // Should be 'true'
+new URLSearchParams(window.location.search).get('context')     // Should contain context
+
+// Force clear URL params if stuck
+window.history.replaceState({}, '', window.location.pathname)
+        </pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>Expected Behavior Summary</h2>
+        <ul>
+            <li>✅ "Robert" alone highlights as Robert Mapplethorpe (except for Robert Louis Stevenson, Robert Frost, etc.)</li>
+            <li>✅ "Mapplethorpe" always highlights</li>
+            <li>✅ "Robert Mapplethorpe" full name highlights</li>
+            <li>✅ "Hotel Chelsea", "Chelsea Hotel", "the Chelsea" all highlight</li>
+            <li>✅ Context highlighting shows yellow search term + light blue surrounding text</li>
+            <li>✅ All entity types have distinct colors: person=blue, place=green, literary=purple, author=orange</li>
+            <li>✅ No extra spaces around highlighted entities</li>
+        </ul>
+    </div>
+</body>
+</html>

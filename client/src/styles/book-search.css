@@ -17,7 +17,77 @@
 .search-highlight {
   background-color: #fef3c7;
   font-weight: 600;
-  padding: 2px 4px;
+  padding: 2px 0;
   border-radius: 3px;
   box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Pulse animation for first search highlight when navigating from search */
+@keyframes searchPulse {
+  0% {
+    background-color: #fef3c7;
+    box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);
+  }
+  50% {
+    background-color: #fbbf24;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+    transform: scale(1.05);
+  }
+  100% {
+    background-color: #fef3c7;
+    box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);
+  }
+}
+
+.search-highlight-pulse {
+  animation: searchPulse 1s ease-in-out 2;
+}
+
+/* Context highlighting - light blue/gray background for surrounding text */
+.search-context-highlight {
+  background: linear-gradient(to right, 
+    rgba(147, 197, 253, 0.15), 
+    rgba(147, 197, 253, 0.25), 
+    rgba(147, 197, 253, 0.15));
+  padding: 4px 8px;
+  border-radius: 6px;
+  border-left: 3px solid rgba(59, 130, 246, 0.4);
+  margin: 2px -8px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced styling when hovering over context */
+.search-context-highlight:hover {
+  background: linear-gradient(to right, 
+    rgba(147, 197, 253, 0.2), 
+    rgba(147, 197, 253, 0.3), 
+    rgba(147, 197, 253, 0.2));
+  border-left-color: rgba(59, 130, 246, 0.6);
+}
+
+/* Make search term stand out within context */
+.search-context-highlight .search-highlight {
+  background-color: #fbbf24;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
+  position: relative;
+  z-index: 1;
+}
+
+/* Context indicator animation */
+@keyframes contextFade {
+  0% {
+    background-color: rgba(147, 197, 253, 0.4);
+  }
+  100% {
+    background-color: rgba(147, 197, 253, 0.2);
+  }
+}
+
+.search-context-highlight-enter {
+  animation: contextFade 0.8s ease-out;
 }
