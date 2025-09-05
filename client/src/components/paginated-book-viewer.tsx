@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft, Search } from 'lucide-react';
 import TextSelectionModal from './text-selection-modal';
 import BookSearch from './book-search';
+import VideoModal from './video-modal';
 import { findBookTitles } from '../data/book-titles-fuzzy';
 import { findAuthors } from '../data/author-recognition';
 import '../styles/literary-highlighting.css';
@@ -9,6 +10,7 @@ import '../styles/entity-spacing-fix.css';
 import '../styles/book-search.css';
 import '../styles/entity-highlighting.css';
 import '../styles/author-highlighting.css';
+import '../styles/video-link.css';
 
 interface BookPage {
   pageNumber: number;
@@ -81,6 +83,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [highlightedSearchTerm, setHighlightedSearchTerm] = useState('');
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [initialSearchTerm, setInitialSearchTerm] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -900,6 +903,19 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       }
     ];
     
+    // SPECIAL TEST: Add John Coltrane video reference
+    const coltranePattern = /John Coltrane, the man who gave us A Love Supreme/gi;
+    let coltraneMatch;
+    while ((coltraneMatch = coltranePattern.exec(normalizedText)) !== null) {
+      replacements.push({
+        start: coltraneMatch.index,
+        end: coltraneMatch.index + coltraneMatch[0].length,
+        entity: { name: 'John Coltrane - A Love Supreme', type: 'music-video' },
+        match: coltraneMatch[0],
+        type: 'music-video'
+      });
+    }
+    
     // Collect matches for important entities (Robert Mapplethorpe, Hotel Chelsea, etc.)
     const entityMatches: Array<{start: number, end: number, entity: any, match: string, type: string}> = [];
     
@@ -1098,6 +1114,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         // Highlight authors with orange theme when near their books
         const authorEntity = r.entity;
         replacement = `<span class="entity-highlight entity-author author-highlight" data-entity="${authorEntity.name || authorEntity.author}" data-type="author" data-relatedbook="${authorEntity.relatedBook || ''}">${r.match}</span>`;
+      } else if (r.type === 'music-video') {
+        // Subtle highlighting for music/video references - just bold purple text
+        replacement = `<span class="entity-highlight entity-music-video" data-entity="${r.entity.name}" data-type="music-video" style="color: #8B5CF6; font-weight: 600; cursor: pointer; position: relative;" title="🎵 Video">${r.match}</span>`;
       } else if (r.type === 'person' || r.type === 'place') {
         // Highlight persons and places with appropriate styles
         const entityClass = r.type === 'person' ? 'entity-person' : 'entity-place';
@@ -1246,10 +1265,19 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
         .book-navigation {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: center;
-          gap: 2rem;
+          gap: 3rem;
           flex-wrap: wrap;
+        }
+        
+        .book-navigation .page-controls {
+          flex: 0 0 auto;
+        }
+        
+        .book-navigation .page-jump {
+          margin-left: auto;
+          margin-right: 15%;
         }
 
         .page-controls {
@@ -1262,16 +1290,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.75rem 1.25rem;
+          padding: 0.94rem 1.56rem;
           background: #1e3a8a;
           color: white;
           border: none;
           border-radius: 8px;
-          font-size: 16px;
+          font-size: 20px;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
-          min-height: 44px;
+          min-height: 55px;
         }
 
         .nav-button:hover:not(:disabled) {
@@ -1286,13 +1314,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .page-info {
-          font-size: 18px;
+          font-size: 22.5px;
           font-weight: 600;
           color: #111827;
-          padding: 0.6rem 1rem;
+          padding: 0.75rem 1.25rem;
           background: #f3f4f6;
           border-radius: 6px;
-          min-width: 140px;
+          min-width: 175px;
           text-align: center;
         }
 
@@ -1303,13 +1331,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .page-jump input {
-          width: 90px;
-          padding: 0.6rem;
+          width: 112px;
+          padding: 0.75rem;
           border: 2px solid #e5e7eb;
           border-radius: 6px;
-          font-size: 16px;
+          font-size: 20px;
+          font-weight: 600;
+          color: #1e293b;
           text-align: center;
-          min-height: 40px;
+          min-height: 50px;
+        }
+        
+        .page-jump input::placeholder {
+          color: #64748b;
+          font-weight: 600;
         }
 
         .page-jump input:focus {
@@ -1318,16 +1353,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
 
         .jump-btn {
-          padding: 0.6rem 1rem;
+          padding: 0.75rem 1.25rem;
           background: #60a5fa;
           color: white;
           border: none;
           border-radius: 6px;
-          font-weight: 500;
-          font-size: 16px;
+          font-weight: 600;
+          font-size: 20px;
           cursor: pointer;
           transition: all 0.2s;
-          min-height: 40px;
+          min-height: 50px;
         }
 
         .jump-btn:hover {
@@ -1340,7 +1375,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
           border-radius: 8px;
           border: 1px solid #fbbf24;
-          font-size: 18px;
+          font-size: 22.5px;
           margin-top: 1rem;
         }
 
@@ -1741,8 +1776,18 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           padding-top: 2rem;
           border-top: 1px solid #e5e7eb;
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: center;
+          gap: 3rem;
+        }
+        
+        .page-footer .word-count {
+          flex: 0 0 auto;
+        }
+        
+        .page-footer .page-controls {
+          margin-left: auto;
+          margin-right: 15%;
         }
 
         .word-count {
@@ -1784,6 +1829,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
           .page-jump {
             width: 100%;
+            margin-left: 0;
+            margin-right: 0;
           }
 
           .page-jump input {
@@ -1878,7 +1925,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 onClick={goToPrevPage}
                 disabled={currentPageIndex === 0}
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={25} />
                 Previous
               </button>
               
@@ -1892,7 +1939,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 disabled={currentPageIndex === pages.length - 1}
               >
                 Next
-                <ChevronRight size={20} />
+                <ChevronRight size={25} />
               </button>
             </div>
 
@@ -1911,50 +1958,58 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
           </div>
           
-          {/* Yellow Bar - Spans Full Width */}
-          <div className="chapter-context" style={{
+          {/* Yellow Bar Container - Positioned to align with Page input */}
+          <div style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             width: '100%',
             marginTop: '1rem'
           }}>
-            <div style={{ fontSize: '18px' }}>
-              Currently reading: <strong>{currentPage?.chapterTitle}</strong>
-            </div>
-            
-            {/* Search & Discover Button - Right Side */}
-            <button 
-              onClick={() => setShowSearch(true)}
-              className="search-button"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem 1.25rem',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontWeight: '600',
-                fontSize: '16px',
-                cursor: 'pointer',
-                boxShadow: '0 3px 10px rgba(102, 126, 234, 0.3)',
-                transition: 'all 0.3s ease',
-                minHeight: '44px'
-              }}
+            <div className="chapter-context" style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: 'calc(85% + 2rem)',
+              marginRight: 'calc(15% - 2rem)',
+              paddingRight: '2rem'
+            }}>
+              <div style={{ fontSize: '22.5px' }}>
+                Currently reading: <strong>{currentPage?.chapterTitle}</strong>
+              </div>
+              
+              {/* Search & Discover Button - Aligned with Page input */}
+              <button 
+                onClick={() => setShowSearch(true)}
+                className="search-button"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.86rem 1.43rem',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: '700',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)',
+                  transition: 'all 0.3s ease',
+                  minHeight: '50px'
+                }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.5)';
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 3px 10px rgba(102, 126, 234, 0.3)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
               }}
             >
-              <Search size={18} />
-              <span>Search & Discover</span>
+              <Search size={21} />
+              <span style={{ fontWeight: '800', letterSpacing: '0.025em', fontSize: '1.17rem' }}>Search & Discover</span>
             </button>
+            </div>
           </div>
         </div>
 
@@ -1973,8 +2028,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   onClick={(e) => {
                     const target = e.target as HTMLElement;
                     if (target.classList.contains('entity-highlight')) {
+                      const entityType = target.getAttribute('data-type');
                       const entityName = target.getAttribute('data-entity');
-                      if (entityName) {
+                      
+                      if (entityType === 'music-video') {
+                        // Open video modal for John Coltrane
+                        setShowVideoModal(true);
+                      } else if (entityName) {
                         showEntityOccurrences(entityName);
                       }
                     }
@@ -2016,6 +2076,11 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         <TextSelectionModal
           selectedText={selectedText}
           onClose={handleCloseSelectionModal}
+          onSearch={(searchText) => {
+            setInitialSearchTerm(searchText);
+            setShowSearch(true);
+            handleCloseSelectionModal();
+          }}
         />
       )}
 
@@ -2030,6 +2095,15 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           setInitialSearchTerm(''); // Reset initial search term
         }}
         initialSearchTerm={initialSearchTerm}
+      />
+
+      {/* Video Modal - John Coltrane Test */}
+      <VideoModal
+        isOpen={showVideoModal}
+        onClose={() => setShowVideoModal(false)}
+        title="John Coltrane - A Love Supreme"
+        videoId="QUAhvJW3ZD4"
+        context="John Coltrane's spiritual jazz masterpiece that influenced a generation of artists including Patti Smith."
       />
     </div>
   );

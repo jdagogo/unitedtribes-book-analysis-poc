@@ -89,8 +89,8 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
           title: "Cultural Discovery",
           summary: `Exploring: "${selectedText}"`,
           culturalContext: userContext ? 
-            `You asked about: ${userContext}. This text appears in "Just Kids" by Patti Smith.` :
-            'This passage appears in "Just Kids," exploring the 1960s-70s New York art scene.',
+            `You asked about: ${userContext}. This text appears in <i>Just Kids</i> by Patti Smith.` :
+            'This passage appears in <i>Just Kids</i>, exploring the 1960s-70s New York art scene.',
           timeline: {
             year: "1967-1975",
             context: "The period covered in Just Kids"
@@ -166,13 +166,13 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
               <div className="p-3 bg-white/25 rounded-xl backdrop-blur-sm shadow-lg">
                 <Sparkles size={24} className="drop-shadow-lg" />
               </div>
-              <h3 className="text-2xl font-bold tracking-tight drop-shadow-lg">
-                Cultural Discovery
+              <h3 className="text-3xl font-bold tracking-tight drop-shadow-lg">
+                Discover
               </h3>
             </div>
 
             {userContext && (
-              <p className="text-white/90 text-[15px] mt-3 font-medium pl-16">
+              <p className="text-white/90 text-[19px] mt-3 font-medium pl-16">
                 Your question: "{userContext}"
               </p>
             )}
@@ -182,8 +182,8 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
           {isLoading && (
             <div className="flex-1 flex items-center justify-center py-20">
               <div className="text-center">
-                <Loader2 className="animate-spin mx-auto mb-4 text-indigo-600" size={32} />
-                <p className="text-gray-600">Discovering connections...</p>
+                <Loader2 className="animate-spin mx-auto mb-4 text-indigo-600" size={40} />
+                <p className="text-indigo-600 text-lg font-medium">Discovering connections...</p>
               </div>
             </div>
           )}
@@ -196,7 +196,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                 <div className="flex gap-3">
                   <button
                     onClick={() => setActiveTab('overview')}
-                    className={`px-6 py-3 rounded-full text-[15px] font-semibold transition-all duration-300 transform hover:scale-105 ${
+                    className={`px-7 py-3.5 rounded-full text-[18px] font-semibold transition-all duration-300 transform hover:scale-105 ${
                       activeTab === 'overview' 
                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' 
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
@@ -206,7 +206,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveTab('media')}
-                    className={`px-6 py-3 rounded-full text-[15px] font-semibold transition-all duration-300 transform hover:scale-105 ${
+                    className={`px-7 py-3.5 rounded-full text-[18px] font-semibold transition-all duration-300 transform hover:scale-105 ${
                       activeTab === 'media' 
                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' 
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
@@ -216,7 +216,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveTab('connections')}
-                    className={`px-6 py-3 rounded-full text-[15px] font-semibold transition-all duration-300 transform hover:scale-105 ${
+                    className={`px-7 py-3.5 rounded-full text-[18px] font-semibold transition-all duration-300 transform hover:scale-105 ${
                       activeTab === 'connections' 
                         ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' 
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
@@ -233,26 +233,26 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                 {activeTab === 'overview' && (
                   <div className="space-y-6">
                     <div>
-                      <h4 className="text-2xl font-bold text-gray-900 mb-2">
-                        {discoveryContent.title}
+                      <h4 className="text-3xl font-bold text-gray-900 mb-2">
+                        {selectedText.charAt(0).toUpperCase() + selectedText.slice(1)} discover
                       </h4>
                       {discoveryContent.timeline && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                        <div className="flex items-center gap-2 text-base text-indigo-600 mb-4">
                           <Calendar size={14} />
                           <span>{discoveryContent.timeline.year}</span>
-                          <span className="text-gray-400">•</span>
+                          <span className="text-indigo-400">•</span>
                           <span>{discoveryContent.timeline.context}</span>
                         </div>
                       )}
-                      <p className="text-gray-700 leading-relaxed">
-                        {discoveryContent.summary}
+                      <p className="text-gray-800 text-lg leading-relaxed">
+                        This passage "{selectedText}..." captures a moment in <i>Just Kids</i> that deserves deeper analysis.
                       </p>
                     </div>
 
                     {discoveryContent.culturalContext && (
                       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
-                        <h5 className="font-semibold text-indigo-900 mb-2">Cultural Context</h5>
-                        <p className="text-gray-700 leading-relaxed">
+                        <h5 className="font-semibold text-indigo-900 text-xl mb-2">Cultural Context</h5>
+                        <p className="text-gray-800 text-lg leading-relaxed">
                           {discoveryContent.culturalContext}
                         </p>
                       </div>
@@ -260,11 +260,11 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
 
                     {discoveryContent.quotes && discoveryContent.quotes.length > 0 && (
                       <div>
-                        <h5 className="font-semibold text-gray-900 mb-3">Notable Quotes</h5>
+                        <h5 className="font-semibold text-indigo-900 text-xl mb-3">Notable Quotes</h5>
                         {discoveryContent.quotes.map((quote, index) => (
                           <blockquote key={index} className="border-l-4 border-indigo-500 pl-4 py-2 mb-3">
-                            <p className="text-gray-700 italic mb-1">"{quote.text}"</p>
-                            <cite className="text-sm text-gray-500">— {quote.source}</cite>
+                            <p className="text-gray-800 text-lg italic mb-1">"{quote.text}"</p>
+                            <cite className="text-base text-indigo-600">— {quote.source}</cite>
                           </blockquote>
                         ))}
                       </div>
@@ -276,19 +276,19 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                 {activeTab === 'media' && (
                   <div className="space-y-4">
                     {discoveryContent.relatedMedia?.map((media, index) => (
-                      <div key={index} className="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-colors">
+                      <div key={index} className="bg-indigo-50 rounded-xl p-4 hover:bg-indigo-100 transition-colors">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
                             <div className="p-2 bg-white rounded-lg text-indigo-600">
                               {getMediaIcon(media.type)}
                             </div>
                             <div>
-                              <h6 className="font-semibold text-gray-900">{media.title}</h6>
+                              <h6 className="font-semibold text-gray-900 text-lg">{media.title}</h6>
                               {media.creator && (
-                                <p className="text-sm text-gray-600">{media.creator}</p>
+                                <p className="text-base text-indigo-700">{media.creator}</p>
                               )}
                               {media.year && (
-                                <p className="text-xs text-gray-500 mt-1">{media.year}</p>
+                                <p className="text-sm text-indigo-600 mt-1">{media.year}</p>
                               )}
                             </div>
                           </div>
@@ -308,12 +308,12 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
 
                     {discoveryContent.videoEmbeds && discoveryContent.videoEmbeds.length > 0 && (
                       <div className="mt-6">
-                        <h5 className="font-semibold text-gray-900 mb-3">Related Videos</h5>
+                        <h5 className="font-semibold text-indigo-900 text-xl mb-3">Related Videos</h5>
                         {discoveryContent.videoEmbeds.map((video, index) => (
                           <div key={index} className="bg-black rounded-xl overflow-hidden mb-4">
                             <div className="aspect-video">
                               {/* Replace with actual embed */}
-                              <div className="w-full h-full flex items-center justify-center bg-gray-900 text-white">
+                              <div className="w-full h-full flex items-center justify-center bg-indigo-900 text-white">
                                 Video: {video.title}
                               </div>
                             </div>
@@ -328,18 +328,18 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                 {activeTab === 'connections' && (
                   <div className="space-y-4">
                     {discoveryContent.connections?.map((connection, index) => (
-                      <div key={index} className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-5 border border-gray-200">
+                      <div key={index} className="bg-gradient-to-r from-indigo-50 to-white rounded-xl p-5 border border-indigo-200">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h6 className="font-semibold text-gray-900 text-lg">{connection.name}</h6>
-                            <p className="text-indigo-600 text-sm mt-1">{connection.relationship}</p>
+                            <h6 className="font-semibold text-gray-900 text-xl">{connection.name}</h6>
+                            <p className="text-indigo-600 text-base mt-1">{connection.relationship}</p>
                             {connection.significance && (
-                              <p className="text-gray-600 text-sm mt-2 leading-relaxed">
+                              <p className="text-indigo-700 text-base mt-2 leading-relaxed">
                                 {connection.significance}
                               </p>
                             )}
                           </div>
-                          <ChevronRight className="text-gray-400" size={20} />
+                          <ChevronRight className="text-indigo-400" size={20} />
                         </div>
                       </div>
                     ))}
@@ -348,14 +348,14 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
               </div>
 
               {/* Footer */}
-              <div className="px-8 py-4 bg-gray-50 border-t border-gray-200">
+              <div className="px-8 py-4 bg-indigo-50 border-t border-indigo-200">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs text-gray-500">
+                  <div className="text-lg font-medium text-blue-600">
                     Selected: "{selectedText.substring(0, 50)}..."
                   </div>
                   <button
                     onClick={handleClose}
-                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors text-sm font-medium text-gray-700"
+                    className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors text-lg font-semibold text-white"
                   >
                     Close
                   </button>

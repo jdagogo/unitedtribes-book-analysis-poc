@@ -405,7 +405,7 @@ export const BookSearch: React.FC<BookSearchProps> = ({
     const after = text.substring(matchEnd);
     
     return (
-      <span className="text-gray-700 leading-relaxed text-[15px]">
+      <span className="text-indigo-900 leading-relaxed text-[18px]">
         ...{before}
         <mark className="bg-yellow-300 font-bold text-black px-1 py-0.5 rounded-sm">
           {match}
@@ -427,7 +427,7 @@ export const BookSearch: React.FC<BookSearchProps> = ({
       />
       
       {/* Search Modal - Beautiful styling matching text selection modal */}
-      <div className="relative bg-white rounded-3xl shadow-2xl w-[750px] max-w-[90vw] max-h-[80vh] flex flex-col animate-slideDown border border-gray-100">
+      <div className="relative bg-white rounded-3xl shadow-2xl w-[860px] max-w-[90vw] max-h-[80vh] flex flex-col animate-slideDown border border-indigo-200 overflow-hidden">
         {/* Gradient Header - Match text selection modal */}
         <div className="relative flex-shrink-0 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 px-8 pt-8 pb-6 rounded-t-3xl">
           {/* Close Button */}
@@ -436,27 +436,27 @@ export const BookSearch: React.FC<BookSearchProps> = ({
             className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
             aria-label="Close"
           >
-            <X size={20} />
+            <X size={24} />
           </button>
 
           {/* Title with Icon */}
           <div className="flex items-center gap-4 text-white">
             <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-white/25 rounded-xl backdrop-blur-sm shadow-lg">
-              <Search size={24} className="text-white drop-shadow-lg" />
+              <Search size={28} className="text-white drop-shadow-lg" />
             </div>
-            <h3 className="text-2xl font-bold tracking-tight drop-shadow-lg">
+            <h3 className="text-3xl font-bold tracking-tight drop-shadow-lg">
               Search & Discover
             </h3>
           </div>
 
           {/* Subtitle */}
-          <p className="text-white/90 text-[15px] mt-3 leading-relaxed font-medium pl-16">
-            Search for any word, phrase, or cultural reference in Just Kids
+          <p className="text-white text-[20px] mt-3 leading-relaxed font-semibold pl-16">
+            Search for any word, phrase, or cultural reference in <i>Just Kids</i>
           </p>
         </div>
         
         {/* Search Input Section */}
-        <div className="px-8 pt-6 pb-4 border-b border-gray-200">
+        <div className="px-8 pt-6 pb-4 border-b border-indigo-200">
           
           {/* Search Input with better styling */}
           <div className="relative">
@@ -472,17 +472,35 @@ export const BookSearch: React.FC<BookSearchProps> = ({
                 }
               }}
               placeholder="Search for any word, phrase, or name..."
-              className="w-full px-5 py-3 pr-12 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-300 text-[16px] shadow-sm hover:shadow-md"
+              className="w-full px-5 py-3 pr-20 border-2 border-blue-300 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-300 text-[30px] font-semibold shadow-sm hover:shadow-md bg-blue-50/30 placeholder-indigo-500"
               autoFocus
               style={{
                 fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
               }}
             />
+            {/* Clear button - only show when there's text */}
+            {searchTerm && (
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setOriginalSearchTerm('');
+                  // Keep focus on input
+                  const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                  if (input) {
+                    input.focus();
+                  }
+                }}
+                className="absolute right-14 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-indigo-100 transition-colors duration-200"
+                aria-label="Clear search"
+              >
+                <X className="text-indigo-400 hover:text-indigo-600" size={20} />
+              </button>
+            )}
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
               {isSearching ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-gray-300 border-t-blue-600" />
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-300 border-t-blue-600" />
               ) : (
-                <Search className="text-gray-400" size={20} />
+                <Search className="text-indigo-500" size={24} />
               )}
             </div>
           </div>
@@ -492,9 +510,9 @@ export const BookSearch: React.FC<BookSearchProps> = ({
             <div className="mt-4 flex justify-center">
               <button
                 onClick={() => setShowDiscoveryCard(true)}
-                className="group flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="group flex items-center gap-2 px-7 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold text-[16px] rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+                <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
                 <span>Discover "{getDiscoveryTerm(searchTerm)}"</span>
               </button>
             </div>
@@ -502,8 +520,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
           
           {/* Quick Discovery Pills - Beautiful styling */}
           <div className="mt-5">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Quick Discovery</p>
-            <div className="flex flex-wrap gap-3">
+            <p className="text-base font-bold text-indigo-700 uppercase tracking-wider mb-3">Quick Discovery</p>
+            <div className="flex flex-wrap gap-3 justify-center">
               {[
                 { name: 'Robert', emoji: '👨‍🎨' },
                 { name: 'Dylan', emoji: '🎸' },
@@ -514,10 +532,10 @@ export const BookSearch: React.FC<BookSearchProps> = ({
                 <button
                   key={entity.name}
                   onClick={() => setSearchTerm(entity.name)}
-                  className="group relative px-4 py-2 text-[14px] font-medium text-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg border border-blue-200/50 hover:border-blue-300"
+                  className="group relative px-5 py-2.5 text-[17px] font-semibold text-indigo-700 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg border border-blue-200/50 hover:border-blue-300"
                 >
                   <span className="relative z-10 flex items-center gap-2">
-                    <span className="text-base">{entity.emoji}</span>
+                    <span className="text-lg">{entity.emoji}</span>
                     {entity.name}
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full opacity-0 group-hover:opacity-10 transition-opacity"></div>
@@ -528,8 +546,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
           
           {/* Results Count */}
           {results.length > 0 && (
-            <div className="mt-3 text-sm text-gray-600">
-              Found <span className="font-semibold text-blue-600">{results.length}</span> matches
+            <div className="mt-3 text-lg text-indigo-700">
+              Found <span className="font-bold text-blue-600 text-xl">{results.length}</span> matches
             </div>
           )}
         </div>
@@ -538,8 +556,8 @@ export const BookSearch: React.FC<BookSearchProps> = ({
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-3">
           {results.length === 0 && searchTerm.length >= 2 && !isSearching && (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-[16px]">No matches found for</p>
-              <p className="text-gray-700 font-semibold text-lg mt-1">"{searchTerm}"</p>
+              <p className="text-indigo-600 text-[19px]">No matches found for</p>
+              <p className="text-indigo-900 font-semibold text-xl mt-1">"{searchTerm}"</p>
             </div>
           )}
           
@@ -551,28 +569,28 @@ export const BookSearch: React.FC<BookSearchProps> = ({
                 group relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-[1.02]
                 ${selectedResultIndex === index 
                   ? 'border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-xl' 
-                  : 'border-gray-200 hover:border-blue-300 hover:shadow-lg hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50'
+                  : 'border-indigo-200 hover:border-blue-300 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50'
                 }
               `}
             >
               {/* Result Header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-bold rounded-full shadow-md">
+                  <div className="px-4 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-base font-bold rounded-full shadow-md">
                     Page {result.pageNumber}
                   </div>
-                  <span className="text-sm font-medium text-gray-600">
+                  <span className="text-base font-medium text-indigo-600">
                     {result.chapterTitle}
                   </span>
                 </div>
                 <div className="p-1.5 bg-blue-100 rounded-full group-hover:bg-blue-200 transition-colors">
-                  <ChevronRight className="text-blue-600" size={16} />
+                  <ChevronRight className="text-blue-600" size={20} />
                 </div>
               </div>
               
               {/* Context with Highlighted Match */}
               <div className="pl-1">
-                <div className="text-[15px] leading-relaxed">
+                <div className="text-[18px] leading-relaxed">
                   {highlightMatch(result.context, result.matchStart, result.matchEnd)}
                 </div>
               </div>

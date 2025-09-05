@@ -1,164 +1,203 @@
-# Just Kids Digital Reader
+# United Tribes Book Analysis POC
 
-A web application for reading Patti Smith's "Just Kids" with integrated search and discovery features.
+A digital reader for "Just Kids" by Patti Smith with interactive entity recognition, cultural discovery features, and multimedia integration.
 
-## Current Features
+## Features
 
-### Book Reader (`/paginated`)
-- 304-page digital version of "Just Kids"
-- Chapter navigation sidebar (19 chapters)
-- Previous/Next page navigation
-- Direct page jump functionality
-- Keyboard navigation (arrow keys for page turning, Ctrl/Cmd+F for search)
-- Responsive text sizing (22px for comfortable reading)
+### Core Reading Experience
+- **Paginated Book Viewer**: Clean, distraction-free reading interface with smooth page navigation
+- **Chapter Navigation**: Quick jump to any of 19 chapters with visual chapter cards
+- **Page Controls**: Navigate by page or chapter with enhanced navigation buttons
+- **Reading Progress**: Visual indicators showing current page (1-304) and chapter
+- **Keyboard Navigation**: Arrow keys for page turning, Ctrl/Cmd+F for search
 
-### Search & Discover System
-- Full-text search across entire book (79,435 words)
-- Search modal with contextual results (shows 150 characters around matches)
-- Quick discovery buttons for common entities (Robert, Dylan, Warhol, Chelsea Hotel, Rimbaud)
-- Search term highlighting on pages after navigation
-- Unified "Search & Discover" interface in navigation bar
+### Entity Recognition & Highlighting
+- **Smart Entity Detection**: Automatically identifies and highlights people, places, books, and cultural references
+- **Color-Coded System**:
+  - People: Blue highlighting
+  - Places: Green highlighting  
+  - Books/Authors: Orange highlighting
+  - Music/Video: Purple text (subtle styling)
 
-### Text Selection & Analysis
-- Text selection triggers discovery modal (10+ character minimum)
-- User can provide context for selected passages
-- Cultural entity database with ~60 key figures/locations from the book
-- Entity highlighting in book text with color coding by type (musicians, artists, authors, venues)
+### Search & Discovery
+- **Full-Text Search**: Search across the entire book (79,435 words)
+- **Context Discovery**: Select any text passage to explore deeper cultural connections
+- **Dual Functionality**: Text selection offers both search and cultural discovery options
+- **Smart Suggestions**: Pre-populated search suggestions for key themes and topics
+- **Highlighted Results**: Search terms highlighted in context with surrounding text
 
-### Audio Features (`/chapters`)
-- Separate audiobook player for Merle Haggard content
-- Word-level synchronization with YouTube audio
-- Not integrated with Just Kids reader
+### Multimedia Integration
+- **Video Modal**: Embedded YouTube videos for musical references
+- **Interactive Links**: Click on highlighted music references to view related videos
+- **Test Implementation**: John Coltrane reference opens video modal with "A Love Supreme"
 
-## Technical Implementation
+## Recent UI Improvements (December 2024)
 
-### Frontend
-- React with TypeScript
-- Vite build system
-- Tailwind CSS for styling
-- Responsive design with media queries
+### Typography & Readability
+- Increased all navigation text and buttons by 25% for better visibility
+- Enhanced modal text sizes by 20-30% across all components
+- Replaced all gray text with high-contrast indigo colors throughout
+- Improved search input field with larger, more readable text
 
-### Backend  
-- Express server with TypeScript
-- Smart analysis endpoint with cultural database
-- Routes for discovery and search functionality
+### Navigation Enhancements
+- Repositioned and aligned navigation elements for better usability
+- Optimized Search & Discover button size and placement
+- Added visual feedback on all interactive elements
+- Streamlined navigation bar layout
 
-## Tech Stack
+### Modal Improvements
+- **Search & Discover Modal**: Larger fonts, clear button for search input, better contrast
+- **Text Selection Modal**: Added dual Search/Discover functionality with split buttons
+- **Discovery Card**: Simplified header, increased text sizes, improved readability
+- **Video Modal**: Elegant design with gradient header and seamless YouTube integration
 
-- **Frontend**: React, TypeScript, Vite
-- **Backend**: Express, Node.js  
-- **Database**: SQLite (local development)
-- **Styling**: Tailwind CSS, inline styles
+## Technical Stack
 
-## Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-```
-
-The application will be available at `http://localhost:3000`
-
-## Main Routes
-
-- `/` - Home page
-- `/paginated` - "Just Kids" reader with entity discovery
-- `/chapters` - Audio-synchronized transcript viewer (Merle Haggard)
-- `/analyze` - Text analysis tools (in development)
-- `/discover` - Entity browser
-- `/cross-media-discovery` - Cross-media connections (experimental)
+- **Frontend**: React with TypeScript
+- **Styling**: Tailwind CSS with custom CSS modules
+- **State Management**: React Hooks (useState, useEffect, useCallback)
+- **Build System**: Vite for fast development and hot module replacement
+- **Data**: JSON-based book content and entity definitions
 
 ## Project Structure
 
 ```
-/client
-  /src
-    /components       # React components
-    /pages           # Page components  
-    /lib            # Utilities
-    /styles         # CSS files
-  /public
-    /transcripts    # Book text files
-    
-/server
-  /routes          # API endpoints
-  /services        # Business logic
-  
-/data             # Entity data and mappings
-/entity-extraction # Python scripts for entity extraction attempts
+client/
+├── src/
+│   ├── components/
+│   │   ├── paginated-book-viewer.tsx    # Main book reader
+│   │   ├── book-search.tsx              # Search & Discover modal
+│   │   ├── text-selection-modal.tsx     # Text selection handler
+│   │   ├── discovery-card.tsx           # Cultural discovery
+│   │   └── video-modal.tsx              # YouTube video player
+│   ├── styles/
+│   │   └── video-link.css              # Video link styling
+│   └── data/
+│       ├── just-kids-cleaned.json      # Book content
+│       └── entities/                   # Entity definitions
+server/
+├── routes/                              # API endpoints
+└── services/                            # Business logic
 ```
 
-## Recent Work (December 2024 Session)
+## Getting Started
 
-### Attempted Improvements with Mixed Results
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
 
-#### Book Title Recognition (C- Grade)
-- Implemented fuzzy matching for 44 book titles from Goodreads list
-- **Major Failure**: "Love and Mr. Lewisham" consistently fails to highlight as complete title
-- Partial matches work for some titles
-- Multi-line book titles break the matching logic
-- Regex patterns became overly complex and fragile
-- Multiple attempts to fix resulted in HTML corruption issues
+### Installation
 
-#### Author Recognition (Passable)
-- Added recognition for 44 authors with name variations
-- Last names generally work (e.g., "Rimbaud" → Arthur Rimbaud)
-- Blue highlighting distinguishes authors from book titles
-- No smart context awareness implemented
-- Basic functionality without sophistication
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/united-tribes-fresh.git
 
-#### Bug Fixes (Eventually Successful After Multiple Attempts)
-- Fixed extra spaces around entity highlighting (took 4+ attempts)
-- Resolved HTML attributes appearing as visible text
-- Fixed context highlighting selecting wrong paragraphs (partially)
-- Addressed search term truncation issues
+# Navigate to project directory
+cd united-tribes-fresh
 
-### Known Unresolved Issues
-- "Love and Mr. Lewisham" book title recognition completely broken
-- Context highlighting unreliable for multi-line text
-- Search navigation sometimes highlights wrong content
-- Fuzzy matching patterns fail with line breaks
-- No comprehensive testing framework
+# Install dependencies
+npm install
 
-## Recent Work (Previous Sessions)
+# Start development server
+npm run dev
+```
 
-### Entity System for "Just Kids"
-- Manually curated 60+ cultural entities from 1960s-70s NYC scene
-- Added cultural context, time periods, and related works for each entity
-- Implemented alias system to handle name variations
-- Created entity search with quick discovery buttons
-- Fixed HTML rendering issues with overlapping entity matches
+### Access the Application
+Open your browser and navigate to:
+```
+http://localhost:3000/paginated
+```
 
-### Previous Iterations
-- Attempted HarperCollins audiobook integration (unsuccessful)
-- Built working YouTube-based audio sync for different book
-- Explored various NLP approaches for entity extraction
-- Created D3.js network visualizations (performance issues)
+## Main Routes
 
-## What We've Learned
+- `/` - Home page
+- `/paginated` - "Just Kids" reader with full feature set
+- `/chapters` - Audio-synchronized transcript viewer (Merle Haggard content)
+- `/analyze` - Text analysis tools
+- `/discover` - Entity browser
+- `/cross-media-discovery` - Cross-media connections (experimental)
 
-This POC has explored multiple approaches with mixed results:
-- Manual curation works better than our automated extraction attempts
-- Audio synchronization is highly dependent on source material quality
-- Entity overlap and alias management is more complex than anticipated
-- Performance optimization is critical for text highlighting at scale
+## Key Components
 
-## Future Exploration
+### PaginatedBookViewer
+The main reading interface handling:
+- Page rendering and navigation
+- Entity highlighting and detection
+- Integration with search and discovery features
+- Video modal triggers for multimedia content
 
-Potential directions (not promises):
-- Better NLP models for entity extraction
-- Improved performance for large-scale entity highlighting
-- Mobile-first redesign
-- Integration of different book systems
-- External API connections (Wikipedia, MusicBrainz)
+### BookSearch
+Comprehensive search functionality with:
+- Real-time search results with context
+- Entity filtering and quick discovery buttons
+- Clear button for search input
+- High-contrast, readable text throughout
+
+### TextSelectionModal
+Enhanced text selection with:
+- Dual Search/Discover functionality
+- User context input for deeper exploration
+- Quick suggestion pills for common queries
+- Character and word count display
+
+### VideoModal
+Clean video playback featuring:
+- YouTube embedding with full controls
+- Gradient header design
+- Optional context display
+- Responsive sizing
+
+## Entity System
+
+### Cultural Database
+- 60+ manually curated entities from 1960s-70s NYC scene
+- Includes musicians, artists, authors, and venues
+- Each entity includes cultural context and time periods
+- Alias system handles name variations
+
+### Book & Author Recognition
+- 44 books from "Just Kids" Goodreads reading list
+- Author detection with name variations
+- Color-coded highlighting system
+- Fuzzy matching for partial references
+
+## Known Issues & Limitations
+
+- Multi-line book titles may not highlight completely
+- Context highlighting can be inconsistent for complex selections
+- Entity overlap handling needs refinement
+- Mobile responsiveness not fully optimized
+
+## Audio Features (`/chapters` route)
+
+Separate implementation for audiobook synchronization:
+- Word-level sync with YouTube audio
+- Merle Haggard's "My House of Memories" content
+- 43,263 words with timestamps
+- Not integrated with main Just Kids reader
+
+## Future Enhancements
+
+Potential areas for exploration:
+- Additional book titles beyond "Just Kids"
+- More multimedia content types (audio, images)
+- User annotations and bookmarks
+- Reading statistics and progress tracking
+- Social sharing features
+- Mobile-responsive design
+- External API integrations (Wikipedia, MusicBrainz)
 
 ## Contributing
 
-This is an experimental project in active development. Feedback and suggestions welcome, though many features are still exploratory.
+This is an experimental POC in active development. Feedback and suggestions are welcome.
 
 ## License
 
 MIT
+
+## Acknowledgments
+
+- Book content: "Just Kids" by Patti Smith
+- Entity data curated for 1960s-1970s NYC cultural scene
+- YouTube API for video embedding
+- Community feedback for UI improvements
