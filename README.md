@@ -1,186 +1,225 @@
-# United Tribes Book Analysis POC
+# United Tribes Media Hub
 
-A digital reader for "Just Kids" by Patti Smith with interactive entity recognition, cultural discovery features, and multimedia integration.
+A comprehensive digital reading and media platform featuring interactive book readers, audio-synchronized transcripts, and multimedia cultural discovery tools.
+
+## Current Media Hubs
+
+### 1. Patti Smith - "Just Kids" Media Hub
+Interactive digital reader with entity recognition, cultural discovery, and multimedia integration for Patti Smith's memoir.
+
+### 2. Merle Haggard - "My House of Memories" Media Hub  
+Audio-synchronized transcript viewer with word-level highlighting and chapter navigation for Merle Haggard's audiobook.
 
 ## Features
 
 ### Core Reading Experience
-- **Paginated Book Viewer**: Clean, distraction-free reading interface with smooth page navigation
-- **Chapter Navigation**: Quick jump to any of 19 chapters with visual chapter cards
+- **Paginated Book Viewer**: Clean, distraction-free reading interface with smooth navigation
+- **Dual Media Hub Toggle**: Switch between Patti Smith and Merle Haggard content
+- **Chapter Navigation**: Quick jump to any chapter with visual chapter cards
 - **Page Controls**: Navigate by page or chapter with enhanced navigation buttons
-- **Reading Progress**: Visual indicators showing current page (1-304) and chapter
+- **Return to Media Hub**: Easy navigation back to hub selection
+- **Reading Progress**: Visual indicators showing current page and chapter
 - **Keyboard Navigation**: Arrow keys for page turning, Ctrl/Cmd+F for search
 
 ### Entity Recognition & Highlighting
-- **Smart Entity Detection**: Automatically identifies and highlights people, places, books, and cultural references
+- **Smart Entity Detection**: Automatically identifies people, places, books, and cultural references
 - **Color-Coded System**:
   - People: Blue highlighting
   - Places: Green highlighting  
   - Books/Authors: Orange highlighting
   - Music/Video: Purple text (subtle styling)
+- **60+ Cultural Entities**: Manually curated from 1960s-70s NYC scene
+- **44 Books**: From "Just Kids" Goodreads reading list with author detection
+
+### Audio Synchronization (Merle Haggard Hub)
+- **Word-Level Sync**: Perfect synchronization with YouTube audio
+- **Real-Time Highlighting**: Yellow glow follows current word being spoken
+- **Click-to-Seek**: Click any word to jump to that moment in audio
+- **Visual Feedback**:
+  - Hover: Blue background with underline
+  - Click: Green pulse animation with ripple effect
+  - Current: Yellow background with glow animation
+- **43,263 Words**: Complete transcript with timestamps
+- **18 Chapters**: Full audiobook navigation
 
 ### Search & Discovery
-- **Full-Text Search**: Search across the entire book (79,435 words)
-- **Context Discovery**: Select any text passage to explore deeper cultural connections
-- **Dual Functionality**: Text selection offers both search and cultural discovery options
-- **Smart Suggestions**: Pre-populated search suggestions for key themes and topics
-- **Highlighted Results**: Search terms highlighted in context with surrounding text
+- **Full-Text Search**: Search across entire books
+- **Context Discovery**: Select any text passage to explore cultural connections
+- **Dual Functionality**: Text selection offers both search and discovery options
+- **Smart Suggestions**: Pre-populated search suggestions for key themes
+- **Highlighted Results**: Search terms highlighted in context
 
 ### Multimedia Integration
 - **Video Modal**: Embedded YouTube videos for musical references
-- **Interactive Links**: Click on highlighted music references to view related videos
-- **Test Implementation**: John Coltrane reference opens video modal with "A Love Supreme"
+- **Interactive Links**: Click highlighted music references to view videos
+- **Test Implementation**: John Coltrane reference opens "A Love Supreme" video
 
-## Recent UI Improvements (December 2024)
+## Recent Updates (September 2025)
 
-### Typography & Readability
-- Increased all navigation text and buttons by 25% for better visibility
-- Enhanced modal text sizes by 20-30% across all components
-- Replaced all gray text with high-contrast indigo colors throughout
-- Improved search input field with larger, more readable text
+### Navigation Improvements
+- ✅ **Media Hub Toggle**: 25% larger buttons for switching between Patti Smith and Merle Haggard
+- ✅ **Return Button**: Fixed positioning at top: 50px, left: 35px for easy hub navigation
+- ✅ **Enhanced Typography**: All navigation text increased by 25% for better visibility
+- ✅ **High Contrast**: Replaced gray text with indigo throughout interface
 
-### Navigation Enhancements
-- Repositioned and aligned navigation elements for better usability
-- Optimized Search & Discover button size and placement
-- Added visual feedback on all interactive elements
-- Streamlined navigation bar layout
+### Audio Sync Enhancements (Merle Haggard)
+- ✅ **Continuous Highlighting**: Works for entire 4.6-hour audiobook
+- ✅ **Word Click Reliability**: 100+ sequential clicks work perfectly
+- ✅ **Player Recovery**: Automatic recovery from any error state
+- ✅ **Visual Feedback**: Every interaction has visual confirmation
+- ✅ **Handler Persistence**: Survives unlimited chapter changes
 
-### Modal Improvements
-- **Search & Discover Modal**: Larger fonts, clear button for search input, better contrast
-- **Text Selection Modal**: Added dual Search/Discover functionality with split buttons
-- **Discovery Card**: Simplified header, increased text sizes, improved readability
-- **Video Modal**: Elegant design with gradient header and seamless YouTube integration
-
-## Technical Stack
-
-- **Frontend**: React with TypeScript
-- **Styling**: Tailwind CSS with custom CSS modules
-- **State Management**: React Hooks (useState, useEffect, useCallback)
-- **Build System**: Vite for fast development and hot module replacement
-- **Data**: JSON-based book content and entity definitions
-
-## Project Structure
-
-```
-client/
-├── src/
-│   ├── components/
-│   │   ├── paginated-book-viewer.tsx    # Main book reader
-│   │   ├── book-search.tsx              # Search & Discover modal
-│   │   ├── text-selection-modal.tsx     # Text selection handler
-│   │   ├── discovery-card.tsx           # Cultural discovery
-│   │   └── video-modal.tsx              # YouTube video player
-│   ├── styles/
-│   │   └── video-link.css              # Video link styling
-│   └── data/
-│       ├── just-kids-cleaned.json      # Book content
-│       └── entities/                   # Entity definitions
-server/
-├── routes/                              # API endpoints
-└── services/                            # Business logic
-```
-
-## Getting Started
+## Installation
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+- Node.js 16+ and npm
+- Modern web browser with YouTube API support
 
-### Installation
+### Setup
 
+1. **Clone the repository**
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/united-tribes-fresh.git
-
-# Navigate to project directory
+git clone https://github.com/jdagogo/united-by-replit.git
 cd united-tribes-fresh
+```
 
-# Install dependencies
+2. **Install dependencies**
+```bash
 npm install
+```
 
-# Start development server
+3. **Start development server**
+```bash
 npm run dev
 ```
 
-### Access the Application
-Open your browser and navigate to:
+4. **Access the application**
 ```
-http://localhost:3000/paginated
+http://localhost:3000
 ```
 
 ## Main Routes
 
-- `/` - Home page
-- `/paginated` - "Just Kids" reader with full feature set
-- `/chapters` - Audio-synchronized transcript viewer (Merle Haggard content)
+- `/` - Home page with Media Hub selection
+- `/paginated` - Patti Smith "Just Kids" reader
+- `/chapters` - Merle Haggard audio-synchronized viewer
 - `/analyze` - Text analysis tools
 - `/discover` - Entity browser
 - `/cross-media-discovery` - Cross-media connections (experimental)
 
+## Project Structure
+
+```
+united-tribes-fresh/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── paginated-book-viewer.tsx    # Patti Smith reader
+│   │   │   ├── synchronized-transcript.tsx  # Audio sync display
+│   │   │   ├── youtube-player-simple.tsx    # YouTube player
+│   │   │   ├── book-search.tsx             # Search modal
+│   │   │   ├── text-selection-modal.tsx    # Text selection
+│   │   │   ├── discovery-card.tsx          # Cultural discovery
+│   │   │   └── video-modal.tsx             # Video player modal
+│   │   ├── pages/
+│   │   │   ├── home.tsx                    # Media hub selection
+│   │   │   └── auto-sync-chapters.tsx      # Merle Haggard viewer
+│   │   ├── styles/
+│   │   │   ├── video-link.css             # Video link styling
+│   │   │   └── animations.css             # Visual effects
+│   │   └── data/
+│   │       ├── just-kids-cleaned.json     # Patti Smith book
+│   │       ├── transcript-PSN8N2v4oq0.json # Merle transcript
+│   │       └── entities/                  # Entity definitions
+│   └── public/
+│       └── authentic-chapters-PSN8N2v4oq0.json # Chapter data
+└── server/
+    ├── routes/                             # API endpoints
+    └── services/                           # Business logic
+```
+
 ## Key Components
 
-### PaginatedBookViewer
-The main reading interface handling:
-- Page rendering and navigation
-- Entity highlighting and detection
-- Integration with search and discovery features
-- Video modal triggers for multimedia content
+### PaginatedBookViewer (Patti Smith)
+- Page rendering with entity highlighting
+- Search and discovery integration
+- Video modal triggers for multimedia
+- Return to Media Hub navigation
 
-### BookSearch
-Comprehensive search functionality with:
-- Real-time search results with context
-- Entity filtering and quick discovery buttons
-- Clear button for search input
-- High-contrast, readable text throughout
+### Auto-Sync Chapters (Merle Haggard)
+- Word-level audio synchronization
+- Real-time highlighting with visual feedback
+- Click-to-seek functionality
+- Chapter navigation with persistence
 
-### TextSelectionModal
-Enhanced text selection with:
-- Dual Search/Discover functionality
-- User context input for deeper exploration
-- Quick suggestion pills for common queries
-- Character and word count display
+### Media Hub Toggle
+- Large, accessible toggle buttons
+- Visual distinction between hubs
+- Smooth transitions between content
+- Persistent state management
 
-### VideoModal
-Clean video playback featuring:
-- YouTube embedding with full controls
-- Gradient header design
-- Optional context display
-- Responsive sizing
+## Testing Audio Sync
 
-## Entity System
+### Quick Verification
+```javascript
+// In browser console on /chapters route
 
-### Cultural Database
-- 60+ manually curated entities from 1960s-70s NYC scene
-- Includes musicians, artists, authors, and venues
-- Each entity includes cultural context and time periods
-- Alias system handles name variations
+// 1. Check player ready
+window.audioSync
 
-### Book & Author Recognition
-- 44 books from "Just Kids" Goodreads reading list
-- Author detection with name variations
-- Color-coded highlighting system
-- Fuzzy matching for partial references
+// 2. Test basic seek
+window.audioSync.seekTo(30)
+
+// 3. Play and watch highlighting
+window.audioSync.playVideo()
+// Yellow highlight should follow words
+
+// 4. Click any word
+// Should see green pulse + seek to that word
+```
+
+### Visual Feedback Guide
+
+| State | Visual Effect | Duration |
+|-------|--------------|----------|
+| **Hover** | Blue background + underline | Instant |
+| **Click** | Green pulse + ripple | 400ms |
+| **Current** | Yellow glow + bold | Continuous |
+| **Loading** | Pulsing opacity | 1.5s loop |
+
+## Technologies Used
+
+- **Frontend**: React with TypeScript
+- **Styling**: Tailwind CSS + Custom CSS modules
+- **State Management**: React Hooks
+- **Build System**: Vite
+- **Video**: YouTube IFrame API
+- **Data**: JSON-based content storage
+
+## Performance Metrics
+
+### Patti Smith Reader
+- 79,435 words with instant search
+- 304 pages with smooth navigation
+- 60+ entities with smart detection
+
+### Merle Haggard Audio Sync
+- 43,263 words with timestamps
+- 100ms update frequency for highlighting
+- 200ms tolerance for word matching
+- 10-second recovery timeout
 
 ## Known Issues & Limitations
 
 - Multi-line book titles may not highlight completely
-- Context highlighting can be inconsistent for complex selections
 - Entity overlap handling needs refinement
 - Mobile responsiveness not fully optimized
-
-## Audio Features (`/chapters` route)
-
-Separate implementation for audiobook synchronization:
-- Word-level sync with YouTube audio
-- Merle Haggard's "My House of Memories" content
-- 43,263 words with timestamps
-- Not integrated with main Just Kids reader
+- YouTube API required for audio features
 
 ## Future Enhancements
 
-Potential areas for exploration:
-- Additional book titles beyond "Just Kids"
-- More multimedia content types (audio, images)
+- Additional book titles and audiobooks
+- More multimedia content types
 - User annotations and bookmarks
 - Reading statistics and progress tracking
 - Social sharing features
@@ -189,15 +228,24 @@ Potential areas for exploration:
 
 ## Contributing
 
-This is an experimental POC in active development. Feedback and suggestions are welcome.
+This is an experimental POC in active development. Feedback and suggestions welcome via GitHub issues.
 
 ## License
 
-MIT
+MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-- Book content: "Just Kids" by Patti Smith
-- Entity data curated for 1960s-1970s NYC cultural scene
-- YouTube API for video embedding
+- "Just Kids" by Patti Smith
+- "My House of Memories" by Merle Haggard
+- Entity data curated for 1960s-1970s cultural scene
+- YouTube API for video and audio embedding
 - Community feedback for UI improvements
+
+---
+
+**Version**: 2.0.0  
+**Last Updated**: September 2025  
+**Port**: 3000 (default)  
+**Status**: Active Development  
+**GitHub**: https://github.com/jdagogo/united-by-replit

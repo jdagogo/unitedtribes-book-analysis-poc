@@ -1,6 +1,6 @@
 /* Subtle styling for video links */
 .entity-music-video {
-  color: #8B5CF6 !important;
+  color: #581C87 !important;
   font-weight: 600 !important;
   cursor: pointer !important;
   transition: color 0.2s ease;
@@ -11,7 +11,7 @@
 }
 
 .entity-music-video:hover {
-  color: #7C3AED !important;
+  color: #3B0764 !important;
   text-decoration: underline !important;
 }
 

@@ -34,6 +34,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEntity, setSelectedEntity] = useState<any>(null);
   const [isEntityModalOpen, setIsEntityModalOpen] = useState(false);
+  const [activeHub, setActiveHub] = useState<"merle" | "patti">("merle");
 
   // Get all entities from the analysis
   const allEntities = authenticMerleAnalysis.entityAnalysis;
@@ -237,16 +238,41 @@ export default function Home() {
         <div className="mb-16">
           <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200">
             <CardContent className="py-8">
+              {/* Hub Toggle */}
+              <div className="flex justify-center mb-6">
+                <div className="inline-flex rounded-lg border-2 border-amber-300 p-1.5 bg-white">
+                  <Button
+                    onClick={() => setActiveHub("merle")}
+                    variant={activeHub === "merle" ? "default" : "ghost"}
+                    className={activeHub === "merle" ? "bg-amber-500 hover:bg-amber-600 text-lg px-6 py-3" : "text-lg px-6 py-3"}
+                    size="lg"
+                  >
+                    <span className="text-2xl mr-2">🎵</span> Merle Haggard
+                  </Button>
+                  <Button
+                    onClick={() => setActiveHub("patti")}
+                    variant={activeHub === "patti" ? "default" : "ghost"}
+                    className={activeHub === "patti" ? "bg-purple-500 hover:bg-purple-600 text-lg px-6 py-3" : "text-lg px-6 py-3"}
+                    size="lg"
+                  >
+                    <span className="text-2xl mr-2">🎸</span> Patti Smith
+                  </Button>
+                </div>
+              </div>
+
               <div className="text-center mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  🎵 Merle Haggard Media Hub
+                  {activeHub === "merle" ? "🎵 Merle Haggard Media Hub" : "🎸 Patti Smith Media Hub"}
                 </h2>
                 <p className="text-lg text-gray-700">
-                  One-click access to all authentic content and analysis
+                  {activeHub === "merle" 
+                    ? "One-click access to all authentic content and analysis"
+                    : "Explore Patti Smith's literary and musical journey"}
                 </p>
               </div>
               
-              <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {activeHub === "merle" ? (
+                <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                 {/* Podcast Analysis */}
                 <Link href="/analyze">
                   <Card className="h-full hover:shadow-lg transition-all hover:scale-105 cursor-pointer bg-white border-2 border-blue-200 hover:border-blue-400">
@@ -289,8 +315,31 @@ export default function Home() {
                   </Card>
                 </Link>
               </div>
+              ) : (
+                /* Patti Smith Media Hub */
+                <div className="grid md:grid-cols-1 gap-6 max-w-md mx-auto">
+                  {/* Just Kids Book */}
+                  <Link href="/paginated">
+                    <Card className="h-full hover:shadow-lg transition-all hover:scale-105 cursor-pointer bg-white border-2 border-purple-200 hover:border-purple-400">
+                      <CardContent className="p-6 text-center">
+                        <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Book className="h-8 w-8 text-purple-600" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          <em>Just Kids</em>
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-3">
+                          Patti Smith's National Book Award-winning memoir of her relationship with Robert Mapplethorpe
+                        </p>
+                        <Badge className="bg-purple-100 text-purple-800 text-xs">Paginated Reader</Badge>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </div>
+              )}
 
-              {/* Entity Search */}
+              {/* Entity Search - Only show for Merle hub */}
+              {activeHub === "merle" && (
               <div className="mt-8 max-w-2xl mx-auto">
                 <div className="text-center mb-4">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">🔍 Entity Explorer</h3>
@@ -353,10 +402,13 @@ export default function Home() {
                   </div>
                 )}
               </div>
+              )}
 
               <div className="text-center mt-6">
                 <p className="text-sm text-gray-600">
-                  All content uses authentic sources with full entity extraction and cross-referencing
+                  {activeHub === "merle" 
+                    ? "All content uses authentic sources with full entity extraction and cross-referencing"
+                    : "Experience Patti Smith's groundbreaking memoir in an interactive format"}
                 </p>
               </div>
             </CardContent>

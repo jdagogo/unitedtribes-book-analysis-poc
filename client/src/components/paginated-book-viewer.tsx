@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft, Search, Home } from 'lucide-react';
+import { Link } from 'wouter';
 import TextSelectionModal from './text-selection-modal';
 import BookSearch from './book-search';
 import VideoModal from './video-modal';
@@ -1116,7 +1117,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         replacement = `<span class="entity-highlight entity-author author-highlight" data-entity="${authorEntity.name || authorEntity.author}" data-type="author" data-relatedbook="${authorEntity.relatedBook || ''}">${r.match}</span>`;
       } else if (r.type === 'music-video') {
         // Subtle highlighting for music/video references - just bold purple text
-        replacement = `<span class="entity-highlight entity-music-video" data-entity="${r.entity.name}" data-type="music-video" style="color: #8B5CF6; font-weight: 600; cursor: pointer; position: relative;" title="🎵 Video">${r.match}</span>`;
+        replacement = `<span class="entity-highlight entity-music-video" data-entity="${r.entity.name}" data-type="music-video" style="color: #581C87; font-weight: 600; cursor: pointer; position: relative;" title="🎵 Video">${r.match}</span>`;
       } else if (r.type === 'person' || r.type === 'place') {
         // Highlight persons and places with appropriate styles
         const entityClass = r.type === 'person' ? 'entity-person' : 'entity-place';
@@ -1848,6 +1849,42 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           }
         }
       `}</style>
+
+      {/* Return to Media Hub Button - positioned above chapters */}
+      <Link href="/">
+        <button style={{
+          position: 'fixed',
+          top: '50px',
+          left: '35px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          padding: '0.75rem 1.5rem',
+          fontSize: '1.125rem',
+          fontWeight: '500',
+          backgroundColor: '#7c3aed',
+          color: 'white',
+          border: 'none',
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          zIndex: 10
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.backgroundColor = '#6d28d9';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+          e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.backgroundColor = '#7c3aed';
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        }}>
+          <Home size={20} />
+          <span>Return to Media Hub</span>
+        </button>
+      </Link>
 
       {/* Chapter Sidebar */}
       <div className="chapter-sidebar">
