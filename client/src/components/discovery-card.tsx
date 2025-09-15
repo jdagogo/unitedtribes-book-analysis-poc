@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Sparkles, Music, Film, Book, MapPin, Calendar, ExternalLink, ChevronRight, Loader2 } from 'lucide-react';
+import { X, Sparkles, Music, Film, Book, MapPin, Calendar, ExternalLink, ChevronRight, Loader2, Instagram, Frame, Youtube, FileText } from 'lucide-react';
 
 interface DiscoveryCardProps {
   selectedText: string;
@@ -16,11 +16,17 @@ interface DiscoveryContent {
     context: string;
   };
   relatedMedia?: {
-    type: 'music' | 'film' | 'book' | 'venue';
+    type: 'music' | 'film' | 'book' | 'venue' | 'instagram' | 'artwork' | 'youtube' | 'article';
     title: string;
     creator?: string;
     year?: string;
     link?: string;
+    embedId?: string;
+    imageUrl?: string;
+    description?: string;
+    museum?: string;
+    exhibition?: string;
+    publication?: string;
   }[];
   connections?: {
     name: string;
@@ -127,6 +133,10 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
       case 'film': return <Film size={16} />;
       case 'book': return <Book size={16} />;
       case 'venue': return <MapPin size={16} />;
+      case 'instagram': return <Instagram size={16} />;
+      case 'artwork': return <Frame size={16} />;
+      case 'youtube': return <Youtube size={16} />;
+      case 'article': return <FileText size={16} />;
       default: return null;
     }
   };
@@ -276,33 +286,280 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                 {activeTab === 'media' && (
                   <div className="space-y-4">
                     {discoveryContent.relatedMedia?.map((media, index) => (
-                      <div key={index} className="bg-indigo-50 rounded-xl p-4 hover:bg-indigo-100 transition-colors">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start gap-3">
-                            <div className="p-2 bg-white rounded-lg text-indigo-600">
-                              {getMediaIcon(media.type)}
-                            </div>
-                            <div>
-                              <h6 className="font-semibold text-gray-900 text-lg">{media.title}</h6>
-                              {media.creator && (
-                                <p className="text-base text-indigo-700">{media.creator}</p>
+                      <div key={index}>
+                        {/* Special handling for Instagram embeds */}
+                        {media.type === 'instagram' && media.embedId ? (
+                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-white rounded-lg text-purple-600">
+                                  {getMediaIcon(media.type)}
+                                </div>
+                                <div>
+                                  <h6 className="font-semibold text-gray-900 text-lg">{media.title}</h6>
+                                  {media.creator && (
+                                    <p className="text-base text-purple-700">{media.creator}</p>
+                                  )}
+                                  {media.year && (
+                                    <p className="text-sm text-purple-600 mt-1">{media.year}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-purple-600 hover:text-purple-700 p-2"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
                               )}
-                              {media.year && (
-                                <p className="text-sm text-indigo-600 mt-1">{media.year}</p>
+                            </div>
+                            {/* Instagram Embed */}
+                            <div className="bg-white rounded-lg overflow-hidden shadow-md">
+                              <iframe
+                                src={`https://www.instagram.com/p/${media.embedId}/embed`}
+                                className="w-full"
+                                height="500"
+                                frameBorder="0"
+                                scrolling="no"
+                                allowTransparency={true}
+                                allow="encrypted-media"
+                              ></iframe>
+                            </div>
+                          </div>
+                        ) : media.type === 'artwork' && media.imageUrl ? (
+                          /* Special handling for artwork with embedded images */
+                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-5 border border-amber-300 shadow-lg">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-white rounded-lg text-amber-700">
+                                  {getMediaIcon(media.type)}
+                                </div>
+                                <div>
+                                  <h6 className="font-bold text-gray-900 text-xl">{media.title}</h6>
+                                  <p className="text-base text-amber-800 font-semibold">{media.creator}, {media.year}</p>
+                                  {media.museum && (
+                                    <p className="text-sm text-amber-700 mt-1">{media.museum}</p>
+                                  )}
+                                  {media.exhibition && (
+                                    <p className="text-xs text-amber-600 italic">{media.exhibition}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-amber-700 hover:text-amber-800 p-2 hover:bg-amber-100 rounded-lg transition-colors flex items-center gap-1"
+                                  title="View in Art Gallery NSW collection"
+                                >
+                                  <ExternalLink size={16} />
+                                  <span className="text-xs font-medium">View in Gallery</span>
+                                </a>
+                              )}
+                            </div>
+
+                            {/* Artwork Image */}
+                            <div className="bg-white rounded-lg overflow-hidden shadow-xl mb-4 border-2 border-amber-300">
+                              <div className="relative bg-gradient-to-br from-amber-100 to-orange-100 p-2">
+                                <img
+                                  src={media.imageUrl}
+                                  alt={media.title}
+                                  className="w-full h-auto rounded-md"
+                                  style={{
+                                    maxHeight: '600px',
+                                    objectFit: 'contain',
+                                    backgroundColor: '#fdfaf7'
+                                  }}
+                                  loading="eager"
+                                  onError={(e) => {
+                                    console.error('Failed to load image:', media.imageUrl);
+                                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTk5IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCI+SW1hZ2UgTG9hZGluZy4uLjwvdGV4dD48L3N2Zz4=';
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Artwork Description */}
+                            {media.description && (
+                              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-amber-200">
+                                <div className="text-gray-800 text-base leading-relaxed">
+                                  {media.description.split('\n').map((line, idx) => {
+                                    // Parse for bold text (text between **)
+                                    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+                                    return (
+                                      <p key={idx} className={idx === 0 ? "italic" : "mt-3"}>
+                                        {parts.map((part, partIdx) => {
+                                          if (part.startsWith('**') && part.endsWith('**')) {
+                                            return <strong key={partIdx} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
+                                          }
+                                          return <span key={partIdx}>{part}</span>;
+                                        })}
+                                      </p>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : media.type === 'youtube' && media.embedId ? (
+                          /* YouTube video embed - elegantly constrained */
+                          <div className="bg-gradient-to-r from-red-50 to-gray-50 rounded-xl p-4 border border-red-200">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-white rounded-lg text-red-600">
+                                  {getMediaIcon(media.type)}
+                                </div>
+                                <div>
+                                  <h6 className="font-semibold text-gray-900 text-lg">{media.title}</h6>
+                                  {media.creator && (
+                                    <p className="text-base text-red-700">{media.creator}</p>
+                                  )}
+                                  {media.year && (
+                                    <p className="text-sm text-red-600 mt-1">{media.year}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-red-600 hover:text-red-700 p-2"
+                                  title="Watch on YouTube"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
+                              )}
+                            </div>
+
+                            {/* YouTube Embed - constrained size */}
+                            <div className="bg-black rounded-lg overflow-hidden shadow-lg">
+                              <div className="relative" style={{ paddingBottom: '56.25%', height: 0 }}>
+                                <iframe
+                                  src={`https://www.youtube.com/embed/${media.embedId}?rel=0&modestbranding=1`}
+                                  className="absolute top-0 left-0 w-full h-full"
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  title={media.title}
+                                ></iframe>
+                              </div>
+                            </div>
+
+                            {/* Video Description */}
+                            {media.description && (
+                              <div className="mt-3 text-sm text-gray-700 italic">
+                                {media.description}
+                              </div>
+                            )}
+                          </div>
+                        ) : media.type === 'article' && media.imageUrl ? (
+                          /* Article with image - Patti's Substack */
+                          <div className="bg-gradient-to-r from-slate-50 to-zinc-50 rounded-xl p-4 border border-slate-300">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-white rounded-lg text-slate-700">
+                                  {getMediaIcon(media.type)}
+                                </div>
+                                <div>
+                                  <h6 className="font-semibold text-gray-900 text-lg">
+                                    {media.title.includes('**') ? (
+                                      media.title.split(/(\*\*[^*]+\*\*)/g).map((part, idx) => {
+                                        if (part.startsWith('**') && part.endsWith('**')) {
+                                          return <span key={idx}>{part.slice(2, -2)}</span>;
+                                        }
+                                        return <span key={idx}>{part}</span>;
+                                      })
+                                    ) : (
+                                      media.title
+                                    )}
+                                  </h6>
+                                  {media.creator && (
+                                    <p className="text-base text-slate-700">{media.creator}</p>
+                                  )}
+                                  {media.publication && (
+                                    <p className="text-sm text-slate-600 italic">{media.publication}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-slate-600 hover:text-slate-800 p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                                  title="Read on Substack"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
+                              )}
+                            </div>
+
+                            {/* Article Image - constrained height */}
+                            <div className="bg-white rounded-lg overflow-hidden shadow-md mb-3">
+                              <img
+                                src={media.imageUrl}
+                                alt={media.title}
+                                className="w-full h-auto"
+                                style={{ maxHeight: '300px', objectFit: 'cover' }}
+                                loading="lazy"
+                              />
+                            </div>
+
+                            {/* Article Description */}
+                            {media.description && (
+                              <div className="text-sm text-slate-700 leading-relaxed">
+                                {media.description.split('\n').map((line, idx) => {
+                                  const parts = line.split(/(\*\*[^*]+\*\*)/g);
+                                  return (
+                                    <p key={idx} className={idx > 0 ? "mt-2" : ""}>
+                                      {parts.map((part, partIdx) => {
+                                        if (part.startsWith('**') && part.endsWith('**')) {
+                                          return <strong key={partIdx} className="font-bold text-slate-900">{part.slice(2, -2)}</strong>;
+                                        }
+                                        return <span key={partIdx} className={idx === 0 && partIdx === 0 ? "" : idx > 2 ? "italic" : ""}>{part}</span>;
+                                      })}
+                                    </p>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          /* Regular media items */
+                          <div className="bg-indigo-50 rounded-xl p-4 hover:bg-indigo-100 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-white rounded-lg text-indigo-600">
+                                  {getMediaIcon(media.type)}
+                                </div>
+                                <div>
+                                  <h6 className="font-semibold text-gray-900 text-lg">{media.title}</h6>
+                                  {media.creator && (
+                                    <p className="text-base text-indigo-700">{media.creator}</p>
+                                  )}
+                                  {media.year && (
+                                    <p className="text-sm text-indigo-600 mt-1">{media.year}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-indigo-600 hover:text-indigo-700 p-2"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
                               )}
                             </div>
                           </div>
-                          {media.link && (
-                            <a
-                              href={media.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-indigo-600 hover:text-indigo-700 p-2"
-                            >
-                              <ExternalLink size={16} />
-                            </a>
-                          )}
-                        </div>
+                        )}
                       </div>
                     ))}
 

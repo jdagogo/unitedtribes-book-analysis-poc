@@ -189,6 +189,64 @@ const entityDatabase: Record<string, DiscoveryContent> = {
         source: 'Patti Smith, Just Kids'
       }
     ]
+  },
+  'robert collages': {
+    title: 'Robert\'s Collage Art',
+    summary: 'Robert Mapplethorpe\'s early collage work explored themes of outsiders, freaks, and religious iconography, creating altarpiece-style compositions that challenged conventional boundaries.',
+    culturalContext: 'Before his fame as a photographer, Robert created mixed-media collages that combined found imagery of circus freaks, religious symbols, and underground culture. These works reflected the bohemian ethos of 1970s NYC.',
+    timeline: {
+      year: '1970-1972',
+      context: 'Early artistic period at the Chelsea Hotel'
+    },
+    relatedMedia: [
+      {
+        type: 'instagram',
+        title: 'Contemporary Collage Art',
+        creator: 'Modern Artist',
+        year: '2020',
+        link: 'https://www.instagram.com/reel/CEXG0FrpJqB/',
+        embedId: 'CEXG0FrpJqB'
+      },
+      {
+        type: 'book',
+        title: 'Mapplethorpe: The Complete Flowers',
+        creator: 'Herbert Muschamp',
+        year: '1990'
+      },
+      {
+        type: 'venue',
+        title: 'Gallery Show at Max\'s Kansas City',
+        creator: 'Underground Art Space',
+        year: '1971'
+      }
+    ],
+    connections: [
+      {
+        name: 'Diane Arbus',
+        relationship: 'Artistic influence',
+        significance: 'Her photographs of marginalized people influenced Robert\'s interest in "freaks" and outsiders'
+      },
+      {
+        name: 'Joseph Cornell',
+        relationship: 'Collage predecessor',
+        significance: 'Cornell\'s box assemblages inspired Robert\'s early mixed-media work'
+      },
+      {
+        name: 'Sandy Daley',
+        relationship: 'Collaborator and friend',
+        significance: 'Fellow artist who shared Robert\'s interest in religious and transgressive imagery'
+      }
+    ],
+    quotes: [
+      {
+        text: 'The show consisted of Robert\'s collages that centered on freaks, but he prepared one fairly large altarpiece for the event.',
+        source: 'Patti Smith, Just Kids, page 207'
+      },
+      {
+        text: 'He saw beauty in what others found disturbing.',
+        source: 'Patti Smith on Robert\'s early work'
+      }
+    ]
   }
 };
 
