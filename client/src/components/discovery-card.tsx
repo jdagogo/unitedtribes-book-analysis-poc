@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Music, Film, Book, MapPin, Calendar, ExternalLink, ChevronRight, Loader2, Instagram, Frame, Youtube, FileText } from 'lucide-react';
+import { ArticleScreenshotModal } from './article-screenshot-modal';
 
 interface DiscoveryCardProps {
   selectedText: string;
@@ -53,6 +54,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [discoveryContent, setDiscoveryContent] = useState<DiscoveryContent | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'media' | 'connections'>('overview');
+  const [articleViewerData, setArticleViewerData] = useState<{ url: string; title: string; screenshot?: string; price?: number } | null>(null);
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 10);
@@ -162,7 +164,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <div className="bg-white rounded-3xl shadow-2xl w-[800px] max-w-[90vw] max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="bg-white rounded-3xl shadow-2xl w-[960px] max-w-[90vw] max-h-[80vh] overflow-hidden flex flex-col">
           {/* Header */}
           <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-8 pt-8 pb-6">
             <button
@@ -394,6 +396,34 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                                       <p key={idx} className={idx === 0 ? "italic" : "mt-3"}>
                                         {parts.map((part, partIdx) => {
                                           if (part.startsWith('**') && part.endsWith('**')) {
+                                            const boldText = part.slice(2, -2);
+                                            // Check if this is a clickable article title
+                                            if ((boldText === 'Forty Years of Rolling Stone: Patti Smith' ||
+                                                 boldText === 'Edie Sedgwick Is the Poster Girl for the No-Pants Look' ||
+                                                 boldText === 'Patti Smith Announces 50th Anniversary Horses Tour') && media.link) {
+                                              // Use media.screenshot if available, otherwise use hardcoded paths
+                                              const screenshotPath = media.screenshot || (
+                                                boldText.includes('Rolling Stone')
+                                                  ? '/article-screenshots/rolling-stone-patti-smith.png'
+                                                  : boldText.includes('Vogue')
+                                                    ? '/article-screenshots/vogue-edie-sedgwick.png'
+                                                    : '/article-screenshots/pitchfork-horses-50th.png'
+                                              );
+                                              return (
+                                                <button
+                                                  key={partIdx}
+                                                  onClick={() => setArticleViewerData({
+                                                    url: media.link!,
+                                                    title: boldText,
+                                                    screenshot: screenshotPath,
+                                                    price: media.price || 0.25
+                                                  })}
+                                                  className="font-bold text-gray-900 hover:text-blue-600 hover:underline transition-colors"
+                                                >
+                                                  {boldText}
+                                                </button>
+                                              );
+                                            }
                                             return <strong key={partIdx} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
                                           }
                                           return <span key={partIdx}>{part}</span>;
@@ -405,7 +435,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                               </div>
                             )}
                           </div>
-                        ) : media.type === 'youtube' && media.embedId ? (
+                        ) : media.type === 'youtube' && (media.embedId || media.embedUrl) ? (
                           /* YouTube video embed - elegantly constrained */
                           <div className="bg-gradient-to-r from-red-50 to-gray-50 rounded-xl p-4 border border-red-200">
                             <div className="flex items-start justify-between mb-3">
@@ -423,7 +453,14 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                                   )}
                                 </div>
                               </div>
-                              {media.link && (
+                              {/* HBO Logo for HBO content */}
+                              {media.imageUrl && media.creator?.includes('HBO') ? (
+                                <img
+                                  src={media.imageUrl}
+                                  alt="HBO"
+                                  className="h-16 object-contain"
+                                />
+                              ) : media.link && (
                                 <a
                                   href={media.link}
                                   target="_blank"
@@ -440,7 +477,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                             <div className="bg-black rounded-lg overflow-hidden shadow-lg">
                               <div className="relative" style={{ paddingBottom: '56.25%', height: 0 }}>
                                 <iframe
-                                  src={`https://www.youtube.com/embed/${media.embedId}?rel=0&modestbranding=1`}
+                                  src={media.embedUrl || `https://www.youtube.com/embed/${media.embedId}?rel=0&modestbranding=1`}
                                   className="absolute top-0 left-0 w-full h-full"
                                   frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -453,6 +490,104 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                             {/* Video Description */}
                             {media.description && (
                               <div className="mt-3 text-sm text-gray-700 italic">
+                                {media.description}
+                              </div>
+                            )}
+
+                            {/* HBO Monetization Buttons */}
+                            {media.creator?.includes('HBO') && (
+                              <div className="mt-4 flex gap-4 justify-center">
+                                {/* Watch on HBO Max */}
+                                <div className="inline-flex flex-col items-center gap-2 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                                  <a
+                                    href={media.link || 'https://www.max.com'}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                                  >
+                                    <ExternalLink className="w-4 h-4" />
+                                    Watch on HBO Max
+                                  </a>
+                                  <p className="text-xs text-gray-600">
+                                    Stream with subscription
+                                  </p>
+                                </div>
+
+                                {/* Purchase Episode */}
+                                <div className="inline-flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                                  <button
+                                    onClick={() => {
+                                      alert('Demo: This would process a $1.00 micropayment to purchase the documentary via Lightning Network or similar instant payment system');
+                                    }}
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm hover:shadow-md"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                    Purchase Documentary
+                                  </button>
+                                  <div className="text-center">
+                                    <p className="text-sm font-semibold text-blue-900">
+                                      Only $1.00
+                                    </p>
+                                    <p className="text-xs text-gray-600 mt-1">
+                                      Instant micropayment via digital wallet
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : media.type === 'tiktok' && media.embedUrl ? (
+                          /* TikTok embed */
+                          <div className="bg-gradient-to-r from-black to-gray-900 rounded-xl p-4 border border-gray-700">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-white rounded-lg text-black">
+                                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.08 2.65 1.62 4.18 1.65v4.16c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                                  </svg>
+                                </div>
+                                <div>
+                                  <h6 className="font-semibold text-white text-lg">{media.title}</h6>
+                                  {media.creator && (
+                                    <p className="text-base text-gray-300">{media.creator}</p>
+                                  )}
+                                  {media.year && (
+                                    <p className="text-sm text-gray-400 mt-1">{media.year}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-white hover:text-gray-300 p-2"
+                                  title="View on TikTok"
+                                >
+                                  <ExternalLink size={16} />
+                                </a>
+                              )}
+                            </div>
+
+                            {/* TikTok Embed */}
+                            <div className="bg-black rounded-lg overflow-hidden shadow-lg">
+                              <div className="relative" style={{ paddingBottom: '177.77%', height: 0 }}>
+                                <iframe
+                                  src={media.embedUrl}
+                                  className="absolute top-0 left-0 w-full h-full"
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  title={media.title}
+                                ></iframe>
+                              </div>
+                            </div>
+
+                            {/* Description */}
+                            {media.description && (
+                              <div className="mt-3 text-sm text-gray-300 italic">
                                 {media.description}
                               </div>
                             )}
@@ -526,6 +661,66 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                                     </p>
                                   );
                                 })}
+                              </div>
+                            )}
+                          </div>
+                        ) : media.type === 'article' && media.screenshot ? (
+                          /* Article with screenshot - clickable title for modal */
+                          <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 border-2 border-purple-300 shadow-lg hover:shadow-xl transition-all">
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-4">
+                                <div className="p-3 bg-purple-200 rounded-lg text-purple-700">
+                                  {getMediaIcon(media.type)}
+                                </div>
+                                <div>
+                                  {media.title.includes('**') ? (
+                                    <h6 className="mb-2">
+                                      {media.title.split(/(\*\*[^*]+\*\*)/g).map((part, idx) => {
+                                        if (part.startsWith('**') && part.endsWith('**')) {
+                                          const boldText = part.slice(2, -2);
+                                          return (
+                                            <button
+                                              key={idx}
+                                              onClick={() => setArticleViewerData({
+                                                url: media.link!,
+                                                title: boldText,
+                                                screenshot: media.screenshot,
+                                                price: media.price || 0.25
+                                              })}
+                                              className="font-extrabold text-xl text-purple-900 hover:text-purple-700 hover:underline decoration-2 underline-offset-2 transition-all hover:bg-purple-200 px-1 py-0.5 rounded leading-snug"
+                                            >
+                                              {boldText}
+                                            </button>
+                                          );
+                                        }
+                                        return <span key={idx} className="text-xl font-extrabold text-gray-900">{part}</span>;
+                                      })}
+                                    </h6>
+                                  ) : (
+                                    <h6 className="font-extrabold text-gray-900 text-xl mb-2 leading-snug">{media.title}</h6>
+                                  )}
+                                  {media.creator && (
+                                    <p className="text-base font-semibold text-purple-800">{media.creator}</p>
+                                  )}
+                                  {media.year && (
+                                    <p className="text-sm text-purple-700 mt-1">{media.year}</p>
+                                  )}
+                                </div>
+                              </div>
+                              {media.link && (
+                                <a
+                                  href={media.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-purple-600 hover:text-purple-800 p-3 hover:bg-purple-200 rounded-lg transition-all"
+                                >
+                                  <ExternalLink size={24} />
+                                </a>
+                              )}
+                            </div>
+                            {media.description && (
+                              <div className="mt-4 text-lg text-gray-800 bg-white/80 p-4 rounded-lg font-medium">
+                                {media.description}
                               </div>
                             )}
                           </div>
@@ -622,6 +817,17 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
           )}
         </div>
       </div>
+
+      {/* Article Screenshot Modal - Proof of Concept */}
+      {articleViewerData && (
+        <ArticleScreenshotModal
+          screenshotUrl={articleViewerData.screenshot || '/article-screenshots/rolling-stone-patti-smith.png'}
+          articleUrl={articleViewerData.url}
+          title={articleViewerData.title}
+          price={articleViewerData.price}
+          onClose={() => setArticleViewerData(null)}
+        />
+      )}
     </>
   );
 };

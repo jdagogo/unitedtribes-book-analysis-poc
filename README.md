@@ -3,11 +3,12 @@
 ## 🎯 Overview
 United Tribes Fresh is an innovative digital reading platform that transforms classic literature into immersive, multimedia experiences. The platform features Patti Smith's memoir "Just Kids" enhanced with cultural discovery modals, and Merle Haggard's "My House of Memories" with perfect audio-text synchronization.
 
-### ✨ Latest Features (December 2024)
-- **Cultural Discovery Modals**: Interactive popups with rich multimedia content for key passages
-- **Smart Text Analysis**: AI-powered context recognition for literary and cultural references
-- **Enhanced Media Integration**: Embedded Instagram posts, YouTube videos, artwork galleries, and articles
-- **Professional Article Formatting**: Bold headlines and proper attribution for Vogue, Rolling Stone, etc.
+### ✨ Latest Features (December 15, 2024)
+- **6 Cultural Discovery Passages**: Full multimedia integration for key moments in "Just Kids"
+- **11 Unique Media Items**: Instagram, YouTube, TikTok, articles, books, and streaming content
+- **Micropayment Demonstrations**: $0.25 to $250 pricing models for various content types
+- **Enhanced Visual Design**: Purple/pink gradients for articles, yellow highlighting for discovery passages
+- **Screenshot Article System**: Local article previews bypassing CORS restrictions
 
 ## 🚀 Quick Start
 
@@ -31,43 +32,103 @@ http://localhost:3000
 ### Interactive Discovery Modals
 The platform now features sophisticated cultural discovery modals that appear when users highlight specific passages in "Just Kids". These modals provide rich, contextual information with embedded media.
 
-#### Currently Enhanced Passages
+#### Currently Enhanced Passages (Complete List)
 
-1. **Robert Mapplethorpe's Collages** (Page 207)
+1. **Robert Mapplethorpe's Freaks Exhibition** (Page 207)
    - Trigger: "The show consisted of Robert's collages that centered on freaks..."
    - Content:
-     - Contemporary collage art Instagram reel
-     - Patti & Robert personal photo from @thisispattismith
-     - Actual altarpiece from Art Gallery NSW
-     - "Freaks" movie clip (1932)
-     - Patti Smith's Substack article "Taking Pictures"
+     - Instagram embed: Mapplethorpe's actual altarpiece from Art Gallery NSW
+     - YouTube: Tod Browning's "Freaks" (1932) - "One of Us" scene
+     - Patti Smith's Substack: "Taking Pictures" reflection
+     - Direct link to Art Gallery NSW exhibition
 
-2. **Edie Sedgwick** (Page 208)
+2. **Edie Sedgwick's Death** (Page 209)
    - Trigger: "The lady's dead. Bobby called from California..."
    - Content:
-     - Iconic Vogue photograph of Edie pirouetting (1965)
+     - Edie pirouetting photograph by Enzo Sellerio (1965)
      - **Edie Sedgwick Is the Poster Girl for the No-Pants Look** (Vogue 2023)
-     - Cultural context about The Factory and Andy Warhol
+     - Screenshot-based article preview with $0.25 micropayment demo
 
 3. **Jann Wenner & Rolling Stone** (Page 210)
    - Trigger: "I called Jann Wenner at Rolling Stone..."
    - Content:
      - Bob Dylan "Bringing It All Back Home" album cover
-     - **The Stories Behind 20 Bob Dylan Album Covers** (Ultimate Classic Rock)
-     - "Subterranean Homesick Blues" YouTube embed
+     - **Truck Driving Man** (Rolling Stone 1967) - Tom Wolfe article
+     - YouTube: Bob Dylan - "Gates of Eden" performance
      - Context about Lotte Lenya album reference
+
+4. **Poetry Reading at St. Mark's** (Page 210)
+   - Trigger: "You need to show people what you can do. Why don't you do a reading?"
+   - Content:
+     - YouTube: Patti Smith performing at St. Mark's Poetry Project (1971)
+     - TikTok: "Poet. Prophet. Punk." - Horses performance (1976)
+     - **Patti Smith Announces 50th Anniversary Horses Tour** (Pitchfork)
+     - Tour tickets: $125-$250 purchase demonstrations
+
+5. **HBO Documentary** (Page 211)
+   - Trigger: "I had watched Robert create..."
+   - Content:
+     - HBO Max: "Mapplethorpe: Look at the Pictures" documentary
+     - Time-stamped preview (starts at 1:14)
+     - $1.00 streaming demo
+     - Larger modal size (20% increase)
+
+6. **The Age of Rock II** (Page 211)
+   - Trigger: "The Age of Rock II" or "Jonathan Eisen"
+   - Content:
+     - Book cover image
+     - Purchase link via Biblio.com
+     - $15.00 book purchase demo
+     - Context on rock criticism's emergence
+
+## 📊 Discovery Content Inventory (December 15, 2024)
+
+### Media Integration Summary
+- **Total Discovery Passages**: 6 unique text triggers
+- **Total Media Items**: 11+ pieces of embedded/linked content
+- **Platform Integrations**: Instagram, YouTube, TikTok, HBO Max, Substack
+- **Article Screenshots**: 5 (Rolling Stone, Vogue, Pitchfork, etc.)
+- **Price Points**: $0.25, $0.50, $1.00, $15.00, $125.00, $250.00
+
+### Complete Media Inventory by Type:
+
+#### Instagram Embeds (1)
+- Mapplethorpe's altarpiece from Art Gallery NSW
+
+#### YouTube Videos (3)
+- Tod Browning's "Freaks" (1932) - "One of Us" scene
+- Bob Dylan - "Gates of Eden" live performance
+- Patti Smith at St. Mark's Poetry Project (1971)
+
+#### TikTok Embeds (1)
+- "Poet. Prophet. Punk." - Patti Smith performing Horses (1976)
+
+#### Article Screenshots (5)
+- **Rolling Stone**: "Truck Driving Man" by Tom Wolfe (1967)
+- **Vogue**: "Edie Sedgwick Is the Poster Girl for the No-Pants Look" (2023)
+- **Pitchfork**: "Patti Smith Announces 50th Anniversary Horses Tour"
+- **Substack**: Patti Smith's "Taking Pictures"
+- **Book Cover**: "The Age of Rock II" by Jonathan Eisen
+
+#### Streaming Demos (1)
+- HBO Max: "Mapplethorpe: Look at the Pictures"
+
+#### Museum/Gallery Links (1)
+- Art Gallery of New South Wales - Mapplethorpe Exhibition
+
+### Visual Enhancements
+- **Yellow Highlighting**: All discovery passages highlighted for easy identification
+- **Purple/Pink Gradients**: Article preview cards with enhanced typography
+- **Modal Size**: 20% larger (960px width) for better readability
+- **Font Hierarchy**: Bold headlines (text-xl font-extrabold) for articles
 
 ### Technical Implementation
 
 #### Backend Architecture
 - **Route**: `/server/routes/smart-analysis.ts`
-- **Entity Detection**: Pattern matching for cultural references
-- **Media Types Supported**:
-  - Instagram embeds (posts and reels)
-  - YouTube video embeds
-  - High-resolution artwork with galleries
-  - Articles with formatted headlines
-  - Substack newsletters
+- **Pattern Matching**: Multiple trigger phrases per passage
+- **Media Handling**: Screenshot fallback for CORS-restricted content
+- **Price Integration**: Micropayment demonstrations from $0.25 to $250
 
 #### Frontend Components
 - **Modal Component**: `/client/src/components/text-selection-modal.tsx`

@@ -14,8 +14,41 @@ interface SmartEntityTextProps {
  * within text descriptions, using both explicit markup and intelligent pattern matching
  */
 export function SmartEntityText({ text, analysis, onEntityClick, className = "" }: SmartEntityTextProps) {
+  // Check if this text contains any of our special discovery passages
+  const lowerText = text.toLowerCase();
+  const hasDiscoveryContent =
+    // Robert's collages/freaks
+    lowerText.includes("robert's collages") ||
+    lowerText.includes("centered on freaks") ||
+    lowerText.includes("his boyfriend had loved the film") ||
+    // Edie Sedgwick
+    lowerText.includes("edie sedgwick") ||
+    lowerText.includes("lady's dead") ||
+    lowerText.includes("pirouetting") ||
+    // Jann Wenner/Rolling Stone
+    lowerText.includes("jann wenner") ||
+    lowerText.includes("called jann wenner at rolling stone") ||
+    // Truck driver comment
+    lowerText.includes("truck driver") ||
+    lowerText.includes("elegant piece") ||
+    lowerText.includes("jann called and said") ||
+    // HBO documentary
+    lowerText.includes("work i had watched robert create") ||
+    lowerText.includes("emotional experience") ||
+    lowerText.includes("watched robert create") ||
+    // Poetry reading passage
+    lowerText.includes("show people what you can do") ||
+    lowerText.includes("why don't you do a reading") ||
+    lowerText.includes("do a reading") ||
+    lowerText.includes("need to show people");
+
+  // Add yellow highlight wrapper if this is a discovery passage
+  const wrapperClassName = hasDiscoveryContent
+    ? `${className} bg-yellow-100 px-1 rounded`
+    : className;
+
   if (!analysis?.entityAnalysis) {
-    return <span className={className}>{text}</span>;
+    return <span className={wrapperClassName}>{text}</span>;
   }
 
   // Create a map of all entities for quick lookup
@@ -93,8 +126,8 @@ export function SmartEntityText({ text, analysis, onEntityClick, className = "" 
   const processedParts = processText(text);
   
   return (
-    <span className={className}>
-      {processedParts.map((part, index) => 
+    <span className={wrapperClassName}>
+      {processedParts.map((part, index) =>
         typeof part === 'string' ? part : React.cloneElement(part as React.ReactElement, { key: `part-${index}` })
       )}
     </span>

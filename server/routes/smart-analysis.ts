@@ -239,6 +239,130 @@ router.post('/api/discovery/smart', async (req: Request, res: Response) => {
     let enhancedContext = analysis.historical_context;
     let additionalConnections = [];
 
+    // Patti's "truck driver" writing comment from Jann Wenner - CHECK FIRST
+    if (lowerText.includes('truck driver') ||
+        lowerText.includes('elegant piece') ||
+        lowerText.includes('writing for rock magazines') ||
+        lowerText.includes("didn't think they would publish") ||
+        lowerText.includes('jann called and said')) {
+      specialMedia.push({
+        type: 'artwork' as const,
+        title: 'Patti Smith - Early Rolling Stone Days',
+        creator: 'Rolling Stone Archives',
+        year: '1970s',
+        imageUrl: 'https://www.rollingstone.com/wp-content/uploads/2018/06/rs-182238-74680569.jpg?w=1581&h=1054&crop=1',
+        description: "Patti Smith during her early days as a rock journalist and emerging artist. A retrospective look at Patti's relationship with Rolling Stone, from her early days as a contributor to her emergence as the 'punk poet laureate.' The magazine that once published her elegant pieces despite her talking 'like a truck driver' would go on to chronicle her entire revolutionary career.\n\n**Forty Years of Rolling Stone: Patti Smith**\nRolling Stone • 2007",
+        link: 'https://www.rollingstone.com/music/music-news/forty-years-of-rolling-stone-patti-smith-205567/'
+      });
+
+      enhancedContext = "This passage marks a pivotal moment in Patti Smith's career - her acceptance as a legitimate voice in rock journalism. Jann Wenner's memorable comment about her talking 'like a truck driver' but writing 'an elegant piece' perfectly captured the dichotomy that made her voice unique. This validation from Rolling Stone's co-founder opened doors to the rock establishment while she maintained her outsider perspective, eventually leading to her transformation from critic to icon.";
+
+      additionalConnections = [
+        { name: 'Jann Wenner', relationship: 'Rolling Stone founder who validated her writing' },
+        { name: 'Lenny Kaye', relationship: 'Guitarist and fellow rock journalist' },
+        { name: 'Creem Magazine', relationship: 'Another publication where Patti wrote' },
+        { name: 'Rolling Stone', relationship: '40+ year relationship from writer to subject' }
+      ];
+    }
+
+    // Robert Mapplethorpe HBO documentary - emotional experience watching him create
+    if (lowerText.includes('work i had watched robert create') ||
+        lowerText.includes('emotional experience') ||
+        lowerText.includes('watched robert create') ||
+        lowerText.includes('work i had watched') ||
+        lowerText.includes('robert create was an emotional')) {
+      specialMedia.push({
+        type: 'youtube' as const,
+        title: 'Mapplethorpe: Look at the Pictures',
+        creator: 'HBO Documentary Films',
+        year: '2016',
+        embedUrl: 'https://www.youtube.com/embed/KrVYqB0geMo?start=15',
+        description: "HBO's unflinching documentary explores Robert Mapplethorpe's life and controversial art. This intimate portrait shows the creative process Patti witnessed firsthand - the emotional intensity of watching an artist push boundaries and challenge society's notions of beauty, sexuality, and art itself.",
+        link: 'https://www.hbo.com/documentaries/mapplethorpe-look-at-the-pictures',
+        imageUrl: 'https://static.cdn.turner.com/inline-images/1d006709-499e-952e-288a-c9a16d0b0766.png'
+      });
+
+      enhancedContext = "Watching Robert Mapplethorpe create art was witnessing transformation in real-time. His creative process was intensely personal yet fearlessly public, turning intimate moments into universal statements. This HBO documentary captures the emotional power of his work - the same raw energy Patti experienced watching him in their Chelsea Hotel days.";
+
+      additionalConnections = [
+        { name: 'HBO Documentary Films', relationship: 'Premiered at Sundance 2016' },
+        { name: 'Contemporary art', relationship: 'Changed photography forever' },
+        { name: 'Creative process', relationship: 'Documented artistic transformation' },
+        { name: 'Chelsea Hotel', relationship: 'Where Patti watched him work' }
+      ];
+    }
+
+    // Poetry reading passage - "You need to show people what you can do"
+    if (lowerText.includes('show people what you can do') ||
+        lowerText.includes("why don't you do a reading") ||
+        lowerText.includes('do a reading') ||
+        lowerText.includes('need to show people')) {
+      specialMedia.push({
+        type: 'youtube' as const,
+        title: 'Patti Smith - First Poetry Reading at St. Mark\'s Church',
+        creator: 'Poetry Project Archives',
+        year: '1971',
+        embedUrl: 'https://www.youtube.com/embed/klpUlOZyGIs?start=74',
+        description: "Patti Smith's groundbreaking early poetry reading at St. Mark's Church in-the-Bowery, where she first combined poetry with rock performance. This historic venue launched countless careers and remains the epicenter of American performance poetry.",
+        link: 'https://www.poetryproject.org/'
+      });
+
+      // Add the TikTok of Horses performance
+      specialMedia.push({
+        type: 'tiktok' as const,
+        title: 'Poet. Prophet. Punk.',
+        creator: 'Patti Smith performing "Horses"',
+        year: '1976',
+        embedUrl: 'https://www.tiktok.com/embed/v2/7503098328284941576',
+        description: 'Patti Smith performing "Horses" in 1976 - the moment poetry became punk. This legendary performance shows how she transformed from poetry readings into the godmother of punk rock.',
+        link: 'https://www.tiktok.com/t/ZP8SDP5tg/'
+      });
+
+      // Add Pitchfork article about 50th anniversary
+      specialMedia.push({
+        type: 'article' as const,
+        title: '**Patti Smith Announces 50th Anniversary Horses Tour**',
+        creator: 'Pitchfork',
+        year: '2024',
+        screenshot: 'https://www.dropbox.com/scl/fi/949crwh2cvf3pqzl5hcge/Screenshot-2025-09-15-at-4.02.10-PM.png?rlkey=ngs5sb7ir70fmkpbw3jy8xf0r&raw=1',
+        description: 'Fifty years after its release, Patti Smith celebrates the album that changed everything. The legendary artist will perform Horses in its entirety across Europe, honoring the groundbreaking debut that merged poetry with punk and established her as the godmother of punk rock. This anniversary tour marks a full-circle moment from those early poetry readings at St. Mark\'s to sold-out venues worldwide.',
+        link: 'https://pitchfork.com/news/patti-smith-announces-50th-anniversary-horses-tour/',
+        price: 0.50
+      });
+
+      // Add tour date buttons
+      specialMedia.push({
+        type: 'article' as const,
+        title: '**An Evening with Patti Smith**',
+        creator: 'Tour Dates & Tickets',
+        year: '2025',
+        screenshot: 'https://www.dropbox.com/scl/fi/q5hsrmflgx9s9p9yqzkvi/Screenshot-2025-09-15-at-3.10.43-PM.png?rlkey=umc1gwwcj6uooz8ooo12ok5q9&raw=1',
+        description: 'Experience an intimate evening with the godmother of punk. Patti Smith brings her poetry, stories, and songs to venues across the country in this special tour series.',
+        link: 'https://www.pattismith.net/tour',
+        price: 125.00
+      });
+
+      specialMedia.push({
+        type: 'article' as const,
+        title: '**Patti Smith Horses 50th Anniversary Tour**',
+        creator: 'Official Tour Dates',
+        year: '2025',
+        screenshot: 'https://www.dropbox.com/scl/fi/rqgpipg8dnyst16zif8y5/Screenshot-2025-09-15-at-4.04.21-PM.png?rlkey=ohw7r6471s8hv8t40p1giix9z&raw=1',
+        description: 'Celebrating 50 years of the album that changed everything. Join Patti Smith for special anniversary performances of Horses in its entirety, plus classics from her legendary career.',
+        link: 'https://www.pattismith.net/horses50',
+        price: 250.00
+      });
+
+      enhancedContext = "This moment captures the pivotal advice that launched Patti Smith's performance career. The suggestion to 'do a reading' led to her revolutionary fusion of poetry and rock at St. Mark's Church, where she transformed spoken word into a new art form that would define punk poetry. Now, 50 years later, she celebrates the album that changed everything.";
+
+      additionalConnections = [
+        { name: 'St. Mark\'s Church', relationship: 'Historic poetry venue in NYC' },
+        { name: 'Poetry Project', relationship: 'Legendary readings series since 1966' },
+        { name: 'Performance Poetry', relationship: 'Patti pioneered the form' },
+        { name: 'NYC Poetry Scene', relationship: '1970s downtown arts movement' }
+      ];
+    }
+
     // Edie Sedgwick discovery content
     if (lowerText.includes('edie sedgwick') ||
         lowerText.includes("lady's dead") ||
@@ -247,14 +371,28 @@ router.post('/api/discovery/smart', async (req: Request, res: Response) => {
         lowerText.includes('called from california') ||
         lowerText.includes('tell me that edie') ||
         lowerText.includes('edie sedgwick had died')) {
+      // First add the pirouetting image
       specialMedia.push({
         type: 'artwork' as const,
-        title: 'Edie Sedgwick Pirouetting - Vogue 1965',
+        title: '**Edie Sedgwick Pirouetting, 1965**',
         creator: 'Enzo Sellerio for Vogue',
         year: '1965',
-        imageUrl: 'https://assets.vogue.com/photos/642b275e9ccb4ce01e4a7881/master/w_1600,c_limit/enzo-sellerio-vogue-19650801-edie-sedgwick-CN000012679.jpg',
-        description: 'The iconic Vogue photograph of Edie pirouetting on a bed - the image Patti mentions finding as a teenager\n\n**Edie Sedgwick Is the Poster Girl for the No-Pants Look**\nVogue • 2023',
-        link: 'https://www.vogue.com/article/edie-sedgwick-is-the-poster-girl-for-the-no-pants-look'
+        imageUrl: '/article-screenshots/edie-sedgwick-pirouetting.webp',
+        description: 'The iconic photograph Patti found in Vogue - Edie pirouetting on a bed in her signature style.',
+        link: 'https://www.vogue.com/article/edie-sedgwick-is-the-poster-girl-for-the-no-pants-look',
+        price: 0.25
+      });
+
+      // Then add the article with screenshot
+      specialMedia.push({
+        type: 'article' as const,
+        title: '**Edie Sedgwick Is the Poster Girl for the No-Pants Look**',
+        creator: 'Vogue',
+        year: '2023',
+        screenshot: '/article-screenshots/vogue-edie-sedgwick.png',
+        description: 'A modern Vogue article revisiting Edie\'s influence on fashion and her enduring legacy as a style icon.',
+        link: 'https://www.vogue.com/article/edie-sedgwick-is-the-poster-girl-for-the-no-pants-look',
+        price: 0.25
       });
 
       enhancedContext = "Edie Sedgwick (1943-1971) was an American actress, socialite, and fashion model, best known for her association with Andy Warhol and The Factory. The Vogue photograph Patti describes - of Edie pirouetting on a bed - became one of the most iconic images of the 1960s. She embodied both the glamour and tragedy of that era, dying at 28 from a barbiturate overdose.";
@@ -263,6 +401,30 @@ router.post('/api/discovery/smart', async (req: Request, res: Response) => {
         { name: 'Andy Warhol', relationship: 'Muse and collaborator at The Factory' },
         { name: 'Bob Dylan', relationship: 'Rumored romantic involvement, inspiration for songs' },
         { name: 'The Velvet Underground', relationship: 'Part of the same Factory scene' }
+      ];
+    }
+
+    // The Age of Rock II / Jonathan Eisen discovery content
+    if (lowerText.includes('age of rock') ||
+        lowerText.includes('jonathan eisen') ||
+        lowerText.includes('edited by jonathan eisen')) {
+      specialMedia.push({
+        type: 'artwork' as const,
+        title: '**The Age of Rock II: Sights and Sounds of the American Cultural Revolution**',
+        creator: 'Edited by Jonathan Eisen',
+        year: '1970',
+        imageUrl: '/article-screenshots/age-of-rock-ii.png',
+        description: 'The legendary anthology that captured the counterculture movement through rock criticism and cultural essays. This book introduced Patti to new ways of thinking about rock as art and literature.',
+        link: 'https://www.biblio.com/book/age-rock-2-sights-sounds-american/d/1569450756',
+        price: 15.00
+      });
+
+      enhancedContext = "The Age of Rock II, edited by Jonathan Eisen in 1970, was a groundbreaking anthology that treated rock music as a serious cultural and artistic force. The book featured essays by leading rock critics and cultural commentators, helping to establish rock criticism as a legitimate form of cultural journalism. For young artists like Patti, it provided a intellectual framework for understanding rock as more than entertainment.";
+
+      additionalConnections = [
+        { name: 'Jonathan Eisen', relationship: 'Editor and cultural critic' },
+        { name: 'Rock Criticism', relationship: 'Emerging field in 1970s' },
+        { name: 'Counterculture Literature', relationship: 'Part of revolutionary publishing movement' }
       ];
     }
 
@@ -342,7 +504,7 @@ router.post('/api/discovery/smart', async (req: Request, res: Response) => {
           title: 'The Actual Altarpiece from the Show',
           creator: 'Robert Mapplethorpe',
           year: '1971',
-          link: 'https://www.artgallery.nsw.gov.au/artboards/robert-mapplethorpe/new-york-new-york/item/jtr9mg/',
+          link: 'https://www.artgallery.nsw.gov.au/artboards/robert-mapplethorpe/new-york-new-york/',
           imageUrl: 'https://www.artgallery.nsw.gov.au/media/thumbnails/uploads/artboards/2017_10/SID59288S.jpg.1400x1400_q85.jpg',
           description: `This is the actual altarpiece Patti Smith describes in "Just Kids" - Robert's mixed-media collage from 1971, combining found images of circus performers, religious iconography, and outcasts. Now preserved in the Art Gallery of New South Wales collection, this piece exemplifies Robert's early exploration of the sacred and profane, elevating society's "freaks" to the status of religious icons through the traditional triptych format. Click the link icon above to explore the full exhibition at the museum.`,
           museum: 'Art Gallery of New South Wales',

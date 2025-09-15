@@ -80,7 +80,7 @@ export const TextSelectionModal: React.FC<TextSelectionModalProps> = ({
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <div className="bg-white rounded-3xl shadow-2xl w-[780px] max-w-[90vw] overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-3xl shadow-2xl w-[936px] max-w-[90vw] overflow-hidden border border-gray-100">
           {/* Gradient Header */}
           <div className="relative bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 px-8 pt-8 pb-6">
             {/* Close Button */}
