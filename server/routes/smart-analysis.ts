@@ -446,22 +446,24 @@ router.post('/api/discovery/smart', async (req: Request, res: Response) => {
       });
 
       specialMedia.push({
-        type: 'article' as const,
-        title: "**The Stories Behind 20 Bob Dylan Album Covers**",
-        creator: 'Ultimate Classic Rock',
-        year: '2023',
-        link: 'https://ultimateclassicrock.com/bob-dylan-album-covers/',
-        description: "**The Stories Behind 20 Bob Dylan Album Covers**\nAllison Rapp • Published: May 2, 2023\n\n'Bringing It All Back Home,' (1965) - There are a number of details to note on the cover of Bringing It All Back Home, the first of which lounges in red behind Dylan..."
-      });
-
-      specialMedia.push({
         type: 'youtube' as const,
-        title: 'Bob Dylan - Subterranean Homesick Blues',
+        title: 'Bob Dylan - Gates of Eden',
         creator: 'From "Bringing It All Back Home"',
         year: '1965',
         link: 'https://youtu.be/MGxjIBEZvx0',
         embedId: 'MGxjIBEZvx0',
-        description: 'The opening track from the album - Dylan\'s electric breakthrough'
+        description: 'A haunting track from the album - showcasing Dylan\'s poetic brilliance'
+      });
+
+      specialMedia.push({
+        type: 'article' as const,
+        title: "**Forty Years of Rolling Stone: Patti Smith**",
+        creator: 'David Fricke',
+        year: '2007',
+        screenshot: '/article-screenshots/rolling-stone-dylan.png',
+        link: 'https://www.rollingstone.com/music/music-news/forty-years-of-rolling-stone-patti-smith-205567/',
+        description: "The singer talks about growing up in the Sixties and whether or not there's hope for the post-9/11 generation",
+        price: 0.25
       });
 
       enhancedContext = "This passage captures a pivotal moment in rock journalism history - Patti Smith's first call to Jann Wenner, founder of Rolling Stone magazine. Her observation about the Lotte Lenya album visible on Dylan's 'Bringing It All Back Home' cover demonstrated her deep cultural knowledge and ability to connect artistic references across generations. The album cover, photographed by Daniel Kramer, is filled with cultural artifacts that tell their own story.";
