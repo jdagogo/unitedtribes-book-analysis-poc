@@ -2,7 +2,7 @@
   "title": "The Cover Art of Blue Note Records",
   "subtitle": "The Ultimate Collection",
   "authors": ["Graham Marsh", "Glyn Callingham"],
-  "totalPages": 17,
+  "totalPages": 18,
   "pages": [
     {
       "page": 1,
@@ -221,6 +221,14 @@
         "cover_photo": "Francis Wolff"
       },
       "discovery_entities": ["Sonny Rollins", "Jay Jay Johnson", "Horace Silver", "Thelonious Monk", "Paul Chambers", "Art Blakey", "Harold Feinstein", "Francis Wolff"]
+    },
+    {
+      "page": 18,
+      "type": "test_integration",
+      "title": "YouTube Analysis Test Page",
+      "content": "This is a test page for integrating YouTube Analysis. Testing with Blue Note and jazz artists.",
+      "test_subjects": ["Blue Note", "John Coltrane", "Miles Davis"],
+      "note": "Integration test page - YouTube Analysis on right panel"
     }
   ]
 }

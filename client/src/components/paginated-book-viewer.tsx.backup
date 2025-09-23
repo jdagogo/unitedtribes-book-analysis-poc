@@ -91,17 +91,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [searchError, setSearchError] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
-  const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
-  const [showPlaylistView, setShowPlaylistView] = useState(false);
-  const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
-  const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [initialSearchTerm, setInitialSearchTerm] = useState('');
-  const [playlistVideos, setPlaylistVideos] = useState<any[]>([]);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [loadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  const videoIframeRef = useRef<HTMLIFrameElement>(null);
 
   // Check if this is the Blue Note book
   const [isBlueNote, setIsBlueNote] = useState(false);
@@ -115,7 +107,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
     try {
       const response = await fetch(
-        `http://localhost:3003/api/videos/search?q=${encodeURIComponent(query)}&limit=20`
+        `http://localhost:3003/api/videos/search?q=${encodeURIComponent(query)}&limit=6`
       );
 
       if (!response.ok) {
@@ -170,116 +162,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     }
   };
 
-  // Add track to current playlist
-  const addToPlaylist = (track: any) => {
-    setCurrentPlaylist(prev => [...prev, track]);
-  };
-
-  // Remove track from playlist
-  const removeFromPlaylist = (index: number) => {
-    setCurrentPlaylist(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Clear playlist
-  const clearPlaylist = () => {
-    setCurrentPlaylist([]);
-  };
-
-  // Play the playlist - search YouTube for each track
-  const playPlaylist = async () => {
-    if (currentPlaylist.length === 0) return;
-
-    setLoadingPlaylistVideos(true);
-    setShowPlaylistPlayer(true);
-    setCurrentTrackIndex(0);
-
-    // Search YouTube for each track in the playlist
-    const videosPromises = currentPlaylist.map(async (track) => {
-      const searchQuery = `${track.title} ${track.artist}`;
-      try {
-        const response = await fetch(
-          `http://localhost:3003/api/youtube/search-track?q=${encodeURIComponent(searchQuery)}`
-        );
-        const data = await response.json();
-
-        if (data.items && data.items.length > 0) {
-          const video = data.items[0];
-          return {
-            ...track,
-            videoId: video.id.videoId,
-            videoTitle: video.snippet.title,
-            channelTitle: video.snippet.channelTitle,
-            thumbnail: video.snippet.thumbnails.high.url
-          };
-        }
-      } catch (error) {
-        console.error(`Failed to find video for ${searchQuery}:`, error);
-      }
-
-      // Return track with no video if search fails
-      return {
-        ...track,
-        videoId: null,
-        videoTitle: `${track.title} - ${track.artist}`,
-        error: true
-      };
-    });
-
-    const videos = await Promise.all(videosPromises);
-    setPlaylistVideos(videos);
-    setLoadingPlaylistVideos(false);
-  };
-
-  // Fetch playlist data for a video
-  const fetchPlaylistData = async (videoId: string) => {
-    try {
-      console.log(`🎵 Fetching playlist data for: ${videoId}`);
-
-      const response = await fetch(
-        `http://localhost:3003/api/videos/${videoId}/playlist-data`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setVideoPlaylistData(data);
-
-      // Pause the video when opening playlist modal
-      // Since the video is in a nested iframe (srcDoc), we need to access it differently
-      if (videoIframeRef.current && videoIframeRef.current.contentWindow) {
-        try {
-          // Get all iframes in the embedded document
-          const iframes = videoIframeRef.current.contentWindow.document.getElementsByTagName('iframe');
-          if (iframes.length > 0) {
-            // Send pause command to the YouTube iframe
-            iframes[0].contentWindow?.postMessage(
-              '{"event":"command","func":"pauseVideo","args":""}',
-              '*'
-            );
-          }
-        } catch (e) {
-          console.log('Could not pause video:', e);
-          // Alternative approach: Try to pause via global message
-          window.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-        }
-      }
-
-      setShowPlaylistView(true);
-      console.log(`✅ Playlist data loaded:`, data);
-
-    } catch (error) {
-      console.error('❌ Error fetching playlist data:', error);
-    }
-  };
-
   // Close video and return to search
   const closeVideo = () => {
     setSelectedVideo(null);
     setVideoEmbedHtml('');
-    setVideoPlaylistData(null);
-    setShowPlaylistView(false);
   };
 
   // Apply dual highlighting: entity (yellow) and context (light blue)
@@ -1861,9 +1747,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           padding: '2rem',
           overflowY: 'auto'
         }}>
-          {(() => {
-            if (currentPage?.originalData?.type === 'test_integration') {
-              return (
+          {currentPage?.originalData?.type === 'test_integration' ? (
             // YouTube Analysis Test Integration
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               {selectedVideo ? (
@@ -1901,572 +1785,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     >
                       ← Back to Search
                     </button>
-
-                    {/* Test Button to Load Playlist Data */}
-                    <button
-                      onClick={() => fetchPlaylistData(selectedVideo.id)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: '#3b82f6',
-                        border: 'none',
-                        borderRadius: '6px',
-                        padding: '0.5rem 1rem',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        color: 'white',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#2563eb';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = '#3b82f6';
-                      }}
-                    >
-                      🎵 Show Playlists & Works
-                    </button>
-
                     <div style={{ fontSize: '14px', color: '#6b7280', fontWeight: '500' }}>
                       Playing Video
                     </div>
                   </div>
 
-                  {/* Show Playlist Data Modal */}
-                  {showPlaylistView && videoPlaylistData && (
-                    <>
-                      {/* Modal Background Overlay */}
-                      <div style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'rgba(0, 0, 0, 0.7)',
-                        zIndex: 50,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }} onClick={() => setShowPlaylistView(false)}>
-                        {/* Modal Content */}
-                        <div style={{
-                          position: 'relative',
-                          width: '90%',
-                          maxWidth: '600px',
-                          maxHeight: '90vh',
-                          background: 'white',
-                          borderRadius: '12px',
-                          padding: '1.5rem',
-                          overflowY: 'auto',
-                          boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
-                        }} onClick={(e) => e.stopPropagation()}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                        <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#000' }}>
-                          📚 Works & Playlists
-                        </h3>
-                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                          {/* Playlist Counter */}
-                          <div style={{
-                            background: '#10b981',
-                            color: 'white',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '6px',
-                            fontSize: '16px',
-                            fontWeight: '600'
-                          }}>
-                            🎵 Playlist: {currentPlaylist.length} tracks
-                          </div>
-                          {currentPlaylist.length > 0 && (
-                            <>
-                              <button
-                                onClick={() => {
-                                  playPlaylist();
-                                  setShowPlaylistView(false);
-                                }}
-                                style={{
-                                  background: '#3b82f6',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '6px',
-                                  padding: '0.5rem 1rem',
-                                  cursor: 'pointer',
-                                  fontSize: '16px',
-                                  fontWeight: '600'
-                                }}
-                              >
-                                ▶ Play All
-                              </button>
-                              <button
-                                onClick={clearPlaylist}
-                                style={{
-                                  background: '#f59e0b',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '6px',
-                                  padding: '0.5rem 1rem',
-                                  cursor: 'pointer',
-                                  fontSize: '16px',
-                                  fontWeight: '600'
-                                }}
-                              >
-                                Clear
-                              </button>
-                            </>
-                          )}
-                          <button
-                            onClick={() => setShowPlaylistView(false)}
-                            style={{
-                              background: '#ef4444',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.5rem 1rem',
-                              cursor: 'pointer',
-                              fontSize: '16px',
-                              fontWeight: '600'
-                            }}
-                          >
-                            ✕ Close
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Works Section */}
-                      {videoPlaylistData.works && videoPlaylistData.works.length > 0 && (
-                        <div style={{ marginBottom: '2rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                            <h4 style={{ fontSize: '22px', fontWeight: '600', color: '#000' }}>
-                              🎵 Works Mentioned ({videoPlaylistData.works.length})
-                            </h4>
-                            <button
-                              onClick={() => {
-                                // Add all works to playlist
-                                videoPlaylistData.works.forEach((work: any) => {
-                                  addToPlaylist(work);
-                                });
-                              }}
-                              style={{
-                                background: '#3b82f6',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '0.5rem 1rem',
-                                cursor: 'pointer',
-                                fontSize: '16px',
-                                fontWeight: '600'
-                              }}
-                            >
-                              + Add All
-                            </button>
-                          </div>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                            {videoPlaylistData.works.map((work: any, idx: number) => {
-                              const isAdded = currentPlaylist.some(item =>
-                                item.title === work.title && item.artist === work.artist
-                              );
-                              return (
-                                <div
-                                  key={idx}
-                                  style={{
-                                    background: isAdded ? '#dcfce7' : '#f0fdf4',
-                                    border: isAdded ? '2px solid #16a34a' : '2px solid #22c55e',
-                                    borderRadius: '8px',
-                                    padding: '0.75rem 1rem',
-                                    fontSize: '18px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    color: '#000',
-                                    opacity: isAdded ? 0.8 : 1
-                                  }}
-                                >
-                                  <button
-                                    onClick={() => addToPlaylist(work)}
-                                    disabled={isAdded}
-                                    style={{
-                                      background: isAdded ? '#16a34a' : '#3b82f6',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '4px',
-                                      padding: '0.25rem 0.5rem',
-                                      cursor: isAdded ? 'default' : 'pointer',
-                                      fontSize: '14px',
-                                      fontWeight: '600',
-                                      marginRight: '0.5rem'
-                                    }}
-                                  >
-                                    {isAdded ? '✓ Added' : '+ Add'}
-                                  </button>
-                                  <strong>{work.title}</strong> - {work.artist}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Playlists Section */}
-                      {videoPlaylistData.playlists && videoPlaylistData.playlists.length > 0 && (
-                        <div>
-                          <h4 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '1rem', color: '#000' }}>
-                            🎼 Discovery Playlists ({videoPlaylistData.playlists.length})
-                          </h4>
-                          <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
-                            {videoPlaylistData.playlists.map((playlist: any, idx: number) => (
-                              <div
-                                key={idx}
-                                style={{
-                                  marginBottom: '1.5rem',
-                                  background: '#faf5ff',
-                                  border: '2px solid #8b5cf6',
-                                  borderRadius: '8px',
-                                  padding: '1rem'
-                                }}
-                              >
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                                  <h5 style={{ fontSize: '20px', fontWeight: '600', color: '#000' }}>
-                                    {playlist.name}
-                                  </h5>
-                                  <button
-                                    onClick={() => {
-                                      playlist.tracks.forEach((track: any) => {
-                                        addToPlaylist(track);
-                                      });
-                                    }}
-                                    style={{
-                                      background: '#8b5cf6',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '6px',
-                                      padding: '0.4rem 0.8rem',
-                                      cursor: 'pointer',
-                                      fontSize: '15px',
-                                      fontWeight: '600'
-                                    }}
-                                  >
-                                    + Add All
-                                  </button>
-                                </div>
-                                <div style={{ fontSize: '16px', color: '#000' }}>
-                                  {playlist.tracks.map((track: any, tidx: number) => {
-                                    const isAdded = currentPlaylist.some(item =>
-                                      item.title === track.title && item.artist === track.artist
-                                    );
-                                    return (
-                                      <div
-                                        key={tidx}
-                                        style={{
-                                          marginBottom: '0.5rem',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          gap: '0.5rem',
-                                          padding: '0.25rem 0.5rem',
-                                          background: isAdded ? '#dcfce7' : 'transparent',
-                                          borderRadius: '4px'
-                                        }}
-                                      >
-                                        <button
-                                          onClick={() => addToPlaylist(track)}
-                                          disabled={isAdded}
-                                          style={{
-                                            background: isAdded ? '#16a34a' : '#3b82f6',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '4px',
-                                            padding: '0.2rem 0.4rem',
-                                            cursor: isAdded ? 'default' : 'pointer',
-                                            fontSize: '12px',
-                                            fontWeight: '600',
-                                            opacity: isAdded ? 0.8 : 1
-                                          }}
-                                        >
-                                          {isAdded ? '✓' : '+ Add'}
-                                        </button>
-                                        <span style={{ opacity: isAdded ? 0.8 : 1 }}>
-                                          <strong>"{track.title}"</strong> - {track.artist}
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  {/* Playlist Player Modal - Shows YouTube videos for playlist tracks */}
-                  {showPlaylistPlayer && (
-                    <>
-                      {/* Modal Background Overlay */}
-                      <div style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'rgba(0, 0, 0, 0.8)',
-                        zIndex: 60,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }} onClick={() => {
-                        setShowPlaylistPlayer(false);
-                        setPlaylistVideos([]);
-                        setCurrentTrackIndex(0);
-                      }}>
-                        {/* Modal Content */}
-                        <div style={{
-                          position: 'relative',
-                          width: '95%',
-                          maxWidth: '1400px',
-                          height: '90vh',
-                          background: '#1a1a1a',
-                          borderRadius: '12px',
-                          padding: '1.5rem',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
-                        }} onClick={(e) => e.stopPropagation()}>
-
-                          {/* Header */}
-                          <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: '1rem',
-                            borderBottom: '2px solid #333',
-                            paddingBottom: '1rem'
-                          }}>
-                            <h2 style={{
-                              fontSize: '28px',
-                              fontWeight: 'bold',
-                              color: '#fff'
-                            }}>
-                              🎵 Playing Playlist ({currentPlaylist.length} tracks)
-                            </h2>
-                            <button
-                              onClick={() => {
-                                setShowPlaylistPlayer(false);
-                                setPlaylistVideos([]);
-                                setCurrentTrackIndex(0);
-                              }}
-                              style={{
-                                background: '#ef4444',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '0.5rem 1rem',
-                                cursor: 'pointer',
-                                fontSize: '16px',
-                                fontWeight: '600'
-                              }}
-                            >
-                              ✕ Close
-                            </button>
-                          </div>
-
-                          {/* Loading State */}
-                          {loadingPlaylistVideos && (
-                            <div style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              height: '100%',
-                              color: '#fff',
-                              fontSize: '24px'
-                            }}>
-                              <div style={{ textAlign: 'center' }}>
-                                <div style={{ marginBottom: '1rem' }}>🔍 Searching YouTube for tracks...</div>
-                                <div style={{ fontSize: '16px', color: '#888' }}>This may take a few seconds</div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Main Content Area */}
-                          {!loadingPlaylistVideos && playlistVideos.length > 0 && (
-                            <div style={{
-                              display: 'flex',
-                              gap: '1.5rem',
-                              flex: 1,
-                              overflow: 'hidden'
-                            }}>
-                              {/* Left Side - Video Player */}
-                              <div style={{
-                                flex: '1 1 70%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '1rem'
-                              }}>
-                                {/* Current Track Info */}
-                                <div style={{
-                                  background: '#2a2a2a',
-                                  padding: '1rem',
-                                  borderRadius: '8px',
-                                  color: '#fff'
-                                }}>
-                                  <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                                    Now Playing: {playlistVideos[currentTrackIndex]?.title} - {playlistVideos[currentTrackIndex]?.artist}
-                                  </div>
-                                  {playlistVideos[currentTrackIndex]?.videoTitle && (
-                                    <div style={{ fontSize: '18px', color: '#10b981', marginTop: '0.5rem' }}>
-                                      YouTube: {playlistVideos[currentTrackIndex].videoTitle}
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* YouTube Video Embed */}
-                                {playlistVideos[currentTrackIndex]?.videoId ? (
-                                  <iframe
-                                    key={playlistVideos[currentTrackIndex].videoId}
-                                    src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1&rel=0`}
-                                    style={{
-                                      width: '100%',
-                                      flex: 1,
-                                      border: 'none',
-                                      borderRadius: '8px',
-                                      background: '#000'
-                                    }}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                  />
-                                ) : (
-                                  <div style={{
-                                    flex: 1,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    background: '#2a2a2a',
-                                    borderRadius: '8px',
-                                    color: '#888'
-                                  }}>
-                                    <div style={{ textAlign: 'center' }}>
-                                      <div style={{ fontSize: '24px', marginBottom: '1rem' }}>❌ Video not found</div>
-                                      <div>Could not find a YouTube video for this track</div>
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Player Controls */}
-                                <div style={{
-                                  display: 'flex',
-                                  gap: '1rem',
-                                  justifyContent: 'center',
-                                  padding: '1rem',
-                                  background: '#2a2a2a',
-                                  borderRadius: '8px'
-                                }}>
-                                  <button
-                                    onClick={() => setCurrentTrackIndex(Math.max(0, currentTrackIndex - 1))}
-                                    disabled={currentTrackIndex === 0}
-                                    style={{
-                                      background: currentTrackIndex === 0 ? '#555' : '#3b82f6',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '6px',
-                                      padding: '0.75rem 1.5rem',
-                                      cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer',
-                                      fontSize: '16px',
-                                      fontWeight: '600'
-                                    }}
-                                  >
-                                    ⏮ Previous
-                                  </button>
-                                  <button
-                                    onClick={() => setCurrentTrackIndex(Math.min(playlistVideos.length - 1, currentTrackIndex + 1))}
-                                    disabled={currentTrackIndex === playlistVideos.length - 1}
-                                    style={{
-                                      background: currentTrackIndex === playlistVideos.length - 1 ? '#555' : '#3b82f6',
-                                      color: 'white',
-                                      border: 'none',
-                                      borderRadius: '6px',
-                                      padding: '0.75rem 1.5rem',
-                                      cursor: currentTrackIndex === playlistVideos.length - 1 ? 'not-allowed' : 'pointer',
-                                      fontSize: '16px',
-                                      fontWeight: '600'
-                                    }}
-                                  >
-                                    Next ⏭
-                                  </button>
-                                </div>
-                              </div>
-
-                              {/* Right Side - Playlist */}
-                              <div style={{
-                                flex: '0 0 30%',
-                                background: '#2a2a2a',
-                                borderRadius: '8px',
-                                padding: '1rem',
-                                overflowY: 'auto'
-                              }}>
-                                <h3 style={{
-                                  fontSize: '22px',
-                                  fontWeight: 'bold',
-                                  color: '#fff',
-                                  marginBottom: '1rem',
-                                  borderBottom: '1px solid #444',
-                                  paddingBottom: '0.5rem'
-                                }}>
-                                  Playlist Tracks
-                                </h3>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                  {playlistVideos.map((video, idx) => (
-                                    <div
-                                      key={idx}
-                                      onClick={() => setCurrentTrackIndex(idx)}
-                                      style={{
-                                        background: idx === currentTrackIndex ? '#3b82f6' : '#333',
-                                        padding: '0.75rem',
-                                        borderRadius: '6px',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        border: idx === currentTrackIndex ? '2px solid #60a5fa' : '2px solid transparent'
-                                      }}
-                                    >
-                                      <div style={{
-                                        fontSize: '18px',
-                                        fontWeight: idx === currentTrackIndex ? 'bold' : 'normal',
-                                        color: '#fff'
-                                      }}>
-                                        {idx + 1}. {video.title} - {video.artist}
-                                      </div>
-                                      {video.videoId && (
-                                        <div style={{
-                                          fontSize: '14px',
-                                          color: idx === currentTrackIndex ? '#bfdbfe' : '#10b981',
-                                          marginTop: '0.25rem'
-                                        }}>
-                                          ✓ Video found
-                                        </div>
-                                      )}
-                                      {video.error && (
-                                        <div style={{
-                                          fontSize: '14px',
-                                          color: '#f87171',
-                                          marginTop: '0.25rem'
-                                        }}>
-                                          ✗ No video
-                                        </div>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  )}
-
                   <iframe
-                    ref={videoIframeRef}
                     srcDoc={videoEmbedHtml}
                     style={{
                       width: '100%',
@@ -2475,9 +1799,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       flex: 1
                     }}
                     title={selectedVideo.title}
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
+                    sandbox="allow-scripts allow-same-origin allow-forms"
                   />
                 </div>
               ) : (
@@ -2650,12 +1972,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 )}
               </div>
             </div>
-          )}
-            </div>
-          );
-            } else if (currentPage?.originalData?.type === 'album_showcase') {
-              return (
-                <div>
+          ) : currentPage?.originalData?.type === 'album_showcase' ? (
+            <div>
               <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
                 Media Discovery
               </h3>
@@ -2794,36 +2112,34 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 </div>
               </div>
             </div>
-          );
-            } else {
-              return (
+          ) : (
+            <div style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#6b7280',
+              fontSize: '18px',
+              textAlign: 'center',
+              lineHeight: '1.6'
+            }}>
+              <div>
                 <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  color: '#6b7280'
+                  fontSize: '48px',
+                  marginBottom: '1rem',
+                  opacity: 0.3
                 }}>
-                  <div style={{
-                    fontSize: '4rem',
-                    marginBottom: '1rem',
-                    opacity: 0.3
-                  }}>
-                    🎵
-                  </div>
-                  <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
-                    Media Discovery Panel
-                  </p>
-                  <p>
-                    Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
-                  </p>
+                  🎵
                 </div>
-              );
-            }
-          })()}
+                <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
+                  Media Discovery Panel
+                </p>
+                <p>
+                  Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

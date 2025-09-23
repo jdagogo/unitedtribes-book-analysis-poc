@@ -223,5 +223,27 @@ const recoverPlayer = () => {
 };
 ```
 
+## Known Issues to Fix
+
+### Video Pause on Modal Open
+- **Issue**: Video doesn't pause when opening the playlist modal
+- **Problem**: YouTube player is nested in srcDoc iframe, making postMessage commands difficult
+- **Potential Solutions**:
+  1. Add enablejsapi=1 to YouTube embed URL
+  2. Use a message relay system in the embed HTML
+  3. Store video player reference globally
+- **Priority**: Low (cosmetic issue, not blocking functionality)
+
+### Playlist Modal Font/Typography Improvements
+- **Issue**: Font sizes and readability could be better in playlist player modal
+- **Current State**: Increased from tiny (12-14px) to moderate (14-18px), changed gray to green
+- **Improvements Needed**:
+  1. Further increase font sizes for better readability
+  2. Better typography hierarchy
+  3. Consider using different colors/weights for better visual separation
+  4. Optimize for presentation/demo scenarios
+- **Priority**: Medium (affects user experience and demo quality)
+
 ## Last Updated
 December 2024 - All 5 critical fixes completed, tested, and verified working. Enhanced visual feedback with custom CSS animations added.
+January 2025 - Added YouTube playlist player modal with track search functionality.

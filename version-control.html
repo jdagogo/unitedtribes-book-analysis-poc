@@ -461,11 +461,11 @@
                 </div>
             </div>
 
-            <!-- Version 4.1.2 (Current Development) -->
+            <!-- Version 4.1.2 (Previous Release) -->
             <div class="version-card">
                 <div class="version-header">
-                    <div class="version-title" style="color: #667eea;">Version 4.1.2 (Development)</div>
-                    <div class="status running" id="v412-status">Running</div>
+                    <div class="version-title" style="color: #667eea;">Version 4.1.2 (Previous)</div>
+                    <div class="status stopped" id="v412-status">Stopped</div>
                 </div>
 
                 <div class="info-section">
@@ -500,6 +500,113 @@
                     </button>
                     <button onclick="revertTo412()" class="tool-btn">
                         🔄 Revert to v4.1.2
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version 4.1.3 (Previous Release) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #64748b;">Version 4.1.3</div>
+                    <div class="status stopped" id="v413-status">Stopped</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Tag:</span>
+                        <span>v4.1.3</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Released:</span>
+                        <span>September 23, 2025</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">✅ YouTube Analysis Integration</span>
+                    <span class="feature-tag">✅ Video Search on Page 18</span>
+                    <span class="feature-tag">✅ Embedded Video Player</span>
+                    <span class="feature-tag">✅ No Gray Text</span>
+                    <span class="feature-tag">✅ Larger Fonts</span>
+                    <span class="feature-tag">✅ JSX Syntax Fixed</span>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="http://localhost:3004/paginated?transcriptId=bluenote" target="_blank" class="btn btn-primary">
+                        🌐 Open App
+                    </a>
+                    <a href="https://github.com/jdagogo/unitedtribes-book-analysis-poc/releases/tag/v4.1.3" target="_blank" class="btn btn-secondary">
+                        📦 View Release
+                    </a>
+                </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <a href="file:///Users/j.d.heilprin/Desktop/my-claude/united-tribes-fresh-v4/README.md" class="btn btn-secondary" style="font-size: 0.9em;">
+                        📖 Release Notes
+                    </a>
+                    <button onclick="checkoutV413()" class="btn btn-secondary" style="font-size: 0.9em;">
+                        🔄 Checkout v4.1.3
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version 4.1.4 (Current Release) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #22c55e;">Version 4.1.4 (Current)</div>
+                    <div class="status running" id="v414-status">Running</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Tag:</span>
+                        <span>v4.1.4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Released:</span>
+                        <span>January 23, 2025</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">🎵 YouTube Playlist Player</span>
+                    <span class="feature-tag">✅ Track Search & Playback</span>
+                    <span class="feature-tag">✅ Visual Feedback for Added Tracks</span>
+                    <span class="feature-tag">✅ Playlist Management Modal</span>
+                    <span class="feature-tag">✅ Works & Discovery Playlists</span>
+                    <span class="feature-tag">✅ Larger Fonts in Player</span>
+                    <span class="feature-tag">✅ Green Status Text</span>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="http://localhost:3004/paginated?transcriptId=bluenote" target="_blank" class="btn btn-primary">
+                        🌐 Open App
+                    </a>
+                    <a href="https://github.com/jdagogo/unitedtribes-book-analysis-poc/releases/tag/v4.1.4" target="_blank" class="btn btn-secondary">
+                        📦 View Release
+                    </a>
+                </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <a href="file:///Users/j.d.heilprin/Desktop/my-claude/united-tribes-fresh-v4/CLAUDE.md" class="btn btn-secondary" style="font-size: 0.9em;">
+                        📖 Release Notes
+                    </a>
+                    <button onclick="checkoutV414()" class="btn btn-secondary" style="font-size: 0.9em;">
+                        🔄 Checkout v4.1.4
                     </button>
                 </div>
             </div>
@@ -821,6 +928,21 @@
                   '• /client/src/components/paginated-book-viewer.tsx\n' +
                   '• /client/public/bluenote-*.png (all images)\n\n' +
                   'This is a stable checkpoint after recovering from data loss.');
+        }
+
+        function checkoutV413() {
+            alert('To use Version 4.1.3 (Current Release):\n\n' +
+                  '1. Open Terminal\n' +
+                  '2. cd ~/Desktop/my-claude/united-tribes-fresh-v4\n' +
+                  '3. git checkout v4.1.3\n\n' +
+                  'This version includes:\n' +
+                  '• YouTube Analysis integration on page 18\n' +
+                  '• Embedded video player functionality\n' +
+                  '• All gray text removed (per user requirements)\n' +
+                  '• Increased font sizes throughout\n' +
+                  '• Fixed JSX syntax errors\n\n' +
+                  'To return to development branch:\n' +
+                  'git checkout v4.1.3-release');
         }
 
         // Auto-refresh status every 10 seconds
