@@ -85,12 +85,88 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [highlightedSearchTerm, setHighlightedSearchTerm] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [initialSearchTerm, setInitialSearchTerm] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Check if this is the Blue Note book
   const [isBlueNote, setIsBlueNote] = useState(false);
+
+  // Search videos function
+  const searchVideos = async (query: string) => {
+    if (!query.trim()) return;
+
+    setSearchLoading(true);
+    setSearchError(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3003/api/videos/search?q=${encodeURIComponent(query)}&limit=6`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setSearchResults(data.results || []);
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchError('Failed to search videos. Make sure YouTube Analysis is running on port 3003.');
+      setSearchResults([]);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Handle search form submission
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      searchVideos(searchQuery.trim());
+    }
+  };
+
+  // Embed video player
+  const embedVideo = async (video: any) => {
+    setSearchLoading(true);
+    setSearchError(null);
+
+    try {
+      console.log(`🎬 Embedding video: ${video.id}`);
+
+      const response = await fetch(
+        `http://localhost:3003/api/videos/${video.id}/embed-html`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const htmlContent = await response.text();
+      setSelectedVideo(video);
+      setVideoEmbedHtml(htmlContent);
+      console.log(`✅ Video embedded successfully`);
+
+    } catch (error) {
+      console.error('❌ Error embedding video:', error);
+      setSearchError(`Failed to load video "${video.title}". Make sure YouTube Analysis is running on port 3003.`);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Close video and return to search
+  const closeVideo = () => {
+    setSelectedVideo(null);
+    setVideoEmbedHtml('');
+  };
 
   // Apply dual highlighting: entity (yellow) and context (light blue)
   const applyDualHighlighting = useCallback((searchTerm: string, context?: string, pageText?: string) => {
@@ -1483,6 +1559,42 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   )
                 )}
 
+                {currentPage.originalData.type === 'test_integration' && (
+                  <div style={{ padding: '2rem' }}>
+                    <h2 style={{
+                      fontSize: '32px',
+                      fontWeight: 'bold',
+                      color: '#1e3a8a',
+                      marginBottom: '1.5rem',
+                      textAlign: 'center'
+                    }}>
+                      {currentPage.originalData.title}
+                    </h2>
+                    <div style={{
+                      fontSize: '18px',
+                      lineHeight: '1.6',
+                      color: '#374151',
+                      textAlign: 'center'
+                    }}>
+                      {currentPage.originalData.content}
+                    </div>
+                    {currentPage.originalData.note && (
+                      <div style={{
+                        marginTop: '2rem',
+                        padding: '1rem',
+                        background: '#f3f4f6',
+                        borderRadius: '8px',
+                        fontSize: '16px',
+                        fontStyle: 'italic',
+                        color: '#6b7280',
+                        textAlign: 'center'
+                      }}>
+                        {currentPage.originalData.note}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {currentPage.originalData.type === 'index' && (
                   <div style={{ padding: '0.5rem 0 2rem 0' }}>
                     <h2 style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a8a', marginBottom: '1.5rem' }}>
@@ -1587,7 +1699,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 )}
 
                 {/* Default text rendering for other types */}
-                {!['cover', 'page_image', 'album_showcase', 'index'].includes(currentPage.originalData.type) && (
+                {!['cover', 'page_image', 'album_showcase', 'index', 'test_integration'].includes(currentPage.originalData.type) && (
                   <>
                     {currentPage.chapterTitle && (
                       <h2 style={{
@@ -1635,8 +1747,239 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           padding: '2rem',
           overflowY: 'auto'
         }}>
-          {currentPage?.originalData?.type === 'album_showcase' ? (
-            <div>
+          {(() => {
+            if (currentPage?.originalData?.type === 'test_integration') {
+              return (
+            // YouTube Analysis Test Integration
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              {selectedVideo ? (
+                // Video Player View
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{
+                    padding: '1rem',
+                    borderBottom: '1px solid #e5e7eb',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <button
+                      onClick={closeVideo}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        background: '#f3f4f6',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        padding: '0.5rem 1rem',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        color: '#374151',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#e5e7eb';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#f3f4f6';
+                      }}
+                    >
+                      ← Back to Search
+                    </button>
+                    <div style={{ fontSize: '14px', color: '#6b7280', fontWeight: '500' }}>
+                      Playing Video
+                    </div>
+                  </div>
+
+                  <iframe
+                    srcDoc={videoEmbedHtml}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      flex: 1
+                    }}
+                    title={selectedVideo.title}
+                    sandbox="allow-scripts allow-same-origin allow-forms"
+                  />
+                </div>
+              ) : (
+                // Search Interface View
+                <div>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
+                    YouTube Analysis Integration
+                  </h3>
+
+              <div style={{ padding: '2rem', color: '#1f2937' }}>
+                <p style={{ marginBottom: '1rem', textAlign: 'center', fontSize: '20px', fontWeight: '700', color: '#000000' }}>
+                  Search YouTube Analysis Videos
+                </p>
+                <p style={{ fontSize: '18px', marginBottom: '1.5rem', textAlign: 'center', color: '#000000', fontWeight: '600' }}>
+                  Enter a search term to find related videos
+                </p>
+
+                <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Enter search term..."
+                      style={{
+                        flex: 1,
+                        padding: '0.75rem',
+                        border: '2px solid #d1d5db',
+                        borderRadius: '6px',
+                        fontSize: '16px',
+                        outline: 'none',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#3b82f6';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = '#d1d5db';
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={searchLoading}
+                      style={{
+                        padding: '0.75rem 1.5rem',
+                        background: searchLoading ? '#dc2626' : '#16a34a',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        transition: 'background 0.2s',
+                        whiteSpace: 'nowrap'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!searchLoading) {
+                          e.currentTarget.style.background = '#15803d';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!searchLoading) {
+                          e.currentTarget.style.background = '#16a34a';
+                        }
+                      }}
+                    >
+                      {searchLoading ? '🔄 Searching...' : '🔍 Search'}
+                    </button>
+                  </div>
+                </form>
+
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '18px', marginBottom: '1rem', color: '#1f2937', fontWeight: '600' }}>
+                    Quick Search:
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
+                    {['Blue Note', 'John Coltrane', 'Miles Davis'].map((subject: string) => (
+                      <button
+                        key={subject}
+                        onClick={() => {
+                          setSearchQuery(subject);
+                          searchVideos(subject);
+                        }}
+                        style={{
+                          padding: '0.75rem 1.25rem',
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#2563eb';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#3b82f6';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        {subject}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Search Error */}
+                {searchError && (
+                  <div style={{
+                    padding: '1rem',
+                    background: '#fee2e2',
+                    borderRadius: '8px',
+                    marginBottom: '1rem',
+                    color: '#dc2626'
+                  }}>
+                    {searchError}
+                  </div>
+                )}
+
+                {/* Search Results */}
+                {searchResults.length > 0 && (
+                  <div style={{ marginTop: '2rem' }}>
+                    <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                      Search Results ({searchResults.length})
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                      {searchResults.map((video: any) => (
+                        <div
+                          key={video.id}
+                          style={{
+                            cursor: 'pointer',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            background: 'white',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            transition: 'transform 0.2s, box-shadow 0.2s'
+                          }}
+                          onClick={() => embedVideo(video)}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                          }}
+                        >
+                          {video.thumbnail && (
+                            <img
+                              src={video.thumbnail}
+                              alt={video.title}
+                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                            />
+                          )}
+                          <div style={{ padding: '1rem' }}>
+                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                              {video.title}
+                            </p>
+                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                              {video.channel} • {video.duration}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+            </div>
+          );
+            } else if (currentPage?.originalData?.type === 'album_showcase') {
+              return (
+                <div>
               <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
                 Media Discovery
               </h3>
@@ -1775,34 +2118,36 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 </div>
               </div>
             </div>
-          ) : (
-            <div style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#6b7280',
-              fontSize: '18px',
-              textAlign: 'center',
-              lineHeight: '1.6'
-            }}>
-              <div>
+          );
+            } else {
+              return (
                 <div style={{
-                  fontSize: '48px',
-                  marginBottom: '1rem',
-                  opacity: 0.3
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  padding: '2rem',
+                  textAlign: 'center',
+                  color: '#6b7280'
                 }}>
-                  🎵
+                  <div style={{
+                    fontSize: '4rem',
+                    marginBottom: '1rem',
+                    opacity: 0.3
+                  }}>
+                    🎵
+                  </div>
+                  <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
+                    Media Discovery Panel
+                  </p>
+                  <p>
+                    Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
+                  </p>
                 </div>
-                <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
-                  Media Discovery Panel
-                </p>
-                <p>
-                  Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
-                </p>
-              </div>
-            </div>
-          )}
+              );
+            }
+          })()}
         </div>
       </div>
     );
