@@ -411,8 +411,8 @@
             <!-- Version 4.1 (Current Development) -->
             <div class="version-card">
                 <div class="version-header">
-                    <div class="version-title" style="color: #3b82f6;">Version 4.1 (Development)</div>
-                    <div class="status running" id="v41-status">Running</div>
+                    <div class="version-title" style="color: #3b82f6;">Version 4.1 (Stable)</div>
+                    <div class="status stopped" id="v41-status">Stopped</div>
                 </div>
 
                 <div class="info-section">
@@ -457,6 +457,49 @@
                     </button>
                     <button class="btn btn-secondary" onclick="show41Details()" style="font-size: 0.9em;">
                         ℹ️ Version Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version 4.1.2 (Current Development) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #667eea;">Version 4.1.2 (Development)</div>
+                    <div class="status running" id="v412-status">Running</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Commit:</span>
+                        <span>62aed8e</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span>Tuesday, September 23, 2025 at 1:45 p.m. ET</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">🎨 Index UI Improvements</span>
+                    <span class="feature-tag">📏 Larger Thumbnails</span>
+                    <span class="feature-tag">🔵 Dark Blue Titles</span>
+                    <span class="feature-tag">📍 Fixed Header Layout</span>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button onclick="window.location.href='http://localhost:3004/paginated?transcriptId=bluenote'" class="tool-btn">
+                        🌐 Open App
+                    </button>
+                    <button onclick="revertTo412()" class="tool-btn">
+                        🔄 Revert to v4.1.2
                     </button>
                 </div>
             </div>
@@ -746,6 +789,20 @@
                   'To return to latest development:\n' +
                   '   git checkout v4-development\n' +
                   '   npm run dev');
+        }
+
+        function revertTo412() {
+            alert('To revert to Version 4.1.2 (Index UI Improvements):\n\n' +
+                  '1. Open Terminal\n' +
+                  '2. cd ~/Desktop/my-claude/united-tribes-fresh-v4\n' +
+                  '3. git checkout 62aed8e\n\n' +
+                  'This will restore:\n' +
+                  '• Improved index page with larger thumbnails\n' +
+                  '• Dark blue section titles\n' +
+                  '• Fixed header layout (Previous → Page → Next → Title)\n' +
+                  '• Album info in header for all pages\n\n' +
+                  'To return to latest:\n' +
+                  'git checkout v4-development');
         }
 
         function show41Details() {
