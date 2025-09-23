@@ -1,0 +1,22 @@
+subject,predicate,object,confidence,source
+Johnny Cash,associated_with,San Quentin,0.7,proximity
+My House of Memories,mentions,Merle Haggard,0.9,transcript
+My House of Memories,mentions,Lefty Frizzell,0.9,transcript
+My House of Memories,mentions,Bob Wills,0.9,transcript
+My House of Memories,mentions,Buck Owens,0.9,transcript
+My House of Memories,mentions,Bonnie Owens,0.9,transcript
+My House of Memories,mentions,Johnny Cash,0.9,transcript
+My House of Memories,mentions,George Jones,0.9,transcript
+My House of Memories,mentions,Dolly Parton,0.9,transcript
+My House of Memories,mentions,Willie Nelson,0.9,transcript
+My House of Memories,mentions,Waylon Jennings,0.9,transcript
+My House of Memories,describes,Bakersfield,0.85,transcript
+My House of Memories,describes,San Quentin,0.85,transcript
+My House of Memories,describes,California,0.85,transcript
+My House of Memories,describes,Texas,0.85,transcript
+My House of Memories,describes,Las Vegas,0.85,transcript
+My House of Memories,describes,Oildale,0.85,transcript
+My House of Memories,describes,Nashville,0.85,transcript
+My House of Memories,describes,Oklahoma,0.85,transcript
+My House of Memories,describes,Los Angeles,0.85,transcript
+My House of Memories,describes,Fresno,0.85,transcript

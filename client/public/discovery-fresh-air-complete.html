@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Air Cross-Media Discovery - Merle Haggard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .fresh-air-badge {
+            background: #FF6B35;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .navigation-bar {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .nav-button:hover:not(:disabled) {
+            background: #45a049;
+        }
+        
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .breadcrumbs {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            margin: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .breadcrumb:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb.current {
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 180px);
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        .left-panel h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .entity-type {
+            margin-bottom: 20px;
+        }
+        
+        .entity-type h3 {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .entity-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .entity-item:hover {
+            background: #e8f4ff;
+            transform: translateX(5px);
+        }
+        
+        .entity-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .entity-metadata {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 3px;
+        }
+        
+        .timestamp-badge {
+            background: #FF6B35;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .mention-count {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .network-container {
+            position: relative;
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        #network {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .node {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .node:hover {
+            stroke-width: 3;
+            filter: brightness(1.2);
+        }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            transition: all 0.3s;
+        }
+        
+        .link.highlighted {
+            stroke: #667eea;
+            stroke-width: 3;
+            stroke-opacity: 1;
+        }
+        
+        .node-label {
+            font-size: 10px;
+            pointer-events: none;
+        }
+        
+        .right-panel h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .discovery-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .discovery-item:hover {
+            background: #e8f4ff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .discovery-item h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .discovery-metadata {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .action-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        
+        .action-button:hover {
+            background: #45a049;
+        }
+        
+        .quote-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .quote-attribution {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .zoom-button {
+            background: white;
+            border: 1px solid #ddd;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .zoom-button:hover {
+            background: #f0f0f0;
+        }
+        
+        #node-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        #node-tooltip.visible {
+            opacity: 1;
+        }
+        
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .detail-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c00;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎙️ Merle Haggard On Hopping Trains And Doing Time
+            <span class="fresh-air-badge">NPR Fresh Air - April 25, 2025</span>
+        </h1>
+        <div class="subtitle">124 Entities • 34 People • 42 Music References • Reflective Sentiment</div>
+        <div class="navigation-bar">
+            <button id="back-btn" class="nav-button" disabled onclick="navigateBack()">← Back</button>
+            <button id="forward-btn" class="nav-button" disabled onclick="navigateForward()">Forward →</button>
+            <button class="nav-button" onclick="playFreshAir()">🎧 Listen to Episode</button>
+        </div>
+    </div>
+    
+    <div class="breadcrumbs" id="breadcrumbs">
+        <a href="/" class="breadcrumb">Home</a>
+        <span> › </span>
+        <span class="breadcrumb current">Fresh Air Episode</span>
+    </div>
+    
+    <div class="container">
+        <div class="panel left-panel">
+            <h2>Complete Entity List</h2>
+            <input type="text" class="search-box" placeholder="Search entities..." id="entity-search">
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="entity-count">124</div>
+                    <div class="stat-label">Entities Found</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">131</div>
+                    <div class="stat-label">Total Mentions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
+            
+            <div id="entity-list">
+                <div class="loading">Loading complete entity data...</div>
+            </div>
+        </div>
+        
+        <div class="panel network-container">
+            <div class="zoom-controls">
+                <button class="zoom-button" onclick="zoomIn()">+</button>
+                <button class="zoom-button" onclick="zoomOut()">−</button>
+                <button class="zoom-button" onclick="resetZoom()">⟲</button>
+            </div>
+            <svg id="network"></svg>
+        </div>
+        
+        <div class="panel right-panel">
+            <h2>Discovery Paths</h2>
+            
+            <div class="quote-box">
+                "A country music titan who most resists easy categorization"
+                <div class="quote-attribution">— Jon Caramanica, NYT</div>
+            </div>
+            
+            <div id="discovery-paths">
+                <div class="loading">Loading discovery paths...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="node-tooltip"></div>
+    
+    <div id="detail-modal" class="detail-modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">×</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let graphData = { nodes: [], links: [] };
+        let simulation, node, link, label, svg, g;
+        let navigationHistory = [];
+        let navigationIndex = -1;
+        let currentZoom = d3.zoomIdentity;
+        
+        // Load authentic Merle Haggard entity data from home page analysis
+        fetch('authentic_merle_entities.json')
+            .then(response => response.json())
+            .then(data => {
+                graphData = data;
+                initializeInterface();
+            })
+            .catch(error => {
+                console.error('Error loading entity data:', error);
+                document.getElementById('entity-list').innerHTML = 
+                    '<div class="error">Failed to load complete entity data. Please check the data file.</div>';
+            });
+        
+        function initializeInterface() {
+            // Update stats
+            document.getElementById('entity-count').textContent = graphData.nodes.length;
+            
+            // Populate entity list
+            populateEntityList();
+            
+            // Initialize network graph
+            initializeNetwork();
+            
+            // Populate discovery paths
+            populateDiscoveryPaths();
+            
+            // Set up search
+            document.getElementById('entity-search').addEventListener('input', filterEntities);
+        }
+        
+        function populateEntityList() {
+            const container = document.getElementById('entity-list');
+            const entityTypes = {};
+            
+            // Group entities by type
+            graphData.nodes.forEach(node => {
+                if (!entityTypes[node.type]) {
+                    entityTypes[node.type] = [];
+                }
+                entityTypes[node.type].push(node);
+            });
+            
+            // Create HTML for each type
+            let html = '';
+            const typeIcons = {
+                'podcast': '🎙️',
+                'person': '👤',
+                'event': '📅',
+                'song': '🎵',
+                'place': '📍',
+                'institution': '🏛️'
+            };
+            
+            Object.keys(entityTypes).forEach(type => {
+                html += `<div class="entity-type">
+                    <h3>${typeIcons[type] || '📄'} ${type.toUpperCase()} (${entityTypes[type].length})</h3>`;
+                
+                entityTypes[type].forEach(entity => {
+                    const isSelected = entity.id === 'Fresh Air Episode' ? 'selected' : '';
+                    html += `
+                        <div class="entity-item ${isSelected}" data-entity="${entity.id}" onclick="selectEntity(this)">
+                            <div>
+                                ${entity.id}
+                                ${entity.role ? `<div class="entity-metadata">${entity.role}</div>` : ''}
+                                ${entity.context ? `<div class="entity-metadata">${entity.context}</div>` : ''}
+                            </div>
+                            ${entity.timestamp && entity.timestamp !== 'throughout' ? 
+                                `<span class="timestamp-badge">${entity.timestamp}</span>` : 
+                                entity.mentions > 1 ? `<span class="mention-count">${entity.mentions}</span>` : ''}
+                        </div>`;
+                });
+                
+                html += '</div>';
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function initializeNetwork() {
+            const width = document.querySelector('.network-container').offsetWidth;
+            const height = document.querySelector('.network-container').offsetHeight;
+            
+            // Clear existing SVG content
+            d3.select("#network").selectAll("*").remove();
+            
+            svg = d3.select("#network")
+                .attr("width", width)
+                .attr("height", height);
+            
+            g = svg.append("g");
+            
+            // Create zoom behavior
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 5])
+                .on("zoom", (event) => {
+                    currentZoom = event.transform;
+                    g.attr("transform", event.transform);
+                });
+            
+            svg.call(zoom);
+            
+            // Create force simulation
+            simulation = d3.forceSimulation(graphData.nodes)
+                .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(30));
+            
+            // Create links
+            link = g.append("g")
+                .selectAll("line")
+                .data(graphData.links)
+                .enter().append("line")
+                .attr("class", "link")
+                .attr("stroke-width", d => d.type === "authored_by" ? 3 : 1.5);
+            
+            // Create nodes
+            node = g.append("g")
+                .selectAll("circle")
+                .data(graphData.nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", d => {
+                    if (d.id === "Fresh Air Episode") return 20;
+                    if (d.id === "Merle Haggard") return 18;
+                    if (d.type === "person") return 12;
+                    if (d.type === "event") return 14;
+                    return 10;
+                })
+                .attr("fill", d => {
+                    const colors = {
+                        'podcast': '#FF6B35',
+                        'person': '#667eea',
+                        'event': '#4CAF50',
+                        'song': '#FFC107',
+                        'place': '#00BCD4',
+                        'institution': '#9C27B0'
+                    };
+                    return colors[d.type] || '#999';
+                })
+                .on("click", nodeClicked)
+                .on("mouseover", showNodeTooltip)
+                .on("mouseout", hideNodeTooltip)
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+            
+            // Create labels
+            label = g.append("g")
+                .selectAll("text")
+                .data(graphData.nodes)
+                .enter().append("text")
+                .attr("class", "node-label")
+                .attr("text-anchor", "middle")
+                .attr("dy", -15)
+                .text(d => d.id.length > 20 ? d.id.substring(0, 17) + "..." : d.id);
+            
+            // Update positions on tick
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+                
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+                
+                label
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+        }
+        
+        function populateDiscoveryPaths() {
+            const container = document.getElementById('discovery-paths');
+            let html = '';
+            
+            // Add key themes if they exist
+            if (graphData.themes) {
+                html += '<h3>Key Themes</h3>';
+                graphData.themes.forEach(theme => {
+                    html += `
+                        <div class="discovery-item" onclick="navigateDiscovery('theme', '${theme.theme}', this)">
+                            <h4>${theme.theme}</h4>
+                            <div class="discovery-metadata">
+                                ${theme.timestamp ? `Timestamp: ${theme.timestamp}` : ''}
+                                ${theme.context ? `<br>${theme.context}` : ''}
+                            </div>
+                        </div>`;
+                });
+            }
+            
+            // Add key quotes if they exist
+            if (graphData.quotes && graphData.quotes.length > 0) {
+                html += '<h3>Notable Quotes</h3>';
+                graphData.quotes.forEach(quote => {
+                    html += `
+                        <div class="discovery-item">
+                            <div style="font-style: italic;">"${quote.text}"</div>
+                            <div class="discovery-metadata">
+                                — ${quote.speaker}
+                                ${quote.timestamp ? ` at ${quote.timestamp}` : ''}
+                            </div>
+                        </div>`;
+                });
+            }
+            
+            // Add statistics if they exist
+            if (graphData.statistics) {
+                html += '<h3>Key Statistics</h3>';
+                graphData.statistics.forEach(stat => {
+                    html += `
+                        <div class="discovery-item">
+                            <h4>${stat.stat}</h4>
+                            <div class="discovery-metadata">
+                                ${stat.context}
+                                ${stat.timestamp ? ` (${stat.timestamp})` : ''}
+                            </div>
+                        </div>`;
+                });
+            }
+            
+            container.innerHTML = html || '<p>Discovery paths loading...</p>';
+        }
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Entity selection
+        function selectEntity(element) {
+            document.querySelectorAll('.entity-item').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            const entityName = element.dataset.entity;
+            highlightConnections(entityName);
+            addToHistory(entityName);
+        }
+        
+        function highlightConnections(entityName) {
+            // Reset
+            node.style("opacity", 1);
+            link.style("opacity", 0.2);
+            
+            // Highlight connected
+            link.style("opacity", d => 
+                (d.source.id === entityName || d.target.id === entityName) ? 1 : 0.1
+            ).classed("highlighted", d => 
+                d.source.id === entityName || d.target.id === entityName
+            );
+            
+            const connected = new Set([entityName]);
+            graphData.links.forEach(l => {
+                if (l.source.id === entityName) connected.add(l.target.id);
+                if (l.target.id === entityName) connected.add(l.source.id);
+            });
+            
+            node.style("opacity", d => connected.has(d.id) ? 1 : 0.3);
+        }
+        
+        function nodeClicked(event, d) {
+            showEntityDetails(d);
+            const entityElement = document.querySelector(`[data-entity="${d.id}"]`);
+            if (entityElement) {
+                selectEntity(entityElement);
+            }
+        }
+        
+        function showNodeTooltip(event, d) {
+            const tooltip = document.getElementById('node-tooltip');
+            let content = `<strong>${d.id}</strong><br>Type: ${d.type}`;
+            
+            if (d.timestamp) content += `<br>Timestamp: ${d.timestamp}`;
+            if (d.date) content += `<br>Date: ${d.date}`;
+            if (d.role) content += `<br>Role: ${d.role}`;
+            if (d.context) content += `<br>Context: ${d.context}`;
+            if (d.mentions) content += `<br>Mentions: ${d.mentions}`;
+            
+            tooltip.innerHTML = content;
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+        
+        function hideNodeTooltip() {
+            document.getElementById('node-tooltip').classList.remove('visible');
+        }
+        
+        function showEntityDetails(entity) {
+            const modal = document.getElementById('detail-modal');
+            const modalBody = document.getElementById('modal-body');
+            
+            let content = `<h2>${entity.id}</h2>`;
+            content += `<p><strong>Type:</strong> ${entity.type}</p>`;
+            
+            if (entity.timestamp) content += `<p><strong>Mentioned at:</strong> ${entity.timestamp}</p>`;
+            if (entity.date) content += `<p><strong>Date:</strong> ${entity.date}</p>`;
+            if (entity.role) content += `<p><strong>Role:</strong> ${entity.role}</p>`;
+            if (entity.context) content += `<p><strong>Context:</strong> ${entity.context}</p>`;
+            if (entity.mentions && entity.mentions > 1) content += `<p><strong>Total Mentions:</strong> ${entity.mentions}</p>`;
+            if (entity.significance) content += `<p><strong>Significance:</strong> ${entity.significance}</p>`;
+            if (entity.url) content += `<p><a href="${entity.url}" target="_blank">View on NPR.org →</a></p>`;
+            
+            // Add connections
+            const connections = graphData.links.filter(l => 
+                l.source.id === entity.id || l.target.id === entity.id
+            );
+            
+            if (connections.length > 0) {
+                content += '<h3>Connections</h3><ul>';
+                connections.forEach(conn => {
+                    const otherNode = conn.source.id === entity.id ? conn.target : conn.source;
+                    content += `<li>${conn.type} → ${otherNode.id}`;
+                    if (conn.timestamp) content += ` (${conn.timestamp})`;
+                    content += '</li>';
+                });
+                content += '</ul>';
+            }
+            
+            modalBody.innerHTML = content;
+            modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').classList.remove('active');
+        }
+        
+        // Navigation functions
+        function addToHistory(entityName) {
+            if (navigationIndex < navigationHistory.length - 1) {
+                navigationHistory = navigationHistory.slice(0, navigationIndex + 1);
+            }
+            navigationHistory.push(entityName);
+            navigationIndex++;
+            updateNavigationButtons();
+            updateBreadcrumbs(entityName);
+        }
+        
+        function navigateBack() {
+            if (navigationIndex > 0) {
+                navigationIndex--;
+                const entityName = navigationHistory[navigationIndex];
+                const element = document.querySelector(`[data-entity="${entityName}"]`);
+                if (element) selectEntity(element);
+                updateNavigationButtons();
+                updateBreadcrumbs(entityName);
+            }
+        }
+        
+        function navigateForward() {
+            if (navigationIndex < navigationHistory.length - 1) {
+                navigationIndex++;
+                const entityName = navigationHistory[navigationIndex];
+                const element = document.querySelector(`[data-entity="${entityName}"]`);
+                if (element) selectEntity(element);
+                updateNavigationButtons();
+                updateBreadcrumbs(entityName);
+            }
+        }
+        
+        function updateNavigationButtons() {
+            document.getElementById('back-btn').disabled = navigationIndex <= 0;
+            document.getElementById('forward-btn').disabled = navigationIndex >= navigationHistory.length - 1;
+        }
+        
+        function updateBreadcrumbs(entityName) {
+            const breadcrumbs = document.getElementById('breadcrumbs');
+            breadcrumbs.innerHTML = `
+                <a href="/" class="breadcrumb">Home</a>
+                <span> › </span>
+                <a href="#" class="breadcrumb" onclick="navigateToEntity('Fresh Air Episode'); return false;">Fresh Air Episode</a>
+                ${entityName !== 'Fresh Air Episode' ? `
+                    <span> › </span>
+                    <span class="breadcrumb current">${entityName}</span>
+                ` : ''}
+            `;
+        }
+        
+        function navigateToEntity(entityName) {
+            const element = document.querySelector(`[data-entity="${entityName}"]`);
+            if (element) {
+                selectEntity(element);
+            }
+        }
+        
+        // Zoom functions
+        function zoomIn() {
+            svg.transition().call(
+                d3.zoom().transform,
+                d3.zoomIdentity.translate(currentZoom.x, currentZoom.y).scale(currentZoom.k * 1.3)
+            );
+        }
+        
+        function zoomOut() {
+            svg.transition().call(
+                d3.zoom().transform,
+                d3.zoomIdentity.translate(currentZoom.x, currentZoom.y).scale(currentZoom.k * 0.7)
+            );
+        }
+        
+        function resetZoom() {
+            svg.transition().call(
+                d3.zoom().transform,
+                d3.zoomIdentity
+            );
+        }
+        
+        // Search function
+        function filterEntities() {
+            const searchTerm = document.getElementById('entity-search').value.toLowerCase();
+            const entityItems = document.querySelectorAll('.entity-item');
+            
+            entityItems.forEach(item => {
+                const entityName = item.dataset.entity.toLowerCase();
+                const metadata = item.querySelector('.entity-metadata');
+                const metadataText = metadata ? metadata.textContent.toLowerCase() : '';
+                
+                if (entityName.includes(searchTerm) || metadataText.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Play Fresh Air function
+        function playFreshAir() {
+            window.open('https://www.npr.org/2016/04/07/473307918/fresh-air-remembers-country-legend-merle-haggard', '_blank');
+        }
+        
+        // Discovery navigation
+        function navigateDiscovery(type, value, element) {
+            if (element) {
+                document.querySelectorAll('.discovery-item').forEach(el => {
+                    el.style.background = '#f8f9fa';
+                });
+                element.style.background = '#e8f4ff';
+            }
+            
+            // Find and highlight related entities
+            const relatedEntities = graphData.nodes.filter(n => {
+                if (type === 'theme') {
+                    // Highlight entities related to this theme
+                    return n.context && n.context.toLowerCase().includes(value.toLowerCase());
+                }
+                return false;
+            });
+            
+            if (relatedEntities.length > 0) {
+                const entityIds = new Set(relatedEntities.map(e => e.id));
+                node.style("opacity", d => entityIds.has(d.id) ? 1 : 0.3);
+            }
+        }
+        
+        // Initialize with Fresh Air Episode selected
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const freshAirElement = document.querySelector('[data-entity="Fresh Air Episode"]');
+                if (freshAirElement) {
+                    selectEntity(freshAirElement);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Media Discovery Interface - Merle Haggard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Navigation elements */
+        .navigation-bar {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .nav-button {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .nav-button:hover:not(:disabled) {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .breadcrumbs {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            margin: 0;
+            border-top: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .breadcrumb {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .breadcrumb:hover {
+            color: #5568d3;
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #999;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .left-panel {
+            flex: 0 0 300px;
+        }
+        
+        .main-panel {
+            flex: 1;
+            min-height: 600px;
+        }
+        
+        .right-panel {
+            flex: 0 0 350px;
+        }
+        
+        .entity-filter {
+            margin-bottom: 20px;
+        }
+        
+        .entity-type {
+            margin-bottom: 15px;
+        }
+        
+        .entity-type h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .entity-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .entity-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #667eea;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+        
+        .entity-item:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .entity-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .entity-item.selected {
+            background: #667eea;
+            color: white;
+            transform: translateX(8px);
+            box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .entity-item.selected .mention-count {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .mention-count {
+            font-size: 12px;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        /* Hover preview tooltip */
+        .entity-preview {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            margin-left: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            min-width: 200px;
+            font-size: 12px;
+        }
+        
+        .entity-item:hover .entity-preview {
+            opacity: 1;
+        }
+        
+        #graph-container {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        
+        /* Graph controls */
+        .graph-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .graph-control {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .graph-control:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+        
+        /* Node tooltip */
+        .node-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+        }
+        
+        .node-tooltip.visible {
+            opacity: 1;
+        }
+        
+        .node {
+            cursor: pointer;
+        }
+        
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+            transition: all 0.3s;
+        }
+        
+        .node:hover circle {
+            stroke-width: 4px;
+            filter: brightness(1.1);
+        }
+        
+        .node.highlighted circle {
+            stroke: #ffeb3b;
+            stroke-width: 4px;
+        }
+        
+        .node.dimmed {
+            opacity: 0.3;
+        }
+        
+        .node text {
+            font-size: 12px;
+            pointer-events: none;
+        }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            stroke-width: 1px;
+            transition: all 0.3s;
+        }
+        
+        .link.highlighted {
+            stroke: #667eea;
+            stroke-width: 3px;
+            stroke-opacity: 1;
+        }
+        
+        .link.dimmed {
+            stroke-opacity: 0.1;
+        }
+        
+        /* Discovery items */
+        .discovery-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .discovery-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .discovery-item::after {
+            content: '→';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #667eea;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .discovery-item:hover::after {
+            opacity: 1;
+            right: 10px;
+        }
+        
+        .discovery-item.active {
+            background: #667eea;
+            color: white;
+            border-left-color: #5568d3;
+        }
+        
+        .discovery-item.active .media-type {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .discovery-item h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .discovery-item.active h4 {
+            color: white;
+        }
+        
+        .discovery-item p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .discovery-item.active p {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .media-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .media-type.book { background: #4CAF50; color: white; }
+        .media-type.podcast { background: #FF9800; color: white; }
+        .media-type.song { background: #2196F3; color: white; }
+        .media-type.video { background: #f44336; color: white; }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        /* Detail modal */
+        .detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s;
+        }
+        
+        .detail-modal.active {
+            display: block;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            margin: 50px auto;
+            border-radius: 10px;
+            padding: 30px;
+            animation: slideIn 0.3s;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 20px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Loading state */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Suggestions */
+        .suggestions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .suggestion-item {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .suggestion-item:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎵 Cross-Media Discovery Interface</h1>
+        <div class="subtitle">Explore connections across Merle Haggard's autobiography, music, and media appearances</div>
+        <div class="navigation-bar">
+            <button id="back-btn" class="nav-button" disabled onclick="navigateBack()">← Back</button>
+            <button id="forward-btn" class="nav-button" disabled onclick="navigateForward()">Forward →</button>
+            <button class="nav-button" onclick="resetView()">Reset View</button>
+        </div>
+    </div>
+    
+    <div class="breadcrumbs" id="breadcrumbs">
+        <span class="breadcrumb" onclick="navigateToEntity('Home')">Home</span>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb current">My House of Memories</span>
+    </div>
+    
+    <div class="container">
+        <div class="panel left-panel">
+            <h2>Entities</h2>
+            <input type="text" class="search-box" placeholder="Search entities..." id="entity-search">
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-entities">73</div>
+                    <div class="stat-label">Entities</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-connections">42</div>
+                    <div class="stat-label">Links</div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>📚 Book</h3>
+                <div class="entity-item selected" data-entity="My House of Memories" data-type="book" onclick="selectEntity(this)">
+                    My House of Memories
+                    <span class="mention-count">1</span>
+                    <div class="entity-preview">
+                        <strong>Autobiography</strong><br>
+                        by Merle Haggard<br>
+                        with Tom Carter<br>
+                        <br>
+                        Connections: 15+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>👤 People</h3>
+                <div id="people-list">
+                    <div class="entity-item" data-entity="Merle Haggard" data-type="person" onclick="selectEntity(this)">
+                        Merle Haggard
+                        <span class="mention-count">15</span>
+                        <div class="entity-preview">
+                            <strong>Country Legend</strong><br>
+                            Born: Oildale, CA<br>
+                            Songs: 600+<br>
+                            Albums: 70+<br>
+                            <br>
+                            Connections: 25+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Johnny Cash" data-type="person" onclick="selectEntity(this)">
+                        Johnny Cash
+                        <span class="mention-count">5</span>
+                        <div class="entity-preview">
+                            <strong>The Man in Black</strong><br>
+                            San Quentin Concert: 1958<br>
+                            Friend of Haggard<br>
+                            <br>
+                            Connections: 12+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Buck Owens" data-type="person" onclick="selectEntity(this)">
+                        Buck Owens
+                        <span class="mention-count">7</span>
+                        <div class="entity-preview">
+                            <strong>Bakersfield Sound</strong><br>
+                            Collaborator<br>
+                            Mentor figure<br>
+                            <br>
+                            Connections: 10+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Willie Nelson" data-type="person" onclick="selectEntity(this)">
+                        Willie Nelson
+                        <span class="mention-count">2</span>
+                        <div class="entity-preview">
+                            <strong>Outlaw Country</strong><br>
+                            Collaborations<br>
+                            "Pancho and Lefty"<br>
+                            <br>
+                            Connections: 8+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Bonnie Owens" data-type="person" onclick="selectEntity(this)">
+                        Bonnie Owens
+                        <span class="mention-count">6</span>
+                        <div class="entity-preview">
+                            <strong>Singer</strong><br>
+                            Ex-wife<br>
+                            Backup vocalist<br>
+                            <br>
+                            Connections: 6+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>📍 Places</h3>
+                <div id="places-list">
+                    <div class="entity-item" data-entity="Bakersfield" data-type="place" onclick="selectEntity(this)">
+                        Bakersfield
+                        <span class="mention-count">55</span>
+                        <div class="entity-preview">
+                            <strong>California City</strong><br>
+                            Bakersfield Sound<br>
+                            Music scene hub<br>
+                            <br>
+                            Connections: 20+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="San Quentin" data-type="place" onclick="selectEntity(this)">
+                        San Quentin Prison
+                        <span class="mention-count">36</span>
+                        <div class="entity-preview">
+                            <strong>State Prison</strong><br>
+                            Incarceration: 1958<br>
+                            Johnny Cash concert<br>
+                            <br>
+                            Connections: 15+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Nashville" data-type="place" onclick="selectEntity(this)">
+                        Nashville
+                        <span class="mention-count">7</span>
+                        <div class="entity-preview">
+                            <strong>Music City</strong><br>
+                            Country capital<br>
+                            Recording hub<br>
+                            <br>
+                            Connections: 10+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Oildale" data-type="place" onclick="selectEntity(this)">
+                        Oildale
+                        <span class="mention-count">10</span>
+                        <div class="entity-preview">
+                            <strong>California Town</strong><br>
+                            Haggard's birthplace<br>
+                            Childhood home<br>
+                            <br>
+                            Connections: 8+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>🎵 Songs</h3>
+                <div id="songs-list">
+                    <div class="entity-item" data-entity="Mama Tried" data-type="song" onclick="selectEntity(this)">
+                        Mama Tried
+                        <span class="mention-count">3</span>
+                        <div class="entity-preview">
+                            <strong>1968 Hit</strong><br>
+                            #1 Country<br>
+                            Grammy Hall of Fame<br>
+                            <br>
+                            Connections: 5+
+                        </div>
+                    </div>
+                    <div class="entity-item" data-entity="Okie from Muskogee" data-type="song" onclick="selectEntity(this)">
+                        Okie from Muskogee
+                        <span class="mention-count">1</span>
+                        <div class="entity-preview">
+                            <strong>1969 Anthem</strong><br>
+                            Cultural phenomenon<br>
+                            Controversial hit<br>
+                            <br>
+                            Connections: 7+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel main-panel">
+            <h2>Discovery Network</h2>
+            <div id="graph-container">
+                <div class="graph-controls">
+                    <div class="graph-control" onclick="zoomIn()" title="Zoom In">+</div>
+                    <div class="graph-control" onclick="zoomOut()" title="Zoom Out">−</div>
+                    <div class="graph-control" onclick="resetZoom()" title="Reset">⟲</div>
+                </div>
+                <div class="node-tooltip" id="node-tooltip"></div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4CAF50"></div>
+                        <span>Book</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2196F3"></div>
+                        <span>Person</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FF9800"></div>
+                        <span>Place</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9C27B0"></div>
+                        <span>Song</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel right-panel">
+            <h2>Discovery Paths</h2>
+            <div id="discovery-paths">
+                <div class="discovery-item" onclick="navigateDiscovery('book-podcast', this)">
+                    <h4>📚 From Book to Podcast</h4>
+                    <span class="media-type book">BOOK</span>
+                    <span class="media-type podcast">PODCAST</span>
+                    <p>Chapter 3 mentions San Quentin concert → Fresh Air interview discusses same event</p>
+                </div>
+                
+                <div class="discovery-item" onclick="navigateDiscovery('song-story', this)">
+                    <h4>🎵 From Song to Story</h4>
+                    <span class="media-type song">SONG</span>
+                    <span class="media-type book">BOOK</span>
+                    <p>"Mama Tried" lyrics → Book reveals personal story behind the song</p>
+                </div>
+                
+                <div class="discovery-item" onclick="navigateDiscovery('person-book', this)">
+                    <h4>👤 Person Connections</h4>
+                    <span class="media-type book">BOOK</span>
+                    <span class="media-type book">BOOK</span>
+                    <p>Johnny Cash mentioned → Link to "Cash: The Autobiography"</p>
+                </div>
+                
+                <div class="discovery-item" onclick="navigateDiscovery('place-video', this)">
+                    <h4>📍 Place-Based Discovery</h4>
+                    <span class="media-type book">BOOK</span>
+                    <span class="media-type video">VIDEO</span>
+                    <p>Bakersfield Sound → Documentary "The Bakersfield Sound: Buck Owens, Merle Haggard"</p>
+                </div>
+            </div>
+            
+            <div class="suggestions">
+                <h3>Explore Similar</h3>
+                <div id="suggestions-container">
+                    <span class="suggestion-item" onclick="selectEntityByName('Willie Nelson')">Willie Nelson</span>
+                    <span class="suggestion-item" onclick="selectEntityByName('Nashville')">Nashville</span>
+                    <span class="suggestion-item" onclick="selectEntityByName('Mama Tried')">Mama Tried</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="detail-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                <!-- Content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation history
+        const navigationHistory = [];
+        let currentHistoryIndex = -1;
+        let currentEntity = "My House of Memories";
+        
+        // Graph data
+        const graphData = {
+            nodes: [
+                // Books
+                { id: "My House of Memories", type: "book", mentions: 1, x: 400, y: 300 },
+                { id: "Cash: The Autobiography", type: "book", mentions: 1 },
+                
+                // People
+                { id: "Merle Haggard", type: "person", mentions: 15 },
+                { id: "Johnny Cash", type: "person", mentions: 5 },
+                { id: "Buck Owens", type: "person", mentions: 7 },
+                { id: "Willie Nelson", type: "person", mentions: 2 },
+                { id: "Bonnie Owens", type: "person", mentions: 6 },
+                { id: "Tom Carter", type: "person", mentions: 1 },
+                { id: "Lefty Frizzell", type: "person", mentions: 8 },
+                { id: "Bob Wills", type: "person", mentions: 8 },
+                
+                // Places
+                { id: "Bakersfield", type: "place", mentions: 55 },
+                { id: "San Quentin", type: "place", mentions: 36 },
+                { id: "Nashville", type: "place", mentions: 7 },
+                { id: "Oildale", type: "place", mentions: 10 },
+                { id: "California", type: "place", mentions: 34 },
+                { id: "Texas", type: "place", mentions: 17 },
+                
+                // Songs
+                { id: "Mama Tried", type: "song", mentions: 3 },
+                { id: "Okie from Muskogee", type: "song", mentions: 1 },
+                { id: "Sing Me Back Home", type: "song", mentions: 1 },
+                
+                // Media
+                { id: "Fresh Air Interview", type: "podcast", mentions: 1 }
+            ],
+            links: [
+                // Book connections
+                { source: "My House of Memories", target: "Merle Haggard", type: "author" },
+                { source: "My House of Memories", target: "Tom Carter", type: "co-author" },
+                { source: "My House of Memories", target: "Bakersfield", type: "describes" },
+                { source: "My House of Memories", target: "San Quentin", type: "describes" },
+                { source: "My House of Memories", target: "Johnny Cash", type: "mentions" },
+                { source: "My House of Memories", target: "Buck Owens", type: "mentions" },
+                { source: "My House of Memories", target: "Willie Nelson", type: "mentions" },
+                { source: "My House of Memories", target: "Bonnie Owens", type: "mentions" },
+                { source: "My House of Memories", target: "Mama Tried", type: "discusses" },
+                { source: "My House of Memories", target: "Oildale", type: "describes" },
+                
+                // Person connections
+                { source: "Merle Haggard", target: "Bakersfield", type: "lived_in" },
+                { source: "Merle Haggard", target: "San Quentin", type: "incarcerated_at" },
+                { source: "Merle Haggard", target: "Bonnie Owens", type: "married_to" },
+                { source: "Merle Haggard", target: "Buck Owens", type: "collaborated_with" },
+                { source: "Merle Haggard", target: "Willie Nelson", type: "collaborated_with" },
+                { source: "Merle Haggard", target: "Mama Tried", type: "performed" },
+                { source: "Merle Haggard", target: "Okie from Muskogee", type: "performed" },
+                { source: "Merle Haggard", target: "Fresh Air Interview", type: "featured_in" },
+                
+                // Cross-references
+                { source: "Johnny Cash", target: "San Quentin", type: "performed_at" },
+                { source: "Johnny Cash", target: "Cash: The Autobiography", type: "author" },
+                { source: "Buck Owens", target: "Bakersfield", type: "associated_with" },
+                
+                // Song connections
+                { source: "Mama Tried", target: "San Quentin", type: "inspired_by" },
+                { source: "Sing Me Back Home", target: "San Quentin", type: "about" }
+            ]
+        };
+        
+        // Color scheme
+        const colorMap = {
+            book: "#4CAF50",
+            person: "#2196F3",
+            place: "#FF9800",
+            song: "#9C27B0",
+            podcast: "#FF5722"
+        };
+        
+        // Set up SVG with zoom
+        const width = document.getElementById('graph-container').offsetWidth;
+        const height = 600;
+        
+        const svg = d3.select("#graph-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        
+        // Add zoom behavior
+        const g = svg.append("g");
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 3])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        
+        svg.call(zoom);
+        
+        // Create force simulation
+        const simulation = d3.forceSimulation(graphData.nodes)
+            .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(d => Math.sqrt(d.mentions) * 5 + 20));
+        
+        // Create links
+        const link = g.append("g")
+            .selectAll("line")
+            .data(graphData.links)
+            .enter().append("line")
+            .attr("class", "link")
+            .style("stroke-width", d => d.type === "author" ? 3 : 1)
+            .on("click", function(event, d) {
+                showLinkDetails(d);
+            });
+        
+        // Create nodes
+        const node = g.append("g")
+            .selectAll("g")
+            .data(graphData.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .on("click", function(event, d) {
+                nodeClicked(d);
+            })
+            .on("dblclick", function(event, d) {
+                focusOnNode(d);
+            })
+            .on("mouseenter", function(event, d) {
+                showNodeTooltip(event, d);
+            })
+            .on("mouseleave", function() {
+                hideNodeTooltip();
+            })
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+        
+        // Add circles to nodes
+        node.append("circle")
+            .attr("r", d => Math.sqrt(d.mentions) * 3 + 10)
+            .style("fill", d => colorMap[d.type]);
+        
+        // Add labels
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", 4)
+            .text(d => d.id)
+            .style("font-size", d => d.mentions > 10 ? "14px" : "12px");
+        
+        // Update positions
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+            
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Entity selection
+        function selectEntity(element) {
+            // Remove previous selection
+            document.querySelectorAll('.entity-item').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selection
+            element.classList.add('selected');
+            
+            const entityName = element.dataset.entity;
+            navigateToEntity(entityName);
+        }
+        
+        function selectEntityByName(entityName) {
+            const element = document.querySelector(`[data-entity="${entityName}"]`);
+            if (element) {
+                selectEntity(element);
+            }
+        }
+        
+        function navigateToEntity(entityName) {
+            // Update history
+            if (currentEntity !== entityName) {
+                navigationHistory.splice(currentHistoryIndex + 1);
+                navigationHistory.push(entityName);
+                currentHistoryIndex++;
+                currentEntity = entityName;
+                updateNavigationButtons();
+                updateBreadcrumbs();
+            }
+            
+            // Highlight connections
+            highlightConnections(entityName);
+            
+            // Update discovery paths
+            updateDiscoveryPaths(entityName);
+            
+            // Update suggestions
+            updateSuggestions(entityName);
+            
+            // Show details if double-clicked
+            const node = graphData.nodes.find(n => n.id === entityName);
+            if (node) {
+                centerOnNode(node);
+            }
+        }
+        
+        function highlightConnections(entityName) {
+            // Reset all
+            node.classed("highlighted", false).classed("dimmed", false);
+            link.classed("highlighted", false).classed("dimmed", false);
+            
+            // Find connected nodes
+            const connectedNodes = new Set([entityName]);
+            graphData.links.forEach(l => {
+                if (l.source.id === entityName || l.source === entityName) {
+                    connectedNodes.add(l.target.id || l.target);
+                }
+                if (l.target.id === entityName || l.target === entityName) {
+                    connectedNodes.add(l.source.id || l.source);
+                }
+            });
+            
+            // Highlight connected
+            node.classed("highlighted", d => d.id === entityName)
+                .classed("dimmed", d => !connectedNodes.has(d.id));
+            
+            link.classed("highlighted", d => 
+                    (d.source.id === entityName || d.target.id === entityName))
+                .classed("dimmed", d => 
+                    !(d.source.id === entityName || d.target.id === entityName));
+        }
+        
+        function nodeClicked(d) {
+            selectEntityByName(d.id);
+            showEntityDetails(d);
+        }
+        
+        function focusOnNode(d) {
+            // Zoom to node
+            const scale = 1.5;
+            const translate = [width / 2 - scale * d.x, height / 2 - scale * d.y];
+            
+            svg.transition()
+                .duration(750)
+                .call(zoom.transform, d3.zoomIdentity
+                    .translate(translate[0], translate[1])
+                    .scale(scale));
+        }
+        
+        function centerOnNode(d) {
+            const translate = [width / 2 - d.x, height / 2 - d.y];
+            
+            svg.transition()
+                .duration(500)
+                .call(zoom.transform, d3.zoomIdentity
+                    .translate(translate[0], translate[1])
+                    .scale(1));
+        }
+        
+        // Tooltip functions
+        function showNodeTooltip(event, d) {
+            const tooltip = document.getElementById('node-tooltip');
+            const connections = graphData.links.filter(l => 
+                l.source.id === d.id || l.target.id === d.id
+            ).length;
+            
+            tooltip.innerHTML = `
+                <strong>${d.id}</strong><br>
+                Type: ${d.type}<br>
+                Mentions: ${d.mentions}<br>
+                Connections: ${connections}
+            `;
+            
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+        
+        function hideNodeTooltip() {
+            const tooltip = document.getElementById('node-tooltip');
+            tooltip.classList.remove('visible');
+        }
+        
+        // Show entity details
+        function showEntityDetails(entity) {
+            const modal = document.getElementById('detail-modal');
+            const modalBody = document.getElementById('modal-body');
+            
+            const connections = graphData.links.filter(l => 
+                l.source.id === entity.id || l.target.id === entity.id
+            );
+            
+            modalBody.innerHTML = `
+                <h2>${entity.id}</h2>
+                <p><strong>Type:</strong> ${entity.type}</p>
+                <p><strong>Mentions in transcript:</strong> ${entity.mentions}</p>
+                
+                <h3>Connections (${connections.length})</h3>
+                <ul>
+                    ${connections.map(c => {
+                        const other = c.source.id === entity.id ? c.target : c.source;
+                        return `<li>${c.type}: <a href="#" onclick="selectEntityByName('${other.id}')">${other.id}</a></li>`;
+                    }).join('')}
+                </ul>
+                
+                <h3>Media Links</h3>
+                <ul>
+                    <li><a href="#" onclick="alert('Opening Spotify...')">Listen on Spotify</a></li>
+                    <li><a href="#" onclick="alert('Opening YouTube...')">Watch on YouTube</a></li>
+                    <li><a href="#" onclick="alert('Opening Wikipedia...')">Read on Wikipedia</a></li>
+                </ul>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        function showLinkDetails(link) {
+            alert(`Relationship: ${link.source.id} ${link.type} ${link.target.id}`);
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').classList.remove('active');
+        }
+        
+        // Navigation functions
+        function navigateBack() {
+            if (currentHistoryIndex > 0) {
+                currentHistoryIndex--;
+                currentEntity = navigationHistory[currentHistoryIndex];
+                selectEntityByName(currentEntity);
+                updateNavigationButtons();
+                updateBreadcrumbs();
+            }
+        }
+        
+        function navigateForward() {
+            if (currentHistoryIndex < navigationHistory.length - 1) {
+                currentHistoryIndex++;
+                currentEntity = navigationHistory[currentHistoryIndex];
+                selectEntityByName(currentEntity);
+                updateNavigationButtons();
+                updateBreadcrumbs();
+            }
+        }
+        
+        function updateNavigationButtons() {
+            document.getElementById('back-btn').disabled = currentHistoryIndex <= 0;
+            document.getElementById('forward-btn').disabled = currentHistoryIndex >= navigationHistory.length - 1;
+        }
+        
+        function updateBreadcrumbs() {
+            const breadcrumbs = document.getElementById('breadcrumbs');
+            const path = navigationHistory.slice(0, currentHistoryIndex + 1);
+            
+            breadcrumbs.innerHTML = `
+                <span class="breadcrumb" onclick="navigateToEntity('Home')">Home</span>
+                ${path.map((entity, i) => `
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb ${i === path.length - 1 ? 'current' : ''}" 
+                          onclick="navigateToEntity('${entity}')">${entity}</span>
+                `).join('')}
+            `;
+        }
+        
+        // Discovery path navigation
+        function navigateDiscovery(pathType, element) {
+            // Remove active from all
+            document.querySelectorAll('.discovery-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Add active to clicked
+            element.classList.add('active');
+            
+            // Simulate navigation based on path type
+            setTimeout(() => {
+                switch(pathType) {
+                    case 'book-podcast':
+                        alert('Opening Fresh Air interview segment...\nTimestamp: 12:34 - Discussion of San Quentin');
+                        break;
+                    case 'song-story':
+                        alert('Opening "Mama Tried" chapter in book...\nChapter 5, Page 127: The story behind the song');
+                        break;
+                    case 'person-book':
+                        selectEntityByName('Johnny Cash');
+                        setTimeout(() => {
+                            alert('Opening "Cash: The Autobiography"...\nAvailable on Kindle and Audible');
+                        }, 500);
+                        break;
+                    case 'place-video':
+                        alert('Opening documentary...\n"The Bakersfield Sound" (2019)\nAvailable on YouTube and Amazon Prime');
+                        break;
+                }
+            }, 300);
+        }
+        
+        function updateDiscoveryPaths(entityName) {
+            const pathsContainer = document.getElementById('discovery-paths');
+            
+            const paths = {
+                "Merle Haggard": [
+                    { title: "📚 Autobiography Highlights", type1: "book", type2: "podcast", 
+                      desc: "Key life events → Media interviews discussing them" },
+                    { title: "🎵 Musical Journey", type1: "song", type2: "video", 
+                      desc: "Hit songs → Live performances and documentaries" },
+                    { title: "👥 Collaborations", type1: "person", type2: "song", 
+                      desc: "Willie Nelson → 'Pancho and Lefty' duet" }
+                ],
+                "San Quentin": [
+                    { title: "🏛️ Prison History", type1: "place", type2: "book", 
+                      desc: "Incarceration story → Chapter 3 of autobiography" },
+                    { title: "🎤 Famous Concert", type1: "event", type2: "video", 
+                      desc: "Johnny Cash 1958 → Concert footage available" },
+                    { title: "🎵 Inspired Songs", type1: "place", type2: "song", 
+                      desc: "Prison experience → 'Sing Me Back Home'" }
+                ],
+                "Johnny Cash": [
+                    { title: "📚 Cross-References", type1: "book", type2: "book", 
+                      desc: "Mentioned in Haggard's book → Cash's own autobiography" },
+                    { title: "🎵 Prison Concerts", type1: "person", type2: "place", 
+                      desc: "San Quentin performance → Haggard in audience" },
+                    { title: "🎬 Documentary", type1: "person", type2: "video", 
+                      desc: "Life story → 'Walk the Line' film" }
+                ]
+            };
+            
+            const selectedPaths = paths[entityName] || paths["Merle Haggard"];
+            
+            pathsContainer.innerHTML = selectedPaths.map(path => `
+                <div class="discovery-item" onclick="navigateDiscovery('${entityName}', this)">
+                    <h4>${path.title}</h4>
+                    <span class="media-type ${path.type1}">${path.type1.toUpperCase()}</span>
+                    <span class="media-type ${path.type2}">${path.type2.toUpperCase()}</span>
+                    <p>${path.desc}</p>
+                </div>
+            `).join('');
+        }
+        
+        function updateSuggestions(entityName) {
+            const container = document.getElementById('suggestions-container');
+            
+            // Find related entities
+            const related = new Set();
+            graphData.links.forEach(link => {
+                if (link.source.id === entityName || link.source === entityName) {
+                    related.add(link.target.id || link.target);
+                }
+                if (link.target.id === entityName || link.target === entityName) {
+                    related.add(link.source.id || link.source);
+                }
+            });
+            
+            // Show top 5 related
+            const suggestions = Array.from(related).slice(0, 5);
+            container.innerHTML = suggestions.map(s => 
+                `<span class="suggestion-item" onclick="selectEntityByName('${s}')">${s}</span>`
+            ).join('');
+        }
+        
+        // Search functionality
+        document.getElementById('entity-search').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            // Filter entities
+            document.querySelectorAll('.entity-item').forEach(item => {
+                const entityName = item.dataset.entity.toLowerCase();
+                const matches = entityName.includes(searchTerm);
+                item.style.display = matches ? 'flex' : 'none';
+                
+                // Highlight in graph
+                if (matches && searchTerm.length > 2) {
+                    const graphNode = node.filter(d => d.id.toLowerCase().includes(searchTerm));
+                    graphNode.classed("highlighted", true);
+                }
+            });
+            
+            // Update stats
+            const visibleCount = document.querySelectorAll('.entity-item:not([style*="none"])').length;
+            document.getElementById('total-entities').textContent = visibleCount;
+        });
+        
+        // Zoom controls
+        function zoomIn() {
+            svg.transition().call(zoom.scaleBy, 1.3);
+        }
+        
+        function zoomOut() {
+            svg.transition().call(zoom.scaleBy, 0.7);
+        }
+        
+        function resetZoom() {
+            svg.transition().call(zoom.transform, d3.zoomIdentity);
+        }
+        
+        function resetView() {
+            // Reset everything to initial state
+            navigationHistory.length = 0;
+            currentHistoryIndex = -1;
+            navigateToEntity("My House of Memories");
+            resetZoom();
+        }
+        
+        // Initialize
+        navigateToEntity("My House of Memories");
+        
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('detail-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

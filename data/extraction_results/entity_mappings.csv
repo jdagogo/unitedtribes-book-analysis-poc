@@ -1,0 +1,22 @@
+extracted,existing,type,confidence,match_type
+Merle Haggard,Merle Haggard,person,1.0,exact
+Buck Owens,Buck Owens,person,1.0,exact
+Bonnie Owens,Bonnie Owens,person,1.0,exact
+Johnny Cash,Johnny Cash,person,1.0,exact
+Willie Nelson,Willie Nelson,person,1.0,exact
+Waylon Jennings,Waylon Jennings,person,1.0,exact
+Tom Carter,Tom Carter,person,1.0,exact
+Kris Kristofferson,Kris Kristofferson,person,1.0,exact
+James Haggard,James Haggard,person,1.0,exact
+Bakersfield,Bakersfield,place,1.0,exact
+San Quentin,San Quentin State Prison,place,0.8,fuzzy
+California,California,place,1.0,exact
+Texas,Texas,place,1.0,exact
+Las Vegas,Las Vegas,place,1.0,exact
+Oildale,Oildale,place,1.0,exact
+Nashville,Nashville,place,1.0,exact
+Muskogee,Muskogee,place,1.0,exact
+Mama Tried,Mama Tried,song,1.0,exact
+Sing Me Back Home,Sing Me Back Home,song,1.0,exact
+Okie from Muskogee,Okie from Muskogee,song,1.0,exact
+If We Make It Through December,If We Make It Through December,song,1.0,exact

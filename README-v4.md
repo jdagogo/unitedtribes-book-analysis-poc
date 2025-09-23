@@ -322,3 +322,175 @@ Despite having a working highlighting system and visible text on the page, we we
 **Last Updated**: Monday, September 23, 2024
 **Status**: Active Development
 **Isolation**: Complete separation from v3.0
+
+---
+
+## 📚 Complete Feature Documentation from README.md
+
+> **⚠️ DATE NOTICE**: The dates below (except for the September 23, 2024 session report) are incorrect. The content and technical information is generally accurate, but please disregard the December 2024 and September 2025 dates mentioned throughout.
+
+### 📊 Complete Data Architecture
+
+#### Primary Data Sources
+
+1. **Patti Smith "Just Kids"**
+- **Main Content**: `/client/src/data/just-kids-cleaned.json`
+  - 304 pages, 79,435 words
+  - 19 chapters + Foreword
+  - Enhanced with cultural discovery triggers
+
+2. **Merle Haggard "My House of Memories"**
+- **Transcript**: `/client/public/transcript-PSN8N2v4oq0.json`
+  - 43,263 words with timestamps
+  - 4.6 hours of audio
+  - Word-level synchronization
+
+3. **Cultural Discovery Data**
+- **Smart Analysis**: `/server/routes/smart-analysis.ts`
+  - AI-powered content analysis
+  - Rich media associations
+  - Historical context generation
+  - Connection mapping
+
+### 🎨 Key Platform Features
+
+#### 1. Enhanced Patti Smith Reader
+- **Text Selection**: Highlight any text to discover cultural connections
+- **Discovery Modals**: Rich multimedia popups with context
+- **Entity Highlighting**: 60+ cultural references auto-highlighted
+- **Smart Search**: Full-text search with entity detection
+
+#### 2. Audio-Synchronized Merle Haggard Viewer
+- **Perfect Sync**: Word-level timing with YouTube audio
+- **Visual Feedback**:
+  - Yellow glow for current word
+  - Green pulse on click
+  - Blue hover effects
+- **Chapter Navigation**: 18 chapters with instant seek
+
+#### 3. Cultural Discovery Features
+- **Embedded Media**: Instagram, YouTube, artwork galleries
+- **Article Integration**: Professional formatting with bold headlines
+- **Context Generation**: AI-powered historical and cultural context
+- **Connection Mapping**: Related people, works, and events
+
+### 📊 Discovery Content Inventory
+
+#### Media Integration Summary
+- **Total Discovery Passages**: 6 unique text triggers
+- **Total Media Items**: 11+ pieces of embedded/linked content
+- **Platform Integrations**: Instagram, YouTube, TikTok, HBO Max, Substack
+- **Article Screenshots**: 5 (Rolling Stone, Vogue, Pitchfork, etc.)
+- **Price Points**: $0.25, $0.50, $1.00, $15.00, $125.00, $250.00
+
+#### Complete Media Inventory by Type:
+
+**Instagram Embeds (1)**
+- Mapplethorpe's altarpiece from Art Gallery NSW
+
+**YouTube Videos (3)**
+- Tod Browning's "Freaks" (1932) - "One of Us" scene
+- Bob Dylan - "Gates of Eden" live performance
+- Patti Smith at St. Mark's Poetry Project (1971)
+
+**TikTok Embeds (1)**
+- "Poet. Prophet. Punk." - Patti Smith performing Horses (1976)
+
+**Article Screenshots (5)**
+- **Rolling Stone**: "Truck Driving Man" by Tom Wolfe (1967)
+- **Vogue**: "Edie Sedgwick Is the Poster Girl for the No-Pants Look" (2023)
+- **Pitchfork**: "Patti Smith Announces 50th Anniversary Horses Tour"
+- **Substack**: Patti Smith's "Taking Pictures"
+- **Book Cover**: "The Age of Rock II" by Jonathan Eisen
+
+**Streaming Demos (1)**
+- HBO Max: "Mapplethorpe: Look at the Pictures"
+
+**Museum/Gallery Links (1)**
+- Art Gallery of New South Wales - Mapplethorpe Exhibition
+
+### Technical Implementation Details
+
+#### Backend Architecture
+- **Route**: `/server/routes/smart-analysis.ts`
+- **Pattern Matching**: Multiple trigger phrases per passage
+- **Media Handling**: Screenshot fallback for CORS-restricted content
+- **Price Integration**: Micropayment demonstrations from $0.25 to $250
+
+#### Frontend Components
+- **Modal Component**: `/client/src/components/text-selection-modal.tsx`
+- **Discovery Card**: `/client/src/components/discovery-card.tsx`
+- **Features**:
+  - Markdown parsing for bold text (**headlines**)
+  - Multi-line text support with proper formatting
+  - Responsive media embeds
+  - Tab navigation (Overview, Media, Connections)
+  - Error handling for failed media loads
+
+### 🧪 Testing Discovery Features
+
+#### Test Cultural Discovery Modals
+1. Navigate to http://localhost:3004/paginated (v4) or http://localhost:3000/paginated (v3)
+2. Go to page 207
+3. Highlight "Robert's collages that centered on freaks"
+4. Verify modal appears with:
+   - Instagram embeds loading
+   - Artwork displaying
+   - YouTube video playing
+   - Bold article headlines
+
+#### Console Testing
+```javascript
+// Test discovery API
+fetch('/api/smart-analysis', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    text: "Edie Sedgwick",
+    context: "Testing discovery"
+  })
+}).then(r => r.json()).then(console.log)
+```
+
+### 📈 Performance Metrics
+
+#### Discovery System
+- Modal load time: <200ms (claimed, not verified)
+- Media embed time: <500ms (claimed, not verified)
+- Context generation: <1s
+- Pattern matching: Real-time
+
+#### Overall Performance
+- Book load: <100ms
+- Audio sync accuracy: ±50ms (claimed, actual may vary)
+- Search speed: <100ms for 79k words
+
+### 🐛 Known Issues
+
+1. Some Instagram embeds may not load due to CORS
+2. Mobile responsiveness needs optimization
+3. Large media files may load slowly
+4. YouTube API required for audio features
+5. Discovery passage highlighting not working (see September 23, 2024 report above)
+6. Text source mismatch between display and processing
+7. Character encoding issues with apostrophes and quotes
+
+### 🙏 Acknowledgments
+
+#### Content Sources
+- "Just Kids" by Patti Smith (Ecco, 2010)
+- "My House of Memories" by Merle Haggard
+- Vogue Magazine articles
+- Ultimate Classic Rock archives
+- Art Gallery of New South Wales
+
+#### Media Partners
+- Instagram (@thisispattismith)
+- YouTube content creators
+- Substack writers
+
+#### Technical Stack
+- React community
+- YouTube IFrame API
+- OpenAI GPT-4
+- Tailwind CSS

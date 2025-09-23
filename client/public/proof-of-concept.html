@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Words Proof of Concept - No React</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        #player-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        #controls {
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        #status {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e7f3ff;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        #transcript {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .word {
+            display: inline-block;
+            padding: 2px 4px;
+            margin: 2px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        
+        .word:hover {
+            background: #e3f2fd;
+            transform: scale(1.05);
+        }
+        
+        .word.active {
+            background: #ffeb3b;
+            font-weight: bold;
+            box-shadow: 0 0 0 2px #ffc107;
+        }
+        
+        .word.clicked {
+            animation: pulse 0.4s;
+            background: #4CAF50 !important;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        #debug {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>72 Words Proof of Concept - Pure JavaScript (Fixed)</h1>
+    
+    <div id="player-container">
+        <h2>YouTube Player</h2>
+        <div id="youtube-player"></div>
+        
+        <div id="controls">
+            <button onclick="playVideo()">Play</button>
+            <button onclick="pauseVideo()">Pause</button>
+            <button onclick="seekTo(0)">Reset</button>
+            <button onclick="testAllWords()">Test All 72 Words</button>
+        </div>
+        
+        <div id="status">
+            Status: <span id="status-text">Loading...</span><br>
+            Current Time: <span id="current-time">0.00</span>s<br>
+            Current Word: <span id="current-word">-</span>
+        </div>
+    </div>
+    
+    <div id="transcript">
+        <h2>First 72 Words - Clean Sequential (Click any word to jump)</h2>
+        <div id="words-container"></div>
+    </div>
+    
+    <div id="debug">
+        <div id="debug-log">Debug console ready...</div>
+    </div>
+
+    <script>
+        // First 72 clean sequential words (no overlaps)
+        const words = [
+            { word: "foreign", start: 0.36, end: 2.54 },
+            { word: "presents", start: 7.04, end: 7.89 },
+            { word: "my", start: 7.89, end: 8.75 },
+            { word: "house", start: 8.75, end: 9.60 },
+            { word: "of", start: 9.60, end: 10.46 },
+            { word: "Memories", start: 10.46, end: 11.31 },
+            { word: "by", start: 11.31, end: 12.16 },
+            { word: "Merle", start: 12.16, end: 13.02 },
+            { word: "read", start: 13.49, end: 14.15 },
+            { word: "by", start: 14.15, end: 14.81 },
+            { word: "Haggard", start: 17.82, end: 22.62 },
+            { word: "I've", start: 22.62, end: 23.42 },
+            { word: "had", start: 23.42, end: 24.21 },
+            { word: "a", start: 24.21, end: 25.01 },
+            { word: "blessed", start: 25.01, end: 25.81 },
+            { word: "life", start: 25.81, end: 26.61 },
+            { word: "despite", start: 26.61, end: 27.40 },
+            { word: "many", start: 27.40, end: 28.20 },
+            { word: "my", start: 28.30, end: 28.89 },
+            { word: "own", start: 28.89, end: 29.47 },
+            { word: "doing", start: 29.47, end: 30.06 },
+            { word: "when", start: 30.26, end: 30.77 },
+            { word: "I", start: 30.77, end: 31.29 },
+            { word: "simply", start: 31.29, end: 31.80 },
+            { word: "light", start: 32.06, end: 32.56 },
+            { word: "at", start: 32.56, end: 33.06 },
+            { word: "the", start: 33.06, end: 33.56 },
+            { word: "end", start: 33.56, end: 34.06 },
+            { word: "of", start: 34.06, end: 34.56 },
+            { word: "psychological", start: 34.90, end: 35.93 },
+            { word: "or", start: 35.93, end: 36.96 },
+            { word: "tunnel", start: 37.02, end: 39.48 },
+            { word: "stays", start: 39.84, end: 40.56 },
+            { word: "in", start: 40.56, end: 41.28 },
+            { word: "Penal", start: 41.28, end: 42.00 },
+            { word: "in", start: 42.45, end: 43.94 },
+            { word: "state", start: 43.94, end: 45.42 },
+            { word: "bankruptcy", start: 45.72, end: 46.96 },
+            { word: "a", start: 46.96, end: 48.20 },
+            { word: "shooting", start: 49.34, end: 50.65 },
+            { word: "incidents", start: 50.65, end: 51.96 },
+            { word: "loved", start: 52.58, end: 53.46 },
+            { word: "more", start: 54.40, end: 55.62 },
+            { word: "thousand", start: 55.62, end: 56.34 },
+            { word: "chat", start: 56.34, end: 57.06 },
+            { word: "my", start: 57.06, end: 57.78 },
+            { word: "name", start: 57.78, end: 58.50 },
+            { word: "my", start: 58.75, end: 59.19 },
+            { word: "own", start: 59.19, end: 59.64 },
+            { word: "and", start: 59.64, end: 60.41 },
+            { word: "I", start: 60.41, end: 61.17 },
+            { word: "wondered", start: 61.17, end: 61.94 },
+            { word: "if", start: 61.94, end: 62.70 },
+            { word: "God", start: 62.70, end: 63.47 },
+            { word: "was", start: 63.47, end: 64.23 },
+            { word: "listening", start: 64.23, end: 65.00 },
+            { word: "and", start: 65.00, end: 65.76 },
+            { word: "one", start: 66.26, end: 66.97 },
+            { word: "else", start: 66.97, end: 67.69 },
+            { word: "was", start: 67.69, end: 68.40 },
+            { word: "times", start: 68.43, end: 69.32 },
+            { word: "was", start: 69.32, end: 70.21 },
+            { word: "so", start: 70.21, end: 71.10 },
+            { word: "ever", start: 71.62, end: 72.43 },
+            { word: "told", start: 72.43, end: 73.23 },
+            { word: "me", start: 73.23, end: 74.04 },
+            { word: "today", start: 74.22, end: 74.61 },
+            { word: "I", start: 74.61, end: 75.00 },
+            { word: "thought", start: 75.22, end: 75.81 },
+            { word: "they", start: 75.81, end: 76.40 },
+            { word: "were", start: 76.40, end: 76.99 },
+            { word: "talking", start: 76.99, end: 77.58 }
+        ];
+        
+        // Global player variable
+        let player = null;
+        let updateInterval = null;
+        let currentWordIndex = -1;
+        let isPlaying = false;  // Track play state
+        
+        // Debug logging
+        function log(message) {
+            const debugLog = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.innerHTML = `[${timestamp}] ${message}<br>` + debugLog.innerHTML;
+            console.log(message);
+        }
+        
+        // Load YouTube IFrame API
+        function loadYouTubeAPI() {
+            log('Loading YouTube IFrame API...');
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.body.appendChild(tag);
+        }
+        
+        // Called by YouTube API when ready
+        function onYouTubeIframeAPIReady() {
+            log('YouTube API ready, creating player...');
+            player = new YT.Player('youtube-player', {
+                height: '200',
+                width: '400',
+                videoId: 'PSN8N2v4oq0',
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+        
+        // Player ready handler
+        function onPlayerReady(event) {
+            log('Player ready!');
+            document.getElementById('status-text').textContent = 'Ready';
+            
+            // Don't start monitoring until playing
+            // startTimeMonitoring();
+            
+            // Don't auto-seek on load
+            // setTimeout(() => {
+            //     log('Testing seek to 10 seconds...');
+            //     seekTo(10);
+            // }, 1000);
+        }
+        
+        // Player state change handler
+        function onPlayerStateChange(event) {
+            const states = {
+                '-1': 'unstarted',
+                '0': 'ended',
+                '1': 'playing',
+                '2': 'paused',
+                '3': 'buffering',
+                '5': 'cued'
+            };
+            const state = states[event.data] || 'unknown';
+            log(`Player state: ${state}`);
+            document.getElementById('status-text').textContent = state;
+            
+            // Track playing state
+            isPlaying = (event.data === 1);
+            
+            // Stop or start highlighting based on state
+            if (event.data === 1) {
+                // Playing - start monitoring
+                startTimeMonitoring();
+            } else if (event.data === 2 || event.data === 0) {
+                // Paused or ended - stop monitoring
+                stopTimeMonitoring();
+            }
+        }
+        
+        // Player error handler
+        function onPlayerError(event) {
+            log(`Player error: ${event.data}`);
+            document.getElementById('status-text').textContent = `Error: ${event.data}`;
+        }
+        
+        // Start monitoring current time
+        function startTimeMonitoring() {
+            if (updateInterval) clearInterval(updateInterval);
+            
+            updateInterval = setInterval(() => {
+                if (player && player.getCurrentTime && isPlaying) {
+                    const currentTime = player.getCurrentTime();
+                    document.getElementById('current-time').textContent = currentTime.toFixed(2);
+                    updateHighlight(currentTime);
+                }
+            }, 100); // Update 10 times per second
+        }
+        
+        // Stop monitoring
+        function stopTimeMonitoring() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+                log('Stopped time monitoring');
+            }
+        }
+        
+        // Update word highlighting based on current time
+        function updateHighlight(currentTime) {
+            let foundWord = -1;
+            
+            // Find current word with tolerance
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                if (currentTime >= (word.start - 0.1) && currentTime <= (word.end + 0.1)) {
+                    foundWord = i;
+                    break;
+                }
+            }
+            
+            // Update highlighting if word changed
+            if (foundWord !== currentWordIndex) {
+                // Remove old highlight
+                const allWords = document.querySelectorAll('.word');
+                allWords.forEach(w => w.classList.remove('active'));
+                
+                // Add new highlight
+                if (foundWord !== -1) {
+                    const wordElement = document.getElementById(`word-${foundWord}`);
+                    if (wordElement) {
+                        wordElement.classList.add('active');
+                        document.getElementById('current-word').textContent = 
+                            `#${foundWord}: "${words[foundWord].word}"`;
+                    }
+                }
+                
+                currentWordIndex = foundWord;
+            }
+        }
+        
+        // Control functions
+        function playVideo() {
+            if (player) {
+                player.playVideo();
+                log('Play command sent');
+            }
+        }
+        
+        function pauseVideo() {
+            if (player) {
+                player.pauseVideo();
+                log('Pause command sent');
+            }
+        }
+        
+        function seekTo(seconds) {
+            if (player && player.seekTo) {
+                player.seekTo(seconds, true);
+                log(`Seeking to ${seconds.toFixed(2)}s`);
+                return true;
+            }
+            return false;
+        }
+        
+        // Handle word click
+        function onWordClick(index) {
+            const word = words[index];
+            log(`Word clicked: #${index} "${word.word}" at ${word.start.toFixed(2)}s`);
+            
+            // Visual feedback
+            const wordElement = document.getElementById(`word-${index}`);
+            wordElement.classList.add('clicked');
+            setTimeout(() => wordElement.classList.remove('clicked'), 400);
+            
+            // Pause before seeking to prevent auto-play issues
+            if (player && player.pauseVideo) {
+                player.pauseVideo();
+                
+                // Wait a moment then seek
+                setTimeout(() => {
+                    if (seekTo(word.start)) {
+                        log(`✓ Successfully seeked to ${word.start.toFixed(2)}s`);
+                        
+                        // Update the current time display immediately
+                        document.getElementById('current-time').textContent = word.start.toFixed(2);
+                        
+                        // Force highlight update
+                        updateHighlight(word.start);
+                    } else {
+                        log(`✗ Failed to seek to ${word.start.toFixed(2)}s`);
+                    }
+                }, 100);
+            }
+        }
+        
+        // Test all 100 words
+        function testAllWords() {
+            log('Starting test of all 100 words...');
+            let testIndex = 0;
+            
+            function testNextWord() {
+                if (testIndex < words.length) {
+                    const word = words[testIndex];
+                    log(`Testing word ${testIndex}: "${word.word}"`);
+                    onWordClick(testIndex);
+                    
+                    // Verify seek worked
+                    setTimeout(() => {
+                        const currentTime = player.getCurrentTime();
+                        const diff = Math.abs(currentTime - word.start);
+                        if (diff < 0.5) {
+                            log(`✓ Word ${testIndex} OK (diff: ${diff.toFixed(3)}s)`);
+                        } else {
+                            log(`✗ Word ${testIndex} FAILED (expected: ${word.start.toFixed(2)}s, got: ${currentTime.toFixed(2)}s)`);
+                        }
+                        testIndex++;
+                        setTimeout(testNextWord, 500); // Test next word
+                    }, 500);
+                } else {
+                    log('✓ Test complete! All 100 words tested.');
+                }
+            }
+            
+            testNextWord();
+        }
+        
+        // Build transcript UI
+        function buildTranscript() {
+            const container = document.getElementById('words-container');
+            container.innerHTML = '';
+            
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.id = `word-${index}`;
+                span.className = 'word';
+                span.textContent = word.word;
+                span.onclick = () => onWordClick(index);
+                span.title = `${word.start.toFixed(2)}s - ${word.end.toFixed(2)}s`;
+                container.appendChild(span);
+                
+                // Add space after each word
+                container.appendChild(document.createTextNode(' '));
+            });
+            
+            log(`Built transcript with ${words.length} words`);
+        }
+        
+        // Initialize when page loads
+        window.onload = function() {
+            log('Page loaded, initializing...');
+            buildTranscript();
+            loadYouTubeAPI();
+            
+            // Expose functions globally for testing
+            window.testSeek = seekTo;
+            window.testWord = onWordClick;
+            window.getPlayer = () => player;
+            window.getCurrentWord = () => currentWordIndex;
+            
+            log('Global test functions available: testSeek(), testWord(), getPlayer(), getCurrentWord()');
+        };
+    </script>
+</body>
+</html>

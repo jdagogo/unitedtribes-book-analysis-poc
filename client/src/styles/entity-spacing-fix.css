@@ -1,0 +1,64 @@
+/* Fix for entity highlighting spacing issues */
+
+/* Ensure all entity highlights have no extra spacing */
+.entity-highlight,
+.entity-person,
+.entity-place,
+.entity-venue,
+.entity-organization,
+.entity-creative-work,
+.entity-literary,
+.literary-highlight,
+.entity-poetry,
+.poetry-highlight,
+.entity-author,
+.author-highlight {
+  /* Force inline display */
+  display: inline !important;
+  
+  /* Remove all margins */
+  margin: 0 !important;
+  
+  /* Remove horizontal padding */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  
+  /* Ensure no word spacing changes */
+  word-spacing: normal !important;
+  letter-spacing: normal !important;
+  
+  /* Prevent white-space issues */
+  white-space: normal !important;
+  
+  /* No float or position issues */
+  float: none !important;
+  position: static !important;
+  
+  /* Ensure proper text flow */
+  vertical-align: baseline !important;
+}
+
+/* Ensure spans don't add space due to font rendering */
+.entity-highlight::before,
+.entity-highlight::after,
+.literary-highlight::before,
+.literary-highlight::after {
+  content: none !important;
+}
+
+/* Fix paragraph spacing to ensure consistent text flow */
+.page-content p {
+  /* Normalize white space */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Remove any potential spacing from nested spans */
+.page-content span + span {
+  margin-left: 0 !important;
+}
+
+/* Ensure no spacing between text and highlight spans */
+.page-content {
+  font-kerning: normal;
+}

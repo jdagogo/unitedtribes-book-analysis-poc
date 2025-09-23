@@ -1,0 +1,29 @@
+/* Author highlighting - distinct from book titles */
+.entity-author {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+  color: white !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  display: inline !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.entity-author:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Ensure no spacing issues */
+.entity-author::before,
+.entity-author::after {
+  content: none !important;
+}
+
+/* Keep text readable */
+.entity-author * {
+  color: white !important;
+}

@@ -1,40 +1,226 @@
 {
   "title": "The Cover Art of Blue Note Records",
+  "subtitle": "The Ultimate Collection",
   "authors": ["Graham Marsh", "Glyn Callingham"],
-  "totalPages": 3,
+  "totalPages": 17,
   "pages": [
     {
       "page": 1,
-      "type": "text",
-      "title": "THE LION AND THE WOLFF",
-      "content": "Blue Note Records was founded in 1939 when German émigré Alfred Lion recorded pianists Albert Ammons and Meade Lux Lewis in a New York studio. Lion had been inspired when he heard them play at the legendary 1938 Spirituals to Swing Carnegie Hall concert.",
-      "entities": ["Alfred Lion", "Albert Ammons", "Meade Lux Lewis", "Carnegie Hall"]
+      "type": "cover",
+      "title": "ALBUM COVER ART",
+      "subtitle": "THE ULTIMATE COLLECTION",
+      "publisher": "BLUE NOTE",
+      "authors": ["Graham Marsh", "Glyn Callingham"],
+      "cover_image": "/bluenote-cover.png",
+      "content": "The definitive collection of Blue Note Records album cover art"
     },
     {
       "page": 2,
-      "type": "album_showcase",
-      "album": {
-        "title": "Blue Train",
-        "artist": "John Coltrane",
-        "catalog": "BLP 1577",
-        "year": 1957,
-        "cover_image": "https://via.placeholder.com/500x500/1f2937/ffffff?text=Blue+Train",
-        "designer": "Reid Miles"
-      },
-      "discovery_entities": ["John Coltrane", "Blue Train", "Reid Miles"]
+      "type": "index",
+      "title": "INDEX",
+      "content": "Navigate through the collection",
+      "sections": [
+        {
+          "title": "The History",
+          "pages": [3, 4, 5, 6],
+          "thumbnails": ["text", "photo", "text", "text"]
+        },
+        {
+          "title": "Classic Albums",
+          "pages": [7, 9, 11, 15],
+          "albums": ["Blue Train", "Thelonious Monk", "Somethin' Else", "GO"]
+        },
+        {
+          "title": "More Albums",
+          "pages": [10, 12, 13, 14, 16, 17],
+          "albums": ["Like Someone in Love", "Doin' Allright", "New York Is Now!", "A Caddy for Daddy", "The All Seeing Eye", "Sonny Rollins Vol. 2"]
+        }
+      ],
+      "note": "Click on any thumbnail to navigate directly"
     },
     {
       "page": 3,
+      "type": "page_image",
+      "title": "THE LION AND THE WOLFF",
+      "image": "/bluenote-page3.png",
+      "entities": ["Alfred Lion", "Albert Ammons", "Meade Lux Lewis", "Carnegie Hall", "Francis Wolff"]
+    },
+    {
+      "page": 4,
+      "type": "page_image",
+      "title": "Blue Note Chiefs",
+      "image": "/bluenote-page4.png",
+      "entities": ["Alfred Lion", "Francis Wolff"]
+    },
+    {
+      "page": 5,
+      "type": "page_image",
+      "title": "BLUE NOTE - 'THE LUCKY LABEL'",
+      "image": "/bluenote-page5.png",
+      "entities": ["Alfred Lion", "Thelonious Monk", "Bud Powell", "Lou Donaldson", "Art Blakey", "Horace Silver", "Jackie McLean", "Herbie Hancock", "Freddie Hubbard", "Jimmy Smith", "Frank Wolff"]
+    },
+    {
+      "page": 6,
+      "type": "page_image",
+      "title": "COVER STORY",
+      "image": "/bluenote-page6.png",
+      "entities": ["Columbia"]
+    },
+    {
+      "page": 7,
+      "type": "page_image",
+      "title": "John Coltrane, Blue Train - Blue Note 1577",
+      "image": "/bluenote-page7-bluetrain.png",
+      "entities": ["John Coltrane", "Blue Train"]
+    },
+    {
+      "page": 8,
+      "type": "page_image",
+      "title": "Blue Train Session",
+      "image": "/bluenote-page8.png",
+      "entities": ["Lee Morgan", "John Coltrane"]
+    },
+    {
+      "page": 9,
       "type": "album_showcase",
+      "title": "Thelonious Monk - Genius of Modern Music Volume 1",
+      "image": "/bluenote-page9.png",
       "album": {
-        "title": "Genius of Modern Music",
+        "title": "GENIUS OF MODERN MUSIC VOLUME 1",
         "artist": "Thelonious Monk",
         "catalog": "BLP 1510",
         "year": 1955,
-        "cover_image": "https://via.placeholder.com/500x500/F59E0B/ffffff?text=Thelonious+Monk",
-        "designer": "Reid Miles"
+        "cover_image": "/bluenote-page9.png",
+        "cover_design": "Reid Miles",
+        "cover_photo": "Francis Wolff"
       },
-      "discovery_entities": ["Thelonious Monk", "Reid Miles"]
+      "discovery_entities": ["Thelonious Monk", "Reid Miles", "Francis Wolff"],
+      "entities": ["Thelonious Monk"]
+    },
+    {
+      "page": 10,
+      "type": "album_showcase",
+      "title": "Art Blakey - Like Someone in Love",
+      "image": "/bluenote-page10-correct.png",
+      "album": {
+        "title": "LIKE SOMEONE IN LOVE",
+        "artist": "Art Blakey and the Jazz Messengers",
+        "personnel": ["Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"],
+        "catalog": "Blue Note",
+        "cover_design": "Reid Miles"
+      },
+      "discovery_entities": ["Art Blakey", "Jazz Messengers", "Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"]
+    },
+    {
+      "page": 11,
+      "type": "album_showcase",
+      "title": "Cannonball Adderley - Somethin' Else",
+      "image": "/bluenote-page11.png",
+      "album": {
+        "title": "SOMETHIN' ELSE",
+        "artist": "Cannonball Adderley",
+        "catalog": "BLP 1595",
+        "year": 1958,
+        "cover_image": "/bluenote-page11.png",
+        "personnel": ["Cannonball Adderley - Alto Saxophone", "Miles Davis - Trumpet", "Hank Jones - Piano", "Sam Jones - Bass", "Art Blakey - Drums"],
+        "cover_design": "Reid Miles"
+      },
+      "discovery_entities": ["Cannonball Adderley", "Miles Davis", "Hank Jones", "Sam Jones", "Art Blakey", "Reid Miles"]
+    },
+    {
+      "page": 12,
+      "type": "album_showcase",
+      "title": "Dexter Gordon - Doin' Allright",
+      "image": "/bluenote-page12.png",
+      "album": {
+        "title": "DOIN' ALLRIGHT",
+        "artist": "Dexter Gordon",
+        "catalog": "84077 BLUE NOTE",
+        "year": 1961,
+        "cover_image": "/bluenote-page12.png",
+        "personnel": ["Freddie Hubbard", "Horace Parlan", "George Tucker", "Al Harewood"],
+        "cover_design": "Reid Miles"
+      },
+      "discovery_entities": ["Dexter Gordon", "Freddie Hubbard", "Horace Parlan", "George Tucker", "Al Harewood"]
+    },
+    {
+      "page": 13,
+      "type": "album_showcase",
+      "title": "Ornette Coleman - New York Is Now!",
+      "image": "/bluenote-page13.png",
+      "album": {
+        "title": "NEW YORK IS NOW!",
+        "artist": "Ornette Coleman",
+        "catalog": "BST 84287",
+        "cover_image": "/bluenote-page13.png",
+        "personnel": ["Dewey Redman", "Jimmy Garrison", "Elvin Jones"],
+        "cover_design": "Reid Miles"
+      },
+      "discovery_entities": ["Ornette Coleman", "Dewey Redman", "Jimmy Garrison", "Elvin Jones"]
+    },
+    {
+      "page": 14,
+      "type": "album_showcase",
+      "title": "Hank Mobley - A Caddy for Daddy",
+      "image": "/bluenote-page14.png",
+      "album": {
+        "title": "A CADDY FOR DADDY",
+        "artist": "Hank Mobley",
+        "catalog": "4230 BLUE NOTE",
+        "cover_image": "/bluenote-page14.png",
+        "cover_design": "Reid Miles",
+        "note": "Features the iconic car and figure composition"
+      },
+      "discovery_entities": ["Hank Mobley", "Reid Miles"]
+    },
+    {
+      "page": 15,
+      "type": "album_showcase",
+      "title": "Dexter Gordon - GO",
+      "image": "/bluenote-page15.png",
+      "album": {
+        "title": "GO",
+        "artist": "Dexter Gordon",
+        "catalog": "84112 BLUE NOTE",
+        "year": 1962,
+        "cover_image": "/bluenote-page15.png",
+        "personnel": ["Sonny Clark", "Butch Warren", "Billy Higgins"],
+        "cover_design": "Reid Miles",
+        "note": "Bold typographic design with GO in large orange letters"
+      },
+      "discovery_entities": ["Dexter Gordon", "Sonny Clark", "Butch Warren", "Billy Higgins", "Reid Miles"]
+    },
+    {
+      "page": 16,
+      "type": "album_showcase",
+      "title": "Wayne Shorter - The All Seeing Eye",
+      "image": "/bluenote-page16.png",
+      "album": {
+        "title": "THE ALL SEEING EYE",
+        "artist": "Wayne Shorter",
+        "catalog": "The finest in jazz since 1939",
+        "cover_image": "/bluenote-page16.png",
+        "cover_design": "Reid Miles",
+        "note": "Dramatic close-up portrait in orange tones"
+      },
+      "discovery_entities": ["Wayne Shorter", "Reid Miles"]
+    },
+    {
+      "page": 17,
+      "type": "album_showcase",
+      "title": "Sonny Rollins - Vol. 2",
+      "image": "/bluenote-page17.png",
+      "album": {
+        "title": "SONNY ROLLINS VOL. 2",
+        "artist": "Sonny Rollins",
+        "catalog": "BLP 1558",
+        "year": 1957,
+        "cover_image": "/bluenote-page17.png",
+        "personnel": ["Jay Jay Johnson", "Horace Silver", "Thelonious Monk", "Paul Chambers", "Art Blakey"],
+        "cover_design": "Harold Feinstein",
+        "cover_photo": "Francis Wolff"
+      },
+      "discovery_entities": ["Sonny Rollins", "Jay Jay Johnson", "Horace Silver", "Thelonious Monk", "Paul Chambers", "Art Blakey", "Harold Feinstein", "Francis Wolff"]
     }
   ]
 }

@@ -1,0 +1,40 @@
+entity_id,entity_type,entity_name,description,confidence
+person_001,Person,Merle Haggard,"Country music legend, author of My House of Memories",1.0
+person_002,Person,Johnny Cash,"Country music icon, friend of Merle Haggard",0.95
+person_003,Person,Willie Nelson,"Country musician, Outlaw Country movement",0.95
+person_004,Person,Waylon Jennings,"Country musician, Outlaw Country movement",0.95
+person_005,Person,Tom Carter,"Co-author of My House of Memories",1.0
+person_006,Person,Buck Owens,"Country musician, Bakersfield Sound pioneer",0.9
+person_007,Person,Bonnie Owens,"Singer, Merle Haggard's ex-wife",0.9
+person_008,Person,Leona Hobbs,"Merle Haggard's mother",0.95
+person_009,Person,James Haggard,"Merle Haggard's father",0.95
+person_010,Person,Kris Kristofferson,"Singer-songwriter, friend of Haggard",0.85
+place_001,Place,Bakersfield,"California city, center of Bakersfield Sound",1.0
+place_002,Place,San Quentin State Prison,"California prison where Haggard was incarcerated",1.0
+place_003,Place,Nashville,"Tennessee city, country music capital",0.95
+place_004,Place,Oildale,"California town, Haggard's birthplace",1.0
+place_005,Place,Muskogee,"Oklahoma city, subject of famous Haggard song",0.95
+place_006,Place,California,"US state where Haggard lived",1.0
+place_007,Place,Texas,"US state, country music hub",0.85
+place_008,Place,Las Vegas,"Nevada city, performance venue",0.8
+song_001,Song,Okie from Muskogee,"1969 hit song by Merle Haggard",1.0
+song_002,Song,Mama Tried,"1968 song by Merle Haggard",1.0
+song_003,Song,Sing Me Back Home,"1967 song by Merle Haggard",1.0
+song_004,Song,The Fightin' Side of Me,"1970 song by Merle Haggard",0.95
+song_005,Song,If We Make It Through December,"1973 song by Merle Haggard",0.95
+song_006,Song,Big City,"1982 song by Merle Haggard",0.9
+song_007,Song,Pancho and Lefty,"Song performed by Haggard and Willie Nelson",0.9
+album_001,Album,Same Train A Different Time,"1969 album by Merle Haggard",0.95
+album_002,Album,A Tribute to the Best Damn Fiddle Player,"1970 album by Merle Haggard",0.9
+album_003,Album,Someday We'll Look Back,"1971 album by Merle Haggard",0.9
+book_001,Book,My House of Memories,"Autobiography by Merle Haggard with Tom Carter",1.0
+book_002,Book,Cash: The Autobiography,"Johnny Cash autobiography",0.85
+book_003,Book,It's a Long Story,"Willie Nelson autobiography",0.85
+event_001,Event,San Quentin Concert 1958,"Johnny Cash concert attended by Haggard in prison",0.95
+event_002,Event,Pardon 1972,"California Governor Reagan pardoned Haggard",0.95
+event_003,Event,Country Music Hall of Fame 1994,"Haggard inducted into Hall of Fame",0.95
+institution_001,Institution,Capitol Records,"Record label for Merle Haggard",0.9
+institution_002,Institution,MCA Records,"Record label for Merle Haggard",0.85
+institution_003,Institution,Country Music Hall of Fame,"Nashville institution honoring country artists",0.9
+podcast_001,Podcast,Fresh Air with Terry Gross,"NPR interview program",0.95
+podcast_002,Podcast,WTF with Marc Maron,"Interview podcast featuring musicians",0.8

@@ -412,16 +412,27 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         if (transcriptId === 'bluenote') {
           console.log('🎵 Loading Blue Note book data');
           setIsBlueNote(true);
-          // Load Blue Note data directly
-          const blueNotePages: BookPage[] = blueNoteData.pages.map((page: any) => ({
+          // Load Blue Note data directly - store raw data for rendering
+          const blueNotePages: any[] = blueNoteData.pages.map((page: any) => ({
+            ...page,
             pageNumber: page.page,
             content: page.type === 'text' ? page.content :
                     page.type === 'album_showcase' ?
                     `Album: ${page.album?.title || ''}\nArtist: ${page.album?.artist || ''}\nYear: ${page.album?.year || ''}\nCatalog: ${page.album?.catalog || ''}\nDesigner: ${page.album?.designer || ''}` :
+                    page.type === 'cover' ?
+                    `${page.title}\n\n${page.subtitle || ''}\n\nBy ${page.authors?.join(', ') || ''}\n\n${page.content || ''}` :
+                    page.type === 'photo' ?
+                    `${page.title || ''}\n\n${page.caption || page.content || ''}` :
+                    page.type === 'index' ?
+                    `${page.title}\n\n${page.content || ''}\n\n${page.sections?.map((s: any) => `${s.title}: Pages ${s.pages.join(', ')}`).join('\n') || ''}\n\n${page.note || ''}` :
+                    page.type === 'page_image' ?
+                    `${page.title || ''}` :
                     'Page content',
             chapter: page.title || 'section',
             chapterTitle: page.title || (page.type === 'album_showcase' ? page.album?.title : 'Blue Note'),
-            wordCount: 50
+            wordCount: 50,
+            // Keep original data for rendering
+            originalData: page
           }));
           console.log('🎵 Blue Note pages created:', blueNotePages.length);
           setPages(blueNotePages);
@@ -1381,7 +1392,155 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
           {/* Page Content */}
           <div style={{ fontSize: '18px', lineHeight: '1.8' }}>
-            {currentPage && (
+            {currentPage && currentPage.originalData && (
+              <>
+                {/* Render based on page type */}
+                {currentPage.originalData.type === 'cover' && (
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 'calc(100vh - 200px)'
+                  }}>
+                    {currentPage.originalData.cover_image && (
+                      <img
+                        src={currentPage.originalData.cover_image}
+                        alt="Blue Note Cover"
+                        style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {currentPage.originalData.type === 'page_image' && (
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 'calc(100vh - 200px)'
+                  }}>
+                    {currentPage.originalData.image && (
+                      <img
+                        src={currentPage.originalData.image}
+                        alt={currentPage.originalData.title || "Page image"}
+                        style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {currentPage.originalData.type === 'album_showcase' && (
+                  currentPage.originalData.image ? (
+                    // If it has an image property, render it like a page_image
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 'calc(100vh - 200px)'
+                    }}>
+                      <img
+                        src={currentPage.originalData.image}
+                        alt={currentPage.originalData.title || "Album cover"}
+                        style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
+                      />
+                    </div>
+                  ) : (
+                    // Original album showcase rendering
+                    <>
+                      {currentPage.chapterTitle && (
+                        <h2 style={{
+                          fontSize: '24px',
+                          fontWeight: 'bold',
+                          marginBottom: '1rem',
+                          color: '#1e3a8a'
+                        }}>
+                          {currentPage.chapterTitle}
+                        </h2>
+                      )}
+                      <div dangerouslySetInnerHTML={{
+                        __html: highlightEntitiesInText(currentPage.content)
+                      }} />
+                    </>
+                  )
+                )}
+
+                {currentPage.originalData.type === 'index' && (
+                  <div style={{ padding: '2rem 0' }}>
+                    <h2 style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a8a', marginBottom: '2rem' }}>
+                      {currentPage.originalData.title}
+                    </h2>
+                    <p style={{ fontSize: '18px', marginBottom: '2rem', color: '#6b7280' }}>
+                      {currentPage.originalData.note}
+                    </p>
+                    {currentPage.originalData.sections?.map((section: any, idx: number) => (
+                      <div key={idx} style={{ marginBottom: '3rem' }}>
+                        <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem' }}>
+                          {section.title}
+                        </h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1rem' }}>
+                          {section.pages?.map((page: number, pageIdx: number) => (
+                            <div
+                              key={pageIdx}
+                              style={{
+                                border: '2px solid #e5e7eb',
+                                borderRadius: '8px',
+                                padding: '1rem',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s',
+                                background: '#f9fafb'
+                              }}
+                              onClick={() => {
+                                const pageIndex = pages.findIndex(p => p.pageNumber === page);
+                                if (pageIndex !== -1) setCurrentPageIndex(pageIndex);
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.borderColor = '#3b82f6';
+                                e.currentTarget.style.background = '#eff6ff';
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.borderColor = '#e5e7eb';
+                                e.currentTarget.style.background = '#f9fafb';
+                              }}
+                            >
+                              <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                Page {page}
+                              </div>
+                              {section.albums && (
+                                <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                                  {section.albums[pageIdx]}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Default text rendering for other types */}
+                {!['cover', 'page_image', 'album_showcase', 'index'].includes(currentPage.originalData.type) && (
+                  <>
+                    {currentPage.chapterTitle && (
+                      <h2 style={{
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem',
+                        color: '#1e3a8a'
+                      }}>
+                        {currentPage.chapterTitle}
+                      </h2>
+                    )}
+                    <div dangerouslySetInnerHTML={{
+                      __html: highlightEntitiesInText(currentPage.content)
+                    }} />
+                  </>
+                )}
+              </>
+            )}
+            {/* Fallback for pages without originalData */}
+            {currentPage && !currentPage.originalData && (
               <>
                 {currentPage.chapterTitle && (
                   <h2 style={{
@@ -1409,32 +1568,174 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           padding: '2rem',
           overflowY: 'auto'
         }}>
-          <div style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#6b7280',
-            fontSize: '18px',
-            textAlign: 'center',
-            lineHeight: '1.6'
-          }}>
+          {currentPage?.originalData?.type === 'album_showcase' ? (
             <div>
-              <div style={{
-                fontSize: '48px',
-                marginBottom: '1rem',
-                opacity: 0.3
-              }}>
-                🎵
+              <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
+                Media Discovery
+              </h3>
+
+              {/* Discovery Entities */}
+              {currentPage.originalData.discovery_entities && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
+                    Related Artists & Topics
+                  </h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    {currentPage.originalData.discovery_entities.map((entity: string, idx: number) => (
+                      <span
+                        key={idx}
+                        style={{
+                          background: '#3b82f6',
+                          color: 'white',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '9999px',
+                          fontSize: '14px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {entity}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Album Details */}
+              {currentPage.originalData.album && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
+                    Album Information
+                  </h4>
+                  <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                    {currentPage.originalData.album.title && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Title:</span>{' '}
+                        {currentPage.originalData.album.title}
+                      </div>
+                    )}
+                    {currentPage.originalData.album.artist && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Artist:</span>{' '}
+                        {currentPage.originalData.album.artist}
+                      </div>
+                    )}
+                    {currentPage.originalData.album.year && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Year:</span>{' '}
+                        {currentPage.originalData.album.year}
+                      </div>
+                    )}
+                    {currentPage.originalData.album.catalog && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Catalog:</span>{' '}
+                        {currentPage.originalData.album.catalog}
+                      </div>
+                    )}
+                    {currentPage.originalData.album.cover_design && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Cover Design:</span>{' '}
+                        {currentPage.originalData.album.cover_design}
+                      </div>
+                    )}
+                    {currentPage.originalData.album.cover_photo && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Photography:</span>{' '}
+                        {currentPage.originalData.album.cover_photo}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Personnel */}
+              {currentPage.originalData.album?.personnel && currentPage.originalData.album.personnel.length > 0 && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
+                    Personnel
+                  </h4>
+                  <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                    {currentPage.originalData.album.personnel.map((person: string, idx: number) => (
+                      <div key={idx} style={{ marginBottom: '0.25rem', fontSize: '14px' }}>
+                        • {person}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Suggested Actions */}
+              <div style={{ marginTop: '2rem' }}>
+                <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
+                  Explore More
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <button style={{
+                    padding: '0.75rem',
+                    background: '#1db954',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}>
+                    Listen on Spotify
+                  </button>
+                  <button style={{
+                    padding: '0.75rem',
+                    background: '#fc3c44',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}>
+                    Open in Apple Music
+                  </button>
+                  <button style={{
+                    padding: '0.75rem',
+                    background: '#ff0000',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}>
+                    Watch on YouTube
+                  </button>
+                </div>
               </div>
-              <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
-                Media Discovery Panel
-              </p>
-              <p>
-                Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
-              </p>
             </div>
-          </div>
+          ) : (
+            <div style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#6b7280',
+              fontSize: '18px',
+              textAlign: 'center',
+              lineHeight: '1.6'
+            }}>
+              <div>
+                <div style={{
+                  fontSize: '48px',
+                  marginBottom: '1rem',
+                  opacity: 0.3
+                }}>
+                  🎵
+                </div>
+                <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
+                  Media Discovery Panel
+                </p>
+                <p>
+                  Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

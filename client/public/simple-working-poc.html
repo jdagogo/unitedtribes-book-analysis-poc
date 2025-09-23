@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Working POC - Manual Timestamps</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        
+        #controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        #status {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            font-family: monospace;
+        }
+        
+        #transcript {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            line-height: 2.5;
+            font-size: 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .word {
+            display: inline-block;
+            padding: 3px 5px;
+            margin: 1px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        
+        .word:hover {
+            background: #e8f4ff;
+            transform: scale(1.05);
+        }
+        
+        .word.current {
+            background: #ffeb3b;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        #youtube-player {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Working Proof of Concept</h1>
+    
+    <div id="controls">
+        <h2>Audio Player Controls</h2>
+        <div id="youtube-player"></div>
+        
+        <div>
+            <button onclick="playAudio()">▶ Play</button>
+            <button onclick="pauseAudio()">⏸ Pause</button>
+            <button onclick="jumpTo(0)">⏮ Reset</button>
+            <button onclick="jumpTo(30)">Jump to 30s</button>
+            <button onclick="jumpTo(60)">Jump to 60s</button>
+        </div>
+        
+        <div id="status">
+            Status: <span id="status-text">Initializing...</span><br>
+            Time: <span id="time-display">0:00</span> / <span id="duration-display">0:00</span><br>
+            Word: <span id="current-word-display">-</span>
+        </div>
+    </div>
+    
+    <div id="transcript">
+        <h2>Opening Text (Click words to jump)</h2>
+        <p id="text-content">Loading...</p>
+    </div>
+
+    <script>
+        // Manually verified opening words with correct timestamps
+        // Based on actual audio: "HarperCollins presents My House of Memories by Merle Haggard with Tom Carter"
+        const words = [
+            { text: "HarperCollins", start: 0.5, end: 2.5 },
+            { text: "presents", start: 7.04, end: 7.89 },
+            { text: "My", start: 7.89, end: 8.75 },
+            { text: "House", start: 8.75, end: 9.60 },
+            { text: "of", start: 9.60, end: 10.46 },
+            { text: "Memories", start: 10.46, end: 11.31 },
+            { text: "by", start: 11.31, end: 12.16 },
+            { text: "Merle", start: 12.16, end: 13.02 },
+            { text: "Haggard", start: 13.02, end: 13.90 },
+            { text: "with", start: 14.00, end: 14.40 },
+            { text: "Tom", start: 14.40, end: 14.80 },
+            { text: "Carter", start: 14.80, end: 15.40 },
+            { text: "and", start: 15.50, end: 15.90 },
+            { text: "read", start: 15.90, end: 16.30 },
+            { text: "by", start: 16.30, end: 16.60 },
+            { text: "Merle", start: 16.60, end: 17.20 },
+            { text: "Haggard.", start: 17.20, end: 18.50 },
+            // After music/intro
+            { text: "I've", start: 22.62, end: 23.42 },
+            { text: "had", start: 23.42, end: 24.21 },
+            { text: "a", start: 24.21, end: 25.01 },
+            { text: "blessed", start: 25.01, end: 25.81 },
+            { text: "life", start: 25.81, end: 26.61 },
+            { text: "despite", start: 26.61, end: 27.40 },
+            { text: "many", start: 27.40, end: 28.20 },
+            { text: "lows,", start: 28.20, end: 28.90 },
+            { text: "many", start: 28.90, end: 29.30 },
+            { text: "of", start: 29.30, end: 29.50 },
+            { text: "which", start: 29.50, end: 29.90 },
+            { text: "were", start: 29.90, end: 30.20 },
+            { text: "of", start: 30.20, end: 30.40 },
+            { text: "my", start: 30.40, end: 30.70 },
+            { text: "own", start: 30.70, end: 31.10 },
+            { text: "doing.", start: 31.10, end: 31.80 },
+            { text: "There", start: 32.00, end: 32.40 },
+            { text: "have", start: 32.40, end: 32.70 },
+            { text: "been", start: 32.70, end: 33.00 },
+            { text: "times", start: 33.00, end: 33.50 },
+            { text: "when", start: 33.50, end: 33.80 },
+            { text: "I", start: 33.80, end: 34.00 },
+            { text: "simply", start: 34.00, end: 34.50 },
+            { text: "could", start: 34.50, end: 34.80 },
+            { text: "not", start: 34.80, end: 35.10 },
+            { text: "see", start: 35.10, end: 35.40 },
+            { text: "the", start: 35.40, end: 35.60 },
+            { text: "light", start: 35.60, end: 36.00 },
+            { text: "at", start: 36.00, end: 36.20 },
+            { text: "the", start: 36.20, end: 36.40 },
+            { text: "end", start: 36.40, end: 36.70 },
+            { text: "of", start: 36.70, end: 36.90 },
+            { text: "the", start: 36.90, end: 37.10 },
+            { text: "economic,", start: 37.10, end: 38.00 },
+            { text: "romantic,", start: 38.00, end: 38.80 },
+            { text: "psychological,", start: 38.80, end: 39.80 },
+            { text: "or", start: 39.80, end: 40.00 },
+            { text: "emotional", start: 40.00, end: 40.70 },
+            { text: "tunnel.", start: 40.70, end: 41.50 }
+        ];
+        
+        let player = null;
+        let isPlaying = false;
+        let currentIndex = -1;
+        let monitorInterval = null;
+        
+        // Load YouTube API
+        function loadYouTubeAPI() {
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.body.appendChild(tag);
+        }
+        
+        // YouTube API callback
+        function onYouTubeIframeAPIReady() {
+            console.log('YouTube API ready');
+            player = new YT.Player('youtube-player', {
+                height: '100',
+                width: '300',
+                videoId: 'PSN8N2v4oq0',
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+        
+        function onPlayerReady(event) {
+            console.log('Player ready');
+            document.getElementById('status-text').textContent = 'Ready';
+            const duration = player.getDuration();
+            document.getElementById('duration-display').textContent = formatTime(duration);
+            buildTranscript();
+        }
+        
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                startMonitoring();
+                document.getElementById('status-text').textContent = 'Playing';
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                stopMonitoring();
+                document.getElementById('status-text').textContent = 'Paused';
+            } else if (event.data === YT.PlayerState.ENDED) {
+                isPlaying = false;
+                stopMonitoring();
+                document.getElementById('status-text').textContent = 'Ended';
+            }
+        }
+        
+        function startMonitoring() {
+            if (monitorInterval) clearInterval(monitorInterval);
+            monitorInterval = setInterval(() => {
+                if (player && isPlaying) {
+                    const time = player.getCurrentTime();
+                    updateDisplay(time);
+                }
+            }, 100);
+        }
+        
+        function stopMonitoring() {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+                monitorInterval = null;
+            }
+        }
+        
+        function updateDisplay(time) {
+            document.getElementById('time-display').textContent = formatTime(time);
+            
+            // Find current word
+            let foundIndex = -1;
+            for (let i = 0; i < words.length; i++) {
+                if (time >= words[i].start && time <= words[i].end) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+            
+            // Update highlighting
+            if (foundIndex !== currentIndex) {
+                // Remove old highlight
+                document.querySelectorAll('.word').forEach(el => {
+                    el.classList.remove('current');
+                });
+                
+                // Add new highlight
+                if (foundIndex >= 0) {
+                    const wordEl = document.getElementById(`word-${foundIndex}`);
+                    if (wordEl) {
+                        wordEl.classList.add('current');
+                        document.getElementById('current-word-display').textContent = words[foundIndex].text;
+                    }
+                }
+                
+                currentIndex = foundIndex;
+            }
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function buildTranscript() {
+            const container = document.getElementById('text-content');
+            container.innerHTML = '';
+            
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.id = `word-${index}`;
+                span.className = 'word';
+                span.textContent = word.text;
+                span.onclick = () => wordClick(index);
+                span.title = `${word.start.toFixed(1)}s`;
+                container.appendChild(span);
+                container.appendChild(document.createTextNode(' '));
+            });
+        }
+        
+        function wordClick(index) {
+            const word = words[index];
+            console.log(`Clicking word "${word.text}" at ${word.start}s`);
+            pauseAudio();
+            setTimeout(() => {
+                jumpTo(word.start);
+                updateDisplay(word.start);
+            }, 100);
+        }
+        
+        function playAudio() {
+            if (player) player.playVideo();
+        }
+        
+        function pauseAudio() {
+            if (player) player.pauseVideo();
+        }
+        
+        function jumpTo(seconds) {
+            if (player) {
+                player.seekTo(seconds, true);
+                console.log(`Jumped to ${seconds}s`);
+            }
+        }
+        
+        // Initialize on load
+        window.onload = function() {
+            document.getElementById('text-content').textContent = 'Initializing YouTube player...';
+            loadYouTubeAPI();
+        };
+    </script>
+</body>
+</html>

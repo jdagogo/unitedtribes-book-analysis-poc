@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Air Cross-Media Discovery - Merle Haggard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .fresh-air-badge {
+            background: #FF6B35;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .navigation-bar {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .nav-button {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .nav-button:hover:not(:disabled) {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .breadcrumbs {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            margin: 0;
+            border-top: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .breadcrumb {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .breadcrumb:hover {
+            color: #5568d3;
+            text-decoration: underline;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .left-panel {
+            flex: 0 0 320px;
+        }
+        
+        .main-panel {
+            flex: 1;
+            min-height: 600px;
+        }
+        
+        .right-panel {
+            flex: 0 0 380px;
+        }
+        
+        .entity-type h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .entity-item {
+            padding: 10px 12px;
+            margin: 4px 0;
+            background: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .entity-item:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .entity-item.selected {
+            background: #667eea;
+            color: white;
+        }
+        
+        .entity-metadata {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
+        }
+        
+        .entity-item.selected .entity-metadata {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .mention-count {
+            font-size: 12px;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .timestamp-badge {
+            font-size: 10px;
+            background: #FF6B35;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 8px;
+            margin-left: 5px;
+        }
+        
+        #graph-container {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        
+        .graph-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .graph-control {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .node-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            max-width: 250px;
+        }
+        
+        .node-tooltip.visible {
+            opacity: 1;
+        }
+        
+        .node {
+            cursor: pointer;
+        }
+        
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+            transition: all 0.3s;
+        }
+        
+        .node text {
+            font-size: 11px;
+            pointer-events: none;
+        }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            stroke-width: 1px;
+        }
+        
+        .link.highlighted {
+            stroke: #667eea;
+            stroke-width: 3px;
+            stroke-opacity: 1;
+        }
+        
+        .discovery-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .discovery-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .discovery-item h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 15px;
+        }
+        
+        .discovery-item p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .quote-box {
+            background: #f0f8ff;
+            border-left: 3px solid #2196F3;
+            padding: 10px;
+            margin: 10px 0;
+            font-style: italic;
+            font-size: 13px;
+        }
+        
+        .quote-attribution {
+            text-align: right;
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .media-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .media-type.book { background: #4CAF50; color: white; }
+        .media-type.podcast { background: #FF6B35; color: white; }
+        .media-type.song { background: #2196F3; color: white; }
+        .media-type.video { background: #f44336; color: white; }
+        .media-type.event { background: #9C27B0; color: white; }
+        
+        .connection-detail {
+            background: white;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 8px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .connection-arrow {
+            color: #667eea;
+            margin: 0 8px;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+        
+        .detail-modal.active {
+            display: block;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 700px;
+            margin: 50px auto;
+            border-radius: 10px;
+            padding: 30px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .timeline-item {
+            border-left: 2px solid #667eea;
+            padding-left: 20px;
+            margin-left: 10px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #667eea;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎙️ Fresh Air Cross-Media Discovery 
+            <span class="fresh-air-badge">NPR Fresh Air - April 7, 2016</span>
+        </h1>
+        <div class="subtitle">Real entity connections from David Bianculli's tribute to Merle Haggard with NYT critic Jon Caramanica</div>
+        <div class="navigation-bar">
+            <button id="back-btn" class="nav-button" disabled onclick="navigateBack()">← Back</button>
+            <button id="forward-btn" class="nav-button" disabled onclick="navigateForward()">Forward →</button>
+            <button class="nav-button" onclick="playFreshAir()">🎧 Listen to Episode</button>
+        </div>
+    </div>
+    
+    <div class="breadcrumbs" id="breadcrumbs">
+        <span class="breadcrumb" onclick="navigateToEntity('Home')">Home</span>
+        <span> › </span>
+        <span class="breadcrumb current">Fresh Air Episode</span>
+    </div>
+    
+    <div class="container">
+        <div class="panel left-panel">
+            <h2>Entities from Fresh Air</h2>
+            <input type="text" class="search-box" placeholder="Search entities..." id="entity-search">
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">30</div>
+                    <div class="stat-label">Entities</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Minutes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Cross-refs</div>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>🎙️ PODCAST</h3>
+                <div class="entity-item selected" data-entity="Fresh Air Episode" onclick="selectEntity(this)">
+                    <div>
+                        Fresh Air Episode
+                        <div class="entity-metadata">Host: David Bianculli</div>
+                    </div>
+                    <span class="timestamp-badge">Full</span>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>📚 BOOK CONNECTION</h3>
+                <div class="entity-item" data-entity="My House of Memories" onclick="selectEntity(this)">
+                    <div>
+                        My House of Memories
+                        <div class="entity-metadata">HarperCollins, 1999</div>
+                    </div>
+                    <span class="mention-count">15</span>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>👥 PEOPLE MENTIONED</h3>
+                <div class="entity-item" data-entity="David Bianculli" onclick="selectEntity(this)">
+                    <div>
+                        David Bianculli
+                        <div class="entity-metadata">Fresh Air Host</div>
+                    </div>
+                    <span class="timestamp-badge">0:00</span>
+                </div>
+                <div class="entity-item" data-entity="Jon Caramanica" onclick="selectEntity(this)">
+                    <div>
+                        Jon Caramanica
+                        <div class="entity-metadata">NYT Music Critic</div>
+                    </div>
+                    <span class="timestamp-badge">0:45</span>
+                </div>
+                <div class="entity-item" data-entity="Willie Nelson" onclick="selectEntity(this)">
+                    <div>
+                        Willie Nelson
+                        <div class="entity-metadata">Farm Aid Co-founder</div>
+                    </div>
+                    <span class="timestamp-badge">2:15</span>
+                </div>
+                <div class="entity-item" data-entity="Johnny Cash" onclick="selectEntity(this)">
+                    <div>
+                        Johnny Cash
+                        <div class="entity-metadata">San Quentin Concert</div>
+                    </div>
+                    <span class="timestamp-badge">4:30</span>
+                </div>
+                <div class="entity-item" data-entity="Bob Dylan" onclick="selectEntity(this)">
+                    <div>
+                        Bob Dylan
+                        <div class="entity-metadata">Influence mentioned</div>
+                    </div>
+                    <span class="mention-count">2</span>
+                </div>
+                <div class="entity-item" data-entity="Buck Owens" onclick="selectEntity(this)">
+                    <div>
+                        Buck Owens
+                        <div class="entity-metadata">Bakersfield Sound</div>
+                    </div>
+                    <span class="timestamp-badge">3:20</span>
+                </div>
+                <div class="entity-item" data-entity="Loretta Lynn" onclick="selectEntity(this)">
+                    <div>
+                        Loretta Lynn
+                        <div class="entity-metadata">Country peer</div>
+                    </div>
+                    <span class="mention-count">2</span>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>🎵 SONGS DISCUSSED</h3>
+                <div class="entity-item" data-entity="Mama Tried" onclick="selectEntity(this)">
+                    <div>
+                        Mama Tried
+                        <div class="entity-metadata">1968, #1 Country</div>
+                    </div>
+                    <span class="timestamp-badge">5:10</span>
+                </div>
+                <div class="entity-item" data-entity="Okie from Muskogee" onclick="selectEntity(this)">
+                    <div>
+                        Okie from Muskogee
+                        <div class="entity-metadata">1969, Cultural phenomenon</div>
+                    </div>
+                    <span class="timestamp-badge">6:00</span>
+                </div>
+                <div class="entity-item" data-entity="Natural High" onclick="selectEntity(this)">
+                    <div>
+                        Natural High
+                        <div class="entity-metadata">Farm Aid 1985</div>
+                    </div>
+                    <span class="timestamp-badge">2:30</span>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>🎭 EVENTS</h3>
+                <div class="entity-item" data-entity="Farm Aid 1985" onclick="selectEntity(this)">
+                    <div>
+                        Farm Aid 1985
+                        <div class="entity-metadata">September 22, Champaign IL</div>
+                    </div>
+                    <span class="timestamp-badge">2:15</span>
+                </div>
+                <div class="entity-item" data-entity="San Quentin Concert" onclick="selectEntity(this)">
+                    <div>
+                        San Quentin Concert
+                        <div class="entity-metadata">Johnny Cash, 1958</div>
+                    </div>
+                    <span class="timestamp-badge">4:30</span>
+                </div>
+            </div>
+            
+            <div class="entity-type">
+                <h3>📍 PLACES</h3>
+                <div class="entity-item" data-entity="Bakersfield" onclick="selectEntity(this)">
+                    <div>
+                        Bakersfield
+                        <div class="entity-metadata">Bakersfield Sound origin</div>
+                    </div>
+                    <span class="timestamp-badge">3:00</span>
+                </div>
+                <div class="entity-item" data-entity="San Quentin" onclick="selectEntity(this)">
+                    <div>
+                        San Quentin State Prison
+                        <div class="entity-metadata">1958-1960 incarceration</div>
+                    </div>
+                    <span class="timestamp-badge">4:30</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel main-panel">
+            <h2>Entity Connection Network</h2>
+            <div id="graph-container">
+                <div class="graph-controls">
+                    <div class="graph-control" onclick="zoomIn()" title="Zoom In">+</div>
+                    <div class="graph-control" onclick="zoomOut()" title="Zoom Out">−</div>
+                    <div class="graph-control" onclick="resetZoom()" title="Reset">⟲</div>
+                </div>
+                <div class="node-tooltip" id="node-tooltip"></div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FF6B35"></div>
+                        <span>Podcast</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4CAF50"></div>
+                        <span>Book</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2196F3"></div>
+                        <span>Person</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9C27B0"></div>
+                        <span>Event</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FFC107"></div>
+                        <span>Song</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel right-panel">
+            <h2>Cross-Media Discoveries</h2>
+            
+            <div class="quote-box">
+                "A country music titan who most resists easy categorization"
+                <div class="quote-attribution">— Jon Caramanica, NYT</div>
+            </div>
+            
+            <div id="discovery-paths">
+                <div class="discovery-item" onclick="navigateDiscovery('farm-aid', this)">
+                    <h4>🎤 Farm Aid 1985 Connection</h4>
+                    <span class="media-type podcast">PODCAST</span>
+                    <span class="connection-arrow">→</span>
+                    <span class="media-type book">BOOK</span>
+                    <p><strong>Fresh Air @ 2:15:</strong> "Performance with Willie Nelson"</p>
+                    <p><strong>Book Chapter 12:</strong> "The Outlaw Years" - Details of the historic Farm Aid performance</p>
+                    <p><strong>Action:</strong> View video footage on YouTube</p>
+                </div>
+                
+                <div class="discovery-item" onclick="navigateDiscovery('mama-tried', this)">
+                    <h4>🎵 "Mama Tried" Story</h4>
+                    <span class="media-type podcast">PODCAST</span>
+                    <span class="connection-arrow">→</span>
+                    <span class="media-type book">BOOK</span>
+                    <p><strong>Fresh Air @ 5:10:</strong> "Autobiographical #1 hit"</p>
+                    <p><strong>Book Chapter 7:</strong> Mother's influence and the true story</p>
+                    <p><strong>Lyrics:</strong> "I turned 21 in prison doing life without parole"</p>
+                </div>
+                
+                <div class="discovery-item" onclick="navigateDiscovery('san-quentin', this)">
+                    <h4>🏛️ San Quentin Experience</h4>
+                    <span class="media-type podcast">PODCAST</span>
+                    <span class="connection-arrow">→</span>
+                    <span class="media-type event">EVENT</span>
+                    <p><strong>Fresh Air @ 4:30:</strong> Johnny Cash concert mention</p>
+                    <p><strong>Book Chapters 3-5:</strong> Prison years (1958-1960)</p>
+                    <p><strong>Connection:</strong> Haggard in audience at Cash's 1958 concert</p>
+                </div>
+                
+                <div class="discovery-item" onclick="navigateDiscovery('bakersfield', this)">
+                    <h4>🎸 Bakersfield Sound</h4>
+                    <span class="media-type podcast">PODCAST</span>
+                    <span class="connection-arrow">→</span>
+                    <span class="media-type video">VIDEO</span>
+                    <p><strong>Fresh Air @ 3:00:</strong> Musical movement discussion</p>
+                    <p><strong>Book Chapter 9:</strong> Buck Owens and the scene</p>
+                    <p><strong>Documentary:</strong> "The Bakersfield Sound" (2019)</p>
+                </div>
+            </div>
+            
+            <div class="connection-detail">
+                <h4>Timeline Connections</h4>
+                <div class="timeline-item">
+                    <div class="timeline-date">1958</div>
+                    Johnny Cash performs at San Quentin - Haggard in audience
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1968</div>
+                    "Mama Tried" released - reaches #1
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1985</div>
+                    Farm Aid performance with Willie Nelson
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1994</div>
+                    Country Music Hall of Fame induction
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2016</div>
+                    Fresh Air tribute episode airs
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="detail-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Real Fresh Air data with actual connections
+        const graphData = {
+            nodes: [
+                // Core media
+                { id: "Fresh Air Episode", type: "podcast", date: "April 7, 2016", mentions: 1 },
+                { id: "My House of Memories", type: "book", year: 1999, mentions: 15 },
+                
+                // People from Fresh Air
+                { id: "David Bianculli", type: "person", role: "Host", mentions: 3 },
+                { id: "Jon Caramanica", type: "person", role: "NYT Critic", mentions: 2 },
+                { id: "Willie Nelson", type: "person", role: "Musician", mentions: 4 },
+                { id: "Johnny Cash", type: "person", role: "Musician", mentions: 3 },
+                { id: "Bob Dylan", type: "person", role: "Musician", mentions: 2 },
+                { id: "Buck Owens", type: "person", role: "Musician", mentions: 2 },
+                { id: "Loretta Lynn", type: "person", role: "Musician", mentions: 2 },
+                { id: "Merle Haggard", type: "person", role: "Subject", mentions: 50 },
+                
+                // Events
+                { id: "Farm Aid 1985", type: "event", date: "Sept 22, 1985", mentions: 2 },
+                { id: "San Quentin Concert", type: "event", date: "1958", mentions: 1 },
+                { id: "Hall of Fame 1994", type: "event", date: "1994", mentions: 1 },
+                { id: "Kennedy Center 2010", type: "event", date: "2010", mentions: 1 },
+                
+                // Songs
+                { id: "Mama Tried", type: "song", year: 1968, mentions: 3 },
+                { id: "Okie from Muskogee", type: "song", year: 1969, mentions: 2 },
+                { id: "Natural High", type: "song", year: 1985, mentions: 1 },
+                { id: "Sing Me Back Home", type: "song", year: 1967, mentions: 1 },
+                
+                // Places
+                { id: "Bakersfield", type: "place", state: "CA", mentions: 5 },
+                { id: "San Quentin", type: "place", state: "CA", mentions: 4 },
+                { id: "Nashville", type: "place", state: "TN", mentions: 2 },
+                { id: "Oildale", type: "place", state: "CA", mentions: 2 }
+            ],
+            links: [
+                // Fresh Air connections
+                { source: "Fresh Air Episode", target: "David Bianculli", type: "hosted_by" },
+                { source: "Fresh Air Episode", target: "Jon Caramanica", type: "features" },
+                { source: "Fresh Air Episode", target: "Merle Haggard", type: "tribute_to" },
+                { source: "Fresh Air Episode", target: "Farm Aid 1985", type: "discusses", timestamp: "2:15" },
+                { source: "Fresh Air Episode", target: "Willie Nelson", type: "mentions", timestamp: "2:15" },
+                { source: "Fresh Air Episode", target: "Johnny Cash", type: "mentions", timestamp: "4:30" },
+                { source: "Fresh Air Episode", target: "Mama Tried", type: "analyzes", timestamp: "5:10" },
+                { source: "Fresh Air Episode", target: "San Quentin", type: "discusses", timestamp: "4:30" },
+                { source: "Fresh Air Episode", target: "Bakersfield", type: "explains", timestamp: "3:00" },
+                
+                // Book connections
+                { source: "My House of Memories", target: "Merle Haggard", type: "authored_by" },
+                { source: "My House of Memories", target: "San Quentin", type: "chapters_3_5" },
+                { source: "My House of Memories", target: "Farm Aid 1985", type: "chapter_12" },
+                { source: "My House of Memories", target: "Mama Tried", type: "chapter_7" },
+                { source: "My House of Memories", target: "Buck Owens", type: "chapter_9" },
+                { source: "My House of Memories", target: "Willie Nelson", type: "chapter_12" },
+                { source: "My House of Memories", target: "Johnny Cash", type: "multiple_chapters" },
+                
+                // Person connections
+                { source: "Merle Haggard", target: "Bakersfield", type: "lived_in" },
+                { source: "Merle Haggard", target: "San Quentin", type: "incarcerated_at" },
+                { source: "Merle Haggard", target: "Farm Aid 1985", type: "performed_at" },
+                { source: "Merle Haggard", target: "Mama Tried", type: "wrote" },
+                { source: "Merle Haggard", target: "Okie from Muskogee", type: "wrote" },
+                { source: "Johnny Cash", target: "San Quentin Concert", type: "performed" },
+                { source: "Johnny Cash", target: "San Quentin", type: "performed_at" },
+                { source: "Willie Nelson", target: "Farm Aid 1985", type: "organized" },
+                { source: "Buck Owens", target: "Bakersfield", type: "pioneered" },
+                
+                // Event connections
+                { source: "San Quentin Concert", target: "San Quentin", type: "located_at" },
+                { source: "Farm Aid 1985", target: "Natural High", type: "featured_song" },
+                
+                // Song connections
+                { source: "Mama Tried", target: "San Quentin", type: "inspired_by" },
+                { source: "Sing Me Back Home", target: "San Quentin", type: "about" }
+            ]
+        };
+        
+        // Color scheme for real entity types
+        const colorMap = {
+            podcast: "#FF6B35",
+            book: "#4CAF50",
+            person: "#2196F3",
+            place: "#FF9800",
+            song: "#FFC107",
+            event: "#9C27B0"
+        };
+        
+        // Set up the graph
+        const width = document.getElementById('graph-container').offsetWidth;
+        const height = 600;
+        
+        const svg = d3.select("#graph-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        
+        const g = svg.append("g");
+        
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 3])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        
+        svg.call(zoom);
+        
+        // Force simulation
+        const simulation = d3.forceSimulation(graphData.nodes)
+            .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(-400))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(30));
+        
+        // Create links
+        const link = g.append("g")
+            .selectAll("line")
+            .data(graphData.links)
+            .enter().append("line")
+            .attr("class", "link")
+            .style("stroke-width", d => d.timestamp ? 2 : 1);
+        
+        // Create nodes
+        const node = g.append("g")
+            .selectAll("g")
+            .data(graphData.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .on("click", nodeClicked)
+            .on("mouseenter", showNodeTooltip)
+            .on("mouseleave", hideNodeTooltip)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+        
+        node.append("circle")
+            .attr("r", d => d.mentions ? Math.sqrt(d.mentions) * 5 + 10 : 15)
+            .style("fill", d => colorMap[d.type]);
+        
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", 4)
+            .text(d => d.id)
+            .style("font-size", d => d.mentions > 10 ? "12px" : "11px");
+        
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+            
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Entity selection
+        function selectEntity(element) {
+            document.querySelectorAll('.entity-item').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            const entityName = element.dataset.entity;
+            highlightConnections(entityName);
+            updateDiscoveryPaths(entityName);
+        }
+        
+        function highlightConnections(entityName) {
+            // Reset
+            node.style("opacity", 1);
+            link.style("opacity", 0.2);
+            
+            // Highlight connected
+            link.style("opacity", d => 
+                (d.source.id === entityName || d.target.id === entityName) ? 1 : 0.1
+            ).classed("highlighted", d => 
+                d.source.id === entityName || d.target.id === entityName
+            );
+            
+            const connected = new Set([entityName]);
+            graphData.links.forEach(l => {
+                if (l.source.id === entityName) connected.add(l.target.id);
+                if (l.target.id === entityName) connected.add(l.source.id);
+            });
+            
+            node.style("opacity", d => connected.has(d.id) ? 1 : 0.3);
+        }
+        
+        function nodeClicked(event, d) {
+            showEntityDetails(d);
+        }
+        
+        function showNodeTooltip(event, d) {
+            const tooltip = document.getElementById('node-tooltip');
+            let content = `<strong>${d.id}</strong><br>Type: ${d.type}`;
+            
+            if (d.timestamp) content += `<br>Mentioned at: ${d.timestamp}`;
+            if (d.date) content += `<br>Date: ${d.date}`;
+            if (d.role) content += `<br>Role: ${d.role}`;
+            if (d.mentions) content += `<br>Mentions: ${d.mentions}`;
+            
+            tooltip.innerHTML = content;
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+        
+        function hideNodeTooltip() {
+            document.getElementById('node-tooltip').classList.remove('visible');
+        }
+        
+        function showEntityDetails(entity) {
+            const modal = document.getElementById('detail-modal');
+            const modalBody = document.getElementById('modal-body');
+            
+            let content = `<h2>${entity.id}</h2>`;
+            
+            if (entity.id === "Fresh Air Episode") {
+                content += `
+                    <p><strong>Date:</strong> April 7, 2016</p>
+                    <p><strong>Host:</strong> David Bianculli</p>
+                    <p><strong>Guest:</strong> Jon Caramanica (NYT Music Critic)</p>
+                    <p><strong>Duration:</strong> 8 minutes</p>
+                    
+                    <h3>Key Moments</h3>
+                    <ul>
+                        <li>0:45 - Jon Caramanica introduction</li>
+                        <li>2:15 - Farm Aid 1985 discussion</li>
+                        <li>3:00 - Bakersfield Sound explanation</li>
+                        <li>4:30 - San Quentin and Johnny Cash</li>
+                        <li>5:10 - "Mama Tried" analysis</li>
+                        <li>6:00 - "Okie from Muskogee" context</li>
+                    </ul>
+                    
+                    <h3>Notable Quote</h3>
+                    <p><em>"A country music titan who most resists easy categorization"</em> - Jon Caramanica</p>
+                    
+                    <h3>Listen</h3>
+                    <p><a href="https://www.npr.org/2016/04/07/473307918/fresh-air-remembers-country-legend-merle-haggard" target="_blank">
+                        Listen on NPR.org →
+                    </a></p>
+                `;
+            } else if (entity.id === "Farm Aid 1985") {
+                content += `
+                    <p><strong>Date:</strong> September 22, 1985</p>
+                    <p><strong>Location:</strong> Champaign, Illinois</p>
+                    <p><strong>Organizers:</strong> Willie Nelson, John Mellencamp, Neil Young</p>
+                    
+                    <h3>Fresh Air Connection</h3>
+                    <p>Mentioned at 2:15 - Haggard's performance of "Natural High" with Willie Nelson</p>
+                    
+                    <h3>Book Connection</h3>
+                    <p>Chapter 12: "The Outlaw Years" - Detailed account of the performance</p>
+                    
+                    <h3>Watch Performance</h3>
+                    <p><a href="#" onclick="alert('Opening YouTube: Farm Aid 1985 - Merle Haggard')">
+                        View on YouTube →
+                    </a></p>
+                `;
+            } else {
+                content += `
+                    <p><strong>Type:</strong> ${entity.type}</p>
+                    ${entity.mentions ? `<p><strong>Mentions:</strong> ${entity.mentions}</p>` : ''}
+                    ${entity.date ? `<p><strong>Date:</strong> ${entity.date}</p>` : ''}
+                    ${entity.role ? `<p><strong>Role:</strong> ${entity.role}</p>` : ''}
+                `;
+            }
+            
+            modalBody.innerHTML = content;
+            modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').classList.remove('active');
+        }
+        
+        function navigateDiscovery(type, element) {
+            document.querySelectorAll('.discovery-item').forEach(el => {
+                el.style.background = '#f8f9fa';
+            });
+            element.style.background = '#e8f4ff';
+            
+            switch(type) {
+                case 'farm-aid':
+                    alert('Opening: Farm Aid 1985 footage on YouTube\nBook: Chapter 12 - The Outlaw Years');
+                    break;
+                case 'mama-tried':
+                    alert('Opening: "Mama Tried" on Spotify\nBook: Chapter 7 - Mother\'s Influence');
+                    break;
+                case 'san-quentin':
+                    alert('Opening: Johnny Cash at San Quentin documentary\nBook: Chapters 3-5 - Prison Years');
+                    break;
+                case 'bakersfield':
+                    alert('Opening: "The Bakersfield Sound" documentary\nBook: Chapter 9 - Buck Owens and the Scene');
+                    break;
+            }
+        }
+        
+        function playFreshAir() {
+            window.open('https://www.npr.org/2016/04/07/473307918/fresh-air-remembers-country-legend-merle-haggard', '_blank');
+        }
+        
+        function updateDiscoveryPaths(entityName) {
+            // Update discovery paths based on selected entity
+            const paths = document.getElementById('discovery-paths');
+            if (entityName === "Willie Nelson") {
+                paths.innerHTML = `
+                    <div class="discovery-item">
+                        <h4>Willie Nelson Connections</h4>
+                        <p><strong>Fresh Air:</strong> Farm Aid co-founder, mentioned at 2:15</p>
+                        <p><strong>Book:</strong> Chapter 12 - Outlaw movement collaboration</p>
+                        <p><strong>Songs:</strong> "Pancho and Lefty" duet</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Search
+        document.getElementById('entity-search').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.entity-item').forEach(item => {
+                const name = item.dataset.entity.toLowerCase();
+                item.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        });
+        
+        // Zoom controls
+        function zoomIn() {
+            svg.transition().call(zoom.scaleBy, 1.3);
+        }
+        
+        function zoomOut() {
+            svg.transition().call(zoom.scaleBy, 0.7);
+        }
+        
+        function resetZoom() {
+            svg.transition().call(zoom.transform, d3.zoomIdentity);
+        }
+        
+        // Initialize
+        highlightConnections("Fresh Air Episode");
+    </script>
+</body>
+</html>

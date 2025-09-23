@@ -1,0 +1,90 @@
+/* Custom animations for visual feedback */
+
+/* Pulse animation for clicked words */
+@keyframes wordPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 15px 5px rgba(34, 197, 94, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* Glow animation for current word */
+@keyframes wordGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(250, 204, 21, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.8);
+  }
+}
+
+/* Ripple effect for clicks */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Apply animations */
+.word-clicked {
+  animation: wordPulse 0.4s ease-out;
+}
+
+.word-current {
+  animation: wordGlow 2s ease-in-out infinite;
+}
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.3);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+/* Hover effects */
+.word-hover {
+  transition: all 0.2s ease;
+  background: linear-gradient(to bottom, transparent 60%, rgba(59, 130, 246, 0.2) 60%);
+}
+
+/* Loading animation for player */
+@keyframes playerLoading {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.player-loading {
+  animation: playerLoading 1.5s ease-in-out infinite;
+}
+
+/* Recovery animation */
+@keyframes recover {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.recovering-icon {
+  animation: recover 1s linear infinite;
+}
