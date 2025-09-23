@@ -1364,7 +1364,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 padding: '0.5rem 1rem',
                 background: '#f3f4f6',
                 borderRadius: '6px',
-                fontWeight: '600'
+                fontWeight: '600',
+                color: 'black'
               }}>
                 Page {currentPage?.pageNumber} of {totalPages}
               </span>
@@ -1387,6 +1388,24 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 Next
                 <ChevronRight size={20} />
               </button>
+
+              {currentPage?.originalData && (
+                <span style={{ color: '#1e3a8a', fontSize: '150%', fontWeight: '600', marginLeft: '2rem' }}>
+                  {(() => {
+                    const data = currentPage.originalData;
+                    if (data.type === 'album_showcase' && data.album) {
+                      return `${data.album.artist} - ${data.album.title}${data.album.year ? ` (${data.album.year})` : ''}`;
+                    } else if (data.type === 'page_image' && data.title) {
+                      return data.title;
+                    } else if (data.type === 'index') {
+                      return 'Index';
+                    } else if (data.type === 'cover') {
+                      return `${data.title} - ${data.subtitle}`;
+                    }
+                    return data.title || '';
+                  })()}
+                </span>
+              )}
             </div>
           </div>
 
@@ -1465,30 +1484,31 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 )}
 
                 {currentPage.originalData.type === 'index' && (
-                  <div style={{ padding: '2rem 0' }}>
-                    <h2 style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a8a', marginBottom: '2rem' }}>
+                  <div style={{ padding: '0.5rem 0 2rem 0' }}>
+                    <h2 style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a8a', marginBottom: '1.5rem' }}>
                       {currentPage.originalData.title}
                     </h2>
-                    <p style={{ fontSize: '18px', marginBottom: '2rem', color: '#6b7280' }}>
+                    <p style={{ fontSize: '18px', marginBottom: '1.5rem', color: '#6b7280' }}>
                       {currentPage.originalData.note}
                     </p>
                     {currentPage.originalData.sections?.map((section: any, idx: number) => (
                       <div key={idx} style={{ marginBottom: '3rem' }}>
-                        <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem' }}>
+                        <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem', color: '#1e3a8a' }}>
                           {section.title}
                         </h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1rem' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(216px, 1fr))', gap: '1.8rem' }}>
                           {section.pages?.map((page: number, pageIdx: number) => (
                             <div
                               key={pageIdx}
                               style={{
                                 border: '2px solid #e5e7eb',
                                 borderRadius: '8px',
-                                padding: '1rem',
+                                padding: '0.75rem',
                                 textAlign: 'center',
                                 cursor: 'pointer',
                                 transition: 'all 0.3s',
-                                background: '#f9fafb'
+                                background: '#f9fafb',
+                                overflow: 'hidden'
                               }}
                               onClick={() => {
                                 const pageIndex = pages.findIndex(p => p.pageNumber === page);
@@ -1497,17 +1517,64 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               onMouseOver={(e) => {
                                 e.currentTarget.style.borderColor = '#3b82f6';
                                 e.currentTarget.style.background = '#eff6ff';
+                                e.currentTarget.style.transform = 'scale(1.05)';
                               }}
                               onMouseOut={(e) => {
                                 e.currentTarget.style.borderColor = '#e5e7eb';
                                 e.currentTarget.style.background = '#f9fafb';
+                                e.currentTarget.style.transform = 'scale(1)';
                               }}
                             >
-                              <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                              {/* Show thumbnail image for album pages */}
+                              {section.albums && (
+                                <div style={{ marginBottom: '0.5rem' }}>
+                                  <img
+                                    src={
+                                      page === 7 ? '/bluenote-page7-bluetrain-thumb.png' :
+                                      page === 9 ? '/bluenote-page9-thumb.png' :
+                                      page === 10 ? '/bluenote-page10-correct-thumb.png' :
+                                      page === 11 ? '/bluenote-page11-thumb.png' :
+                                      page === 12 ? '/bluenote-page12-thumb.png' :
+                                      page === 13 ? '/bluenote-page13-thumb.png' :
+                                      page === 14 ? '/bluenote-page14-thumb.png' :
+                                      page === 15 ? '/bluenote-page15-thumb.png' :
+                                      page === 16 ? '/bluenote-page16-thumb.png' :
+                                      page === 17 ? '/bluenote-page17-thumb.png' :
+                                      '/bluenote-cover.png'
+                                    }
+                                    alt={section.albums[pageIdx]}
+                                    style={{
+                                      width: '100%',
+                                      height: 'auto',
+                                      aspectRatio: '1',
+                                      objectFit: 'cover',
+                                      borderRadius: '4px'
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              {/* Show thumbnail images for history pages */}
+                              {section.thumbnails && (
+                                <div style={{ marginBottom: '0.9rem' }}>
+                                  <img
+                                    src={`/bluenote-page${page}.png`}
+                                    alt={`Page ${page}`}
+                                    style={{
+                                      width: '100%',
+                                      height: 'auto',
+                                      aspectRatio: '1',
+                                      objectFit: 'contain',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f3f4f6'
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.3rem' }}>
                                 Page {page}
                               </div>
                               {section.albums && (
-                                <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                                <div style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.3' }}>
                                   {section.albums[pageIdx]}
                                 </div>
                               )}

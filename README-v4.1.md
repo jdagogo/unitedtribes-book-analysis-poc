@@ -1,10 +1,10 @@
 # United Tribes Fresh v4.1 - Blue Note Two-Panel Layout
 
 ## Version 4.1 Release Notes
-**Released:** Monday, September 22, 2025 at 10:59 PM EDT
+**Released:** Tuesday, September 23, 2025 at 12:51 PM EDT
 **Git Tag:** `v4.1`
 **Branch:** `v4-development`
-**Commit:** `e442c92`
+**Commit:** `6ca0b39`
 
 ## What's New in v4.1
 

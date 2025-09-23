@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>United Tribes Fresh - Version Control</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
         * {
             margin: 0;
@@ -350,17 +353,17 @@
                 </div>
             </div>
 
-            <!-- Version 4.0 (Development) -->
+            <!-- Version 4.0 (Stable) -->
             <div class="version-card">
                 <div class="version-header">
-                    <div class="version-title v4">Version 4.0 (Development)</div>
-                    <div class="status development" id="v4-status">Development</div>
+                    <div class="version-title v4">Version 4.0 (Stable)</div>
+                    <div class="status stopped" id="v4-status">Stopped</div>
                 </div>
 
                 <div class="info-section">
                     <div class="info-row">
                         <span class="info-label">Port:</span>
-                        <span>3004</span>
+                        <span>3004 (when running)</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Branch:</span>
@@ -402,6 +405,59 @@
                     <a href="file:///Users/j.d.heilprin/Desktop/my-claude/united-tribes-fresh-v4/TERMINAL_QUICK_START.md" class="btn btn-secondary" style="font-size: 0.9em;">
                         💻 Terminal Guide
                     </a>
+                </div>
+            </div>
+
+            <!-- Version 4.1 (Current Development) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #3b82f6;">Version 4.1 (Development)</div>
+                    <div class="status running" id="v41-status">Running</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Commit:</span>
+                        <span>6ca0b39</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span>Tuesday, September 23, 2025 at 12:51 p.m. ET</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-tag">✅ 17 Blue Note Pages</div>
+                    <div class="feature-tag">✅ All Images Working</div>
+                    <div class="feature-tag">✅ Media Discovery Panel</div>
+                    <div class="feature-tag">✅ Album Showcases</div>
+                    <div class="feature-tag">✅ Two-Panel Layout</div>
+                    <div class="feature-tag">✅ Index Navigation</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="revertTo41()">
+                        🔄 Revert to 4.1
+                    </button>
+                    <a href="http://localhost:3004/paginated" target="_blank" class="btn btn-secondary">
+                        📚 View Blue Note Book
+                    </a>
+                </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <button class="btn btn-secondary" onclick="showRevertInstructions()" style="font-size: 0.9em;">
+                        📖 How to Revert
+                    </button>
+                    <button class="btn btn-secondary" onclick="show41Details()" style="font-size: 0.9em;">
+                        ℹ️ Version Details
+                    </button>
                 </div>
             </div>
         </div>
@@ -535,12 +591,41 @@
         // Check server status on load
         window.onload = function() {
             checkServerStatus(3);
-            checkServerStatus(4);
+            // Don't auto-check v4.0 since we're running 4.1
+            // checkServerStatus(4);
+            checkServerStatus41(); // Check 4.1 instead
         };
 
         function checkServerStatus(version) {
             const port = version === 3 ? 3000 : 3004;
             const statusId = `v${version}-status`;
+
+            // Try to load a small resource to check if server is up
+            const img = new Image();
+            img.src = `http://localhost:${port}/favicon.ico?t=${Date.now()}`;
+
+            img.onload = function() {
+                document.getElementById(statusId).className = 'status running';
+                document.getElementById(statusId).textContent = 'Running';
+            };
+
+            img.onerror = function() {
+                // Try fetch as fallback
+                fetch(`http://localhost:${port}/`, { mode: 'no-cors' })
+                    .then(() => {
+                        document.getElementById(statusId).className = 'status running';
+                        document.getElementById(statusId).textContent = 'Running';
+                    })
+                    .catch(() => {
+                        document.getElementById(statusId).className = 'status stopped';
+                        document.getElementById(statusId).textContent = 'Stopped';
+                    });
+            };
+        }
+
+        function checkServerStatus41() {
+            const port = 3004;
+            const statusId = 'v41-status';
 
             // Try to load a small resource to check if server is up
             const img = new Image();
@@ -636,10 +721,57 @@
                   '3. Or press Ctrl+C in each terminal');
         }
 
+        function revertTo41() {
+            alert('To revert to Version 4.1 (Blue Note):\n\n' +
+                  '1. Open Terminal\n' +
+                  '2. cd ~/Desktop/my-claude/united-tribes-fresh-v4\n' +
+                  '3. git checkout 6ca0b39\n\n' +
+                  'This will restore:\n' +
+                  '• All 17 Blue Note pages with images\n' +
+                  '• Media Discovery panel\n' +
+                  '• Working album showcases\n\n' +
+                  'To return to latest:\n' +
+                  'git checkout v4-development');
+        }
+
+        function showRevertInstructions() {
+            alert('Complete Revert Instructions for Version 4.1:\n\n' +
+                  '1. Stop the dev server (Ctrl+C)\n\n' +
+                  '2. Revert to commit 6ca0b39:\n' +
+                  '   cd ~/Desktop/my-claude/united-tribes-fresh-v4\n' +
+                  '   git checkout 6ca0b39\n\n' +
+                  '3. Restart the server:\n' +
+                  '   npm run dev\n\n' +
+                  '4. Open http://localhost:3004/paginated\n\n' +
+                  'To return to latest development:\n' +
+                  '   git checkout v4-development\n' +
+                  '   npm run dev');
+        }
+
+        function show41Details() {
+            alert('Version 4.1 - Blue Note Release\n\n' +
+                  'Commit: 6ca0b39\n' +
+                  'Date: Tuesday, September 23, 2025 at 12:51 p.m. ET\n\n' +
+                  'Features:\n' +
+                  '• Complete Blue Note book (17 pages)\n' +
+                  '• All album cover images working\n' +
+                  '• Media Discovery panel on right side\n' +
+                  '• Album showcase pages with metadata\n' +
+                  '• Index page with navigation thumbnails\n' +
+                  '• Two-panel layout (60% content / 40% discovery)\n\n' +
+                  'Key Files:\n' +
+                  '• /client/src/data/blue-note-cover-art.json\n' +
+                  '• /client/src/components/paginated-book-viewer.tsx\n' +
+                  '• /client/public/bluenote-*.png (all images)\n\n' +
+                  'This is a stable checkpoint after recovering from data loss.');
+        }
+
         // Auto-refresh status every 10 seconds
         setInterval(() => {
             checkServerStatus(3);
-            checkServerStatus(4);
+            // Don't auto-check v4.0 since we're running 4.1
+            // checkServerStatus(4);
+            checkServerStatus41(); // Check 4.1 instead
         }, 10000);
     </script>
 </body>
