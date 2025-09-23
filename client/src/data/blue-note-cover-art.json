@@ -1,0 +1,40 @@
+{
+  "title": "The Cover Art of Blue Note Records",
+  "authors": ["Graham Marsh", "Glyn Callingham"],
+  "totalPages": 3,
+  "pages": [
+    {
+      "page": 1,
+      "type": "text",
+      "title": "THE LION AND THE WOLFF",
+      "content": "Blue Note Records was founded in 1939 when German émigré Alfred Lion recorded pianists Albert Ammons and Meade Lux Lewis in a New York studio. Lion had been inspired when he heard them play at the legendary 1938 Spirituals to Swing Carnegie Hall concert.",
+      "entities": ["Alfred Lion", "Albert Ammons", "Meade Lux Lewis", "Carnegie Hall"]
+    },
+    {
+      "page": 2,
+      "type": "album_showcase",
+      "album": {
+        "title": "Blue Train",
+        "artist": "John Coltrane",
+        "catalog": "BLP 1577",
+        "year": 1957,
+        "cover_image": "https://via.placeholder.com/500x500/1f2937/ffffff?text=Blue+Train",
+        "designer": "Reid Miles"
+      },
+      "discovery_entities": ["John Coltrane", "Blue Train", "Reid Miles"]
+    },
+    {
+      "page": 3,
+      "type": "album_showcase",
+      "album": {
+        "title": "Genius of Modern Music",
+        "artist": "Thelonious Monk",
+        "catalog": "BLP 1510",
+        "year": 1955,
+        "cover_image": "https://via.placeholder.com/500x500/F59E0B/ffffff?text=Thelonious+Monk",
+        "designer": "Reid Miles"
+      },
+      "discovery_entities": ["Thelonious Monk", "Reid Miles"]
+    }
+  ]
+}

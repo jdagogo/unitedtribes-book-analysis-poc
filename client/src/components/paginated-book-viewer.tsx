@@ -12,6 +12,7 @@ import '../styles/book-search.css';
 import '../styles/entity-highlighting.css';
 import '../styles/author-highlighting.css';
 import '../styles/video-link.css';
+import blueNoteData from '../data/blue-note-cover-art.json';
 
 interface BookPage {
   pageNumber: number;
@@ -87,6 +88,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [initialSearchTerm, setInitialSearchTerm] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Check if this is the Blue Note book
+  const [isBlueNote, setIsBlueNote] = useState(false);
 
   // Apply dual highlighting: entity (yellow) and context (light blue)
   const applyDualHighlighting = useCallback((searchTerm: string, context?: string, pageText?: string) => {
@@ -401,15 +405,42 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     const loadTranscript = async () => {
       try {
         setIsLoading(true);
+
+        console.log('🔵 Loading transcript with ID:', transcriptId);
+
+        // Check if this is Blue Note book
+        if (transcriptId === 'bluenote') {
+          console.log('🎵 Loading Blue Note book data');
+          setIsBlueNote(true);
+          // Load Blue Note data directly
+          const blueNotePages: BookPage[] = blueNoteData.pages.map((page: any) => ({
+            pageNumber: page.page,
+            content: page.type === 'text' ? page.content :
+                    page.type === 'album_showcase' ?
+                    `Album: ${page.album?.title || ''}\nArtist: ${page.album?.artist || ''}\nYear: ${page.album?.year || ''}\nCatalog: ${page.album?.catalog || ''}\nDesigner: ${page.album?.designer || ''}` :
+                    'Page content',
+            chapter: page.title || 'section',
+            chapterTitle: page.title || (page.type === 'album_showcase' ? page.album?.title : 'Blue Note'),
+            wordCount: 50
+          }));
+          console.log('🎵 Blue Note pages created:', blueNotePages.length);
+          setPages(blueNotePages);
+          setFullTranscript('Blue Note Records Collection');
+          setIsLoading(false);
+          return; // Exit early for Blue Note
+        }
+
+        // For non-Blue Note books
+        console.log('📚 Loading regular book:', transcriptId);
+        // Load regular transcript
         const response = await fetch(`/transcripts/${transcriptId}/transcript.txt`);
         if (!response.ok) throw new Error('Failed to load transcript');
         const text = await response.text();
         setFullTranscript(text);
-        
+
         // Split into pages
         const bookPages = splitIntoPages(text);
         setPages(bookPages);
-        
         setIsLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load transcript');
@@ -1257,6 +1288,159 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     return chapterStartPages.includes(pageNumber);
   };
 
+  // Render Blue Note two-panel layout if it's the Blue Note book
+  if (isBlueNote) {
+    return (
+      <div className="paginated-book-viewer bluenote-viewer" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+        {/* Left Panel - Book Content (60%) */}
+        <div style={{
+          width: '60%',
+          height: '100%',
+          overflowY: 'auto',
+          borderRight: '2px solid #e5e7eb',
+          padding: '2rem'
+        }}>
+          {/* Navigation Controls */}
+          <div style={{
+            position: 'sticky',
+            top: 0,
+            background: 'white',
+            zIndex: 10,
+            paddingBottom: '1rem',
+            marginBottom: '2rem',
+            borderBottom: '2px solid #e5e7eb'
+          }}>
+            <Link href="/">
+              <button style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.5rem 1rem',
+                background: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                marginBottom: '1rem'
+              }}>
+                <ArrowLeft size={16} />
+                Return to Media Hub
+              </button>
+            </Link>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <button
+                onClick={goToPrevPage}
+                disabled={currentPageIndex === 0}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: currentPageIndex === 0 ? '#e5e7eb' : '#1e3a8a',
+                  color: currentPageIndex === 0 ? '#9ca3af' : 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: currentPageIndex === 0 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <ChevronLeft size={20} />
+                Previous
+              </button>
+
+              <span style={{
+                padding: '0.5rem 1rem',
+                background: '#f3f4f6',
+                borderRadius: '6px',
+                fontWeight: '600'
+              }}>
+                Page {currentPage?.pageNumber} of {totalPages}
+              </span>
+
+              <button
+                onClick={goToNextPage}
+                disabled={currentPageIndex === pages.length - 1}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: currentPageIndex === pages.length - 1 ? '#e5e7eb' : '#1e3a8a',
+                  color: currentPageIndex === pages.length - 1 ? '#9ca3af' : 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: currentPageIndex === pages.length - 1 ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                Next
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Page Content */}
+          <div style={{ fontSize: '18px', lineHeight: '1.8' }}>
+            {currentPage && (
+              <>
+                {currentPage.chapterTitle && (
+                  <h2 style={{
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    marginBottom: '1rem',
+                    color: '#1e3a8a'
+                  }}>
+                    {currentPage.chapterTitle}
+                  </h2>
+                )}
+                <div dangerouslySetInnerHTML={{
+                  __html: highlightEntitiesInText(currentPage.content)
+                }} />
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Right Panel - Media Area (40%) */}
+        <div style={{
+          width: '40%',
+          height: '100%',
+          background: '#f9fafb',
+          padding: '2rem',
+          overflowY: 'auto'
+        }}>
+          <div style={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#6b7280',
+            fontSize: '18px',
+            textAlign: 'center',
+            lineHeight: '1.6'
+          }}>
+            <div>
+              <div style={{
+                fontSize: '48px',
+                marginBottom: '1rem',
+                opacity: 0.3
+              }}>
+                🎵
+              </div>
+              <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
+                Media Discovery Panel
+              </p>
+              <p>
+                Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Regular single-panel layout for other books
   return (
     <div className="paginated-book-viewer">
       <style>{`
