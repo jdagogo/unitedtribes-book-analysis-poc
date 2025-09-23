@@ -1,5 +1,7 @@
 # United Tribes Fresh - Interactive Literary Experience Platform
 
+> **⚠️ DATE NOTICE**: The dates in this README (except for the September 23, 2024 session report at the bottom) are incorrect. The content and technical information is generally accurate, but please disregard the December 2024 and September 2025 dates mentioned throughout.
+
 ## 🎯 Overview
 United Tribes Fresh is an innovative digital reading platform that transforms classic literature into immersive, multimedia experiences. The platform features Patti Smith's memoir "Just Kids" enhanced with cultural discovery modals, and Merle Haggard's "My House of Memories" with perfect audio-text synchronization.
 
