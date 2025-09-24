@@ -796,7 +796,8 @@
             checkServerStatus(3);
             // Don't auto-check v4.0 since we're running 4.1
             // checkServerStatus(4);
-            checkServerStatus41(); // Check 4.1 instead
+            // Don't check v4.1 either - it's an old version and shouldn't be running
+            // checkServerStatus41();
         };
 
         function checkServerStatus(version) {
