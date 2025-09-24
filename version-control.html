@@ -557,11 +557,11 @@
                 </div>
             </div>
 
-            <!-- Version 4.1.4 (Current Release) -->
+            <!-- Version 4.1.4 -->
             <div class="version-card">
                 <div class="version-header">
-                    <div class="version-title" style="color: #22c55e;">Version 4.1.4 (Current)</div>
-                    <div class="status running" id="v414-status">Running</div>
+                    <div class="version-title">Version 4.1.4</div>
+                    <div class="status inactive" id="v414-status">Previous</div>
                 </div>
 
                 <div class="info-section">
@@ -579,7 +579,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Released:</span>
-                        <span>January 23, 2025</span>
+                        <span>September 23, 2025 - 4:58 PM ET</span>
                     </div>
                 </div>
 
@@ -607,6 +607,59 @@
                     </a>
                     <button onclick="checkoutV414()" class="btn btn-secondary" style="font-size: 0.9em;">
                         🔄 Checkout v4.1.4
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version 4.1.5 (Current Release) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #22c55e;">Version 4.1.5 (Current)</div>
+                    <div class="status running" id="v415-status">Running</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Tag:</span>
+                        <span>v4.1.5</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Released:</span>
+                        <span>September 23, 2025 - Evening</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">🔴 YouTube API Quota Exhausted</span>
+                    <span class="feature-tag">⚠️ All 3 API Keys Depleted</span>
+                    <span class="feature-tag">✅ Page 7 Search Added</span>
+                    <span class="feature-tag">✅ Typography Fixes</span>
+                    <span class="feature-tag">📝 Accurate Documentation</span>
+                    <span class="feature-tag">🐛 Identified Core Issues</span>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="http://localhost:3004/paginated?transcriptId=bluenote" target="_blank" class="btn btn-primary">
+                        🌐 Open App
+                    </a>
+                    <a href="https://github.com/jdagogo/unitedtribes-book-analysis-poc/releases/tag/v4.1.5" target="_blank" class="btn btn-secondary">
+                        📦 View Release
+                    </a>
+                </div>
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <a href="file:///Users/j.d.heilprin/Desktop/my-claude/united-tribes-fresh-v4/CLAUDE.md" class="btn btn-secondary" style="font-size: 0.9em;">
+                        📖 Release Notes
+                    </a>
+                    <button onclick="checkoutV415()" class="btn btn-secondary" style="font-size: 0.9em;">
+                        🔄 Checkout v4.1.5
                     </button>
                 </div>
             </div>
@@ -852,6 +905,21 @@
                   'code -n ~/Desktop/my-claude/united-tribes-fresh ~/Desktop/my-claude/united-tribes-fresh-v4');
         }
 
+        function checkoutV414() {
+            alert('To use Version 4.1.4 (Current Release):\n\n' +
+                  '1. Open Terminal\n' +
+                  '2. cd ~/Desktop/my-claude/united-tribes-fresh-v4\n' +
+                  '3. git checkout v4.1.4\n\n' +
+                  'This version includes:\n' +
+                  '• YouTube playlist player modal\n' +
+                  '• Track search and playback functionality\n' +
+                  '• Visual feedback for added tracks\n' +
+                  '• Works & Discovery playlist management\n' +
+                  '• Larger fonts in player (18px tracks)\n' +
+                  '• Green status text instead of gray\n\n' +
+                  'Now running on port 3004 with full playlist integration!');
+        }
+
         function showGitStatus() {
             alert('To check git status:\n\n' +
                   'V3.0: cd ~/Desktop/my-claude/united-tribes-fresh && git status\n' +
@@ -859,6 +927,23 @@
                   'Remember:\n' +
                   '• V3.0 should remain unchanged (clean)\n' +
                   '• V4.0 is where all new development happens');
+        }
+
+        function showV415Readme() {
+            window.open('CLAUDE.md', '_blank');
+        }
+
+        function checkoutV415() {
+            alert('To use Version 4.1.5 (Current):\n\n' +
+                  '1. Open Terminal\n' +
+                  '2. cd ~/Desktop/my-claude/united-tribes-fresh-v4\n' +
+                  '3. git checkout v4.1.5\n\n' +
+                  'This version includes:\n' +
+                  '• Page 7 search functionality\n' +
+                  '• Fixed typography issues\n' +
+                  '• Accurate documentation\n' +
+                  '• Identified YouTube API quota issues\n\n' +
+                  'Note: YouTube API quota exhausted - tracks show "✗ No video"');
         }
 
         function killAllServers() {

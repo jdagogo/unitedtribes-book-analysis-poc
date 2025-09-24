@@ -1,105 +1,52 @@
 # United Tribes Audio Interface - Claude Code Documentation
 
-## ✅ STATUS: ALL 5 CRITICAL FIXES COMPLETED
+## 🔄 STATUS: Version 4.1.5 - September 23, 2025
 
 ### Project Overview
-Audio-text synchronization interface for Merle Haggard's "My House of Memories" audiobook with perfect word-level highlighting and chapter navigation. 43,263 words with YouTube-extracted timestamps for perfect sync.
+Blue Note Records interactive book application integrating YouTube Analysis v3.1 (port 3003) with United Tribes Fresh book reader (port 3004). Features 18 interactive pages with YouTube video search, playlist management, and synchronized audio playback.
 
-### ✅ COMPLETED FIXES (All 5 Requested)
+## What's Actually Working (September 23, 2025)
 
-#### 1. ✅ Real-Time Word Highlighting FIXED
-- **Previous Issue**: Highlighting stopped after ~30 seconds
-- **Solution**: Enhanced `useEffect` with tolerance-based word matching
-- **Update frequency**: Changed from 250ms to 100ms for smooth highlighting
-- **Added tolerance**: 200ms gap tolerance between words
-- **Visual**: Yellow background + bold + ring-2 effect on current word
-- **Location**: `/client/src/pages/auto-sync-chapters.tsx` lines 145-171
-- **Test**: Play audio - words highlight continuously in yellow with glow effect
+### ✅ Features That Work
+1. **YouTube Search Integration** - Search for videos on page 18 and page 7
+2. **Playlist Modal** - Shows playlists and works from analyzed videos
+3. **Video Player** - Embeds and plays YouTube videos correctly
+4. **Page Navigation** - All 18 pages load and navigate properly
+5. **Blue Note Book Structure** - Properly loads content for all pages
 
-#### 2. ✅ Word Click Reliability FIXED  
-- **Previous Issue**: Clicks degraded after 10-15 interactions
-- **Solution**: Used `useRef` for handler persistence + retry logic
-- **Visual feedback**: Green pulse animation on click (400ms) with ripple effect
-- **Retry mechanism**: 3 attempts if initial seek fails  
-- **Location**: `/client/src/pages/auto-sync-chapters.tsx` lines 266-303
-- **Test**: Click 20+ words sequentially - all work with green flash
+### ❌ Current Issues
 
-#### 3. ✅ Player Recovery Mechanism FIXED
-- **Previous Issue**: Stuck in "Loading..." state forever
-- **Solution**: Complete destroy and recreate with API verification
-- **Auto-recovery**: 10-second timeout triggers recovery
-- **Manual option**: "Reload Player" button when stuck
-- **Visual**: Orange "Recovering..." message with attempt counter
-- **Location**: `/client/src/components/youtube-player-simple.tsx` lines 127-182
-- **Test**: Recovery works up to 5 attempts
+#### 1. YouTube API Quota Exhausted
+- **Problem**: All 3 API keys have exceeded daily quota (10,000 units each)
+- **Impact**: Playlist tracks show "✗ No video" instead of finding YouTube videos
+- **Solution**: Need to wait for quota reset at midnight PT or create new Google Cloud project
+- **Files affected**: `/app/api/youtube/search-track/route.ts`
 
-#### 4. ✅ Visual Feedback ADDED
-- **Previous Issue**: No indication clicks registered
-- **Hover effects**: Blue background + underline + scale 1.05 + shadow
-- **Click animation**: Green pulse + scale 1.25 + ripple effect + glow
-- **Current word**: Yellow + bold + glow animation + ring
-- **Loading states**: Pulsing opacity animation
-- **Custom CSS**: Added animations.css with smooth transitions
-- **Location**: `/client/src/components/synchronized-transcript.tsx` + `/client/src/styles/animations.css`
+#### 2. Playlist Track Search Not Working
+- **Problem**: Cannot search for YouTube videos for individual tracks in playlists
+- **Cause**: API quota exceeded, preventing track searches
+- **User Experience**: Tracks display but cannot be played
 
-#### 5. ✅ State Management FIXED
-- **Previous Issue**: Handlers lost after React re-renders
-- **Solution**: `useCallback` and `useMemo` for all handlers
-- **Refs used**: `wordClickHandlerRef` maintains persistence  
-- **Memoized data**: `chapterTranscript` and `chapterWordTimestamps`
-- **Location**: `/client/src/pages/auto-sync-chapters.tsx` lines 306-322
-- **Test**: Change chapters 5+ times - handlers still work
+#### 3. Page 7 Search Results
+- **Problem**: Search was not returning results properly earlier
+- **Status**: Partially working but hampered by API quota issues
 
-## Testing Protocol
+## What Actually Happened Today (September 23, 2025)
 
-### Quick Verification (Do This First)
-```javascript
-// 1. Check player is ready
-window.audioSync
+### Morning Session
+1. **Fixed Playlist Modal Typography** - Increased font sizes from 14px to 18px for tracks, 24px for headers
+2. **Fixed Gray Text Issue** - Changed gray (#888) to green (#10b981) in playlist modal
+3. **Added YouTube Search to Page 7** - Integrated search functionality for John Coltrane Blue Train page
+4. **Fixed Search Input Styling** - Removed gray placeholder, increased to 24px font, dark blue color
 
-// 2. Test basic seek
-window.audioSync.seekTo(30)
+### Afternoon Session
+5. **Debugged Search API** - Discovered all 3 YouTube API keys exceeded quota
+6. **Switched API Keys** - Rotated through YOUTUBE_API_KEY, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3
+7. **Identified Core Issue** - Playlist tracks can't find videos due to API quota exhaustion
 
-// 3. Play and watch highlighting
-window.audioSync.playVideo()
-// Yellow highlight should follow words continuously
-
-// 4. Click any word in transcript
-// Should see green pulse animation + seek to that word
-
-// 5. Test chapter navigation
-// Click chapter arrows or chapter cards - should jump immediately
-```
-
-### Comprehensive Test Suite
-```javascript
-// Test 1: Continuous Highlighting (60+ seconds) ✅
-window.audioSync.playVideo()
-// Watch for 60 seconds - yellow highlight with glow should never stop
-// Console shows continuous: 🔆 [HIGHLIGHT] messages
-
-// Test 2: Sequential Word Clicks (20+ clicks) ✅
-// Click 20 different words rapidly
-// Each should show green pulse + ripple + seek correctly
-// Console shows: ✅ [WORD CLICK] Seek successful
-
-// Test 3: Chapter Changes + Word Clicks ✅
-// 1. Change to chapter 5
-// 2. Click 10 words in chapter 5
-// 3. Change to chapter 10
-// 4. Click 10 words in chapter 10
-// All clicks should work with visual feedback
-
-// Test 4: Player Recovery ✅
-// If player gets stuck, click "Reload Player" button
-// Should show orange recovery message
-// Player recreates and continues working
-
-// Test 5: Visual Feedback Check ✅
-// Hover over words - see blue background + underline
-// Click words - see green pulse + ripple
-// Playing word - see yellow glow + bold
-```
+### Version History Corrections
+- **Version 4.1.4** (September 23, 2025 4:58 PM ET) - Added search to page 7, fixed typography issues
+- **Version 4.1.5** (September 23, 2025 Evening) - Documented API quota issues, accurate status update
 
 ## File Structure
 ```
@@ -223,27 +170,29 @@ const recoverPlayer = () => {
 };
 ```
 
-## Known Issues to Fix
+## Critical Issues to Fix (High Priority)
 
-### Video Pause on Modal Open
-- **Issue**: Video doesn't pause when opening the playlist modal
-- **Problem**: YouTube player is nested in srcDoc iframe, making postMessage commands difficult
-- **Potential Solutions**:
-  1. Add enablejsapi=1 to YouTube embed URL
-  2. Use a message relay system in the embed HTML
-  3. Store video player reference globally
-- **Priority**: Low (cosmetic issue, not blocking functionality)
+### 1. YouTube API Quota Management ⚠️
+- **Issue**: All 3 API keys exhausted their 10,000 unit daily quotas
+- **Impact**: Playlist tracks cannot find YouTube videos, show "✗ No video"
+- **Solutions**:
+  1. Create new Google Cloud project with fresh quota
+  2. Implement API key rotation logic
+  3. Add caching layer to reduce API calls
+  4. Store found video IDs in database
+- **Priority**: CRITICAL - Core functionality broken
 
-### Playlist Modal Font/Typography Improvements
-- **Issue**: Font sizes and readability could be better in playlist player modal
-- **Current State**: Increased from tiny (12-14px) to moderate (14-18px), changed gray to green
-- **Improvements Needed**:
-  1. Further increase font sizes for better readability
-  2. Better typography hierarchy
-  3. Consider using different colors/weights for better visual separation
-  4. Optimize for presentation/demo scenarios
-- **Priority**: Medium (affects user experience and demo quality)
+### 2. Playlist Track Video Search 🔴
+- **Issue**: Tracks in playlists don't have YouTube video IDs
+- **Impact**: Users can see track names but can't play them
+- **Current Behavior**: Shows "✗ No video" for all tracks when API quota exceeded
+- **Priority**: HIGH - Major feature unusable
+
+### 3. API Key Rotation Not Automatic
+- **Issue**: System doesn't automatically switch to next API key when quota exceeded
+- **Impact**: Manual intervention required to change keys
+- **Solution**: Implement automatic failover to next available key
+- **Priority**: HIGH - Affects reliability
 
 ## Last Updated
-December 2024 - All 5 critical fixes completed, tested, and verified working. Enhanced visual feedback with custom CSS animations added.
-January 2025 - Added YouTube playlist player modal with track search functionality.
+September 23, 2025 - Version 4.1.5 - Documented actual state, fixed typography issues, added page 7 search, identified YouTube API quota exhaustion issue.

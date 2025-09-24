@@ -1,0 +1,29 @@
+
+/* Custom placeholder styles for UnitedTribes search inputs */
+.united-tribes-search-input::placeholder {
+  color: #1e3a8a !important; /* Dark blue to match border */
+  opacity: 0.8 !important;
+  font-weight: 400 !important;
+  font-size: 24px !important;
+}
+
+.united-tribes-search-input::-webkit-input-placeholder {
+  color: #1e3a8a !important;
+  opacity: 0.8 !important;
+  font-weight: 400 !important;
+  font-size: 24px !important;
+}
+
+.united-tribes-search-input::-moz-placeholder {
+  color: #1e3a8a !important;
+  opacity: 0.8 !important;
+  font-weight: 400 !important;
+  font-size: 24px !important;
+}
+
+.united-tribes-search-input:-ms-input-placeholder {
+  color: #1e3a8a !important;
+  opacity: 0.8 !important;
+  font-weight: 400 !important;
+  font-size: 24px !important;
+}
