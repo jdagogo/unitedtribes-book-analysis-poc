@@ -194,5 +194,43 @@ const recoverPlayer = () => {
 - **Solution**: Implement automatic failover to next available key
 - **Priority**: HIGH - Affects reliability
 
+## YouTube Integration & API Key Management
+
+### How the Integration Works
+1. **United Tribes Fresh (Port 3004)** - The Blue Note book application
+2. **YouTube Analysis App (Port 3003)** - Provides video search and YouTube API access
+3. **Dependency**: United Tribes Fresh requires the YouTube Analysis app to be running on port 3003
+
+### API Endpoints Used
+- **Video Search**: `http://localhost:3003/api/videos/search` - Search for analyzed videos
+- **Track Search**: `http://localhost:3003/api/youtube-search` - Find YouTube videos for playlist tracks
+  - Parameters: `song` (track title) and `artist` (artist name)
+  - Returns: `url`, `title`, `channel` for the found video
+- **Playlist Data**: `http://localhost:3003/api/videos/{videoId}/playlist-data` - Get playlist metadata
+
+### API Key Rotation
+- The YouTube Analysis app manages 3 API keys (YOUTUBE_API_KEY, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3)
+- Each key has 10,000 units daily quota (resets at midnight PT)
+- **Automatic Rotation**: The `/api/youtube-search` endpoint should automatically switch to the next API key when quota is exceeded
+- **Transparency**: United Tribes Fresh doesn't need to handle key rotation - the YouTube Analysis app manages it internally
+
+### Troubleshooting API Issues
+
+#### CORS Errors
+If you see "CORS policy" errors in the console:
+- The YouTube Analysis app needs to add CORS headers to allow requests from port 3004
+- Headers needed: `Access-Control-Allow-Origin: http://localhost:3004` or `*` for development
+
+#### API Quota Exceeded
+If all tracks show "✗ No video":
+1. Check quota status: `node /Users/j.d.heilprin/youtube-transcript-analysis-v2/check-api-quota.js`
+2. Verify API key rotation is working in the YouTube Analysis app
+3. If all keys exhausted, wait until midnight PT for quota reset
+
+#### Endpoint Changes
+If the YouTube Analysis app updates its endpoints:
+- Update the URLs in `/client/src/components/paginated-book-viewer.tsx`
+- Check parameter names match what the API expects
+
 ## Last Updated
-September 23, 2025 - Version 4.1.5 - Documented actual state, fixed typography issues, added page 7 search, identified YouTube API quota exhaustion issue.
+September 24, 2025 - Fixed playlist track search integration, updated API endpoint from `/api/youtube/search-track` to `/api/youtube-search`, added CORS support, documented API key rotation.

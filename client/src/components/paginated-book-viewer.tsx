@@ -197,25 +197,27 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
     // Search YouTube for each track in the playlist
     const videosPromises = currentPlaylist.map(async (track) => {
-      const searchQuery = `${track.title} ${track.artist}`;
       try {
         const response = await fetch(
-          `http://localhost:3003/api/youtube/search-track?q=${encodeURIComponent(searchQuery)}`
+          `http://localhost:3003/api/youtube-search?song=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
         );
         const data = await response.json();
 
-        if (data.items && data.items.length > 0) {
-          const video = data.items[0];
+        if (data.url) {
+          // Extract video ID from YouTube URL
+          const videoIdMatch = data.url.match(/(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/watch\?v=)([^&\n?#]+)/);
+          const videoId = videoIdMatch ? videoIdMatch[1] : null;
+
           return {
             ...track,
-            videoId: video.id.videoId,
-            videoTitle: video.snippet.title,
-            channelTitle: video.snippet.channelTitle,
-            thumbnail: video.snippet.thumbnails.high.url
+            videoId: videoId,
+            videoTitle: data.title || `${track.title} - ${track.artist}`,
+            channelTitle: data.channel || track.artist,
+            thumbnail: videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null
           };
         }
       } catch (error) {
-        console.error(`Failed to find video for ${searchQuery}:`, error);
+        console.error(`Failed to find video for ${track.title} - ${track.artist}:`, error);
       }
 
       // Return track with no video if search fails
