@@ -197,10 +197,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
     // Search YouTube for each track in the playlist
     const videosPromises = currentPlaylist.map(async (track) => {
-      const searchQuery = `${track.title} ${track.artist}`;
       try {
         const response = await fetch(
-          `http://localhost:3003/api/youtube/search-track?q=${encodeURIComponent(searchQuery)}`
+          `http://localhost:3003/api/youtube-search?song=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
         );
         const data = await response.json();
 
