@@ -203,18 +203,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         );
         const data = await response.json();
 
-        if (data.items && data.items.length > 0) {
-          const video = data.items[0];
+        // Handle the simplified response format from the YouTube Analysis API
+        if (data.url) {
+          // Extract video ID from the URL
+          const videoId = data.url.split('v=')[1] || data.url.split('/')[-1];
           return {
             ...track,
-            videoId: video.id.videoId,
-            videoTitle: video.snippet.title,
-            channelTitle: video.snippet.channelTitle,
-            thumbnail: video.snippet.thumbnails.high.url
+            videoId: videoId,
+            videoTitle: data.title || track.title,
+            channelTitle: data.channel || track.artist,
+            thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
           };
         }
       } catch (error) {
-        console.error(`Failed to find video for ${searchQuery}:`, error);
+        console.error(`Failed to find video for ${track.title} by ${track.artist}:`, error);
       }
 
       // Return track with no video if search fails
