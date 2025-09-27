@@ -465,7 +465,7 @@
             <div class="version-card">
                 <div class="version-header">
                     <div class="version-title" style="color: #667eea;">Version 4.1.2 (Development)</div>
-                    <div class="status running" id="v412-status">Running</div>
+                    <div class="status stopped" id="v412-status">Stopped</div>
                 </div>
 
                 <div class="info-section">
@@ -501,6 +501,143 @@
                     <button onclick="revertTo412()" class="tool-btn">
                         🔄 Revert to v4.1.2
                     </button>
+                </div>
+            </div>
+
+            <!-- Version 4.1.4 -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #818cf8;">Version 4.1.4</div>
+                    <div class="status stopped" id="v414-status">Stopped</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span>December 2024</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">✅ YouTube API Integration</span>
+                    <span class="feature-tag">✅ Search Functionality</span>
+                    <span class="feature-tag">✅ All Previous Features</span>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button onclick="window.location.href='http://localhost:3004'" class="tool-btn">
+                        🌐 Open App
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version 4.1.5 (SAFE CHECKPOINT) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #22c55e;">Version 4.1.5 (SAFE CHECKPOINT)</div>
+                    <div class="status stopped" id="v415-status">Stopped</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Branch:</span>
+                        <span>v4.1.5-stable</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Tag:</span>
+                        <span>v4.1.5</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span>December 2024</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">✅ YouTube API Integration FIXED</span>
+                    <span class="feature-tag">✅ CORS Configuration Resolved</span>
+                    <span class="feature-tag">✅ Search Functionality Working</span>
+                    <span class="feature-tag">✅ All Features Stable</span>
+                    <span class="feature-tag">🛡️ Safe Revert Point</span>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button onclick="revertTo415()" class="tool-btn" style="background: #22c55e; color: white;">
+                        🛡️ Revert to v4.1.5 (SAFE)
+                    </button>
+                    <button onclick="window.location.href='http://localhost:3004'" class="tool-btn">
+                        🌐 Open App
+                    </button>
+                </div>
+                <div style="margin-top: 10px; padding: 10px; background: #dcfce7; border-radius: 5px;">
+                    <strong>📌 SAFE CHECKPOINT:</strong> All features working correctly.
+                    Use <code>git checkout v4.1.5-stable</code> to return to this state.
+                </div>
+            </div>
+
+            <!-- Version 4.1.6 (CURRENT DEVELOPMENT) -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #3b82f6;">Version 4.1.6 (CURRENT DEVELOPMENT)</div>
+                    <div class="status running" id="v416-status">Running</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Branch:</span>
+                        <span>v4.1.6-development</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Path:</span>
+                        <span>~/united-tribes-fresh-v4</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span>December 2024</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Forked From:</span>
+                        <span>v4.1.5 (Safe Checkpoint)</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <span class="feature-tag">🔧 Development Version</span>
+                    <span class="feature-tag">📝 New Features In Progress</span>
+                    <span class="feature-tag">🚀 Forked from v4.1.5</span>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button onclick="window.location.href='http://localhost:3004'" class="tool-btn" style="background: #3b82f6; color: white;">
+                        🌐 Open App (Current)
+                    </button>
+                    <button onclick="checkoutV416()" class="tool-btn">
+                        📥 Checkout v4.1.6
+                    </button>
+                </div>
+                <div style="margin-top: 10px; padding: 10px; background: #dbeafe; border-radius: 5px;">
+                    <strong>📝 NOTE:</strong> This is the active development branch.
+                    To return to safe v4.1.5: <code>git checkout v4.1.5-stable</code>
                 </div>
             </div>
         </div>
