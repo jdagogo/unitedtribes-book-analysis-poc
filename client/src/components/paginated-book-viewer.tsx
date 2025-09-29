@@ -158,22 +158,48 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     try {
       console.log(`🎬 Embedding video: ${video.id}`);
 
-      const response = await fetch(
-        `http://localhost:3003/api/videos/${video.id}/embed-html`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Extract video ID from the video object
+      // The video object from search has either videoId or we can extract from URL
+      let videoId = video.videoId;
+      if (!videoId && video.url) {
+        // Extract from YouTube URL if needed
+        const match = video.url.match(/[?&]v=([^&]+)/);
+        if (match) {
+          videoId = match[1];
+        }
       }
 
-      const htmlContent = await response.text();
-      setSelectedVideo(video);
-      setVideoEmbedHtml(htmlContent);
-      console.log(`✅ Video embedded successfully`);
+      if (!videoId) {
+        throw new Error('No video ID found');
+      }
+
+      // Create embed HTML for YouTube iframe
+      const embedHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { margin: 0; padding: 0; }
+            iframe { width: 100%; height: 100vh; border: none; }
+          </style>
+        </head>
+        <body>
+          <iframe
+            src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </body>
+        </html>
+      `;
+
+      setSelectedVideo({ ...video, videoId });
+      setVideoEmbedHtml(embedHtml);
+      console.log(`✅ Video embedded successfully with ID: ${videoId}`);
 
     } catch (error) {
       console.error('❌ Error embedding video:', error);
-      setSearchError(`Failed to load video "${video.title}". Make sure YouTube Analysis is running on port 3003.`);
+      setSearchError(`Failed to load video "${video.title}".`);
     } finally {
       setSearchLoading(false);
     }
@@ -206,7 +232,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     const videosPromises = currentPlaylist.map(async (track) => {
       try {
         const response = await fetch(
-          `http://localhost:3003/api/youtube-search?song=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
+          `/api/youtube/search-track?song=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
         );
         const data = await response.json();
 
@@ -245,8 +271,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     try {
       console.log(`🎵 Fetching playlist data for: ${videoId}`);
 
+      // Try to get video data from our local API
+      // videoId here is actually the directory name from search results
       const response = await fetch(
-        `http://localhost:3003/api/videos/${videoId}/playlist-data`
+        `/api/youtube/videos/${videoId}`
       );
 
       if (!response.ok) {
@@ -254,7 +282,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       }
 
       const data = await response.json();
-      setVideoPlaylistData(data);
+
+      // Transform the data to match expected playlist format
+      // The local endpoint returns {metadata, analysis, transcript}
+      const playlistData = {
+        works: data.metadata?.works || [],
+        playlists: data.metadata?.playlists || [],
+        analysis: data.analysis || null
+      };
+
+      setVideoPlaylistData(playlistData);
 
       // Pause the video when opening playlist modal
       // Since the video is in a nested iframe (srcDoc), we need to access it differently
