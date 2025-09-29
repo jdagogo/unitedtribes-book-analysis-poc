@@ -122,7 +122,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
     try {
       const response = await fetch(
-        `http://localhost:3003/api/videos/search?q=${encodeURIComponent(query)}&limit=20`
+        `/api/youtube/search?q=${encodeURIComponent(query)}`
       );
 
       if (!response.ok) {
@@ -135,7 +135,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       setSearchResults(data.results || []);
     } catch (error) {
       console.error('Search error:', error);
-      setSearchError('Failed to search videos. Make sure YouTube Analysis is running on port 3003.');
+      setSearchError('Failed to search videos. Please try again.');
       setSearchResults([]);
     } finally {
       setSearchLoading(false);
