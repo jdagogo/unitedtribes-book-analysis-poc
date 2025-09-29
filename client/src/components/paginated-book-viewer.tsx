@@ -158,44 +158,19 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     try {
       console.log(`🎬 Embedding video: ${video.id}`);
 
-      // Extract video ID from the video object
-      // The video object from search has either videoId or we can extract from URL
-      let videoId = video.videoId;
-      if (!videoId && video.url) {
-        // Extract from YouTube URL if needed
-        const match = video.url.match(/[?&]v=([^&]+)/);
-        if (match) {
-          videoId = match[1];
-        }
+      // Fetch the embed HTML from our local endpoint
+      const response = await fetch(
+        `/api/videos/${video.id}/embed-html`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      if (!videoId) {
-        throw new Error('No video ID found');
-      }
-
-      // Create embed HTML for YouTube iframe
-      const embedHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { margin: 0; padding: 0; }
-            iframe { width: 100%; height: 100vh; border: none; }
-          </style>
-        </head>
-        <body>
-          <iframe
-            src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </body>
-        </html>
-      `;
-
-      setSelectedVideo({ ...video, videoId });
-      setVideoEmbedHtml(embedHtml);
-      console.log(`✅ Video embedded successfully with ID: ${videoId}`);
+      const htmlContent = await response.text();
+      setSelectedVideo(video);
+      setVideoEmbedHtml(htmlContent);
+      console.log(`✅ Video embedded successfully`);
 
     } catch (error) {
       console.error('❌ Error embedding video:', error);
@@ -727,6 +702,37 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
     loadTranscript();
   }, [transcriptId]);
+
+  // Listen for messages from embedded iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Handle messages from the embedded video iframe
+      if (event.data && event.data.type) {
+        switch (event.data.type) {
+          case 'SHOW_PLAYLIST_DATA':
+            // Set the playlist data received from iframe
+            if (event.data.data) {
+              setVideoPlaylistData({
+                works: event.data.data.works || [],
+                playlists: event.data.data.playlists || []
+              });
+              setShowPlaylistView(true);
+              console.log('📚 Received playlist data from iframe:', event.data.data);
+            }
+            break;
+          case 'EMBED_LOADED':
+            console.log('✅ Video embed loaded:', event.data.videoId);
+            break;
+          case 'PLAYER_STATE_CHANGE':
+            console.log('🎬 Player state changed:', event.data.state);
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   // Split transcript into pages
   const splitIntoPages = useCallback((text: string): BookPage[] => {

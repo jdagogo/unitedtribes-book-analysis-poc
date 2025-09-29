@@ -19,6 +19,7 @@ import simpleHybridRouter from './routes/simple-hybrid';
 import workingHybridRouter from './routes/working-hybrid';
 import smartAnalysisRouter from './routes/smart-analysis';
 import youtubeRouter from './routes/youtube';
+import youtubeEmbedRouter from './routes/youtube-embed';
 
 // In-memory book storage for immediate access
 const bookStore = new Map<string, any>();
@@ -88,6 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register YouTube routes
   app.use('/api/youtube', youtubeRouter);
+  app.use('/api', youtubeEmbedRouter);
   
   // Simple polling endpoint for progress
   app.get("/api/progress-status/:sessionId", (req, res) => {
