@@ -1,0 +1,222 @@
+.playerContainer {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.playerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.videoTitle {
+  font-size: 1.375rem; /* Increased */
+  color: #111827;
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.fullViewButton {
+  padding: 0.625rem 1.25rem; /* Increased */
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem; /* Increased */
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.fullViewButton:hover {
+  background: #2563eb;
+}
+
+.playerWrapper {
+  display: flex;
+  flex-direction: column; /* Changed to column for better layout */
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.videoSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.videoContainer {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.youtubePlayer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.controlsContainer {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-top: none;
+  border-radius: 0 0 0.625rem 0.625rem;
+  margin-top: -2px;
+  position: relative;
+  z-index: 2;
+}
+
+.playPauseButton {
+  width: 3rem; /* Increased */
+  height: 3rem;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.375rem; /* Increased */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.playPauseButton:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
+}
+
+.timeDisplay {
+  font-size: 1.125rem; /* Increased */
+  color: #4b5563;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+.jumpToContextButton {
+  margin-left: auto;
+  padding: 0.625rem 1.25rem; /* Increased */
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem; /* Increased */
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.jumpToContextButton:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+}
+
+.timestampsContainer {
+  width: 100%; /* Full width instead of fixed */
+  position: relative;
+  z-index: 3;
+}
+
+.timestampsContainer h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem; /* Increased */
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.timestampsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+  max-height: 400px; /* Increased */
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.timestampButton {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.875rem 1rem; /* Increased */
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.timestampButton:hover {
+  background: #f0f9ff;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.timestampTime {
+  font-size: 0.9375rem; /* Increased */
+  color: #2563eb;
+  font-weight: 600;
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+.timestampText {
+  font-size: 0.875rem; /* Increased */
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .playerWrapper {
+    flex-direction: column;
+  }
+
+  .videoSection {
+    width: 100%;
+  }
+
+  .timestampsContainer {
+    width: 100%;
+  }
+
+  .playerHeader {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .fullViewButton {
+    width: 100%;
+  }
+}

@@ -4,6 +4,8 @@ import { Link } from 'wouter';
 import TextSelectionModal from './text-selection-modal';
 import BookSearch from './book-search';
 import VideoModal from './video-modal';
+import DiscoveryPlaylist from './DiscoveryPlaylist';
+import TimelineDiscoveryFeed from './TimelineDiscoveryFeed';
 import { findBookTitles } from '../data/book-titles-fuzzy';
 import { findAuthors } from '../data/author-recognition';
 import '../styles/literary-highlighting.css';
@@ -100,6 +102,11 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [playlistVideos, setPlaylistVideos] = useState<any[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [loadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
+
+  // Discovery Playlist State
+  const [discoveryPlaylist, setDiscoveryPlaylist] = useState<Set<string>>(new Set());
+  const [discoveryItems, setDiscoveryItems] = useState<Map<string, any>>(new Map());
+
   const contentRef = useRef<HTMLDivElement>(null);
   const videoIframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -283,6 +290,35 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     setVideoEmbedHtml('');
     setVideoPlaylistData(null);
     setShowPlaylistView(false);
+  };
+
+  // Discovery Playlist Handlers
+  const handleAddToDiscoveryPlaylist = (id: string, item: any) => {
+    setDiscoveryPlaylist(prev => new Set(prev).add(id));
+    setDiscoveryItems(prev => new Map(prev).set(id, item));
+  };
+
+  const handleRemoveFromDiscoveryPlaylist = (id: string) => {
+    setDiscoveryPlaylist(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+    setDiscoveryItems(prev => {
+      const next = new Map(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const handleClearDiscoveryPlaylist = () => {
+    setDiscoveryPlaylist(new Set());
+    setDiscoveryItems(new Map());
+  };
+
+  const handlePlayDiscoveryItem = (item: any) => {
+    console.log('Playing discovery item:', item);
+    // TODO: Implement play functionality
   };
 
   // Apply dual highlighting: entity (yellow) and context (light blue)
@@ -3411,6 +3447,48 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         🎵 UnitedTribes Video Search
                       </h3>
 
+                      {/* Test Discovery Playlist Button */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // Add some test items to the discovery playlist
+                          handleAddToDiscoveryPlaylist('work-Blue Train', {
+                            id: 'work-Blue Train',
+                            title: 'Blue Train',
+                            artist: 'John Coltrane',
+                            type: 'work',
+                            category: 'Works Discussed'
+                          });
+                          handleAddToDiscoveryPlaylist('work-A Love Supreme', {
+                            id: 'work-A Love Supreme',
+                            title: 'A Love Supreme',
+                            artist: 'John Coltrane',
+                            type: 'work',
+                            category: 'Works Discussed'
+                          });
+                          handleAddToDiscoveryPlaylist('related-jazz-My Favorite Things', {
+                            id: 'related-jazz-My Favorite Things',
+                            title: 'My Favorite Things',
+                            artist: 'John Coltrane',
+                            type: 'song',
+                            category: 'Related Jazz'
+                          });
+                        }}
+                        style={{
+                          padding: '10px 20px',
+                          background: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 100%)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          marginBottom: '20px',
+                          cursor: 'pointer',
+                          fontSize: '16px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Add Test Items to Discovery Playlist
+                      </button>
+
                       {/* Search Form */}
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -4495,6 +4573,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         title="John Coltrane - A Love Supreme"
         videoId="QUAhvJW3ZD4"
         context="John Coltrane's spiritual jazz masterpiece that influenced a generation of artists including Patti Smith."
+      />
+
+      {/* Discovery Playlist - Shows when items are added */}
+      <DiscoveryPlaylist
+        items={discoveryItems}
+        onPlayItem={handlePlayDiscoveryItem}
+        onRemoveItem={handleRemoveFromDiscoveryPlaylist}
+        onClearPlaylist={handleClearDiscoveryPlaylist}
       />
     </div>
   );

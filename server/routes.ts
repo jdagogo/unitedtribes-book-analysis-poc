@@ -18,6 +18,7 @@ import hybridDiscoveryRouter from './routes/hybrid-discovery';
 import simpleHybridRouter from './routes/simple-hybrid';
 import workingHybridRouter from './routes/working-hybrid';
 import smartAnalysisRouter from './routes/smart-analysis';
+import youtubeRouter from './routes/youtube';
 
 // In-memory book storage for immediate access
 const bookStore = new Map<string, any>();
@@ -84,6 +85,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(simpleHybridRouter);
   app.use(workingHybridRouter);
   app.use(smartAnalysisRouter);
+
+  // Register YouTube routes
+  app.use('/api/youtube', youtubeRouter);
   
   // Simple polling endpoint for progress
   app.get("/api/progress-status/:sessionId", (req, res) => {
