@@ -1,0 +1,136 @@
+{
+  "search_track_1": {
+    "endpoint": "search-track",
+    "timestamp": 1759239430000,
+    "date": "2025-09-30T13:37:10.000Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_2": {
+    "endpoint": "search-track",
+    "timestamp": 1759239450000,
+    "date": "2025-09-30T13:37:30.000Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_3": {
+    "endpoint": "search-track",
+    "timestamp": 1759239450100,
+    "date": "2025-09-30T13:37:30.100Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_4": {
+    "endpoint": "search-track",
+    "timestamp": 1759239450200,
+    "date": "2025-09-30T13:37:30.200Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_5": {
+    "endpoint": "search-track",
+    "timestamp": 1759239451000,
+    "date": "2025-09-30T13:37:31.000Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_6": {
+    "endpoint": "search-track",
+    "timestamp": 1759239451100,
+    "date": "2025-09-30T13:37:31.100Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_7": {
+    "endpoint": "search-track",
+    "timestamp": 1759239451200,
+    "date": "2025-09-30T13:37:31.200Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_8": {
+    "endpoint": "search-track",
+    "timestamp": 1759239451300,
+    "date": "2025-09-30T13:37:31.300Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_9": {
+    "endpoint": "search-track",
+    "timestamp": 1759239451400,
+    "date": "2025-09-30T13:37:31.400Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search_track_10": {
+    "endpoint": "search-track",
+    "timestamp": 1759239787000,
+    "date": "2025-09-30T13:49:47.000Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "test_call_1": {
+    "endpoint": "quota-check",
+    "timestamp": 1759239750000,
+    "date": "2025-09-30T13:42:30.000Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY",
+    "note": "check-api-quota.cjs test"
+  },
+  "test_call_2": {
+    "endpoint": "quota-check",
+    "timestamp": 1759239750100,
+    "date": "2025-09-30T13:42:30.100Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2",
+    "note": "check-api-quota.cjs test"
+  },
+  "test_call_3": {
+    "endpoint": "quota-check",
+    "timestamp": 1759239750200,
+    "date": "2025-09-30T13:42:30.200Z",
+    "units": 100,
+    "keyIndex": 2,
+    "keyName": "YOUTUBE_API_KEY_3",
+    "note": "check-api-quota.cjs test"
+  },
+  "test_call_4": {
+    "endpoint": "quota-check",
+    "timestamp": 1759239995000,
+    "date": "2025-09-30T13:46:35.000Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY",
+    "note": "check-quota-detailed.cjs test"
+  },
+  "test_call_5": {
+    "endpoint": "quota-check",
+    "timestamp": 1759239995100,
+    "date": "2025-09-30T13:46:35.100Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2",
+    "note": "check-quota-detailed.cjs test"
+  },
+  "test_call_6": {
+    "endpoint": "quota-check",
+    "timestamp": 1759239995200,
+    "date": "2025-09-30T13:46:35.200Z",
+    "units": 100,
+    "keyIndex": 2,
+    "keyName": "YOUTUBE_API_KEY_3",
+    "note": "check-quota-detailed.cjs test"
+  }
+}

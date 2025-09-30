@@ -2,12 +2,53 @@ import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const router = Router();
 
 // Get data path from environment or use default
 const VIDEO_DATA_PATH = process.env.VIDEO_DATA_PATH ||
   '/Users/j.d.heilprin/Desktop/my-claude/podcast-test/youtube-analysis-viewer/data/videos';
+
+// Cache file for tracking API usage
+const API_CACHE_PATH = path.join(__dirname, '../../data/youtube-api-cache.json');
+
+// Load or create cache
+let apiCache = {};
+try {
+  if (fs.existsSync(API_CACHE_PATH)) {
+    apiCache = JSON.parse(fs.readFileSync(API_CACHE_PATH, 'utf-8'));
+  }
+} catch (error) {
+  console.error('Error loading API cache:', error);
+  apiCache = {};
+}
+
+// Function to track API calls
+function trackApiCall(endpoint, units = 100, keyUsed = currentKeyIndex) {
+  const now = Date.now();
+  const callId = `${endpoint}_${now}_${Math.random().toString(36).substr(2, 9)}`;
+
+  apiCache[callId] = {
+    endpoint,
+    timestamp: now,
+    date: new Date(now).toISOString(),
+    units,
+    keyIndex: keyUsed,
+    keyName: `YOUTUBE_API_KEY${keyUsed > 0 ? `_${keyUsed + 1}` : ''}`
+  };
+
+  // Save cache
+  try {
+    fs.writeFileSync(API_CACHE_PATH, JSON.stringify(apiCache, null, 2));
+  } catch (error) {
+    console.error('Error saving API cache:', error);
+  }
+}
 
 // YouTube API keys with rotation
 const YOUTUBE_API_KEYS = [
@@ -199,6 +240,103 @@ router.get('/videos', async (req, res) => {
   }
 });
 
+// Check YouTube API quota status for all configured keys
+router.get('/quota-status', async (req, res) => {
+  const quotaStatus = [];
+
+  for (let i = 0; i < YOUTUBE_API_KEYS.length; i++) {
+    const apiKey = YOUTUBE_API_KEYS[i];
+    if (!apiKey) continue;
+
+    // Make a simple test request to check quota
+    const testUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=test&maxResults=1&key=${apiKey}`;
+
+    try {
+      await new Promise((resolve, reject) => {
+        https.get(testUrl, (response) => {
+          let data = '';
+          response.on('data', (chunk) => { data += chunk; });
+          response.on('end', () => {
+            try {
+              const result = JSON.parse(data);
+
+              if (result.error) {
+                if (result.error.code === 403 && result.error.message.includes('quota')) {
+                  quotaStatus.push({
+                    keyIndex: i,
+                    keyName: `YOUTUBE_API_KEY${i > 0 ? `_${i + 1}` : ''}`,
+                    status: 'QUOTA_EXCEEDED',
+                    message: 'Daily quota limit exceeded'
+                  });
+                } else {
+                  quotaStatus.push({
+                    keyIndex: i,
+                    keyName: `YOUTUBE_API_KEY${i > 0 ? `_${i + 1}` : ''}`,
+                    status: 'ERROR',
+                    message: result.error.message
+                  });
+                }
+              } else if (result.items) {
+                quotaStatus.push({
+                  keyIndex: i,
+                  keyName: `YOUTUBE_API_KEY${i > 0 ? `_${i + 1}` : ''}`,
+                  status: 'WORKING',
+                  message: 'API key is active and has quota available'
+                });
+              }
+              resolve(null);
+            } catch (error) {
+              quotaStatus.push({
+                keyIndex: i,
+                keyName: `YOUTUBE_API_KEY${i > 0 ? `_${i + 1}` : ''}`,
+                status: 'PARSE_ERROR',
+                message: 'Failed to parse API response'
+              });
+              resolve(null);
+            }
+          });
+        }).on('error', (error) => {
+          quotaStatus.push({
+            keyIndex: i,
+            keyName: `YOUTUBE_API_KEY${i > 0 ? `_${i + 1}` : ''}`,
+            status: 'REQUEST_FAILED',
+            message: error.message
+          });
+          resolve(null);
+        });
+      });
+    } catch (error) {
+      quotaStatus.push({
+        keyIndex: i,
+        keyName: `YOUTUBE_API_KEY${i > 0 ? `_${i + 1}` : ''}`,
+        status: 'ERROR',
+        message: error.message
+      });
+    }
+  }
+
+  // Calculate summary
+  const summary = {
+    total: YOUTUBE_API_KEYS.length,
+    working: quotaStatus.filter(k => k.status === 'WORKING').length,
+    quotaExceeded: quotaStatus.filter(k => k.status === 'QUOTA_EXCEEDED').length,
+    errors: quotaStatus.filter(k => !['WORKING', 'QUOTA_EXCEEDED'].includes(k.status)).length,
+    currentKeyIndex: currentKeyIndex
+  };
+
+  res.json({
+    keys: quotaStatus,
+    summary,
+    quotaInfo: {
+      dailyLimit: 10000,
+      searchCost: 100,
+      detailsCost: 1,
+      resetsAt: 'Midnight Pacific Time (PT)',
+      currentTime: new Date().toISOString()
+    }
+  });
+});
+
 // Search YouTube for a specific track (song + artist)
 router.get('/search-track', async (req, res) => {
   const { song, artist } = req.query;
@@ -210,6 +348,9 @@ router.get('/search-track', async (req, res) => {
   // Search for the song and artist, we'll prioritize VEVO/Official in the results
   const query = artist ? `${song} ${artist}` : song as string;
   const apiKey = getNextApiKey();
+
+  // Track this API call (search costs 100 units)
+  trackApiCall('search-track', 100, currentKeyIndex - 1);
 
   if (!apiKey) {
     return res.status(500).json({ error: 'No YouTube API keys configured' });
@@ -295,7 +436,14 @@ router.get('/search-track', async (req, res) => {
             });
 
             const video = sortedVideos[0];
-            console.log(`Selected video: "${video.snippet.title}" by ${video.snippet.channelTitle}`);
+            const channelName = video.snippet.channelTitle;
+            const isVevo = channelName.toUpperCase().includes('VEVO');
+            const isOfficial = channelName.toLowerCase().includes('official') ||
+                              channelName.includes('- Topic') ||
+                              video.snippet.title.toLowerCase().includes('official');
+
+            console.log(`Selected video: "${video.snippet.title}" by ${channelName}`);
+            console.log(`  → VEVO: ${isVevo ? '✓' : '✗'} | Official: ${isOfficial ? '✓' : '✗'}`);
 
             res.json({
               videoId: video.id.videoId,

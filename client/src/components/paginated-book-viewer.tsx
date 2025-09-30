@@ -107,6 +107,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [discoveryPlaylist, setDiscoveryPlaylist] = useState<Set<string>>(new Set());
   const [discoveryItems, setDiscoveryItems] = useState<Map<string, any>>(new Map());
 
+
   const contentRef = useRef<HTMLDivElement>(null);
   const videoIframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -211,16 +212,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         );
         const data = await response.json();
 
-        // Handle the simplified response format from the YouTube Analysis API
-        if (data.url) {
-          // Extract video ID from the URL
-          const videoId = data.url.split('v=')[1] || data.url.split('/')[-1];
+        // Handle response from our YouTube search endpoint
+        if (data.videoId) {
           return {
             ...track,
-            videoId: videoId,
+            videoId: data.videoId,
             videoTitle: data.title || track.title,
             channelTitle: data.channel || track.artist,
-            thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+            thumbnail: `https://img.youtube.com/vi/${data.videoId}/hqdefault.jpg`
           };
         }
       } catch (error) {
@@ -260,9 +259,15 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
       // Transform the data to match expected playlist format
       // The local endpoint returns {metadata, analysis, transcript}
+      // Ensure playlists have tracks property (not songs)
+      const playlists = (data.metadata?.playlists || []).map((playlist: any) => ({
+        ...playlist,
+        tracks: playlist.tracks || playlist.songs || []  // Support both tracks and songs
+      }));
+
       const playlistData = {
         works: data.metadata?.works || [],
-        playlists: data.metadata?.playlists || [],
+        playlists: playlists,
         analysis: data.analysis || null
       };
 
@@ -706,22 +711,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   // Listen for messages from embedded iframe
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      console.log('🔴 Parent received message:', event.data);
+      console.log('🔴 Event origin:', event.origin);
+      console.log('🔴 Event source type:', event.source ? 'iframe' : 'unknown');
+
+
       // Handle messages from the embedded video iframe
       if (event.data && event.data.type) {
+        console.log('🔴 Message type:', event.data.type);
         switch (event.data.type) {
           case 'SHOW_PLAYLIST_DATA':
-            // Set the playlist data received from iframe
+            console.log('🎯 SHOW_PLAYLIST_DATA received!');
+            // Store the data and show the modal immediately
             if (event.data.data) {
+              console.log('📊 Setting playlist data for modal:', event.data.data);
+
+              // Ensure playlists have tracks property (not songs)
+              const playlists = (event.data.data.playlists || []).map((playlist: any) => ({
+                ...playlist,
+                tracks: playlist.tracks || playlist.songs || []  // Support both tracks and songs
+              }));
+
               setVideoPlaylistData({
                 works: event.data.data.works || [],
-                playlists: event.data.data.playlists || []
+                playlists: playlists,
+                relatedContent: event.data.data.relatedContent || []
               });
+
+              // Show the playlist modal immediately
+              console.log('📦 Setting showPlaylistView to true');
               setShowPlaylistView(true);
-              console.log('📚 Received playlist data from iframe:', event.data.data);
+              console.log('✅ Modal should now be visible');
+
+            } else {
+              console.error('❌ No data in SHOW_PLAYLIST_DATA message');
+            }
+            break;
+          case 'ADD_TO_PLAYLIST':
+            // Handle adding items to discovery playlist from iframe
+            if (event.data.item) {
+              const item = event.data.item;
+              handleAddToDiscoveryPlaylist(item.id, item);
+              console.log('➕ Added to playlist from iframe:', item);
             }
             break;
           case 'EMBED_LOADED':
             console.log('✅ Video embed loaded:', event.data.videoId);
+            break;
+          case 'PLAYER_READY':
+            console.log('🎬 YouTube player ready:', event.data.videoId);
             break;
           case 'PLAYER_STATE_CHANGE':
             console.log('🎬 Player state changed:', event.data.state);
@@ -732,7 +770,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [handleAddToDiscoveryPlaylist]);
 
   // Split transcript into pages
   const splitIntoPages = useCallback((text: string): BookPage[] => {
@@ -1984,32 +2022,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       ← Back to Search
                     </button>
 
-                    {/* Test Button to Load Playlist Data */}
-                    <button
-                      onClick={() => fetchPlaylistData(selectedVideo.id)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: '#3b82f6',
-                        border: 'none',
-                        borderRadius: '6px',
-                        padding: '0.5rem 1rem',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        color: 'white',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#2563eb';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = '#3b82f6';
-                      }}
-                    >
-                      🎵 Show Playlists & Works
-                    </button>
 
                     <div style={{ fontSize: '14px', color: '#6b7280', fontWeight: '500' }}>
                       Playing Video
@@ -2915,21 +2927,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           }}
                         >
                           ← Back to Search
-                        </button>
-                        <button
-                          onClick={() => fetchPlaylistData(selectedVideo.id)}
-                          style={{
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            padding: '0.5rem 1rem',
-                            cursor: 'pointer',
-                            fontSize: '14px',
-                            fontWeight: '600'
-                          }}
-                        >
-                          Show Playlists & Works
                         </button>
                       </div>
 
