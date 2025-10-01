@@ -92,6 +92,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
+
+  // Clear search state when page changes
+  useEffect(() => {
+    setSearchQuery('');
+    setSearchResults([]);
+    setSearchError(null);
+    setSelectedVideo(null);
+  }, [currentPageIndex]);
   const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
   const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
   const [showPlaylistView, setShowPlaylistView] = useState(false);
@@ -1874,11 +1882,194 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     height: 'calc(100vh - 200px)'
                   }}>
                     {currentPage.originalData.image && (
-                      <img
-                        src={currentPage.originalData.image}
-                        alt={currentPage.originalData.title || "Page image"}
-                        style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
-                      />
+                      <div style={{ position: 'relative', display: 'inline-block' }}>
+                        <img
+                          src={currentPage.originalData.image}
+                          alt={currentPage.originalData.title || "Page image"}
+                          style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
+                        />
+
+                        {/* FINAL INTERACTIVE HOTSPOTS for page 5 - STABLE POSITIONING */}
+                        {currentPage.pageNumber === 5 && (
+                          <>
+                            {/* HOTSPOT 1 - Alfred Lion (Gold) */}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '10.0439%',
+                                left: '24.6852%',
+                                width: '100px',
+                                height: '30px',
+                                cursor: 'pointer',
+                                backgroundColor: 'transparent',
+                                borderRadius: '6px',
+                                transition: 'all 0.3s ease',
+                                zIndex: 10,
+                                border: '2px solid transparent'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = 'rgba(255, 215, 0, 0.4)';
+                                e.target.style.border = '2px solid #FFD700';
+                                e.target.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.5)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = 'transparent';
+                                e.target.style.border = '2px solid transparent';
+                                e.target.style.boxShadow = 'none';
+                              }}
+                              onClick={() => {
+                                setDiscoveryResults([{
+                                  type: 'biography',
+                                  title: 'Alfred Lion',
+                                  subtitle: 'Co-founder of Blue Note Records',
+                                  description: 'Alfred Lion (1908-1987) was a German-American record producer and jazz enthusiast who co-founded Blue Note Records in 1939 with Francis Wolff. Born in Berlin, Lion emigrated to New York and became one of the most influential figures in jazz recording history. His dedication to artistic integrity and respect for musicians made Blue Note a legendary label.',
+                                  details: [
+                                    'Co-founded Blue Note Records in 1939',
+                                    'Produced recordings for John Coltrane, Thelonious Monk, Art Blakey',
+                                    'Known for giving artists complete creative freedom',
+                                    'Pioneered high-quality jazz recording techniques',
+                                    'Sold Blue Note to Liberty Records in 1966'
+                                  ]
+                                }]);
+                                setSelectedDiscoveryIndex(0);
+                              }}
+                              title="Alfred Lion - Co-founder of Blue Note Records"
+                            />
+
+                            {/* HOTSPOT 2 - Thelonious Monk (Blue) */}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '15.7349%',
+                                left: '19.8247%',
+                                width: '120px',
+                                height: '30px',
+                                cursor: 'pointer',
+                                backgroundColor: 'transparent',
+                                borderRadius: '6px',
+                                transition: 'all 0.3s ease',
+                                zIndex: 10,
+                                border: '2px solid transparent'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = 'rgba(69, 183, 209, 0.4)';
+                                e.target.style.border = '2px solid #45b7d1';
+                                e.target.style.boxShadow = '0 4px 15px rgba(69, 183, 209, 0.5)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = 'transparent';
+                                e.target.style.border = '2px solid transparent';
+                                e.target.style.boxShadow = 'none';
+                              }}
+                              onClick={() => {
+                                setDiscoveryResults([{
+                                  type: 'biography',
+                                  title: 'Thelonious Monk',
+                                  subtitle: 'Jazz Piano Pioneer',
+                                  description: 'Thelonious Sphere Monk (1917-1982) was an American jazz pianist and composer, considered one of the giants of American music. His unique improvisational style and angular melodic twists made him a key figure in the development of bebop and modern jazz. Blue Note Records captured some of his most important early recordings.',
+                                  details: [
+                                    'Recorded for Blue Note from 1947-1952 and 1957-1958',
+                                    'Composed jazz standards including "Round Midnight" and "Blue Monk"',
+                                    'Known for his percussive, dissonant piano style',
+                                    'Second most-recorded jazz composer after Duke Ellington',
+                                    'Inducted into Grammy Hall of Fame multiple times'
+                                  ]
+                                }]);
+                                setSelectedDiscoveryIndex(0);
+                              }}
+                              title="Thelonious Monk - Jazz Piano Pioneer"
+                            />
+
+                            {/* HOTSPOT 3 - Herbie Hancock (Blue) */}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '19.5289%',
+                                left: '27.5631%',
+                                width: '110px',
+                                height: '30px',
+                                cursor: 'pointer',
+                                backgroundColor: 'transparent',
+                                borderRadius: '6px',
+                                transition: 'all 0.3s ease',
+                                zIndex: 10,
+                                border: '2px solid transparent'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = 'rgba(69, 183, 209, 0.4)';
+                                e.target.style.border = '2px solid #45b7d1';
+                                e.target.style.boxShadow = '0 4px 15px rgba(69, 183, 209, 0.5)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = 'transparent';
+                                e.target.style.border = '2px solid transparent';
+                                e.target.style.boxShadow = 'none';
+                              }}
+                              onClick={() => {
+                                setDiscoveryResults([{
+                                  type: 'biography',
+                                  title: 'Herbie Hancock',
+                                  subtitle: 'Jazz Piano Innovator',
+                                  description: 'Herbert Jeffrey "Herbie" Hancock (born 1940) is an American jazz pianist, keyboardist, bandleader, and composer. A member of Miles Davis\'s second great quintet, Hancock helped redefine the role of rhythm section in jazz. His Blue Note recordings in the 1960s established him as a major force in modern jazz.',
+                                  details: [
+                                    'Recorded groundbreaking albums for Blue Note including "Takin\' Off" (1962)',
+                                    'Composed "Watermelon Man" and "Cantaloupe Island"',
+                                    'Member of Miles Davis Quintet (1963-1968)',
+                                    '14-time Grammy Award winner',
+                                    'UNESCO Goodwill Ambassador and jazz education advocate'
+                                  ]
+                                }]);
+                                setSelectedDiscoveryIndex(0);
+                              }}
+                              title="Herbie Hancock - Jazz Piano Innovator"
+                            />
+
+                            {/* HOTSPOT 4 - Rudy Van Gelder (Purple) */}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '65.4632%',
+                                left: '40.4369%',
+                                width: '130px',
+                                height: '30px',
+                                cursor: 'pointer',
+                                backgroundColor: 'transparent',
+                                borderRadius: '6px',
+                                transition: 'all 0.3s ease',
+                                zIndex: 10,
+                                border: '2px solid transparent'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = 'rgba(165, 94, 234, 0.4)';
+                                e.target.style.border = '2px solid #a55eea';
+                                e.target.style.boxShadow = '0 4px 15px rgba(165, 94, 234, 0.5)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = 'transparent';
+                                e.target.style.border = '2px solid transparent';
+                                e.target.style.boxShadow = 'none';
+                              }}
+                              onClick={() => {
+                                setDiscoveryResults([{
+                                  type: 'biography',
+                                  title: 'Rudy Van Gelder',
+                                  subtitle: 'Legendary Recording Engineer',
+                                  description: 'Rudy Van Gelder (1924-2016) was an American recording engineer who specialized in jazz and is considered one of the most important recording engineers in music history. He engineered thousands of albums including many of the most famous Blue Note Records releases, creating the distinctive "Blue Note sound."',
+                                  details: [
+                                    'Engineered over 2,000 jazz albums including most Blue Note classics',
+                                    'Developed innovative microphone techniques for jazz recording',
+                                    'Worked from his parents\' living room (1952-1959) then custom studio',
+                                    'Created the warm, intimate sound associated with Blue Note Records',
+                                    'Received Grammy Trustees Award for lifetime achievement in 2002'
+                                  ]
+                                }]);
+                                setSelectedDiscoveryIndex(0);
+                              }}
+                              title="Rudy Van Gelder - Legendary Recording Engineer"
+                            />
+                          </>
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
@@ -2863,146 +3054,682 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           );
             } else if (currentPage?.originalData?.type === 'album_showcase') {
               return (
-                <div>
-              <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
-                Media Discovery
-              </h3>
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  {selectedVideo ? (
+                    // Video Player View
+                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <div style={{
+                        padding: '1rem',
+                        borderBottom: '1px solid #e5e7eb',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                        <button
+                          onClick={closeVideo}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: '#f3f4f6',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '6px',
+                            padding: '0.5rem 1rem',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            color: '#374151',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#e5e7eb';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#f3f4f6';
+                          }}
+                        >
+                          ← Back to Search
+                        </button>
+                      </div>
 
-              {/* Discovery Entities */}
-              {currentPage.originalData.discovery_entities && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
-                    Related Artists & Topics
-                  </h4>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    {currentPage.originalData.discovery_entities.map((entity: string, idx: number) => (
-                      <span
-                        key={idx}
+                      {showPlaylistView && videoPlaylistData && (
+                        <>
+                          {/* Modal Background Overlay */}
+                          <div style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            zIndex: 50,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }} onClick={() => setShowPlaylistView(false)}>
+                            {/* Modal Content */}
+                            <div style={{
+                              position: 'relative',
+                              width: '90%',
+                              maxWidth: '600px',
+                              maxHeight: '90vh',
+                              background: 'white',
+                              borderRadius: '12px',
+                              padding: '1.5rem',
+                              overflowY: 'auto',
+                              boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+                            }} onClick={(e) => e.stopPropagation()}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#000' }}>
+                                  📚 Works & Playlists
+                                </h3>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                  {/* Playlist Counter */}
+                                  <div style={{
+                                    background: '#10b981',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '6px',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    🎵 Playlist: {currentPlaylist.length} tracks
+                                  </div>
+                                  {currentPlaylist.length > 0 && (
+                                    <>
+                                      <button
+                                        onClick={() => {
+                                          playPlaylist();
+                                          setShowPlaylistView(false);
+                                        }}
+                                        style={{
+                                          background: '#3b82f6',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '6px',
+                                          padding: '0.5rem 1rem',
+                                          cursor: 'pointer',
+                                          fontSize: '16px',
+                                          fontWeight: '600'
+                                        }}
+                                      >
+                                        ▶ Play All
+                                      </button>
+                                      <button
+                                        onClick={clearPlaylist}
+                                        style={{
+                                          background: '#f59e0b',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '6px',
+                                          padding: '0.5rem 1rem',
+                                          cursor: 'pointer',
+                                          fontSize: '16px',
+                                          fontWeight: '600'
+                                        }}
+                                      >
+                                        Clear
+                                      </button>
+                                    </>
+                                  )}
+                                  <button
+                                    onClick={() => setShowPlaylistView(false)}
+                                    style={{
+                                      background: '#ef4444',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      cursor: 'pointer',
+                                      fontSize: '16px',
+                                      fontWeight: '600'
+                                    }}
+                                  >
+                                    ✕ Close
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Works Section */}
+                              {videoPlaylistData.works && videoPlaylistData.works.length > 0 && (
+                                <div style={{ marginBottom: '2rem' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '22px', fontWeight: '600', color: '#000' }}>
+                                      🎵 Works Mentioned ({videoPlaylistData.works.length})
+                                    </h4>
+                                    <button
+                                      onClick={() => toggleAllWorks(true)}
+                                      style={{
+                                        background: areAllWorksAdded(true) ? '#ef4444' : '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 1rem',
+                                        cursor: 'pointer',
+                                        fontSize: '16px',
+                                        fontWeight: '600'
+                                      }}
+                                    >
+                                      {areAllWorksAdded(true) ? '- Remove All' : '+ Add All'}
+                                    </button>
+                                  </div>
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                                    {videoPlaylistData.works.map((work: any, idx: number) => {
+                                      const isAdded = currentPlaylist.some(item =>
+                                        item.title === work.title && item.artist === work.artist
+                                      );
+                                      return (
+                                        <div
+                                          key={idx}
+                                          style={{
+                                            background: isAdded ? '#dcfce7' : '#f0fdf4',
+                                            border: isAdded ? '2px solid #16a34a' : '2px solid #22c55e',
+                                            borderRadius: '8px',
+                                            padding: '0.75rem 1rem',
+                                            fontSize: '18px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            color: '#000',
+                                            opacity: isAdded ? 0.8 : 1
+                                          }}
+                                        >
+                                          <button
+                                            onClick={() => toggleIndividualSong(work)}
+                                            style={{
+                                              background: isAdded ? '#ef4444' : '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '4px',
+                                              padding: '0.25rem 0.5rem',
+                                              cursor: 'pointer',
+                                              fontSize: '14px',
+                                              fontWeight: '600',
+                                              marginRight: '0.5rem'
+                                            }}
+                                          >
+                                            {isAdded ? '- Remove' : '+ Add'}
+                                          </button>
+                                          <strong>{work.title}</strong> - {work.artist}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Playlists Section */}
+                              {videoPlaylistData.playlists && videoPlaylistData.playlists.length > 0 && (
+                                <div>
+                                  <h4 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '1rem', color: '#000' }}>
+                                    🎼 Discovery Playlists ({videoPlaylistData.playlists.length})
+                                  </h4>
+                                  <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
+                                    {videoPlaylistData.playlists.map((playlist: any, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        style={{
+                                          marginBottom: '1.5rem',
+                                          background: '#faf5ff',
+                                          border: '2px solid #8b5cf6',
+                                          borderRadius: '8px',
+                                          padding: '1rem'
+                                        }}
+                                      >
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                                          <h5 style={{ fontSize: '20px', fontWeight: '600', color: '#000' }}>
+                                            {playlist.name}
+                                          </h5>
+                                          <button
+                                            onClick={() => toggleAllPlaylistTracks(playlist.name, playlist.tracks)}
+                                            style={{
+                                              background: areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '#ef4444' : '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '6px',
+                                              padding: '0.4rem 0.8rem',
+                                              cursor: 'pointer',
+                                              fontSize: '15px',
+                                              fontWeight: '600'
+                                            }}
+                                          >
+                                            {areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '- Remove All' : '+ Add All'}
+                                          </button>
+                                        </div>
+                                        <div style={{ fontSize: '16px', color: '#000' }}>
+                                          {playlist.tracks.map((track: any, tidx: number) => {
+                                            const isAdded = currentPlaylist.some(item =>
+                                              item.title === track.title && item.artist === track.artist
+                                            );
+                                            return (
+                                              <div
+                                                key={tidx}
+                                                style={{
+                                                  marginBottom: '0.5rem',
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  gap: '0.5rem',
+                                                  padding: '0.25rem 0.5rem',
+                                                  background: isAdded ? '#dcfce7' : 'transparent',
+                                                  borderRadius: '4px'
+                                                }}
+                                              >
+                                                <button
+                                                  onClick={() => toggleIndividualSong(track)}
+                                                  style={{
+                                                    background: isAdded ? '#ef4444' : '#3b82f6',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '4px',
+                                                    padding: '0.2rem 0.4rem',
+                                                    cursor: 'pointer',
+                                                    fontSize: '12px',
+                                                    fontWeight: '600',
+                                                    opacity: 1
+                                                  }}
+                                                >
+                                                  {isAdded ? '- Remove' : '+ Add'}
+                                                </button>
+                                                <span style={{ opacity: isAdded ? 0.8 : 1 }}>
+                                                  <strong>"{track.title}"</strong> - {track.artist}
+                                                </span>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Playlist Player Modal - Shows YouTube videos for playlist tracks */}
+                      {showPlaylistPlayer && (
+                        <>
+                          {/* Modal Background Overlay */}
+                          <div style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(0, 0, 0, 0.8)',
+                            zIndex: 60,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }} onClick={() => {
+                            setShowPlaylistPlayer(false);
+                            setPlaylistVideos([]);
+                            setCurrentTrackIndex(0);
+                          }}>
+                            {/* Modal Content */}
+                            <div style={{
+                              position: 'relative',
+                              width: '95%',
+                              maxWidth: '1400px',
+                              height: '90vh',
+                              background: '#1a1a1a',
+                              borderRadius: '12px',
+                              padding: '1.5rem',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+                            }} onClick={(e) => e.stopPropagation()}>
+
+                              {/* Header */}
+                              <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '1rem',
+                                borderBottom: '2px solid #333',
+                                paddingBottom: '1rem'
+                              }}>
+                                <h2 style={{
+                                  fontSize: '28px',
+                                  fontWeight: 'bold',
+                                  color: 'white',
+                                  margin: 0
+                                }}>
+                                  🎵 Playlist Player ({playlistVideos.length} videos)
+                                </h2>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                  <div style={{
+                                    background: '#4ade80',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '6px',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    Track {currentTrackIndex + 1} of {playlistVideos.length}
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      setShowPlaylistPlayer(false);
+                                      setPlaylistVideos([]);
+                                      setCurrentTrackIndex(0);
+                                    }}
+                                    style={{
+                                      background: '#ef4444',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      cursor: 'pointer',
+                                      fontSize: '16px',
+                                      fontWeight: '600'
+                                    }}
+                                  >
+                                    ✕ Close Player
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Main Content Area */}
+                              <div style={{ display: 'flex', flex: 1, gap: '1rem', height: 'calc(100% - 80px)' }}>
+                                {/* Video Player */}
+                                <div style={{ flex: '2', display: 'flex', flexDirection: 'column' }}>
+                                  {playlistVideos[currentTrackIndex] ? (
+                                    <>
+                                      <div style={{ marginBottom: '1rem' }}>
+                                        <h3 style={{ color: 'white', fontSize: '20px', marginBottom: '0.5rem' }}>
+                                          {playlistVideos[currentTrackIndex].title}
+                                        </h3>
+                                        <p style={{ color: '#999', fontSize: '16px' }}>
+                                          {playlistVideos[currentTrackIndex].channel}
+                                        </p>
+                                      </div>
+                                      <iframe
+                                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].id}?autoplay=1`}
+                                        style={{
+                                          width: '100%',
+                                          height: '400px',
+                                          border: 'none',
+                                          borderRadius: '8px'
+                                        }}
+                                        title={playlistVideos[currentTrackIndex].title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                      />
+                                      {/* Player Controls */}
+                                      <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        gap: '1rem',
+                                        marginTop: '1rem'
+                                      }}>
+                                        <button
+                                          onClick={() => setCurrentTrackIndex(Math.max(0, currentTrackIndex - 1))}
+                                          disabled={currentTrackIndex === 0}
+                                          style={{
+                                            background: currentTrackIndex === 0 ? '#666' : '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            padding: '0.75rem 1.5rem',
+                                            cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer',
+                                            fontSize: '16px',
+                                            fontWeight: '600'
+                                          }}
+                                        >
+                                          ⏮ Previous
+                                        </button>
+                                        <button
+                                          onClick={() => setCurrentTrackIndex(Math.min(playlistVideos.length - 1, currentTrackIndex + 1))}
+                                          disabled={currentTrackIndex === playlistVideos.length - 1}
+                                          style={{
+                                            background: currentTrackIndex === playlistVideos.length - 1 ? '#666' : '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            padding: '0.75rem 1.5rem',
+                                            cursor: currentTrackIndex === playlistVideos.length - 1 ? 'not-allowed' : 'pointer',
+                                            fontSize: '16px',
+                                            fontWeight: '600'
+                                          }}
+                                        >
+                                          Next ⏭
+                                        </button>
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      height: '100%',
+                                      color: 'white',
+                                      fontSize: '18px'
+                                    }}>
+                                      Loading video...
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Playlist Sidebar */}
+                                <div style={{
+                                  flex: '1',
+                                  background: '#2a2a2a',
+                                  borderRadius: '8px',
+                                  padding: '1rem',
+                                  overflowY: 'auto'
+                                }}>
+                                  <h4 style={{ color: 'white', fontSize: '18px', marginBottom: '1rem' }}>
+                                    Playlist Queue
+                                  </h4>
+                                  {playlistVideos.map((video: any, idx: number) => (
+                                    <div
+                                      key={idx}
+                                      onClick={() => setCurrentTrackIndex(idx)}
+                                      style={{
+                                        padding: '0.75rem',
+                                        marginBottom: '0.5rem',
+                                        background: idx === currentTrackIndex ? '#3b82f6' : '#3a3a3a',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        if (idx !== currentTrackIndex) {
+                                          e.currentTarget.style.background = '#4a4a4a';
+                                        }
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        if (idx !== currentTrackIndex) {
+                                          e.currentTarget.style.background = '#3a3a3a';
+                                        }
+                                      }}
+                                    >
+                                      <div style={{
+                                        color: 'white',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        marginBottom: '0.25rem'
+                                      }}>
+                                        {idx + 1}. {video.title}
+                                      </div>
+                                      <div style={{
+                                        color: '#999',
+                                        fontSize: '12px'
+                                      }}>
+                                        {video.channel}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      <iframe
+                        ref={videoIframeRef}
+                        srcDoc={videoEmbedHtml}
                         style={{
-                          background: '#3b82f6',
-                          color: 'white',
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: '9999px',
-                          fontSize: '14px',
-                          cursor: 'pointer'
+                          width: '100%',
+                          height: '100%',
+                          border: 'none',
+                          flex: 1
                         }}
-                      >
-                        {entity}
-                      </span>
-                    ))}
+                        title={selectedVideo.title}
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : (
+                    // Search Interface View
+                    <div>
+                      <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
+                        YouTube Analysis Integration
+                      </h3>
+
+                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {/* Search Form */}
+                    <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <input
+                          type="text"
+                          className="united-tribes-search-input"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search UnitedTribes videos"
+                          style={{
+                            flex: 1,
+                            padding: '1rem 1.5rem',
+                            border: '2px solid #1e3a8a',
+                            borderRadius: '10px',
+                            fontSize: '24px',
+                            outline: 'none',
+                            fontWeight: '500',
+                            color: '#000',
+                            backgroundColor: 'white',
+                            lineHeight: '1.2'
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = '#3b82f6';
+                            e.currentTarget.style.backgroundColor = '#f0f9ff';
+                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = '#1e3a8a';
+                            e.currentTarget.style.backgroundColor = 'white';
+                            e.currentTarget.style.boxShadow = 'none';
+                          }}
+                        />
+                        <button
+                          type="submit"
+                          style={{
+                            padding: '1rem 2rem',
+                            background: '#3b82f6',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '10px',
+                            fontSize: '20px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#2563eb';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#3b82f6';
+                          }}
+                        >
+                          Search
+                        </button>
+                      </div>
+                    </form>
+
+                    {/* Search Results */}
+                    {searchLoading && (
+                      <div style={{ textAlign: 'center', padding: '2rem', color: '#3b82f6', fontSize: '18px', fontWeight: '600' }}>
+                        Searching videos...
+                      </div>
+                    )}
+
+                    {searchError && (
+                      <div style={{
+                        padding: '1rem',
+                        background: '#fee2e2',
+                        color: '#dc2626',
+                        borderRadius: '8px',
+                        marginBottom: '1rem'
+                      }}>
+                        {searchError}
+                      </div>
+                    )}
+
+                    {!searchLoading && searchResults.length > 0 && (
+                      <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
+                        <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                          Search Results ({searchResults.length})
+                        </h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                          {searchResults.map((video: any) => (
+                            <div
+                              key={video.id}
+                              style={{
+                                cursor: 'pointer',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                background: 'white',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.2s, box-shadow 0.2s'
+                              }}
+                              onClick={() => embedVideo(video)}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                              }}
+                            >
+                              {video.thumbnail && (
+                                <img
+                                  src={video.thumbnail}
+                                  alt={video.title}
+                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                />
+                              )}
+                              <div style={{ padding: '1rem' }}>
+                                <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                  {video.title}
+                                </p>
+                                <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                  {video.channel} • {video.duration}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
+                      <div style={{
+                        textAlign: 'center',
+                        padding: '2rem',
+                        color: '#6b7280'
+                      }}>
+                        No results found for "{searchQuery}"
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
-
-              {/* Album Details */}
-              {currentPage.originalData.album && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
-                    Album Information
-                  </h4>
-                  <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                    {currentPage.originalData.album.title && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Title:</span>{' '}
-                        {currentPage.originalData.album.title}
-                      </div>
-                    )}
-                    {currentPage.originalData.album.artist && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Artist:</span>{' '}
-                        {currentPage.originalData.album.artist}
-                      </div>
-                    )}
-                    {currentPage.originalData.album.year && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Year:</span>{' '}
-                        {currentPage.originalData.album.year}
-                      </div>
-                    )}
-                    {currentPage.originalData.album.catalog && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Catalog:</span>{' '}
-                        {currentPage.originalData.album.catalog}
-                      </div>
-                    )}
-                    {currentPage.originalData.album.cover_design && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Cover Design:</span>{' '}
-                        {currentPage.originalData.album.cover_design}
-                      </div>
-                    )}
-                    {currentPage.originalData.album.cover_photo && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <span style={{ fontWeight: '600', color: '#6b7280' }}>Photography:</span>{' '}
-                        {currentPage.originalData.album.cover_photo}
-                      </div>
-                    )}
-                  </div>
                 </div>
-              )}
-
-              {/* Personnel */}
-              {currentPage.originalData.album?.personnel && currentPage.originalData.album.personnel.length > 0 && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
-                    Personnel
-                  </h4>
-                  <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                    {currentPage.originalData.album.personnel.map((person: string, idx: number) => (
-                      <div key={idx} style={{ marginBottom: '0.25rem', fontSize: '14px' }}>
-                        • {person}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Suggested Actions */}
-              <div style={{ marginTop: '2rem' }}>
-                <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>
-                  Explore More
-                </h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <button style={{
-                    padding: '0.75rem',
-                    background: '#1db954',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    cursor: 'pointer'
-                  }}>
-                    Listen on Spotify
-                  </button>
-                  <button style={{
-                    padding: '0.75rem',
-                    background: '#fc3c44',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    cursor: 'pointer'
-                  }}>
-                    Open in Apple Music
-                  </button>
-                  <button style={{
-                    padding: '0.75rem',
-                    background: '#ff0000',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    cursor: 'pointer'
-                  }}>
-                    Watch on YouTube
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
+              );
             } else if (currentPage?.originalData?.page === 7 && currentPage?.originalData?.type === 'page_image') {
               // Page 7 - John Coltrane Blue Train - Add YouTube search
               return (
@@ -3719,33 +4446,34 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 </div>
               );
             } else {
-              return (
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  color: '#6b7280'
-                }}>
+                // Default Discovery panel placeholder for other pages
+                return (
                   <div style={{
-                    fontSize: '4rem',
-                    marginBottom: '1rem',
-                    opacity: 0.3
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    padding: '2rem',
+                    textAlign: 'center',
+                    color: '#6b7280'
                   }}>
-                    🎵
+                    <div style={{
+                      fontSize: '4rem',
+                      marginBottom: '1rem',
+                      opacity: 0.3
+                    }}>
+                      🎵
+                    </div>
+                    <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
+                      Media Discovery Panel
+                    </p>
+                    <p>
+                      Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
+                    </p>
                   </div>
-                  <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
-                    Media Discovery Panel
-                  </p>
-                  <p>
-                    Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
-                  </p>
-                </div>
-              );
-            }
+                );
+              }
           })()}
         </div>
       </div>

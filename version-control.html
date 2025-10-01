@@ -266,17 +266,17 @@
         </div>
 
         <div class="version-grid">
-            <!-- Version 4.2.1 In Development -->
+            <!-- Version 4.2.2 In Development -->
             <div class="version-card">
                 <div class="version-header">
-                    <div class="version-title" style="color: #f59e0b;">Version 4.2.1</div>
+                    <div class="version-title" style="color: #f59e0b;">Version 4.2.2</div>
                     <div class="status development">In Development</div>
                 </div>
 
                 <div class="info-section">
                     <div class="info-row">
                         <span class="info-label">Branch:</span>
-                        <span>v4.2.1-design-improvements</span>
+                        <span>v4.2.2-blue-note-integration</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Port:</span>
@@ -288,33 +288,89 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Created:</span>
-                        <span>September 30, 2025</span>
+                        <span>October 1, 2025</span>
                     </div>
                 </div>
 
                 <div class="features">
-                    <div class="feature-tag wip">🎨 YouTube-style Works/Playlists</div>
-                    <div class="feature-tag wip">🎨 Enhanced Blue Note Design</div>
-                    <div class="feature-tag wip">🎨 UI/UX Improvements</div>
-                    <div class="feature-tag">✅ Based on v4.2.0</div>
-                    <div class="feature-tag">✅ All v4.2.0 Features</div>
+                    <div class="feature-tag wip">🎵 Blue Note Records Integration</div>
+                    <div class="feature-tag wip">🎨 Cover Art Features</div>
+                    <div class="feature-tag wip">📖 Book Content Integration</div>
+                    <div class="feature-tag">✅ Based on v4.2.1</div>
+                    <div class="feature-tag">✅ UI/UX Improvements</div>
                 </div>
 
                 <div class="alert">
-                    <strong>⚠️ Development Branch:</strong> Design improvements in progress. Building on stable v4.2.0 foundation.
+                    <strong>🚀 Development Branch:</strong> Blue Note Records book content integration in progress. Building on v4.2.1 stable foundation.
                 </div>
 
-                <div class="alert" style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;">
-                    <strong>❌ v4.2.1 Failed:</strong> Core video control functionality blocked by YouTube IFrame API restrictions. Pause and timestamp features non-functional. <a href="README-v4.2.1-limitations.md" target="_blank" style="color: #991b1b; text-decoration: underline;">View limitations report</a>
+                <div class="success alert">
+                    <strong>🎯 Quick Start:</strong><br>
+                    1. <code>git checkout v4.2.2-blue-note-integration</code><br>
+                    2. <code>npm run dev</code><br>
+                    3. Open <a href="http://localhost:3004" target="_blank">localhost:3004</a><br>
+                    Focus: Blue Note Records cover art and book content features
                 </div>
 
                 <div class="action-buttons">
                     <a href="http://localhost:3004" target="_blank" class="btn btn-warning">
                         🌐 Open App
                     </a>
-                    <button class="btn btn-secondary" onclick="showBranchInfo()">
+                    <button class="btn btn-secondary" onclick="showBranchInfo422()">
                         📋 Git Info
                     </button>
+                </div>
+            </div>
+
+            <!-- Version 4.2.1 Stable Rollback -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #8b5cf6;">Version 4.2.1</div>
+                    <div class="status rollback">Stable Rollback</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Branch:</span>
+                        <span>v4.2.1-design-improvements</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tag:</span>
+                        <span>v4.2.1</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Released:</span>
+                        <span>October 1, 2025</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-tag">✅ Toggleable Add All Buttons</div>
+                    <div class="feature-tag">✅ Individual Song Toggle</div>
+                    <div class="feature-tag">✅ Video Analysis UI</div>
+                    <div class="feature-tag">✅ UI/UX Improvements</div>
+                    <div class="feature-tag">⚠️ Limited Video Control</div>
+                </div>
+
+                <div class="alert" style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;">
+                    <strong>⚠️ Known Limitations:</strong> Video control functionality blocked by YouTube IFrame API restrictions. UI improvements work perfectly. <a href="README-v4.2.1-limitations.md" target="_blank" style="color: #991b1b; text-decoration: underline;">View detailed limitations report</a>
+                </div>
+
+                <div class="success alert">
+                    <strong>✓ Stable Rollback Point:</strong> UI improvements successfully implemented. Playlist toggle functionality working perfectly.
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="rollbackTo421()">
+                        ⬅️ Rollback to v4.2.1
+                    </button>
+                    <a href="README-v4.2.1-limitations.md" target="_blank" class="btn btn-secondary">
+                        📋 View Limitations
+                    </a>
                 </div>
             </div>
 
@@ -494,6 +550,17 @@
             });
         }
 
+        function showBranchInfo422() {
+            alert('Current Branch: v4.2.2-blue-note-integration\n\n' +
+                  'To check status:\n' +
+                  'git status\n\n' +
+                  'To see changes:\n' +
+                  'git diff\n\n' +
+                  'To commit changes:\n' +
+                  'git add .\n' +
+                  'git commit -m "Blue Note Records: [your message]"');
+        }
+
         function showBranchInfo() {
             alert('Current Branch: v4.2.0-youtube-integration\n\n' +
                   'To check status:\n' +
@@ -503,6 +570,17 @@
                   'To commit changes:\n' +
                   'git add .\n' +
                   'git commit -m "Your message"');
+        }
+
+        function rollbackTo421() {
+            const message = 'To rollback to v4.2.1 (Stable):\n\n' +
+                          '1. Stop the current server (Ctrl+C)\n' +
+                          '2. Run these commands:\n\n' +
+                          'git stash\n' +
+                          'git checkout v4.2.1\n' +
+                          'npm run dev\n\n' +
+                          'Your changes will be saved in stash.';
+            alert(message);
         }
 
         function rollbackToStable() {
