@@ -88,18 +88,18 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
 
     .main-layout {
       display: flex;
-      gap: 2rem;
-      align-items: flex-start;
+      flex-direction: column;
+      gap: 1rem;
       height: 100vh;
       padding: 1.5rem 2rem;
     }
 
     .video-section {
-      flex: 1;
-      min-width: 400px;
-      max-width: 1000px;
       display: flex;
       flex-direction: column;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
     }
 
     .title {
@@ -144,7 +144,7 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
     }
 
     .btn {
@@ -325,6 +325,76 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
     }
 
+    .analysis-panel {
+      margin-top: 1rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .analysis-panel-content {
+      padding: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .analysis-panel h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e40af;
+    }
+
+    .analysis-hint {
+      margin: 0 0 1.5rem 0;
+      color: #666;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .analysis-panel .analysis-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+      white-space: pre-wrap;
+    }
+
+    .analysis-panel .analysis-text h1,
+    .analysis-panel .analysis-text h2,
+    .analysis-panel .analysis-text h3,
+    .analysis-panel .analysis-text h4 {
+      font-weight: 700;
+      color: #1e40af;
+      margin: 1.5rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #bfdbfe;
+    }
+
+    .analysis-panel .timestamp-button {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      margin: 0 0.25rem 0.25rem 0;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      vertical-align: baseline;
+      box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);
+    }
+
+    .analysis-panel .timestamp-button:hover {
+      background: #dc2626;
+      transform: scale(1.05);
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+    }
+
     .hidden {
       display: none;
     }
@@ -360,14 +430,39 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       </div>
 
       <div class="controls-bar">
-        <button class="btn" onclick="toggleWorksDisplay()">
-          Show Playlists & Works
+        <button class="btn" onclick="toggleWorksDisplay()" id="playlist-btn">
+          Works & Discovery Playlists ▼
         </button>
+        <button class="btn" onclick="toggleAnalysisDisplay()" id="analysis-btn">
+          Video Analysis ▼
+        </button>
+      </div>
+
+      <!-- Collapsible Analysis Panel -->
+      <div class="analysis-panel" id="analysis-panel" style="display: none;">
+        <div class="analysis-panel-content">
+          <h3>Video Analysis</h3>
+          <p class="analysis-hint">Click timestamps to jump to specific moments</p>
+          <div class="analysis-text">
+            ${analysis ? analysis
+              .replace(/\[([^\]]+)\]/g, '<button class="timestamp-button" onclick="jumpToTime(\'$1\')">$1</button>')
+              .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+              .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+              .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
+              .replace(/^\* (.+)$/gm, '• $1')
+              .replace(/\n\n/g, '</p><p>')
+              .replace(/^(.)/gm, '<p>$1')
+              .replace(/<\/p><p><h/g, '</p><h')
+              .replace(/<\/h([1-6])><p>/g, '</h$1><p>')
+              + '</p>'
+              : 'No analysis available for this video.'}
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Analysis Section -->
-    <div class="analysis-section">
+    <!-- Analysis Section - Hidden, using collapsible panel instead -->
+    <div class="analysis-section" style="display: none;">
       <div class="analysis-header">
         <h2>Video Analysis</h2>
         <p class="analysis-hint">Click timestamps to jump to specific moments</p>
@@ -411,7 +506,11 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
           modestbranding: 1,
           rel: 0,
           origin: window.location.origin,
-          playsinline: 1
+          playsinline: 1,
+          enablejsapi: 1,
+          controls: 1,
+          fs: 1,
+          iv_load_policy: 3
         },
         events: {
           'onReady': onPlayerReady,
@@ -421,6 +520,37 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
     }
 
     function onPlayerReady(event) {
+      console.log('🎬 Player ready!');
+      console.log('🔍 Event object:', event);
+      console.log('🔍 Event.target:', event.target);
+
+      // Ensure we're using the actual player from the event
+      player = event.target;
+
+      // Add a global reference for debugging
+      window.globalPlayer = player;
+
+      // Log all available methods/properties for debugging
+      console.log('🔍 Player object keys:', Object.keys(player));
+      console.log('🔍 Player prototype:', Object.getPrototypeOf(player));
+      console.log('🔍 Player constructor:', player.constructor.name);
+
+      // Test player methods immediately when ready
+      console.log('Player methods available:', {
+        hasPlayVideo: typeof player.playVideo === 'function',
+        hasPauseVideo: typeof player.pauseVideo === 'function',
+        hasGetPlayerState: typeof player.getPlayerState === 'function',
+        hasSeekTo: typeof player.seekTo === 'function'
+      });
+
+      // Try alternative method names (YouTube sometimes uses different names)
+      console.log('Alternative method checks:', {
+        hasSeekTo: typeof player.seekTo === 'function',
+        hasSeekToSeconds: typeof player.seekToSeconds === 'function',
+        hasSeekToTime: typeof player.seekToTime === 'function',
+        hasSetCurrentTime: typeof player.setCurrentTime === 'function'
+      });
+
       // Notify parent that player is ready
       window.parent.postMessage({
         type: 'PLAYER_READY',
@@ -437,30 +567,107 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
 
     // Jump to timestamp
     function jumpToTime(timestamp) {
-      if (!player || !player.seekTo) return;
+      console.log('🎯 jumpToTime called with:', timestamp);
+
+      // Try to use the main player first, then fall back to global player
+      let activePlayer = player || window.globalPlayer;
+
+      if (!activePlayer) {
+        console.log('❌ No player available (neither player nor globalPlayer)');
+        return;
+      }
+
+      console.log('🎮 Using player:', activePlayer === player ? 'main player' : 'global player');
+
+      // Check if player is ready by testing the player state
+      try {
+        const playerState = activePlayer.getPlayerState();
+        console.log('🎮 Player state:', playerState);
+
+        if (playerState === undefined || playerState === null) {
+          console.log('❌ Player not fully initialized yet');
+          return;
+        }
+      } catch (error) {
+        console.log('❌ Player not ready, error checking state:', error);
+        console.log('🔍 Available player methods:', Object.getOwnPropertyNames(activePlayer).filter(name => typeof activePlayer[name] === 'function'));
+        return;
+      }
+
+      // Double-check seekTo method exists
+      if (typeof activePlayer.seekTo !== 'function') {
+        console.log('❌ Player seekTo method not available, type:', typeof activePlayer.seekTo);
+        console.log('🔍 Available player methods:', Object.getOwnPropertyNames(activePlayer).filter(name => typeof activePlayer[name] === 'function'));
+        return;
+      }
 
       const seconds = timestampToSeconds(timestamp);
-      player.seekTo(seconds, true);
-      player.playVideo();
+      console.log('⏰ Converted to seconds:', seconds);
+
+      try {
+        activePlayer.seekTo(seconds, true);
+        activePlayer.playVideo();
+        console.log('✅ Successfully seeked to', seconds, 'seconds');
+      } catch (error) {
+        console.log('❌ Error seeking:', error);
+      }
     }
 
     // Convert timestamp to seconds
     function timestampToSeconds(timestamp) {
-      const clean = timestamp.replace(/[\[\]]/g, '');
-      const parts = clean.split(':').map(p => parseInt(p, 10));
+      console.log('🔍 Processing timestamp:', timestamp);
 
+      const clean = timestamp.replace(/[\[\]]/g, '').trim();
+      console.log('🧹 Cleaned timestamp:', clean);
+
+      const parts = clean.split(':').map(p => parseInt(p, 10));
+      console.log('📊 Parts:', parts);
+
+      let seconds = 0;
       if (parts.length === 3) {
-        return parts[0] * 3600 + parts[1] * 60 + parts[2];
+        // H:M:S format
+        seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
       } else if (parts.length === 2) {
-        return parts[0] * 60 + parts[1];
+        // M:S format
+        seconds = parts[0] * 60 + parts[1];
+      } else if (parts.length === 1) {
+        // Just seconds
+        seconds = parts[0];
       }
-      return 0;
+
+      console.log('⏱️ Final seconds:', seconds);
+      return seconds;
     }
 
-    // Toggle works display - send data to parent modal
+    // Global state tracking
+    let isPlaylistVisible = false;
+    let isAnalysisVisible = false;
+
+    // Toggle works display - simplified without pause functionality
     function toggleWorksDisplay() {
       console.log('🔵 Button clicked - toggleWorksDisplay called');
 
+      const button = document.getElementById('playlist-btn');
+
+      if (!isPlaylistVisible) {
+        // Show the playlists modal
+        if (button) {
+          button.textContent = 'Works & Discovery Playlists ▲';
+          isPlaylistVisible = true;
+        }
+        showPlaylistsModal();
+      } else {
+        // Hide the playlists modal
+        if (button) {
+          button.textContent = 'Works & Discovery Playlists ▼';
+          isPlaylistVisible = false;
+        }
+        closePlaylistsModal();
+      }
+    }
+
+    // Show playlists modal
+    function showPlaylistsModal() {
       // Check if we're in an iframe
       if (window.parent === window) {
         console.error('❌ Not in iframe - window.parent === window');
@@ -487,15 +694,61 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       console.log('✅ Message sent successfully');
     }
 
+    // Close playlists modal
+    function closePlaylistsModal() {
+      // Send message to parent to close the modal
+      if (window.parent !== window) {
+        const message = {
+          type: 'CLOSE_PLAYLIST_DATA'
+        };
+        console.log('📤 Sending close message to parent:', message);
+        window.parent.postMessage(message, '*');
+        console.log('✅ Close message sent successfully');
+      }
+    }
+
+    // Toggle analysis display
+    function toggleAnalysisDisplay() {
+      console.log('📄 Analysis button clicked');
+      const panel = document.getElementById('analysis-panel');
+      const button = document.getElementById('analysis-btn');
+
+      if (!isAnalysisVisible) {
+        // Show analysis
+        panel.style.display = 'block';
+        button.textContent = 'Video Analysis ▲';
+        isAnalysisVisible = true;
+        console.log('📄 Analysis panel shown');
+      } else {
+        // Hide analysis
+        panel.style.display = 'none';
+        button.textContent = 'Video Analysis ▼';
+        isAnalysisVisible = false;
+        console.log('📄 Analysis panel hidden');
+      }
+    }
+
 
     // Load YouTube IFrame API
     if (!window.YT) {
+      console.log('📺 Loading YouTube IFrame API...');
       const tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       const firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    } else {
+
+      // Set up global callback
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    } else if (window.YT && window.YT.Player) {
+      console.log('📺 YouTube API already loaded, initializing player...');
       onYouTubeIframeAPIReady();
+    } else {
+      console.log('📺 YouTube API exists but Player not ready, waiting...');
+      setTimeout(() => {
+        if (window.YT && window.YT.Player) {
+          onYouTubeIframeAPIReady();
+        }
+      }, 1000);
     }
 
     // Notify parent that embed is loaded

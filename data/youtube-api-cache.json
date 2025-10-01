@@ -132,5 +132,325 @@
     "keyIndex": 2,
     "keyName": "YOUTUBE_API_KEY_3",
     "note": "check-quota-detailed.cjs test"
+  },
+  "search-track_1759329964660_t2ma41qqr": {
+    "endpoint": "search-track",
+    "timestamp": 1759329964660,
+    "date": "2025-10-01T14:46:04.660Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759329964691_6b3lt6b4g": {
+    "endpoint": "search-track",
+    "timestamp": 1759329964691,
+    "date": "2025-10-01T14:46:04.691Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759329964692_8kw73e25k": {
+    "endpoint": "search-track",
+    "timestamp": 1759329964692,
+    "date": "2025-10-01T14:46:04.692Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759329964693_g7n6elw7i": {
+    "endpoint": "search-track",
+    "timestamp": 1759329964693,
+    "date": "2025-10-01T14:46:04.693Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759329964694_mu61dc20w": {
+    "endpoint": "search-track",
+    "timestamp": 1759329964694,
+    "date": "2025-10-01T14:46:04.694Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759333636781_j665hidmg": {
+    "endpoint": "search-track",
+    "timestamp": 1759333636781,
+    "date": "2025-10-01T15:47:16.781Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333636813_btvoyc0rz": {
+    "endpoint": "search-track",
+    "timestamp": 1759333636813,
+    "date": "2025-10-01T15:47:16.813Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759333636814_rnijzqguy": {
+    "endpoint": "search-track",
+    "timestamp": 1759333636814,
+    "date": "2025-10-01T15:47:16.814Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333636815_jvx5az9u5": {
+    "endpoint": "search-track",
+    "timestamp": 1759333636815,
+    "date": "2025-10-01T15:47:16.815Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333636816_8dw8z8w7k": {
+    "endpoint": "search-track",
+    "timestamp": 1759333636816,
+    "date": "2025-10-01T15:47:16.816Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759333678213_2dtfz03nd": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678213,
+    "date": "2025-10-01T15:47:58.213Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678218_vbvunide6": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678218,
+    "date": "2025-10-01T15:47:58.218Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678221_7a3b3suzo": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678221,
+    "date": "2025-10-01T15:47:58.221Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759333678225_wtl6d4fre": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678225,
+    "date": "2025-10-01T15:47:58.225Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678231_zmt85j19c": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678231,
+    "date": "2025-10-01T15:47:58.231Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678236_lhuvvop6w": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678236,
+    "date": "2025-10-01T15:47:58.236Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759333678742_1zcerqvw9": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678742,
+    "date": "2025-10-01T15:47:58.742Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678744_tr94xpebh": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678744,
+    "date": "2025-10-01T15:47:58.744Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678745_5ibzi63w0": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678745,
+    "date": "2025-10-01T15:47:58.745Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759333678880_11yna4f5y": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678880,
+    "date": "2025-10-01T15:47:58.880Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759333678881_e7gkgxa0b": {
+    "endpoint": "search-track",
+    "timestamp": 1759333678881,
+    "date": "2025-10-01T15:47:58.881Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759335518885_yvmvu7iqx": {
+    "endpoint": "search-track",
+    "timestamp": 1759335518885,
+    "date": "2025-10-01T16:18:38.885Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336004491_2xi9utdcv": {
+    "endpoint": "search-track",
+    "timestamp": 1759336004491,
+    "date": "2025-10-01T16:26:44.491Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759336004497_jnfir3v1l": {
+    "endpoint": "search-track",
+    "timestamp": 1759336004497,
+    "date": "2025-10-01T16:26:44.497Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336252526_km6ohg1by": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252526,
+    "date": "2025-10-01T16:30:52.526Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336252530_wg9uwd1sg": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252530,
+    "date": "2025-10-01T16:30:52.530Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759336252534_ze8aovxhi": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252534,
+    "date": "2025-10-01T16:30:52.534Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336252538_pxho8ly0z": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252538,
+    "date": "2025-10-01T16:30:52.538Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336252542_pzajc91jq": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252542,
+    "date": "2025-10-01T16:30:52.542Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759336252548_numilxv1u": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252548,
+    "date": "2025-10-01T16:30:52.548Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336252923_cudhq2yt9": {
+    "endpoint": "search-track",
+    "timestamp": 1759336252923,
+    "date": "2025-10-01T16:30:52.923Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336253086_yyqdj7bc1": {
+    "endpoint": "search-track",
+    "timestamp": 1759336253086,
+    "date": "2025-10-01T16:30:53.086Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759336253262_6sovschf9": {
+    "endpoint": "search-track",
+    "timestamp": 1759336253262,
+    "date": "2025-10-01T16:30:53.262Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336306271_r4ynuzdrq": {
+    "endpoint": "search-track",
+    "timestamp": 1759336306271,
+    "date": "2025-10-01T16:31:46.271Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336306276_qpvjnvp5t": {
+    "endpoint": "search-track",
+    "timestamp": 1759336306276,
+    "date": "2025-10-01T16:31:46.276Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759336306279_4n8dbn75i": {
+    "endpoint": "search-track",
+    "timestamp": 1759336306279,
+    "date": "2025-10-01T16:31:46.279Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759336306284_9v7bs3thu": {
+    "endpoint": "search-track",
+    "timestamp": 1759336306284,
+    "date": "2025-10-01T16:31:46.284Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759337615991_oezc9ot4h": {
+    "endpoint": "search-track",
+    "timestamp": 1759337615991,
+    "date": "2025-10-01T16:53:35.991Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759337616019_susf1qm76": {
+    "endpoint": "search-track",
+    "timestamp": 1759337616019,
+    "date": "2025-10-01T16:53:36.019Z",
+    "units": 100,
+    "keyIndex": 1,
+    "keyName": "YOUTUBE_API_KEY_2"
+  },
+  "search-track_1759337616020_17vvmoniz": {
+    "endpoint": "search-track",
+    "timestamp": 1759337616020,
+    "date": "2025-10-01T16:53:36.020Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
   }
 }

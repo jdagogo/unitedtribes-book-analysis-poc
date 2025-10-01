@@ -97,6 +97,11 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showPlaylistView, setShowPlaylistView] = useState(false);
   const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
   const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
+
+  // Track items added by each "Add All" button for toggle functionality
+  const [addedWorksMain, setAddedWorksMain] = useState<Set<string>>(new Set());
+  const [addedWorksModal, setAddedWorksModal] = useState<Set<string>>(new Set());
+  const [addedPlaylistsByName, setAddedPlaylistsByName] = useState<Map<string, Set<string>>>(new Map());
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [initialSearchTerm, setInitialSearchTerm] = useState('');
   const [playlistVideos, setPlaylistVideos] = useState<any[]>([]);
@@ -194,6 +199,120 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   // Clear playlist
   const clearPlaylist = () => {
     setCurrentPlaylist([]);
+  };
+
+  // Helper functions for toggleable "Add All" buttons
+  const getItemKey = (item: any): string => {
+    return JSON.stringify({ title: item.title, artist: item.artist });
+  };
+
+  const toggleAllWorks = (isModal: boolean = false) => {
+    if (!videoPlaylistData?.works) return;
+
+    const addedSet = isModal ? addedWorksModal : addedWorksMain;
+    const setAddedSet = isModal ? setAddedWorksModal : setAddedWorksMain;
+
+    const allWorksAdded = videoPlaylistData.works.every((work: any) =>
+      addedSet.has(getItemKey(work))
+    );
+
+    if (allWorksAdded) {
+      // Remove all works that were added by this button
+      const newSet = new Set(addedSet);
+      videoPlaylistData.works.forEach((work: any) => {
+        const key = getItemKey(work);
+        if (newSet.has(key)) {
+          newSet.delete(key);
+          // Remove from current playlist
+          setCurrentPlaylist(prev => prev.filter(item => getItemKey(item) !== key));
+        }
+      });
+      setAddedSet(newSet);
+    } else {
+      // Add all works that aren't already added
+      const newSet = new Set(addedSet);
+      videoPlaylistData.works.forEach((work: any) => {
+        const key = getItemKey(work);
+        if (!newSet.has(key)) {
+          newSet.add(key);
+          addToPlaylist(work);
+        }
+      });
+      setAddedSet(newSet);
+    }
+  };
+
+  const toggleAllPlaylistTracks = (playlistName: string, tracks: any[]) => {
+    if (!tracks || tracks.length === 0) return;
+
+    const currentPlaylistTracks = addedPlaylistsByName.get(playlistName) || new Set();
+
+    const allTracksAdded = tracks.every((track: any) =>
+      currentPlaylistTracks.has(getItemKey(track))
+    );
+
+    if (allTracksAdded) {
+      // Remove all tracks that were added by this button
+      const newPlaylistMap = new Map(addedPlaylistsByName);
+      const newTrackSet = new Set(currentPlaylistTracks);
+
+      tracks.forEach((track: any) => {
+        const key = getItemKey(track);
+        if (newTrackSet.has(key)) {
+          newTrackSet.delete(key);
+          // Remove from current playlist
+          setCurrentPlaylist(prev => prev.filter(item => getItemKey(item) !== key));
+        }
+      });
+
+      newPlaylistMap.set(playlistName, newTrackSet);
+      setAddedPlaylistsByName(newPlaylistMap);
+    } else {
+      // Add all tracks that aren't already added
+      const newPlaylistMap = new Map(addedPlaylistsByName);
+      const newTrackSet = new Set(currentPlaylistTracks);
+
+      tracks.forEach((track: any) => {
+        const key = getItemKey(track);
+        if (!newTrackSet.has(key)) {
+          newTrackSet.add(key);
+          addToPlaylist(track);
+        }
+      });
+
+      newPlaylistMap.set(playlistName, newTrackSet);
+      setAddedPlaylistsByName(newPlaylistMap);
+    }
+  };
+
+  const areAllWorksAdded = (isModal: boolean = false): boolean => {
+    if (!videoPlaylistData?.works) return false;
+    const addedSet = isModal ? addedWorksModal : addedWorksMain;
+    return videoPlaylistData.works.every((work: any) =>
+      addedSet.has(getItemKey(work))
+    );
+  };
+
+  const areAllPlaylistTracksAdded = (playlistName: string, tracks: any[]): boolean => {
+    if (!tracks || tracks.length === 0) return false;
+    const currentPlaylistTracks = addedPlaylistsByName.get(playlistName) || new Set();
+    return tracks.every((track: any) =>
+      currentPlaylistTracks.has(getItemKey(track))
+    );
+  };
+
+  // Toggle individual song in playlist
+  const toggleIndividualSong = (item: any) => {
+    const itemKey = getItemKey(item);
+    const isInPlaylist = currentPlaylist.some(playlistItem => getItemKey(playlistItem) === itemKey);
+
+    if (isInPlaylist) {
+      // Remove from playlist
+      setCurrentPlaylist(prev => prev.filter(playlistItem => getItemKey(playlistItem) !== itemKey));
+    } else {
+      // Add to playlist
+      addToPlaylist(item);
+    }
   };
 
   // Play the playlist - search YouTube for each track
@@ -746,6 +865,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
             } else {
               console.error('❌ No data in SHOW_PLAYLIST_DATA message');
             }
+            break;
+          case 'CLOSE_PLAYLIST_DATA':
+            console.log('🎯 CLOSE_PLAYLIST_DATA received!');
+            console.log('📦 Setting showPlaylistView to false');
+            setShowPlaylistView(false);
+            console.log('✅ Modal should now be closed');
             break;
           case 'ADD_TO_PLAYLIST':
             // Handle adding items to discovery playlist from iframe
@@ -2135,14 +2260,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               🎵 Works Mentioned ({videoPlaylistData.works.length})
                             </h4>
                             <button
-                              onClick={() => {
-                                // Add all works to playlist
-                                videoPlaylistData.works.forEach((work: any) => {
-                                  addToPlaylist(work);
-                                });
-                              }}
+                              onClick={() => toggleAllWorks(false)}
                               style={{
-                                background: '#3b82f6',
+                                background: areAllWorksAdded(false) ? '#ef4444' : '#3b82f6',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '6px',
@@ -2152,7 +2272,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 fontWeight: '600'
                               }}
                             >
-                              + Add All
+                              {areAllWorksAdded(false) ? '- Remove All' : '+ Add All'}
                             </button>
                           </div>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -2177,21 +2297,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   }}
                                 >
                                   <button
-                                    onClick={() => addToPlaylist(work)}
-                                    disabled={isAdded}
+                                    onClick={() => toggleIndividualSong(work)}
                                     style={{
-                                      background: isAdded ? '#16a34a' : '#3b82f6',
+                                      background: isAdded ? '#ef4444' : '#3b82f6',
                                       color: 'white',
                                       border: 'none',
                                       borderRadius: '4px',
                                       padding: '0.25rem 0.5rem',
-                                      cursor: isAdded ? 'default' : 'pointer',
+                                      cursor: 'pointer',
                                       fontSize: '14px',
                                       fontWeight: '600',
                                       marginRight: '0.5rem'
                                     }}
                                   >
-                                    {isAdded ? '✓ Added' : '+ Add'}
+                                    {isAdded ? '- Remove' : '+ Add'}
                                   </button>
                                   <strong>{work.title}</strong> - {work.artist}
                                 </div>
@@ -2224,13 +2343,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     {playlist.name}
                                   </h5>
                                   <button
-                                    onClick={() => {
-                                      playlist.tracks.forEach((track: any) => {
-                                        addToPlaylist(track);
-                                      });
-                                    }}
+                                    onClick={() => toggleAllPlaylistTracks(playlist.name, playlist.tracks)}
                                     style={{
-                                      background: '#8b5cf6',
+                                      background: areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '#ef4444' : '#3b82f6',
                                       color: 'white',
                                       border: 'none',
                                       borderRadius: '6px',
@@ -2240,7 +2355,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       fontWeight: '600'
                                     }}
                                   >
-                                    + Add All
+                                    {areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '- Remove All' : '+ Add All'}
                                   </button>
                                 </div>
                                 <div style={{ fontSize: '16px', color: '#000' }}>
@@ -2262,21 +2377,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         }}
                                       >
                                         <button
-                                          onClick={() => addToPlaylist(track)}
-                                          disabled={isAdded}
+                                          onClick={() => toggleIndividualSong(track)}
                                           style={{
-                                            background: isAdded ? '#16a34a' : '#3b82f6',
+                                            background: isAdded ? '#ef4444' : '#3b82f6',
                                             color: 'white',
                                             border: 'none',
                                             borderRadius: '4px',
                                             padding: '0.2rem 0.4rem',
-                                            cursor: isAdded ? 'default' : 'pointer',
+                                            cursor: 'pointer',
                                             fontSize: '12px',
                                             fontWeight: '600',
-                                            opacity: isAdded ? 0.8 : 1
+                                            opacity: 1
                                           }}
                                         >
-                                          {isAdded ? '✓' : '+ Add'}
+                                          {isAdded ? '- Remove' : '+ Add'}
                                         </button>
                                         <span style={{ opacity: isAdded ? 0.8 : 1 }}>
                                           <strong>"{track.title}"</strong> - {track.artist}
@@ -3036,14 +3150,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       🎵 Works Mentioned ({videoPlaylistData.works.length})
                                     </h4>
                                     <button
-                                      onClick={() => {
-                                        // Add all works to playlist
-                                        videoPlaylistData.works.forEach((work: any) => {
-                                          addToPlaylist(work);
-                                        });
-                                      }}
+                                      onClick={() => toggleAllWorks(true)}
                                       style={{
-                                        background: '#3b82f6',
+                                        background: areAllWorksAdded(true) ? '#ef4444' : '#3b82f6',
                                         color: 'white',
                                         border: 'none',
                                         borderRadius: '6px',
@@ -3053,7 +3162,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         fontWeight: '600'
                                       }}
                                     >
-                                      + Add All
+                                      {areAllWorksAdded(true) ? '- Remove All' : '+ Add All'}
                                     </button>
                                   </div>
                                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -3078,21 +3187,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                           }}
                                         >
                                           <button
-                                            onClick={() => addToPlaylist(work)}
-                                            disabled={isAdded}
+                                            onClick={() => toggleIndividualSong(work)}
                                             style={{
-                                              background: isAdded ? '#16a34a' : '#3b82f6',
+                                              background: isAdded ? '#ef4444' : '#3b82f6',
                                               color: 'white',
                                               border: 'none',
                                               borderRadius: '4px',
                                               padding: '0.25rem 0.5rem',
-                                              cursor: isAdded ? 'default' : 'pointer',
+                                              cursor: 'pointer',
                                               fontSize: '14px',
                                               fontWeight: '600',
                                               marginRight: '0.5rem'
                                             }}
                                           >
-                                            {isAdded ? '✓ Added' : '+ Add'}
+                                            {isAdded ? '- Remove' : '+ Add'}
                                           </button>
                                           <strong>{work.title}</strong> - {work.artist}
                                         </div>
@@ -3125,13 +3233,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                             {playlist.name}
                                           </h5>
                                           <button
-                                            onClick={() => {
-                                              playlist.tracks.forEach((track: any) => {
-                                                addToPlaylist(track);
-                                              });
-                                            }}
+                                            onClick={() => toggleAllPlaylistTracks(playlist.name, playlist.tracks)}
                                             style={{
-                                              background: '#8b5cf6',
+                                              background: areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '#ef4444' : '#3b82f6',
                                               color: 'white',
                                               border: 'none',
                                               borderRadius: '6px',
@@ -3141,7 +3245,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                               fontWeight: '600'
                                             }}
                                           >
-                                            + Add All
+                                            {areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '- Remove All' : '+ Add All'}
                                           </button>
                                         </div>
                                         <div style={{ fontSize: '16px', color: '#000' }}>
@@ -3163,21 +3267,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                                 }}
                                               >
                                                 <button
-                                                  onClick={() => addToPlaylist(track)}
-                                                  disabled={isAdded}
+                                                  onClick={() => toggleIndividualSong(track)}
                                                   style={{
-                                                    background: isAdded ? '#16a34a' : '#3b82f6',
+                                                    background: isAdded ? '#ef4444' : '#3b82f6',
                                                     color: 'white',
                                                     border: 'none',
                                                     borderRadius: '4px',
                                                     padding: '0.2rem 0.4rem',
-                                                    cursor: isAdded ? 'default' : 'pointer',
+                                                    cursor: 'pointer',
                                                     fontSize: '12px',
                                                     fontWeight: '600',
-                                                    opacity: isAdded ? 0.8 : 1
+                                                    opacity: 1
                                                   }}
                                                 >
-                                                  {isAdded ? '✓' : '+ Add'}
+                                                  {isAdded ? '- Remove' : '+ Add'}
                                                 </button>
                                                 <span style={{ opacity: isAdded ? 0.8 : 1 }}>
                                                   <strong>"{track.title}"</strong> - {track.artist}
@@ -3478,57 +3581,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   ) : (
                     // Search View
                     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                      <h3 style={{
-                        fontSize: '28px',
-                        fontWeight: 'bold',
-                        marginBottom: '1.5rem',
-                        color: '#1e3a8a'
-                      }}>
-                        🎵 UnitedTribes Video Search
-                      </h3>
-
-                      {/* Test Discovery Playlist Button */}
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // Add some test items to the discovery playlist
-                          handleAddToDiscoveryPlaylist('work-Blue Train', {
-                            id: 'work-Blue Train',
-                            title: 'Blue Train',
-                            artist: 'John Coltrane',
-                            type: 'work',
-                            category: 'Works Discussed'
-                          });
-                          handleAddToDiscoveryPlaylist('work-A Love Supreme', {
-                            id: 'work-A Love Supreme',
-                            title: 'A Love Supreme',
-                            artist: 'John Coltrane',
-                            type: 'work',
-                            category: 'Works Discussed'
-                          });
-                          handleAddToDiscoveryPlaylist('related-jazz-My Favorite Things', {
-                            id: 'related-jazz-My Favorite Things',
-                            title: 'My Favorite Things',
-                            artist: 'John Coltrane',
-                            type: 'song',
-                            category: 'Related Jazz'
-                          });
-                        }}
-                        style={{
-                          padding: '10px 20px',
-                          background: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 100%)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '8px',
-                          marginBottom: '20px',
-                          cursor: 'pointer',
-                          fontSize: '16px',
-                          fontWeight: '600'
-                        }}
-                      >
-                        Add Test Items to Discovery Playlist
-                      </button>
-
                       {/* Search Form */}
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
