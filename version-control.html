@@ -266,17 +266,25 @@
         </div>
 
         <div class="version-grid">
-            <!-- Version 4.2.2 In Development -->
-            <div class="version-card">
+            <!-- Version 4.2.2 STABLE ROLLBACK POINT -->
+            <div class="version-card" style="border: 3px solid #22c55e;">
                 <div class="version-header">
-                    <div class="version-title" style="color: #f59e0b;">Version 4.2.2</div>
-                    <div class="status development">In Development</div>
+                    <div class="version-title" style="color: #22c55e;">Version 4.2.2</div>
+                    <div class="status stable">⚡ STABLE ROLLBACK</div>
                 </div>
 
                 <div class="info-section">
                     <div class="info-row">
                         <span class="info-label">Branch:</span>
                         <span>v4.2.2-blue-note-integration</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Tag:</span>
+                        <span style="font-weight: bold; color: #22c55e;">v4.2.2-stable-rollback</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Commit:</span>
+                        <span>5896e6e</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Port:</span>
@@ -287,37 +295,41 @@
                         <span style="color: #22c55e;">Currently Running</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Created:</span>
-                        <span>October 1, 2025</span>
+                        <span class="info-label">Saved:</span>
+                        <span style="font-weight: bold;">October 1, 2025 @ 6:11 PM</span>
                     </div>
                 </div>
 
                 <div class="features">
-                    <div class="feature-tag wip">🎵 Blue Note Records Integration</div>
-                    <div class="feature-tag wip">🎨 Cover Art Features</div>
-                    <div class="feature-tag wip">📖 Book Content Integration</div>
-                    <div class="feature-tag">✅ Based on v4.2.1</div>
-                    <div class="feature-tag">✅ UI/UX Improvements</div>
+                    <div class="feature-tag">✅ Page 7 Search Working</div>
+                    <div class="feature-tag">✅ Page 18 Search Working</div>
+                    <div class="feature-tag">✅ Syntax Errors Fixed</div>
+                    <div class="feature-tag">✅ API Calls Successful</div>
+                    <div class="feature-tag">✅ Server Running Clean</div>
+                    <div class="feature-tag">✅ Discovery Panel Ready</div>
                 </div>
 
-                <div class="alert">
-                    <strong>🚀 Development Branch:</strong> Blue Note Records book content integration in progress. Building on v4.2.1 stable foundation.
+                <div class="success alert" style="background: #dcfce7; border: 2px solid #22c55e;">
+                    <strong>✅ VERIFIED STABLE ROLLBACK POINT</strong><br>
+                    This is your safe rollback version. All critical features working:<br>
+                    • Pages 7 and 18 fully functional<br>
+                    • YouTube search integration operational<br>
+                    • No syntax errors or build issues<br>
+                    • Ready for pages 1-6 Discovery panel implementation
                 </div>
 
-                <div class="success alert">
-                    <strong>🎯 Quick Start:</strong><br>
-                    1. <code>git checkout v4.2.2-blue-note-integration</code><br>
-                    2. <code>npm run dev</code><br>
-                    3. Open <a href="http://localhost:3004" target="_blank">localhost:3004</a><br>
-                    Focus: Blue Note Records cover art and book content features
+                <div class="alert" style="background: #fef3c7; border: 1px solid #f59e0b;">
+                    <strong>⚠️ DO NOT MODIFY WITHOUT BRANCHING FIRST</strong><br>
+                    To rollback to this exact point:<br>
+                    <code>git reset --hard v4.2.2-stable-rollback</code>
                 </div>
 
                 <div class="action-buttons">
-                    <a href="http://localhost:3004" target="_blank" class="btn btn-warning">
-                        🌐 Open App
-                    </a>
-                    <button class="btn btn-secondary" onclick="showBranchInfo422()">
-                        📋 Git Info
+                    <button class="btn btn-success" onclick="rollbackTo422()">
+                        🛡️ ROLLBACK HERE
+                    </button>
+                    <button class="btn btn-primary" onclick="createNewBranch423()">
+                        🚀 Create v4.2.3 Branch
                     </button>
                 </div>
             </div>
@@ -548,6 +560,37 @@
                 btn.textContent = 'Copied!';
                 setTimeout(() => btn.textContent = 'Copy', 2000);
             });
+        }
+
+        function rollbackTo422() {
+            const message = '🛡️ ROLLBACK TO v4.2.2 (STABLE ROLLBACK POINT)\n\n' +
+                          'This will restore to the verified stable state:\n' +
+                          '✅ Pages 7 and 18 working\n' +
+                          '✅ No syntax errors\n' +
+                          '✅ Server running clean\n\n' +
+                          'Commands to rollback:\n\n' +
+                          '1. Stop current server (Ctrl+C)\n' +
+                          '2. Save any uncommitted work:\n' +
+                          '   git stash\n\n' +
+                          '3. Rollback to stable point:\n' +
+                          '   git reset --hard v4.2.2-stable-rollback\n\n' +
+                          '4. Restart server:\n' +
+                          '   npm run dev\n\n' +
+                          'Git Tag: v4.2.2-stable-rollback\n' +
+                          'Commit: 5896e6e';
+            alert(message);
+        }
+
+        function createNewBranch423() {
+            const message = '🚀 CREATE NEW BRANCH v4.2.3\n\n' +
+                          'This will create a new branch for continued development:\n\n' +
+                          'Commands:\n' +
+                          '1. Make sure all changes are committed\n' +
+                          '2. Create and switch to new branch:\n\n' +
+                          '   git checkout -b v4.2.3-discovery-panel\n\n' +
+                          '3. Continue development on the new branch\n\n' +
+                          'The v4.2.2-stable-rollback tag will remain as your safe point.';
+            alert(message);
         }
 
         function showBranchInfo422() {
