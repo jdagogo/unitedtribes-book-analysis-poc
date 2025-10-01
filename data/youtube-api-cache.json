@@ -452,5 +452,13 @@
     "units": 100,
     "keyIndex": -1,
     "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1759338455629_alp3plskx": {
+    "endpoint": "search-track",
+    "timestamp": 1759338455629,
+    "date": "2025-10-01T17:07:35.629Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
   }
 }
