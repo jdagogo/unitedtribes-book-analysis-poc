@@ -4440,6 +4440,705 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   )}
                 </div>
               );
+            } else if (currentPage?.originalData?.page === 8 && currentPage?.originalData?.type === 'page_image') {
+              // Page 8 - Blue Train Session - Add YouTube search (same as page 7)
+              return (
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  {selectedVideo ? (
+                    // Video Player View
+                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <div style={{
+                        padding: '1rem',
+                        borderBottom: '1px solid #e5e7eb',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                        <button
+                          onClick={closeVideo}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            background: '#f3f4f6',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '6px',
+                            padding: '0.5rem 1rem',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            color: '#374151',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#e5e7eb';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#f3f4f6';
+                          }}
+                        >
+                          ← Back to Search
+                        </button>
+                      </div>
+
+                      {showPlaylistView && videoPlaylistData && (
+                        <>
+                          {/* Modal Background Overlay */}
+                          <div style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            zIndex: 50,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }} onClick={() => setShowPlaylistView(false)}>
+                            {/* Modal Content */}
+                            <div style={{
+                              position: 'relative',
+                              width: '90%',
+                              maxWidth: '600px',
+                              maxHeight: '90vh',
+                              background: 'white',
+                              borderRadius: '12px',
+                              padding: '1.5rem',
+                              overflowY: 'auto',
+                              boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+                            }} onClick={(e) => e.stopPropagation()}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#000' }}>
+                                  📚 Works & Playlists
+                                </h3>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                  {/* Playlist Counter */}
+                                  <div style={{
+                                    background: '#10b981',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '6px',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    🎵 Playlist: {currentPlaylist.length} tracks
+                                  </div>
+                                  {currentPlaylist.length > 0 && (
+                                    <>
+                                      <button
+                                        onClick={() => {
+                                          playPlaylist();
+                                          setShowPlaylistView(false);
+                                        }}
+                                        style={{
+                                          background: '#3b82f6',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '6px',
+                                          padding: '0.5rem 1rem',
+                                          cursor: 'pointer',
+                                          fontSize: '16px',
+                                          fontWeight: '600'
+                                        }}
+                                      >
+                                        ▶ Play All
+                                      </button>
+                                      <button
+                                        onClick={clearPlaylist}
+                                        style={{
+                                          background: '#f59e0b',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '6px',
+                                          padding: '0.5rem 1rem',
+                                          cursor: 'pointer',
+                                          fontSize: '16px',
+                                          fontWeight: '600'
+                                        }}
+                                      >
+                                        Clear
+                                      </button>
+                                    </>
+                                  )}
+                                  <button
+                                    onClick={() => setShowPlaylistView(false)}
+                                    style={{
+                                      background: '#ef4444',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      cursor: 'pointer',
+                                      fontSize: '16px',
+                                      fontWeight: '600'
+                                    }}
+                                  >
+                                    ✕ Close
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Works Section */}
+                              {videoPlaylistData.works && videoPlaylistData.works.length > 0 && (
+                                <div style={{ marginBottom: '2rem' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '22px', fontWeight: '600', color: '#000' }}>
+                                      🎵 Works Mentioned ({videoPlaylistData.works.length})
+                                    </h4>
+                                    <button
+                                      onClick={() => toggleAllWorks(true)}
+                                      style={{
+                                        background: areAllWorksAdded(true) ? '#ef4444' : '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 1rem',
+                                        cursor: 'pointer',
+                                        fontSize: '16px',
+                                        fontWeight: '600'
+                                      }}
+                                    >
+                                      {areAllWorksAdded(true) ? '- Remove All' : '+ Add All'}
+                                    </button>
+                                  </div>
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                                    {videoPlaylistData.works.map((work: any, idx: number) => {
+                                      const isAdded = currentPlaylist.some(item =>
+                                        item.title === work.title && item.artist === work.artist
+                                      );
+                                      return (
+                                        <div
+                                          key={idx}
+                                          style={{
+                                            background: isAdded ? '#dcfce7' : '#f0fdf4',
+                                            border: isAdded ? '2px solid #16a34a' : '2px solid #22c55e',
+                                            borderRadius: '8px',
+                                            padding: '0.75rem 1rem',
+                                            fontSize: '18px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            color: '#000',
+                                            opacity: isAdded ? 0.8 : 1
+                                          }}
+                                        >
+                                          <button
+                                            onClick={() => toggleIndividualSong(work)}
+                                            style={{
+                                              background: isAdded ? '#ef4444' : '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '4px',
+                                              padding: '0.25rem 0.5rem',
+                                              cursor: 'pointer',
+                                              fontSize: '14px',
+                                              fontWeight: '600',
+                                              marginRight: '0.5rem'
+                                            }}
+                                          >
+                                            {isAdded ? '- Remove' : '+ Add'}
+                                          </button>
+                                          <strong>{work.title}</strong> - {work.artist}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Playlists Section */}
+                              {videoPlaylistData.playlists && videoPlaylistData.playlists.length > 0 && (
+                                <div>
+                                  <h4 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '1rem', color: '#000' }}>
+                                    🎼 Discovery Playlists ({videoPlaylistData.playlists.length})
+                                  </h4>
+                                  <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
+                                    {videoPlaylistData.playlists.map((playlist: any, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        style={{
+                                          marginBottom: '1.5rem',
+                                          background: '#faf5ff',
+                                          border: '2px solid #8b5cf6',
+                                          borderRadius: '8px',
+                                          padding: '1rem'
+                                        }}
+                                      >
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                                          <h5 style={{ fontSize: '20px', fontWeight: '600', color: '#000' }}>
+                                            {playlist.name}
+                                          </h5>
+                                          <button
+                                            onClick={() => toggleAllPlaylistTracks(playlist.name, playlist.tracks)}
+                                            style={{
+                                              background: areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '#ef4444' : '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '6px',
+                                              padding: '0.4rem 0.8rem',
+                                              cursor: 'pointer',
+                                              fontSize: '15px',
+                                              fontWeight: '600'
+                                            }}
+                                          >
+                                            {areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '- Remove All' : '+ Add All'}
+                                          </button>
+                                        </div>
+                                        <div style={{ fontSize: '16px', color: '#000' }}>
+                                          {playlist.tracks.map((track: any, tidx: number) => {
+                                            const isAdded = currentPlaylist.some(item =>
+                                              item.title === track.title && item.artist === track.artist
+                                            );
+                                            return (
+                                              <div
+                                                key={tidx}
+                                                style={{
+                                                  marginBottom: '0.5rem',
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  gap: '0.5rem',
+                                                  padding: '0.25rem 0.5rem',
+                                                  background: isAdded ? '#dcfce7' : 'transparent',
+                                                  borderRadius: '4px'
+                                                }}
+                                              >
+                                                <button
+                                                  onClick={() => toggleIndividualSong(track)}
+                                                  style={{
+                                                    background: isAdded ? '#ef4444' : '#3b82f6',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '4px',
+                                                    padding: '0.2rem 0.4rem',
+                                                    cursor: 'pointer',
+                                                    fontSize: '12px',
+                                                    fontWeight: '600',
+                                                    opacity: 1
+                                                  }}
+                                                >
+                                                  {isAdded ? '- Remove' : '+ Add'}
+                                                </button>
+                                                <span style={{ opacity: isAdded ? 0.8 : 1 }}>
+                                                  <strong>"{track.title}"</strong> - {track.artist}
+                                                </span>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Playlist Player Modal - Shows YouTube videos for playlist tracks */}
+                      {showPlaylistPlayer && (
+                        <>
+                          {/* Modal Background Overlay */}
+                          <div style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(0, 0, 0, 0.8)',
+                            zIndex: 60,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }} onClick={() => {
+                            setShowPlaylistPlayer(false);
+                            setPlaylistVideos([]);
+                            setCurrentTrackIndex(0);
+                          }}>
+                            {/* Modal Content */}
+                            <div style={{
+                              position: 'relative',
+                              width: '95%',
+                              maxWidth: '1400px',
+                              height: '90vh',
+                              background: '#1a1a1a',
+                              borderRadius: '12px',
+                              padding: '1.5rem',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+                            }} onClick={(e) => e.stopPropagation()}>
+
+                              {/* Header */}
+                              <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '1rem',
+                                borderBottom: '2px solid #333',
+                                paddingBottom: '1rem'
+                              }}>
+                                <h2 style={{
+                                  fontSize: '28px',
+                                  fontWeight: 'bold',
+                                  color: 'white',
+                                  margin: 0
+                                }}>
+                                  🎵 Playlist Player ({playlistVideos.length} videos)
+                                </h2>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                  <div style={{
+                                    background: '#4ade80',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '6px',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    Track {currentTrackIndex + 1} of {playlistVideos.length}
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      setShowPlaylistPlayer(false);
+                                      setPlaylistVideos([]);
+                                      setCurrentTrackIndex(0);
+                                    }}
+                                    style={{
+                                      background: '#ef4444',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      cursor: 'pointer',
+                                      fontSize: '16px',
+                                      fontWeight: '600'
+                                    }}
+                                  >
+                                    ✕ Close Player
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Main Content Area */}
+                              <div style={{ display: 'flex', flex: 1, gap: '1rem', overflow: 'hidden' }}>
+                                {/* Left Side - Video Player */}
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                                  {loadingPlaylistVideos ? (
+                                    <div style={{
+                                      flex: 1,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      background: '#2a2a2a',
+                                      borderRadius: '8px'
+                                    }}>
+                                      <div style={{ textAlign: 'center', color: '#fff' }}>
+                                        <div style={{ fontSize: '24px', marginBottom: '1rem' }}>⏳ Loading videos...</div>
+                                        <div>Searching YouTube for playlist tracks</div>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <>
+                                    {playlistVideos[currentTrackIndex]?.videoId ? (
+                                      <iframe
+                                        key={playlistVideos[currentTrackIndex].videoId}
+                                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1&rel=0`}
+                                        style={{
+                                          width: '100%',
+                                          flex: 1,
+                                          border: 'none',
+                                          borderRadius: '8px',
+                                          background: '#000'
+                                        }}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                      />
+                                    ) : (
+                                      <div style={{
+                                        flex: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        background: '#2a2a2a',
+                                        borderRadius: '8px',
+                                        color: '#888'
+                                      }}>
+                                        <div style={{ textAlign: 'center' }}>
+                                          <div style={{ fontSize: '24px', marginBottom: '1rem' }}>❌ Video not found</div>
+                                          <div>Could not find a YouTube video for this track</div>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Player Controls */}
+                                    <div style={{
+                                      display: 'flex',
+                                      gap: '1rem',
+                                      justifyContent: 'center',
+                                      padding: '1rem',
+                                      background: '#2a2a2a',
+                                      borderRadius: '8px'
+                                    }}>
+                                      <button
+                                        onClick={() => setCurrentTrackIndex(Math.max(0, currentTrackIndex - 1))}
+                                        disabled={currentTrackIndex === 0}
+                                        style={{
+                                          background: currentTrackIndex === 0 ? '#555' : '#3b82f6',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '6px',
+                                          padding: '0.75rem 1.5rem',
+                                          cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer',
+                                          fontSize: '16px',
+                                          fontWeight: '600'
+                                        }}
+                                      >
+                                        ⏮ Previous
+                                      </button>
+                                      <button
+                                        onClick={() => setCurrentTrackIndex(Math.min(playlistVideos.length - 1, currentTrackIndex + 1))}
+                                        disabled={currentTrackIndex === playlistVideos.length - 1}
+                                        style={{
+                                          background: currentTrackIndex === playlistVideos.length - 1 ? '#555' : '#3b82f6',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '6px',
+                                          padding: '0.75rem 1.5rem',
+                                          cursor: currentTrackIndex === playlistVideos.length - 1 ? 'not-allowed' : 'pointer',
+                                          fontSize: '16px',
+                                          fontWeight: '600'
+                                        }}
+                                      >
+                                        Next ⏭
+                                      </button>
+                                    </div>
+                                  </>
+                                  )}
+                                </div>
+
+                                {/* Right Side - Playlist */}
+                                <div style={{
+                                  flex: '0 0 30%',
+                                  background: '#2a2a2a',
+                                  borderRadius: '8px',
+                                  padding: '1rem',
+                                  overflowY: 'auto'
+                                }}>
+                                  <h3 style={{
+                                    fontSize: '22px',
+                                    fontWeight: 'bold',
+                                    color: '#fff',
+                                    marginBottom: '1rem',
+                                    borderBottom: '1px solid #444',
+                                    paddingBottom: '0.5rem'
+                                  }}>
+                                    Playlist Tracks
+                                  </h3>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    {playlistVideos.map((video, idx) => (
+                                      <div
+                                        key={idx}
+                                        onClick={() => setCurrentTrackIndex(idx)}
+                                        style={{
+                                          background: idx === currentTrackIndex ? '#3b82f6' : '#333',
+                                          padding: '0.75rem',
+                                          borderRadius: '6px',
+                                          cursor: 'pointer',
+                                          transition: 'all 0.2s',
+                                          border: idx === currentTrackIndex ? '2px solid #60a5fa' : '2px solid transparent'
+                                        }}
+                                      >
+                                        <div style={{
+                                          fontSize: '18px',
+                                          fontWeight: idx === currentTrackIndex ? 'bold' : 'normal',
+                                          color: '#fff'
+                                        }}>
+                                          {idx + 1}. {video.title} - {video.artist}
+                                        </div>
+                                        {video.videoId && (
+                                          <div style={{
+                                            fontSize: '14px',
+                                            color: idx === currentTrackIndex ? '#bfdbfe' : '#10b981',
+                                            marginTop: '0.25rem'
+                                          }}>
+                                            ✓ Video found
+                                          </div>
+                                        )}
+                                        {video.error && (
+                                          <div style={{
+                                            fontSize: '14px',
+                                            color: '#f87171',
+                                            marginTop: '0.25rem'
+                                          }}>
+                                            ✗ No video
+                                          </div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      <iframe
+                        ref={videoIframeRef}
+                        srcDoc={videoEmbedHtml}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          border: 'none',
+                          flex: 1
+                        }}
+                        title={selectedVideo.title}
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : (
+                    // Search View
+                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      {/* Search Form */}
+                      <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ display: 'flex', gap: '0.75rem' }}>
+                          <input
+                            type="text"
+                            className="united-tribes-search-input"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search UnitedTribes videos"
+                            style={{
+                              flex: 1,
+                              padding: '1rem 1.5rem',
+                              border: '2px solid #1e3a8a',
+                              borderRadius: '10px',
+                              fontSize: '24px',
+                              outline: 'none',
+                              fontWeight: '500',
+                              color: '#000',
+                              backgroundColor: 'white',
+                              lineHeight: '1.2'
+                            }}
+                            onFocus={(e) => {
+                              e.currentTarget.style.borderColor = '#3b82f6';
+                              e.currentTarget.style.backgroundColor = '#f0f9ff';
+                              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                            }}
+                            onBlur={(e) => {
+                              e.currentTarget.style.borderColor = '#1e3a8a';
+                              e.currentTarget.style.backgroundColor = 'white';
+                              e.currentTarget.style.boxShadow = 'none';
+                            }}
+                          />
+                          <button
+                            type="submit"
+                            style={{
+                              padding: '1rem 2rem',
+                              background: '#3b82f6',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '10px',
+                              fontSize: '20px',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#2563eb';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#3b82f6';
+                            }}
+                          >
+                            Search
+                          </button>
+                        </div>
+                      </form>
+
+                      {/* Search Results */}
+                      {searchLoading && (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: '#3b82f6', fontSize: '18px', fontWeight: '600' }}>
+                          Searching videos...
+                        </div>
+                      )}
+
+                      {searchError && (
+                        <div style={{
+                          padding: '1rem',
+                          background: '#fee2e2',
+                          color: '#dc2626',
+                          borderRadius: '8px',
+                          marginBottom: '1rem'
+                        }}>
+                          {searchError}
+                        </div>
+                      )}
+
+                      {!searchLoading && searchResults.length > 0 && (
+                        <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
+                          <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                            Search Results ({searchResults.length})
+                          </h4>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                            {searchResults.map((video: any) => (
+                              <div
+                                key={video.id}
+                                style={{
+                                  cursor: 'pointer',
+                                  borderRadius: '8px',
+                                  overflow: 'hidden',
+                                  background: 'white',
+                                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                  transition: 'transform 0.2s, box-shadow 0.2s'
+                                }}
+                                onClick={() => embedVideo(video)}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.transform = 'translateY(-2px)';
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = 'translateY(0)';
+                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                }}
+                              >
+                                {video.thumbnail && (
+                                  <img
+                                    src={video.thumbnail}
+                                    alt={video.title}
+                                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                                  />
+                                )}
+                                <div style={{ padding: '1rem' }}>
+                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                    {video.title}
+                                  </p>
+                                  <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                    {video.channel} • {video.duration}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
+                        <div style={{
+                          textAlign: 'center',
+                          padding: '2rem',
+                          color: '#6b7280'
+                        }}>
+                          No results found for "{searchQuery}"
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
             } else {
                 // Default Discovery panel placeholder for other pages
                 return (
