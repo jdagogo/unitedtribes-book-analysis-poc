@@ -2882,9 +2882,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
               ) : (
                 // Search Interface View
                 <div>
-                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
-                    YouTube Analysis Integration
-                  </h3>
 
               <div style={{ padding: '2rem', color: '#1f2937' }}>
                 <p style={{ marginBottom: '1rem', textAlign: 'center', fontSize: '20px', fontWeight: '700', color: '#000000' }}>
@@ -3446,12 +3443,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         </p>
                                       </div>
                                       <iframe
-                                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].id}?autoplay=1`}
+                                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1`}
                                         style={{
                                           width: '100%',
-                                          height: '400px',
+                                          flex: 1,
                                           border: 'none',
-                                          borderRadius: '8px'
+                                          borderRadius: '8px',
+                                          background: '#000'
                                         }}
                                         title={playlistVideos[currentTrackIndex].title}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -3587,9 +3585,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   ) : (
                     // Search Interface View
                     <div>
-                      <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1.5rem', color: '#1e3a8a' }}>
-                        YouTube Analysis Integration
-                      </h3>
 
                   <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                     {/* Search Form */}
