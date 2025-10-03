@@ -101,10 +101,22 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     setSelectedVideo(null);
   }, [currentPageIndex]);
   const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
+  const [savedVideoEmbedHtml, setSavedVideoEmbedHtml] = useState<string>(''); // Store video HTML before playlist
   const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
   const [showPlaylistView, setShowPlaylistView] = useState(false);
   const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
   const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
+
+  // Discovery panel state for page 15
+  const [discoveryTab, setDiscoveryTab] = useState<'musicians' | 'film' | 'connections' | 'readlisten'>('musicians');
+
+  // Book modal state
+  const [showBookModal, setShowBookModal] = useState(false);
+  const [currentBookUrl, setCurrentBookUrl] = useState('');
+  const [currentBookId, setCurrentBookId] = useState('');
+  const [bookModalVideoHtml, setBookModalVideoHtml] = useState('');
+  const [bookModalVideoData, setBookModalVideoData] = useState<any>(null);
+  const [showAudioPlayer, setShowAudioPlayer] = useState(false);
 
   // Track items added by each "Add All" button for toggle functionality
   const [addedWorksMain, setAddedWorksMain] = useState<Set<string>>(new Set());
@@ -326,6 +338,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   // Play the playlist - search YouTube for each track
   const playPlaylist = async () => {
     if (currentPlaylist.length === 0) return;
+
+    // Temporarily clear and restore video HTML to stop it from playing
+    // This pauses the video without breaking the player view
+    const currentHtml = videoEmbedHtml;
+    setSavedVideoEmbedHtml(currentHtml);
+    setVideoEmbedHtml('');
+
+    // Restore after a brief moment so the player container stays visible
+    setTimeout(() => {
+      setVideoEmbedHtml(currentHtml);
+    }, 100);
 
     setLoadingPlaylistVideos(true);
     setShowPlaylistPlayer(true);
@@ -2619,6 +2642,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         setShowPlaylistPlayer(false);
                         setPlaylistVideos([]);
                         setCurrentTrackIndex(0);
+                        // Restore the saved video HTML
+                        if (savedVideoEmbedHtml) {
+                          setVideoEmbedHtml(savedVideoEmbedHtml);
+                        }
                       }}>
                         {/* Modal Content */}
                         <div style={{
@@ -2655,6 +2682,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 setShowPlaylistPlayer(false);
                                 setPlaylistVideos([]);
                                 setCurrentTrackIndex(0);
+                                // Restore the saved video HTML
+                                if (savedVideoEmbedHtml) {
+                                  setVideoEmbedHtml(savedVideoEmbedHtml);
+                                }
                               }}
                               style={{
                                 background: '#ef4444',
@@ -3363,6 +3394,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             setShowPlaylistPlayer(false);
                             setPlaylistVideos([]);
                             setCurrentTrackIndex(0);
+                            // Restore the saved video HTML
+                            if (savedVideoEmbedHtml) {
+                              setVideoEmbedHtml(savedVideoEmbedHtml);
+                            }
                           }}>
                             {/* Modal Content */}
                             <div style={{
@@ -3590,35 +3625,78 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     {/* Search Form */}
                     <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                       <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        <input
-                          type="text"
-                          className="united-tribes-search-input"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search UnitedTribes videos"
-                          style={{
-                            flex: 1,
-                            padding: '1rem 1.5rem',
-                            border: '2px solid #1e3a8a',
-                            borderRadius: '10px',
-                            fontSize: '24px',
-                            outline: 'none',
-                            fontWeight: '500',
-                            color: '#000',
-                            backgroundColor: 'white',
-                            lineHeight: '1.2'
-                          }}
-                          onFocus={(e) => {
-                            e.currentTarget.style.borderColor = '#3b82f6';
-                            e.currentTarget.style.backgroundColor = '#f0f9ff';
-                            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
-                          }}
-                          onBlur={(e) => {
-                            e.currentTarget.style.borderColor = '#1e3a8a';
-                            e.currentTarget.style.backgroundColor = 'white';
-                            e.currentTarget.style.boxShadow = 'none';
-                          }}
-                        />
+                        <div style={{ position: 'relative', flex: 1 }}>
+                          <input
+                            type="text"
+                            className="united-tribes-search-input"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search UnitedTribes videos"
+                            style={{
+                              width: '100%',
+                              padding: '1rem 3.5rem 1rem 1.5rem',
+                              border: '2px solid #1e3a8a',
+                              borderRadius: '10px',
+                              fontSize: '24px',
+                              outline: 'none',
+                              fontWeight: '500',
+                              color: '#000',
+                              backgroundColor: 'white',
+                              lineHeight: '1.2'
+                            }}
+                            onFocus={(e) => {
+                              e.currentTarget.style.borderColor = '#3b82f6';
+                              e.currentTarget.style.backgroundColor = '#f0f9ff';
+                              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                            }}
+                            onBlur={(e) => {
+                              e.currentTarget.style.borderColor = '#1e3a8a';
+                              e.currentTarget.style.backgroundColor = 'white';
+                              e.currentTarget.style.boxShadow = 'none';
+                            }}
+                          />
+                          {searchQuery && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSearchQuery('');
+                                setSearchResults([]);
+                                setSearchError(null);
+                              }}
+                              style={{
+                                position: 'absolute',
+                                right: '1rem',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: '50%',
+                                border: '2px solid #6b7280',
+                                background: 'white',
+                                color: '#6b7280',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '18px',
+                                fontWeight: 'bold',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = '#ef4444';
+                                e.currentTarget.style.borderColor = '#ef4444';
+                                e.currentTarget.style.color = 'white';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'white';
+                                e.currentTarget.style.borderColor = '#6b7280';
+                                e.currentTarget.style.color = '#6b7280';
+                              }}
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
                         <button
                           type="submit"
                           style={{
@@ -3718,6 +3796,709 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         color: '#6b7280'
                       }}>
                         No results found for "{searchQuery}"
+                      </div>
+                    )}
+
+                    {/* ENHANCED DISCOVERY PANEL - PAGE 15 ONLY */}
+                    {currentPage?.originalData?.page === 15 && (
+                      <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
+                        <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
+                          🎵 Discover More About This Album
+                        </h3>
+
+                        {/* Tab Navigation */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
+                          <button
+                            onClick={() => setDiscoveryTab('musicians')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'musicians' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'musicians' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'musicians' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Musicians
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('film')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'film' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'film' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'film' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Film Career
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('connections')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'connections' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'connections' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'connections' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Connections
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('readlisten')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'readlisten' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'readlisten' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'readlisten' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Read & Listen
+                          </button>
+                        </div>
+
+                        {/* Tab Content */}
+                        <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          {discoveryTab === 'musicians' && (
+                            <div>
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Album Personnel</h4>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🎷 Dexter Gordon - Tenor Saxophone</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Also appears on Page 12 (Doin' Allright)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#3b82f6', marginTop: '0.5rem' }}>
+                                  🎬 Starred in "Round Midnight" (1986) - See Film Career tab
+                                </p>
+                              </div>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🎹 Sonny Clark - Piano</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Blue Note session legend known for his bluesy, hard-swinging style
+                                </p>
+                              </div>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🎸 Butch Warren - Bass</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Solid, swinging bassist who appeared on many Blue Note sessions
+                                </p>
+                              </div>
+
+                              <div style={{ padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🥁 Billy Higgins - Drums</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  One of the most recorded drummers in jazz history
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {discoveryTab === 'film' && (
+                            <div>
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>🎬 Round Midnight (1986)</h4>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  Dexter Gordon's Acting Career
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.6' }}>
+                                  Dexter Gordon received an Academy Award nomination for Best Actor for his role
+                                  in Bertrand Tavernier's "Round Midnight" - a rare honor for a jazz musician.
+                                </p>
+                              </div>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.6', marginBottom: '0.5rem' }}>
+                                  The film tells the story of an aging jazz saxophonist in Paris, inspired by the lives
+                                  of Bud Powell and Lester Young.
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', fontStyle: 'italic' }}>
+                                  Directed by Bertrand Tavernier
+                                </p>
+                              </div>
+
+                              {/* Video Player */}
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+                                  🎥 Watch the trailer:
+                                </p>
+                                <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '8px' }}>
+                                  <iframe
+                                    src="https://www.youtube.com/embed/JFIOUdVSTQw"
+                                    style={{
+                                      position: 'absolute',
+                                      top: 0,
+                                      left: 0,
+                                      width: '100%',
+                                      height: '100%',
+                                      border: 'none',
+                                      borderRadius: '8px'
+                                    }}
+                                    title="Round Midnight - Dexter Gordon"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Stream/Purchase Film */}
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: '#fef3c7', borderRadius: '6px', border: '2px solid #fbbf24' }}>
+                                <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#92400e', marginBottom: '0.5rem' }}>
+                                  🎬 Stream the Film
+                                </p>
+                                <p style={{ fontSize: '13px', color: '#78350f', marginBottom: '1rem' }}>
+                                  Available on Criterion Collection with restored picture and sound
+                                </p>
+                                <a
+                                  href="https://www.criterion.com/films/28405-round-midnight"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    display: 'inline-block',
+                                    fontSize: '13px',
+                                    color: '#fff',
+                                    background: '#92400e',
+                                    padding: '0.5rem 1.5rem',
+                                    borderRadius: '6px',
+                                    textDecoration: 'none',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Purchase from Criterion here
+                                </a>
+                              </div>
+
+                              {/* Criterion Article */}
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  📖 Criterion Collection: "Return from Exile"
+                                </p>
+                                <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '1rem', lineHeight: '1.5' }}>
+                                  Deep dive into the making of Round Midnight and Dexter Gordon's remarkable comeback
+                                </p>
+                                <iframe
+                                  src="https://www.criterion.com/current/posts/7757--round-midnight-return-from-exile"
+                                  style={{
+                                    width: '100%',
+                                    height: '400px',
+                                    border: '1px solid #e5e7eb',
+                                    borderRadius: '6px',
+                                    marginBottom: '0.5rem'
+                                  }}
+                                  title="Criterion - Round Midnight Article"
+                                />
+                                <a
+                                  href="https://www.criterion.com/current/posts/7757--round-midnight-return-from-exile"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    fontSize: '12px',
+                                    color: '#3b82f6',
+                                    textDecoration: 'underline'
+                                  }}
+                                >
+                                  Open in new tab →
+                                </a>
+                              </div>
+
+                              {/* New Yorker Article */}
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  📰 The New Yorker: "A Feast of Music and Acting"
+                                </p>
+                                <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '1rem', lineHeight: '1.5' }}>
+                                  Classic review of the film from The New Yorker archives
+                                </p>
+                                <img
+                                  src="https://www.dropbox.com/scl/fi/ps1qr5mdigvfefjicnbxw/Round-Midnight-Revisited-A-Feast-of-Music-and-Acting-The-New-Yorker-2.png?rlkey=ox3tb9fqzkv4y6l2hluzu5ai1&raw=1"
+                                  alt="The New Yorker article on Round Midnight"
+                                  style={{
+                                    width: '100%',
+                                    borderRadius: '6px',
+                                    marginBottom: '0.5rem',
+                                    border: '1px solid #e5e7eb'
+                                  }}
+                                />
+                                <a
+                                  href="https://www.newyorker.com/magazine/2018/08/06/round-midnight-revisited-a-feast-of-music-and-acting"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    display: 'inline-block',
+                                    fontSize: '13px',
+                                    color: '#fff',
+                                    background: '#92400e',
+                                    padding: '0.5rem 1.5rem',
+                                    borderRadius: '6px',
+                                    textDecoration: 'none',
+                                    fontWeight: '600',
+                                    marginTop: '0.5rem'
+                                  }}
+                                >
+                                  Read Full Article ($1.00)
+                                </a>
+                              </div>
+                            </div>
+                          )}
+
+                          {discoveryTab === 'connections' && (
+                            <div>
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Connections in This Book</h4>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  📖 Dexter Gordon Albums
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 12: Doin' Allright (1961)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 15: GO (1962) ← You are here
+                                </p>
+                              </div>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  🎨 Reid Miles Cover Designs
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.5rem' }}>
+                                  This bold typographic style appears on:
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 9: Thelonious Monk - Genius of Modern Music
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 14: Hank Mobley - A Caddy for Daddy
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 16: Wayne Shorter - The All Seeing Eye
+                                </p>
+                              </div>
+
+                              <div style={{ padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  🎺 Hard Bop Era (1960-1962)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 11: Cannonball Adderley - Somethin' Else (1958)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 12: Dexter Gordon - Doin' Allright (1961)
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {discoveryTab === 'readlisten' && (
+                            <div>
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>📚 Related Books & Audio</h4>
+
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+
+                                {/* Kansas City Lightning */}
+                                <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                  <img
+                                    src="https://www.harpercollins.com/cdn/shop/files/9780062005618_1618c813-096a-4f49-bebe-775d51820fcc.jpg?v=1759161105&width=350"
+                                    alt="Kansas City Lightning"
+                                    style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                  />
+                                  <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>Kansas City Lightning</h5>
+                                  <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>by Stanley Crouch</p>
+                                  <button
+                                    onClick={async () => {
+                                      setCurrentBookUrl('https://www.harpercollins.com/products/kansas-city-lightning-stanley-crouch?variant=40974806220834');
+                                      setCurrentBookId('kansas-city-lightning');
+
+                                      // Preload the video for the modal
+                                      try {
+                                        const video = {
+                                          id: 'stanely_crouch_on_kansas_city_lightning_the_rise_a',
+                                          title: 'Stanley Crouch on "Kansas City Lightning: The Rise and Times of Charlie Parker"'
+                                        };
+
+                                        const response = await fetch(`/api/videos/${video.id}/embed-html`);
+                                        if (response.ok) {
+                                          const htmlContent = await response.text();
+                                          setBookModalVideoHtml(htmlContent);
+                                          setBookModalVideoData(video);
+                                        }
+                                      } catch (error) {
+                                        console.error('Error loading video for modal:', error);
+                                      }
+
+                                      setShowBookModal(true);
+                                    }}
+                                    style={{
+                                      display: 'block',
+                                      width: '100%',
+                                      padding: '0.75rem',
+                                      background: '#00563f',
+                                      color: 'white',
+                                      textAlign: 'center',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      fontWeight: '600',
+                                      fontSize: '14px',
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    Buy on HarperCollins
+                                  </button>
+                                </div>
+
+                                {/* Strange Fruit */}
+                                <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                  <img
+                                    src="https://www.harpercollins.com/cdn/shop/products/9780060959562_743f3505-1385-4671-8d13-ff7266b59fa3.jpg?v=1699295481&width=350"
+                                    alt="Strange Fruit"
+                                    style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                  />
+                                  <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>Strange Fruit</h5>
+                                  <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>by David Margolick</p>
+                                  <button
+                                    onClick={() => {
+                                      setCurrentBookUrl('https://www.harpercollins.com/products/strange-fruit-david-margolickdavid-margolick?variant=41176753209378');
+                                      setShowBookModal(true);
+                                    }}
+                                    style={{
+                                      display: 'block',
+                                      width: '100%',
+                                      padding: '0.75rem',
+                                      background: '#00563f',
+                                      color: 'white',
+                                      textAlign: 'center',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      fontWeight: '600',
+                                      fontSize: '14px',
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    Buy on HarperCollins
+                                  </button>
+                                </div>
+
+                                {/* The Jazzmen */}
+                                <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                  <img
+                                    src="https://www.harpercollins.com/cdn/shop/files/9780063444867_5591af52-3546-420e-9c1c-01e009614e19.jpg?v=1759274524&width=350"
+                                    alt="The Jazzmen"
+                                    style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                  />
+                                  <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>The Jazzmen</h5>
+                                  <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>by Larry Tye</p>
+                                  <button
+                                    onClick={() => {
+                                      setCurrentBookUrl('https://www.harpercollins.com/products/the-jazzmen-larry-tye?variant=43110379749410');
+                                      setShowBookModal(true);
+                                    }}
+                                    style={{
+                                      display: 'block',
+                                      width: '100%',
+                                      padding: '0.75rem',
+                                      background: '#00563f',
+                                      color: 'white',
+                                      textAlign: 'center',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      fontWeight: '600',
+                                      fontSize: '14px',
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    Buy on HarperCollins
+                                  </button>
+                                </div>
+
+                                {/* Dexter Gordon Book from Amazon */}
+                                <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                  <img
+                                    src="https://m.media-amazon.com/images/I/71IrtNbSGFL._SY522_.jpg"
+                                    alt="Sophisticated Giant: Dexter Gordon"
+                                    style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                  />
+                                  <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>Sophisticated Giant</h5>
+                                  <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>The Life of Dexter Gordon</p>
+                                  <button
+                                    onClick={() => {
+                                      setCurrentBookUrl('https://www.amazon.com/exec/obidos/ASIN/0520280644/wnycorg-20/');
+                                      setShowBookModal(true);
+                                    }}
+                                    style={{
+                                      display: 'block',
+                                      width: '100%',
+                                      padding: '0.75rem',
+                                      background: '#ff9900',
+                                      color: 'white',
+                                      textAlign: 'center',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      fontWeight: '600',
+                                      fontSize: '14px',
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    Buy on Amazon
+                                  </button>
+                                </div>
+
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Book Modal - Enhanced with Purchase, Audiobook, and Video */}
+                    {showBookModal && (
+                      <div
+                        style={{
+                          position: 'fixed',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'rgba(0, 0, 0, 0.85)',
+                          zIndex: 60,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '2rem'
+                        }}
+                        onClick={() => setShowBookModal(false)}
+                      >
+                        <div
+                          style={{
+                            position: 'relative',
+                            width: '75%',
+                            maxWidth: '1200px',
+                            background: '#fff',
+                            borderRadius: '12px',
+                            padding: '2rem',
+                            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                            maxHeight: '90vh',
+                            overflowY: 'auto'
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {/* Close button */}
+                          <button
+                            onClick={() => setShowBookModal(false)}
+                            style={{
+                              position: 'absolute',
+                              top: '1rem',
+                              right: '1rem',
+                              background: '#ef4444',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '50%',
+                              width: '40px',
+                              height: '40px',
+                              cursor: 'pointer',
+                              fontSize: '20px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              zIndex: 10
+                            }}
+                          >
+                            ✕
+                          </button>
+
+                          {/* Enhanced modal for Kansas City Lightning */}
+                          {currentBookId === 'kansas-city-lightning' ? (
+                            <div>
+                              {/* Section 1: Purchase */}
+                              <div style={{ marginBottom: '2rem' }}>
+                                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
+                                  📚 Purchase Book
+                                </h3>
+                                <div style={{ textAlign: 'center', background: '#f9fafb', padding: '1.5rem', borderRadius: '8px' }}>
+                                  <img
+                                    src="https://www.dropbox.com/scl/fi/ij9eb3s2hhe5t5sdfgocs/Screenshot-2025-10-03-at-10.28.15-AM.png?rlkey=l6t415nrnw0f6khaygc2nnsrf&raw=1"
+                                    alt="Kansas City Lightning on HarperCollins"
+                                    style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', marginBottom: '1rem' }}
+                                  />
+                                  <a
+                                    href={currentBookUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      display: 'inline-block',
+                                      padding: '1rem 2rem',
+                                      background: '#00563f',
+                                      color: 'white',
+                                      textDecoration: 'none',
+                                      borderRadius: '8px',
+                                      fontSize: '18px',
+                                      fontWeight: '600'
+                                    }}
+                                  >
+                                    Buy on HarperCollins →
+                                  </a>
+                                </div>
+                              </div>
+
+                              {/* Section 2: Audiobook Sample */}
+                              <div style={{ marginBottom: '2rem' }}>
+                                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
+                                  🎧 Listen: Audiobook Sample
+                                </h3>
+                                <div style={{ background: '#f9fafb', padding: '1.5rem', borderRadius: '8px' }}>
+                                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                                    {/* Book cover */}
+                                    <div style={{ position: 'relative', flexShrink: 0 }}>
+                                      <img
+                                        src="https://www.harpercollins.com/cdn/shop/files/9780062005618_1618c813-096a-4f49-bebe-775d51820fcc.jpg?v=1759161105&width=350"
+                                        alt="Kansas City Lightning"
+                                        style={{
+                                          width: '150px',
+                                          height: 'auto',
+                                          borderRadius: '8px',
+                                          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                                        }}
+                                      />
+                                    </div>
+
+                                    {/* Info and buttons */}
+                                    <div style={{ flex: 1, minWidth: '250px' }}>
+                                      <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                        Kansas City Lightning
+                                      </h4>
+                                      <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '1rem' }}>
+                                        Narrated audiobook sample
+                                      </p>
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                        <button
+                                          onClick={() => setShowAudioPlayer(!showAudioPlayer)}
+                                          style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.5rem',
+                                            padding: '0.75rem 1.5rem',
+                                            background: '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            cursor: 'pointer'
+                                          }}
+                                        >
+                                          {showAudioPlayer ? '⏸ Hide Player' : '▶ Play Sample'}
+                                        </button>
+                                        <a
+                                          href="https://www.harpercollins.com/products/kansas-city-lightning-stanley-crouch?variant=40974806220834"
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            padding: '0.75rem 1.5rem',
+                                            background: '#00563f',
+                                            color: 'white',
+                                            textDecoration: 'none',
+                                            borderRadius: '6px',
+                                            fontSize: '16px',
+                                            fontWeight: '600'
+                                          }}
+                                        >
+                                          Buy on HarperCollins →
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Audio player (toggleable) */}
+                                  {showAudioPlayer && (
+                                    <div style={{ marginTop: '1rem', width: '100%' }}>
+                                      <iframe
+                                        src="https://www.youtube.com/embed/XMC9R3L1wo4?autoplay=1"
+                                        style={{
+                                          width: '100%',
+                                          height: '80px',
+                                          border: 'none',
+                                          borderRadius: '8px'
+                                        }}
+                                        title="Audiobook Sample"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Section 3: Video About the Book */}
+                              <div>
+                                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
+                                  🎬 Watch: Author Discussion
+                                </h3>
+                                <div style={{ background: '#f9fafb', padding: '1rem', borderRadius: '8px' }}>
+                                  <p style={{ fontSize: '16px', color: '#6b7280', marginBottom: '1rem' }}>
+                                    Stanley Crouch discusses "Kansas City Lightning: The Rise and Times of Charlie Parker"
+                                  </p>
+                                  <div style={{ width: '100%', height: '400px' }}>
+                                    <iframe
+                                      src="https://www.youtube.com/embed/zowjztg8QlI"
+                                      style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        border: 'none',
+                                        borderRadius: '8px'
+                                      }}
+                                      title="Stanley Crouch on Kansas City Lightning"
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                      allowFullScreen
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Fallback for other books - simple modal */
+                            <div style={{ textAlign: 'center', paddingTop: '1rem' }}>
+                              <p style={{ fontSize: '16px', color: '#6b7280', marginBottom: '1.5rem' }}>
+                                Click below to visit the book page and make a purchase
+                              </p>
+                              <a
+                                href={currentBookUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  display: 'inline-block',
+                                  padding: '1rem 2rem',
+                                  background: currentBookUrl.includes('amazon') ? '#ff9900' : '#00563f',
+                                  color: 'white',
+                                  textDecoration: 'none',
+                                  borderRadius: '8px',
+                                  fontSize: '18px',
+                                  fontWeight: '600'
+                                }}
+                              >
+                                {currentBookUrl.includes('amazon') ? 'Purchase on Amazon →' : 'Purchase on HarperCollins →'}
+                              </a>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -4040,6 +4821,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             setShowPlaylistPlayer(false);
                             setPlaylistVideos([]);
                             setCurrentTrackIndex(0);
+                            // Restore the saved video HTML
+                            if (savedVideoEmbedHtml) {
+                              setVideoEmbedHtml(savedVideoEmbedHtml);
+                            }
                           }}>
                             {/* Modal Content */}
                             <div style={{
@@ -4755,6 +5540,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             setShowPlaylistPlayer(false);
                             setPlaylistVideos([]);
                             setCurrentTrackIndex(0);
+                            // Restore the saved video HTML
+                            if (savedVideoEmbedHtml) {
+                              setVideoEmbedHtml(savedVideoEmbedHtml);
+                            }
                           }}>
                             {/* Modal Content */}
                             <div style={{
@@ -5453,6 +6242,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             setShowPlaylistPlayer(false);
                             setPlaylistVideos([]);
                             setCurrentTrackIndex(0);
+                            // Restore the saved video HTML
+                            if (savedVideoEmbedHtml) {
+                              setVideoEmbedHtml(savedVideoEmbedHtml);
+                            }
                           }}>
                             <div style={{
                               position: 'relative',
@@ -6022,6 +6815,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             setShowPlaylistPlayer(false);
                             setPlaylistVideos([]);
                             setCurrentTrackIndex(0);
+                            // Restore the saved video HTML
+                            if (savedVideoEmbedHtml) {
+                              setVideoEmbedHtml(savedVideoEmbedHtml);
+                            }
                           }}>
                             <div style={{
                               position: 'relative', width: '95%', maxWidth: '1400px', height: '90vh',
@@ -6046,6 +6843,10 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     setShowPlaylistPlayer(false);
                                     setPlaylistVideos([]);
                                     setCurrentTrackIndex(0);
+                                    // Restore the saved video HTML
+                                    if (savedVideoEmbedHtml) {
+                                      setVideoEmbedHtml(savedVideoEmbedHtml);
+                                    }
                                   }} style={{
                                     background: '#ef4444', color: 'white', border: 'none',
                                     borderRadius: '6px', padding: '0.5rem 1rem',
