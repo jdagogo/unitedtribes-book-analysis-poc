@@ -266,11 +266,125 @@
         </div>
 
         <div class="version-grid">
-            <!-- Version 4.2.2 STABLE ROLLBACK POINT -->
+            <!-- Version 4.3.1 IN DEVELOPMENT -->
+            <div class="version-card" style="border: 3px solid #f59e0b;">
+                <div class="version-header">
+                    <div class="version-title" style="color: #f59e0b;">Version 4.3.1</div>
+                    <div class="status development">🚧 IN DEVELOPMENT</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Branch:</span>
+                        <span>v4.3.1-development (to be created)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Base:</span>
+                        <span style="font-weight: bold; color: #22c55e;">v4.3.0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span style="color: #f59e0b;">Next Development Phase</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-tag wip">🚧 Additional Book Enhancements</div>
+                    <div class="feature-tag wip">🚧 Extended Modal Features</div>
+                    <div class="feature-tag wip">🚧 More Discovery Content</div>
+                </div>
+
+                <div class="alert" style="background: #fef3c7; border: 2px solid #f59e0b;">
+                    <strong>⚠️ DEVELOPMENT BRANCH</strong><br>
+                    Create this branch to continue development:<br>
+                    <code>git checkout -b v4.3.1-development</code>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-warning" onclick="createBranch431()">
+                        🚀 Create v4.3.1 Branch
+                    </button>
+                </div>
+            </div>
+
+            <!-- Version 4.3.0 STABLE ROLLBACK POINT -->
             <div class="version-card" style="border: 3px solid #22c55e;">
                 <div class="version-header">
-                    <div class="version-title" style="color: #22c55e;">Version 4.2.2</div>
+                    <div class="version-title" style="color: #22c55e;">Version 4.3.0</div>
                     <div class="status stable">⚡ STABLE ROLLBACK</div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label">Branch:</span>
+                        <span>v4.3-development</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Git Tag:</span>
+                        <span style="font-weight: bold; color: #22c55e;">v4.3.0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Commit:</span>
+                        <span>ef8e6ee</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Port:</span>
+                        <span>3004</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span style="color: #22c55e;">Currently Running</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Saved:</span>
+                        <span style="font-weight: bold;">October 3, 2025</span>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-tag">✅ Read & Listen Tab</div>
+                    <div class="feature-tag">✅ 4 HarperCollins/Amazon Books</div>
+                    <div class="feature-tag">✅ Enhanced Kansas City Lightning Modal</div>
+                    <div class="feature-tag">✅ Audiobook Sample Player</div>
+                    <div class="feature-tag">✅ Stanley Crouch Video Embed</div>
+                    <div class="feature-tag">✅ HarperCollins Integration</div>
+                </div>
+
+                <div class="success alert" style="background: #dcfce7; border: 2px solid #22c55e;">
+                    <strong>✅ VERIFIED STABLE ROLLBACK POINT</strong><br>
+                    HarperCollins book integration complete:<br>
+                    • Read & Listen tab on page 15<br>
+                    • Enhanced modal with purchase + audiobook + video<br>
+                    • Toggleable audio player (no new tabs)<br>
+                    • All book cover images working<br>
+                    • Clean HarperCollins branding (#00563f)
+                </div>
+
+                <div class="alert" style="background: #fef3c7; border: 1px solid #f59e0b;">
+                    <strong>⚠️ DO NOT MODIFY WITHOUT BRANCHING FIRST</strong><br>
+                    To rollback to this exact point:<br>
+                    <code>git checkout v4.3.0</code>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="rollbackTo430()">
+                        🛡️ ROLLBACK HERE
+                    </button>
+                    <a href="README-v4.3.0-enhanced-book-modal.md" target="_blank" class="btn btn-primary">
+                        📖 Full Documentation
+                    </a>
+                </div>
+            </div>
+
+            <!-- Version 4.2.2 Previous Stable -->
+            <div class="version-card">
+                <div class="version-header">
+                    <div class="version-title" style="color: #8b5cf6;">Version 4.2.2</div>
+                    <div class="status rollback">Previous Stable</div>
                 </div>
 
                 <div class="info-section">
@@ -562,9 +676,42 @@
             });
         }
 
-        function rollbackTo422() {
-            const message = '🛡️ ROLLBACK TO v4.2.2 (STABLE ROLLBACK POINT)\n\n' +
+        function rollbackTo430() {
+            const message = '🛡️ ROLLBACK TO v4.3.0 (STABLE ROLLBACK POINT)\n\n' +
                           'This will restore to the verified stable state:\n' +
+                          '✅ Read & Listen tab with HarperCollins books\n' +
+                          '✅ Enhanced Kansas City Lightning modal\n' +
+                          '✅ Audiobook sample player\n' +
+                          '✅ All features working\n\n' +
+                          'Commands to rollback:\n\n' +
+                          '1. Stop current server (Ctrl+C)\n' +
+                          '2. Save any uncommitted work:\n' +
+                          '   git stash\n\n' +
+                          '3. Rollback to stable point:\n' +
+                          '   git checkout v4.3.0\n\n' +
+                          '4. Restart server:\n' +
+                          '   PORT=3004 npm run dev\n\n' +
+                          'Git Tag: v4.3.0\n' +
+                          'Branch: v4.3-development\n' +
+                          'Commit: ef8e6ee';
+            alert(message);
+        }
+
+        function createBranch431() {
+            const message = '🚀 CREATE NEW BRANCH v4.3.1-development\n\n' +
+                          'This will create a new development branch based on v4.3.0:\n\n' +
+                          'Commands:\n' +
+                          '1. Make sure all changes are committed\n' +
+                          '2. Create and switch to new branch:\n\n' +
+                          '   git checkout -b v4.3.1-development\n\n' +
+                          '3. Continue development on the new branch\n\n' +
+                          'The v4.3.0 tag will remain as your safe rollback point.';
+            alert(message);
+        }
+
+        function rollbackTo422() {
+            const message = '🛡️ ROLLBACK TO v4.2.2 (Previous Stable)\n\n' +
+                          'This will restore to the v4.2.2 stable state:\n' +
                           '✅ Pages 7 and 18 working\n' +
                           '✅ No syntax errors\n' +
                           '✅ Server running clean\n\n' +
