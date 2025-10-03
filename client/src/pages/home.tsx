@@ -441,6 +441,22 @@ export default function Home() {
                     : "Discover the visual history of jazz through Blue Note's legendary album covers"}
                 </p>
               </div>
+
+              {/* Development Branch Indicator */}
+              <div className="mt-6 p-3 bg-gradient-to-r from-orange-100 to-amber-100 border-2 border-orange-300 rounded-lg">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                    <span className="font-bold text-orange-900">Development Branch:</span>
+                  </div>
+                  <code className="bg-orange-200 px-3 py-1 rounded font-mono text-sm text-orange-900 font-bold">
+                    v4.3.1-development
+                  </code>
+                  <span className="text-orange-700 text-sm">
+                    | Base: <span className="font-semibold">v4.3.0</span> (stable)
+                  </span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
