@@ -108,14 +108,23 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
 
   // Discovery panel state for page 15
-  const [discoveryTab, setDiscoveryTab] = useState<'read' | 'watch' | 'music' | 'explorer'>('read');
-  const [discoveryPanelExpanded, setDiscoveryPanelExpanded] = useState(true);
+  const [discoveryTab, setDiscoveryTab] = useState<'read' | 'watch' | 'music' | 'explorer'>('music');
+  const [discoveryPanelExpanded, setDiscoveryPanelExpanded] = useState(false);
+  const [discoveryResults, setDiscoveryResults] = useState<any[]>([]);
+  const [selectedDiscoveryIndex, setSelectedDiscoveryIndex] = useState(0);
+
+  // Album cover audio player state
+  const [isAlbumAudioPlaying, setIsAlbumAudioPlaying] = useState(false);
+  const albumAudioIframeRef = useRef<HTMLIFrameElement>(null);
 
   // Discovery panel state for page 4
   const [page4DiscoveryExpanded, setPage4DiscoveryExpanded] = useState(false);
   const [page4PreloadedVideos, setPage4PreloadedVideos] = useState<any[]>([]);
   const [page1DiscoveryExpanded, setPage1DiscoveryExpanded] = useState(false);
   const [page1PreloadedVideos, setPage1PreloadedVideos] = useState<any[]>([]);
+  const [page17DiscoveryExpanded, setPage17DiscoveryExpanded] = useState(false);
+  const [defaultDiscoveryExpanded, setDefaultDiscoveryExpanded] = useState(false);
+  const [defaultDiscoveryTab, setDefaultDiscoveryTab] = useState<'music'>('music');
 
   // Book modal state
   const [showBookModal, setShowBookModal] = useState(false);
@@ -1151,6 +1160,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     return pages[currentPageIndex] || null;
   }, [pages, currentPageIndex]);
 
+  // Clear discovery results when page changes
+  useEffect(() => {
+    setDiscoveryResults([]);
+    setIsAlbumAudioPlaying(false);
+  }, [currentPage]);
+
   // Navigation handlers
   const goToNextPage = useCallback(() => {
     if (currentPageIndex < pages.length - 1) {
@@ -2135,20 +2150,28 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 e.target.style.boxShadow = 'none';
                               }}
                               onClick={() => {
-                                setDiscoveryResults([{
-                                  type: 'biography',
-                                  title: 'Thelonious Monk',
-                                  subtitle: 'Jazz Piano Pioneer',
-                                  description: 'Thelonious Sphere Monk (1917-1982) was an American jazz pianist and composer, considered one of the giants of American music. His unique improvisational style and angular melodic twists made him a key figure in the development of bebop and modern jazz. Blue Note Records captured some of his most important early recordings.',
-                                  details: [
-                                    'Recorded for Blue Note from 1947-1952 and 1957-1958',
-                                    'Composed jazz standards including "Round Midnight" and "Blue Monk"',
-                                    'Known for his percussive, dissonant piano style',
-                                    'Second most-recorded jazz composer after Duke Ellington',
-                                    'Inducted into Grammy Hall of Fame multiple times'
-                                  ]
-                                }]);
-                                setSelectedDiscoveryIndex(0);
+                                console.log('🎹 Thelonious Monk clicked!');
+                                // Check if this album is already displayed - if so, clear it (toggle off)
+                                if (discoveryResults.length > 0 && discoveryResults[0].title === 'Thelonious Monk' && discoveryResults[0].type === 'album_cover') {
+                                  console.log('🎹 Toggling off - clearing discovery results');
+                                  setDiscoveryResults([]);
+                                  setSelectedDiscoveryIndex(0);
+                                  setIsAlbumAudioPlaying(false);
+                                } else {
+                                  // Show the album cover with video
+                                  const albumData = {
+                                    type: 'album_cover',
+                                    title: 'Thelonious Monk',
+                                    subtitle: 'Genius of Modern Music',
+                                    image: '/thelonious-monk-cover.png',
+                                    videoId: 'dG1BADiWfdU'
+                                  };
+                                  console.log('🎹 Setting discovery results:', albumData);
+                                  setDiscoveryResults([albumData]);
+                                  setSelectedDiscoveryIndex(0);
+                                  setIsAlbumAudioPlaying(false);
+                                  console.log('🎹 Discovery results set complete');
+                                }
                               }}
                               title="Thelonious Monk - Jazz Piano Pioneer"
                             />
@@ -2179,20 +2202,28 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 e.target.style.boxShadow = 'none';
                               }}
                               onClick={() => {
-                                setDiscoveryResults([{
-                                  type: 'biography',
-                                  title: 'Herbie Hancock',
-                                  subtitle: 'Jazz Piano Innovator',
-                                  description: 'Herbert Jeffrey "Herbie" Hancock (born 1940) is an American jazz pianist, keyboardist, bandleader, and composer. A member of Miles Davis\'s second great quintet, Hancock helped redefine the role of rhythm section in jazz. His Blue Note recordings in the 1960s established him as a major force in modern jazz.',
-                                  details: [
-                                    'Recorded groundbreaking albums for Blue Note including "Takin\' Off" (1962)',
-                                    'Composed "Watermelon Man" and "Cantaloupe Island"',
-                                    'Member of Miles Davis Quintet (1963-1968)',
-                                    '14-time Grammy Award winner',
-                                    'UNESCO Goodwill Ambassador and jazz education advocate'
-                                  ]
-                                }]);
-                                setSelectedDiscoveryIndex(0);
+                                console.log('🎹 Herbie Hancock clicked!');
+                                // Check if this album is already displayed - if so, clear it (toggle off)
+                                if (discoveryResults.length > 0 && discoveryResults[0].title === 'Herbie Hancock' && discoveryResults[0].type === 'album_cover') {
+                                  console.log('🎹 Toggling off - clearing discovery results');
+                                  setDiscoveryResults([]);
+                                  setSelectedDiscoveryIndex(0);
+                                  setIsAlbumAudioPlaying(false);
+                                } else {
+                                  // Show the album cover with video
+                                  const albumData = {
+                                    type: 'album_cover',
+                                    title: 'Herbie Hancock',
+                                    subtitle: 'Takin\' Off',
+                                    image: '/herbie-hancock-cover.png',
+                                    videoId: 'CrmFJjmRIi4'
+                                  };
+                                  console.log('🎹 Setting discovery results:', albumData);
+                                  setDiscoveryResults([albumData]);
+                                  setSelectedDiscoveryIndex(0);
+                                  setIsAlbumAudioPlaying(false);
+                                  console.log('🎹 Discovery results set complete');
+                                }
                               }}
                               title="Herbie Hancock - Jazz Piano Innovator"
                             />
@@ -4128,6 +4159,27 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
                           {discoveryTab === 'watch' && (
                             <div>
+                              {/* Album Cover Display */}
+                              {discoveryResults.length > 0 && discoveryResults[0].type === 'album_cover' && (
+                                <div style={{ marginBottom: '2rem' }}>
+                                  <h4 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
+                                    {discoveryResults[0].title}
+                                  </h4>
+                                  {discoveryResults[0].subtitle && (
+                                    <p style={{ fontSize: '16px', color: '#6b7280', marginBottom: '1rem' }}>
+                                      {discoveryResults[0].subtitle}
+                                    </p>
+                                  )}
+                                  <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                                    <img
+                                      src={discoveryResults[0].image}
+                                      alt={discoveryResults[0].title}
+                                      style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                                    />
+                                  </div>
+                                </div>
+                              )}
+
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>🎬 Round Midnight (1986)</h4>
 
                               <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
@@ -7102,6 +7154,85 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           No results found for "{searchQuery}"
                         </div>
                       )}
+
+                      {/* Album Cover Display with Hidden Audio Player */}
+                      {!selectedVideo && !searchLoading && !searchQuery && searchResults.length === 0 && discoveryResults.length > 0 && discoveryResults[0].type === 'album_cover' && (
+                        <div style={{ marginTop: '2rem' }}>
+                          <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>
+                            {discoveryResults[0].title}
+                          </h3>
+                          {discoveryResults[0].subtitle && (
+                            <p style={{ fontSize: '18px', color: '#6b7280', marginBottom: '1.5rem' }}>
+                              {discoveryResults[0].subtitle}
+                            </p>
+                          )}
+                          <div
+                            style={{
+                              background: 'white',
+                              padding: '1rem',
+                              borderRadius: '8px',
+                              boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                              cursor: discoveryResults[0].videoId ? 'pointer' : 'default',
+                              transition: 'all 0.3s ease',
+                              border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                            }}
+                            onClick={() => {
+                              if (discoveryResults[0].videoId && albumAudioIframeRef.current) {
+                                const iframe = albumAudioIframeRef.current;
+                                const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                iframe.contentWindow?.postMessage(
+                                  JSON.stringify({ event: 'command', func: command, args: [] }),
+                                  '*'
+                                );
+                                setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} audio for ${discoveryResults[0].title}`);
+                              }
+                            }}
+                          >
+                            <img
+                              src={discoveryResults[0].image}
+                              alt={discoveryResults[0].title}
+                              style={{
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: '4px',
+                                opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                transition: 'opacity 0.3s ease'
+                              }}
+                            />
+                            {isAlbumAudioPlaying && (
+                              <div style={{
+                                marginTop: '1rem',
+                                padding: '0.75rem',
+                                background: '#3b82f6',
+                                color: 'white',
+                                borderRadius: '6px',
+                                textAlign: 'center',
+                                fontSize: '16px',
+                                fontWeight: '600'
+                              }}>
+                                ♪ Playing...
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Hidden YouTube iframe for audio playback */}
+                          {discoveryResults[0].videoId && (
+                            <iframe
+                              ref={albumAudioIframeRef}
+                              src={`https://www.youtube.com/embed/${discoveryResults[0].videoId}?enablejsapi=1&controls=0`}
+                              style={{
+                                position: 'absolute',
+                                width: '1px',
+                                height: '1px',
+                                opacity: 0,
+                                pointerEvents: 'none'
+                              }}
+                              allow="autoplay"
+                            />
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -7630,31 +7761,310 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 </div>
               );
             } else {
-                // Default Discovery panel placeholder for other pages
-                return (
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100%',
-                    padding: '2rem',
-                    textAlign: 'center',
-                    color: '#6b7280'
-                  }}>
-                    <div style={{
-                      fontSize: '4rem',
-                      marginBottom: '1rem',
-                      opacity: 0.3
-                    }}>
-                      🎵
+                // Discovery panel for pages 3-14
+                console.log('🎵 Discovery panel rendering - discoveryResults:', discoveryResults);
+                // Check if we have album cover to display
+                if (discoveryResults.length > 0 && discoveryResults[0].type === 'album_cover') {
+                  console.log('🎵 Rendering album cover:', discoveryResults[0]);
+                  return (
+                    <div style={{ padding: '1.5rem' }}>
+                      <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>
+                        {discoveryResults[0].title}
+                      </h3>
+                      {discoveryResults[0].subtitle && (
+                        <p style={{ fontSize: '18px', color: '#6b7280', marginBottom: '1.5rem' }}>
+                          {discoveryResults[0].subtitle}
+                        </p>
+                      )}
+                      <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+                        <img
+                          src={discoveryResults[0].image}
+                          alt={discoveryResults[0].title}
+                          style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                        />
+                      </div>
                     </div>
-                    <p style={{ marginBottom: '1rem', fontWeight: '600' }}>
-                      Media Discovery Panel
-                    </p>
-                    <p>
-                      Click on artists, albums, or highlighted text in the book to explore related music, videos, and photos
-                    </p>
+                  );
+                }
+
+                // Page 17 (Sonny Rollins) - Collapsible discovery section
+                if (currentPage?.originalData?.page === 17) {
+                  return (
+                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>
+                        <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                          🎵 UnitedTribes AI-Enhanced Discovery
+                        </h3>
+                        <button
+                          onClick={() => setPage17DiscoveryExpanded(!page17DiscoveryExpanded)}
+                          style={{
+                            padding: '0.5rem 1rem',
+                            background: '#f3f4f6',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            color: '#374151',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                          }}
+                        >
+                          {page17DiscoveryExpanded ? '▼ Collapse' : '▶ Expand'}
+                        </button>
+                      </div>
+
+                      {page17DiscoveryExpanded && (
+                        <div style={{ marginTop: '1rem' }}>
+                          <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>
+                            Sonny Rollins
+                          </h3>
+                          <p style={{ fontSize: '18px', color: '#6b7280', marginBottom: '1.5rem' }}>
+                            Vol. 2
+                          </p>
+                          <div
+                            style={{
+                              background: 'white',
+                              padding: '1rem',
+                              borderRadius: '8px',
+                              boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                            }}
+                            onClick={() => {
+                              if (albumAudioIframeRef.current) {
+                                const iframe = albumAudioIframeRef.current;
+                                const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                iframe.contentWindow?.postMessage(
+                                  JSON.stringify({ event: 'command', func: command, args: [] }),
+                                  '*'
+                                );
+                                setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} audio for Sonny Rollins`);
+                              }
+                            }}
+                          >
+                            <img
+                              src="/sonny-rollins-cover.png"
+                              alt="Sonny Rollins Vol. 2"
+                              style={{
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: '4px',
+                                opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                transition: 'opacity 0.3s ease'
+                              }}
+                            />
+                            {isAlbumAudioPlaying && (
+                              <div style={{
+                                marginTop: '1rem',
+                                padding: '0.75rem',
+                                background: '#3b82f6',
+                                color: 'white',
+                                borderRadius: '6px',
+                                textAlign: 'center',
+                                fontSize: '16px',
+                                fontWeight: '600'
+                              }}>
+                                ♪ Playing...
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Hidden YouTube iframe for audio playback */}
+                          <iframe
+                            ref={albumAudioIframeRef}
+                            src="https://www.youtube.com/embed/X1alDkoPCNE?enablejsapi=1&controls=0"
+                            style={{
+                              position: 'absolute',
+                              width: '1px',
+                              height: '1px',
+                              opacity: 0,
+                              pointerEvents: 'none'
+                            }}
+                            allow="autoplay"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                // Default Discovery panel for other pages with Music tab
+                return (
+                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>
+                      <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                        🎵 UnitedTribes AI-Enhanced Discovery
+                      </h3>
+                      <button
+                        onClick={() => setDefaultDiscoveryExpanded(!defaultDiscoveryExpanded)}
+                        style={{
+                          padding: '0.5rem 1rem',
+                          background: '#f3f4f6',
+                          border: '1px solid #d1d5db',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          color: '#374151',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        {defaultDiscoveryExpanded ? '▼ Collapse' : '▶ Expand'}
+                      </button>
+                    </div>
+
+                    {defaultDiscoveryExpanded && (
+                      <div style={{ marginTop: '1rem' }}>
+                        {/* Music Tab Content */}
+                        <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>Album Collection</h4>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                            {/* Thelonious Monk Album */}
+                            <div style={{ background: 'white', borderRadius: '8px', padding: '1rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                              <div
+                                style={{
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  const albumData = {
+                                    type: 'album_cover',
+                                    title: 'Thelonious Monk',
+                                    subtitle: 'Genius of Modern Music',
+                                    image: '/thelonious-monk-cover.png',
+                                    videoId: 'dG1BADiWfdU'
+                                  };
+                                  setDiscoveryResults([albumData]);
+                                  setSelectedDiscoveryIndex(0);
+
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="/thelonious-monk-cover.png"
+                                  alt="Thelonious Monk"
+                                  style={{ width: '100%', height: 'auto', borderRadius: '4px', marginBottom: '0.5rem' }}
+                                />
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.25rem' }}>Thelonious Monk</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280' }}>Genius of Modern Music</p>
+                              </div>
+                            </div>
+
+                            {/* Herbie Hancock Album */}
+                            <div style={{ background: 'white', borderRadius: '8px', padding: '1rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                              <div
+                                style={{
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  const albumData = {
+                                    type: 'album_cover',
+                                    title: 'Herbie Hancock',
+                                    subtitle: 'Takin\' Off',
+                                    image: '/herbie-hancock-cover.png',
+                                    videoId: 'CrmFJjmRIi4'
+                                  };
+                                  setDiscoveryResults([albumData]);
+                                  setSelectedDiscoveryIndex(0);
+
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="/herbie-hancock-cover.png"
+                                  alt="Herbie Hancock"
+                                  style={{ width: '100%', height: 'auto', borderRadius: '4px', marginBottom: '0.5rem' }}
+                                />
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.25rem' }}>Herbie Hancock</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280' }}>Takin' Off</p>
+                              </div>
+                            </div>
+
+                            {/* Sonny Rollins Album */}
+                            <div style={{ background: 'white', borderRadius: '8px', padding: '1rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                              <div
+                                style={{
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  const albumData = {
+                                    type: 'album_cover',
+                                    title: 'Sonny Rollins',
+                                    subtitle: 'Vol. 2',
+                                    image: '/sonny-rollins-cover.png',
+                                    videoId: 'X1alDkoPCNE'
+                                  };
+                                  setDiscoveryResults([albumData]);
+                                  setSelectedDiscoveryIndex(0);
+
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="/sonny-rollins-cover.png"
+                                  alt="Sonny Rollins"
+                                  style={{ width: '100%', height: 'auto', borderRadius: '4px', marginBottom: '0.5rem' }}
+                                />
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.25rem' }}>Sonny Rollins</p>
+                                <p style={{ fontSize: '14px', color: '#6b7280' }}>Vol. 2</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Hidden YouTube iframe for audio playback */}
+                          {discoveryResults.length > 0 && discoveryResults[0].videoId && (
+                            <iframe
+                              ref={albumAudioIframeRef}
+                              src={`https://www.youtube.com/embed/${discoveryResults[0].videoId}?enablejsapi=1&controls=0`}
+                              style={{
+                                position: 'absolute',
+                                width: '1px',
+                                height: '1px',
+                                opacity: 0,
+                                pointerEvents: 'none'
+                              }}
+                              allow="autoplay"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               }

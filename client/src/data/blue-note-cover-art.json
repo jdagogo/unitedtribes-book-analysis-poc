@@ -2,7 +2,7 @@
   "title": "The Cover Art of Blue Note Records",
   "subtitle": "The Ultimate Collection",
   "authors": ["Graham Marsh", "Glyn Callingham"],
-  "totalPages": 18,
+  "totalPages": 12,
   "pages": [
     {
       "page": 1,
@@ -22,28 +22,21 @@
       "sections": [
         {
           "title": "The History",
-          "pages": [3, 4, 5, 6],
-          "thumbnails": ["text", "photo", "text", "text"]
+          "pages": [4, 5, 6],
+          "thumbnails": ["photo", "text", "text"]
         },
         {
           "title": "Classic Albums",
-          "pages": [7, 9, 11, 15],
-          "albums": ["Blue Train", "Thelonious Monk", "Somethin' Else", "GO"]
+          "pages": [7, 9, 15, 10],
+          "albums": ["Blue Train", "Thelonious Monk", "GO", "Like Someone in Love"]
         },
         {
           "title": "More Classic Albums",
-          "pages": [10, 12, 13, 14, 16, 17],
-          "albums": ["Like Someone in Love", "Doin' Allright", "New York Is Now!", "A Caddy for Daddy", "The All Seeing Eye", "Sonny Rollins Vol. 2"]
+          "pages": [14, 16, 17],
+          "albums": ["A Caddy for Daddy", "The All Seeing Eye", "Sonny Rollins Vol. 2"]
         }
       ],
       "note": "Click on any thumbnail to navigate directly"
-    },
-    {
-      "page": 3,
-      "type": "page_image",
-      "title": "THE LION AND THE WOLFF",
-      "image": "/bluenote-page3.png",
-      "entities": ["Alfred Lion", "Albert Ammons", "Meade Lux Lewis", "Carnegie Hall", "Francis Wolff"]
     },
     {
       "page": 4,
@@ -74,13 +67,6 @@
       "entities": ["John Coltrane", "Blue Train"]
     },
     {
-      "page": 8,
-      "type": "page_image",
-      "title": "Blue Train Session",
-      "image": "/bluenote-page8.png",
-      "entities": ["Lee Morgan", "John Coltrane"]
-    },
-    {
       "page": 9,
       "type": "album_showcase",
       "title": "Thelonious Monk - Genius of Modern Music Volume 1",
@@ -98,82 +84,6 @@
       "entities": ["Thelonious Monk"]
     },
     {
-      "page": 10,
-      "type": "album_showcase",
-      "title": "Art Blakey - Like Someone in Love",
-      "image": "/bluenote-page10-correct.png",
-      "album": {
-        "title": "LIKE SOMEONE IN LOVE",
-        "artist": "Art Blakey and the Jazz Messengers",
-        "personnel": ["Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"],
-        "catalog": "Blue Note",
-        "cover_design": "Reid Miles"
-      },
-      "discovery_entities": ["Art Blakey", "Jazz Messengers", "Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"]
-    },
-    {
-      "page": 11,
-      "type": "album_showcase",
-      "title": "Cannonball Adderley - Somethin' Else",
-      "image": "/bluenote-page11.png",
-      "album": {
-        "title": "SOMETHIN' ELSE",
-        "artist": "Cannonball Adderley",
-        "catalog": "BLP 1595",
-        "year": 1958,
-        "cover_image": "/bluenote-page11.png",
-        "personnel": ["Cannonball Adderley - Alto Saxophone", "Miles Davis - Trumpet", "Hank Jones - Piano", "Sam Jones - Bass", "Art Blakey - Drums"],
-        "cover_design": "Reid Miles"
-      },
-      "discovery_entities": ["Cannonball Adderley", "Miles Davis", "Hank Jones", "Sam Jones", "Art Blakey", "Reid Miles"]
-    },
-    {
-      "page": 12,
-      "type": "album_showcase",
-      "title": "Dexter Gordon - Doin' Allright",
-      "image": "/bluenote-page12.png",
-      "album": {
-        "title": "DOIN' ALLRIGHT",
-        "artist": "Dexter Gordon",
-        "catalog": "84077 BLUE NOTE",
-        "year": 1961,
-        "cover_image": "/bluenote-page12.png",
-        "personnel": ["Freddie Hubbard", "Horace Parlan", "George Tucker", "Al Harewood"],
-        "cover_design": "Reid Miles"
-      },
-      "discovery_entities": ["Dexter Gordon", "Freddie Hubbard", "Horace Parlan", "George Tucker", "Al Harewood"]
-    },
-    {
-      "page": 13,
-      "type": "album_showcase",
-      "title": "Ornette Coleman - New York Is Now!",
-      "image": "/bluenote-page13.png",
-      "album": {
-        "title": "NEW YORK IS NOW!",
-        "artist": "Ornette Coleman",
-        "catalog": "BST 84287",
-        "cover_image": "/bluenote-page13.png",
-        "personnel": ["Dewey Redman", "Jimmy Garrison", "Elvin Jones"],
-        "cover_design": "Reid Miles"
-      },
-      "discovery_entities": ["Ornette Coleman", "Dewey Redman", "Jimmy Garrison", "Elvin Jones"]
-    },
-    {
-      "page": 14,
-      "type": "album_showcase",
-      "title": "Hank Mobley - A Caddy for Daddy",
-      "image": "/bluenote-page14.png",
-      "album": {
-        "title": "A CADDY FOR DADDY",
-        "artist": "Hank Mobley",
-        "catalog": "4230 BLUE NOTE",
-        "cover_image": "/bluenote-page14.png",
-        "cover_design": "Reid Miles",
-        "note": "Features the iconic car and figure composition"
-      },
-      "discovery_entities": ["Hank Mobley", "Reid Miles"]
-    },
-    {
       "page": 15,
       "type": "album_showcase",
       "title": "Dexter Gordon - GO",
@@ -189,6 +99,35 @@
         "note": "Bold typographic design with GO in large orange letters"
       },
       "discovery_entities": ["Dexter Gordon", "Sonny Clark", "Butch Warren", "Billy Higgins", "Reid Miles"]
+    },
+    {
+      "page": 10,
+      "type": "album_showcase",
+      "title": "Art Blakey - Like Someone in Love",
+      "image": "/bluenote-page10-correct.png",
+      "album": {
+        "title": "LIKE SOMEONE IN LOVE",
+        "artist": "Art Blakey and the Jazz Messengers",
+        "personnel": ["Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"],
+        "catalog": "Blue Note",
+        "cover_design": "Reid Miles"
+      },
+      "discovery_entities": ["Art Blakey", "Jazz Messengers", "Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"]
+    },
+    {
+      "page": 14,
+      "type": "album_showcase",
+      "title": "Hank Mobley - A Caddy for Daddy",
+      "image": "/bluenote-page14.png",
+      "album": {
+        "title": "A CADDY FOR DADDY",
+        "artist": "Hank Mobley",
+        "catalog": "4230 BLUE NOTE",
+        "cover_image": "/bluenote-page14.png",
+        "cover_design": "Reid Miles",
+        "note": "Features the iconic car and figure composition"
+      },
+      "discovery_entities": ["Hank Mobley", "Reid Miles"]
     },
     {
       "page": 16,
@@ -221,14 +160,6 @@
         "cover_photo": "Francis Wolff"
       },
       "discovery_entities": ["Sonny Rollins", "Jay Jay Johnson", "Horace Silver", "Thelonious Monk", "Paul Chambers", "Art Blakey", "Harold Feinstein", "Francis Wolff"]
-    },
-    {
-      "page": 18,
-      "type": "test_integration",
-      "title": "YouTube Analysis Test Page",
-      "content": "This is a test page for integrating YouTube Analysis. Testing with Blue Note and jazz artists.",
-      "test_subjects": ["Blue Note", "John Coltrane", "Miles Davis"],
-      "note": "Integration test page - YouTube Analysis on right panel"
     }
   ]
 }
