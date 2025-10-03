@@ -108,7 +108,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
 
   // Discovery panel state for page 15
-  const [discoveryTab, setDiscoveryTab] = useState<'musicians' | 'film' | 'connections' | 'readlisten'>('musicians');
+  const [discoveryTab, setDiscoveryTab] = useState<'read' | 'watch' | 'music' | 'explorer'>('read');
+  const [discoveryPanelExpanded, setDiscoveryPanelExpanded] = useState(true);
+
+  // Discovery panel state for page 4
+  const [page4DiscoveryExpanded, setPage4DiscoveryExpanded] = useState(false);
+  const [page4PreloadedVideos, setPage4PreloadedVideos] = useState<any[]>([]);
+  const [page1DiscoveryExpanded, setPage1DiscoveryExpanded] = useState(false);
+  const [page1PreloadedVideos, setPage1PreloadedVideos] = useState<any[]>([]);
 
   // Book modal state
   const [showBookModal, setShowBookModal] = useState(false);
@@ -175,6 +182,106 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       searchVideos(searchQuery.trim());
     }
   };
+
+  // Preload videos for page 4 discovery section
+  useEffect(() => {
+    const loadPage4Videos = async () => {
+      if (page4PreloadedVideos.length === 0) {
+        try {
+          const response = await fetch(
+            `/api/youtube/search?q=${encodeURIComponent('Blue Note')}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            const results = data.results || [];
+
+            console.log('Page 4 search results:', results.map((v: any) => ({
+              title: v.title,
+              channel: v.channel
+            })));
+
+            // Find the specific videos we want
+            const voxVideo = results.find((v: any) =>
+              v.title.includes('Greatest Album Covers') && v.channel.includes('Vox')
+            );
+            console.log('Found Vox video:', voxVideo);
+
+            const kennedyVideo = results.find((v: any) =>
+              v.title.includes('Blue Note Records') && v.channel.includes('Kennedy Center')
+            );
+            console.log('Found Kennedy video:', kennedyVideo);
+
+            // Add them in order if found
+            const selectedVideos = [];
+            if (voxVideo) selectedVideos.push(voxVideo);
+            if (kennedyVideo) selectedVideos.push(kennedyVideo);
+
+            console.log('Selected videos for page 4:', selectedVideos.length);
+
+            // If we didn't find both, just use first 2 results
+            if (selectedVideos.length < 2) {
+              setPage4PreloadedVideos(results.slice(0, 2));
+            } else {
+              setPage4PreloadedVideos(selectedVideos);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to preload page 4 videos:', error);
+        }
+      }
+    };
+    loadPage4Videos();
+  }, []);
+
+  // Preload videos for page 1 discovery section
+  useEffect(() => {
+    const loadPage1Videos = async () => {
+      if (page1PreloadedVideos.length === 0) {
+        try {
+          const response = await fetch(
+            `/api/youtube/search?q=${encodeURIComponent('Blue Note')}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            const results = data.results || [];
+
+            console.log('Page 1 search results:', results.map((v: any) => ({
+              title: v.title,
+              channel: v.channel
+            })));
+
+            // Find the specific videos we want
+            const voxVideo = results.find((v: any) =>
+              v.title.includes('Greatest Album Covers') && v.channel.includes('Vox')
+            );
+            console.log('Found Vox video:', voxVideo);
+
+            const kennedyVideo = results.find((v: any) =>
+              v.title.includes('Blue Note Records') && v.channel.includes('Kennedy Center')
+            );
+            console.log('Found Kennedy video:', kennedyVideo);
+
+            // Add them in order if found
+            const selectedVideos = [];
+            if (voxVideo) selectedVideos.push(voxVideo);
+            if (kennedyVideo) selectedVideos.push(kennedyVideo);
+
+            console.log('Selected videos for page 1:', selectedVideos.length);
+
+            // If we didn't find both, just use first 2 results
+            if (selectedVideos.length < 2) {
+              setPage1PreloadedVideos(results.slice(0, 2));
+            } else {
+              setPage1PreloadedVideos(selectedVideos);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to preload page 1 videos:', error);
+        }
+      }
+    };
+    loadPage1Videos();
+  }, []);
 
   // Embed video player
   const embedVideo = async (video: any) => {
@@ -1787,24 +1894,67 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
             marginBottom: '2rem',
             borderBottom: '2px solid #e5e7eb'
           }}>
-            <Link href="/">
-              <button style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.5rem 1rem',
-                background: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '14px',
-                cursor: 'pointer',
-                marginBottom: '1rem'
-              }}>
-                <ArrowLeft size={16} />
-                Return to Media Hub
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+              <Link href="/">
+                <button style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  background: '#7c3aed',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}>
+                  <ArrowLeft size={16} />
+                  Media Hub
+                </button>
+              </Link>
+
+              <button
+                onClick={() => {
+                  setCurrentPageIndex(0);
+                  window.scrollTo(0, 0);
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  background: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}>
+                <BookOpen size={16} />
+                Cover
               </button>
-            </Link>
+
+              <button
+                onClick={() => {
+                  setCurrentPageIndex(1);
+                  window.scrollTo(0, 0);
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  background: '#10b981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}>
+                <Search size={16} />
+                Index
+              </button>
+            </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <button
@@ -3668,8 +3818,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 right: '1rem',
                                 top: '50%',
                                 transform: 'translateY(-50%)',
-                                width: '32px',
-                                height: '32px',
+                                width: '28px',
+                                height: '28px',
                                 borderRadius: '50%',
                                 border: '2px solid #6b7280',
                                 background: 'white',
@@ -3678,13 +3828,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: '18px',
+                                fontSize: '16px',
                                 fontWeight: 'bold',
                                 transition: 'all 0.2s'
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = '#ef4444';
-                                e.currentTarget.style.borderColor = '#ef4444';
+                                e.currentTarget.style.background = '#3b82f6';
+                                e.currentTarget.style.borderColor = '#3b82f6';
                                 e.currentTarget.style.color = 'white';
                               }}
                               onMouseLeave={(e) => {
@@ -3802,77 +3952,99 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     {/* ENHANCED DISCOVERY PANEL - PAGE 15 ONLY */}
                     {currentPage?.originalData?.page === 15 && (
                       <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
-                        <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
-                          🎵 Discover More About This Album
-                        </h3>
-
-                        {/* Tab Navigation */}
-                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                            🎵 UnitedTribes AI-Enhanced Discovery
+                          </h3>
                           <button
-                            onClick={() => setDiscoveryTab('musicians')}
+                            onClick={() => setDiscoveryPanelExpanded(!discoveryPanelExpanded)}
                             style={{
-                              padding: '0.75rem 1.5rem',
-                              background: discoveryTab === 'musicians' ? '#3b82f6' : 'transparent',
-                              color: discoveryTab === 'musicians' ? 'white' : '#6b7280',
-                              border: 'none',
-                              borderBottom: discoveryTab === 'musicians' ? '2px solid #3b82f6' : '2px solid transparent',
+                              padding: '0.5rem 1rem',
+                              background: '#f3f4f6',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '6px',
                               cursor: 'pointer',
-                              fontSize: '16px',
-                              fontWeight: '600'
+                              fontSize: '14px',
+                              fontWeight: '600',
+                              color: '#374151',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem'
                             }}
                           >
-                            Musicians
-                          </button>
-                          <button
-                            onClick={() => setDiscoveryTab('film')}
-                            style={{
-                              padding: '0.75rem 1.5rem',
-                              background: discoveryTab === 'film' ? '#3b82f6' : 'transparent',
-                              color: discoveryTab === 'film' ? 'white' : '#6b7280',
-                              border: 'none',
-                              borderBottom: discoveryTab === 'film' ? '2px solid #3b82f6' : '2px solid transparent',
-                              cursor: 'pointer',
-                              fontSize: '16px',
-                              fontWeight: '600'
-                            }}
-                          >
-                            Film Career
-                          </button>
-                          <button
-                            onClick={() => setDiscoveryTab('connections')}
-                            style={{
-                              padding: '0.75rem 1.5rem',
-                              background: discoveryTab === 'connections' ? '#3b82f6' : 'transparent',
-                              color: discoveryTab === 'connections' ? 'white' : '#6b7280',
-                              border: 'none',
-                              borderBottom: discoveryTab === 'connections' ? '2px solid #3b82f6' : '2px solid transparent',
-                              cursor: 'pointer',
-                              fontSize: '16px',
-                              fontWeight: '600'
-                            }}
-                          >
-                            Connections
-                          </button>
-                          <button
-                            onClick={() => setDiscoveryTab('readlisten')}
-                            style={{
-                              padding: '0.75rem 1.5rem',
-                              background: discoveryTab === 'readlisten' ? '#3b82f6' : 'transparent',
-                              color: discoveryTab === 'readlisten' ? 'white' : '#6b7280',
-                              border: 'none',
-                              borderBottom: discoveryTab === 'readlisten' ? '2px solid #3b82f6' : '2px solid transparent',
-                              cursor: 'pointer',
-                              fontSize: '16px',
-                              fontWeight: '600'
-                            }}
-                          >
-                            Read & Listen
+                            {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
                           </button>
                         </div>
 
-                        {/* Tab Content */}
-                        <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
-                          {discoveryTab === 'musicians' && (
+                        {discoveryPanelExpanded && (
+                          <>
+                        {/* Tab Navigation */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
+                          <button
+                            onClick={() => setDiscoveryTab('read')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'read' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'read' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'read' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Read
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('watch')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'watch' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'watch' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'watch' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Watch
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('music')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'music' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'music' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'music' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Music
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('explorer')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'explorer' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'explorer' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'explorer' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            United AI Explorer
+                          </button>
+                        </div>
+
+                          {/* Tab Content */}
+                          <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          {discoveryTab === 'music' && (
                             <div>
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Album Personnel</h4>
 
@@ -3882,7 +4054,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   Also appears on Page 12 (Doin' Allright)
                                 </p>
                                 <p style={{ fontSize: '14px', color: '#3b82f6', marginTop: '0.5rem' }}>
-                                  🎬 Starred in "Round Midnight" (1986) - See Film Career tab
+                                  🎬 Starred in "Round Midnight" (1986) - See Watch tab
                                 </p>
                               </div>
 
@@ -3900,16 +4072,61 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 </p>
                               </div>
 
-                              <div style={{ padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
                                 <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🥁 Billy Higgins - Drums</p>
                                 <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
                                   One of the most recorded drummers in jazz history
                                 </p>
                               </div>
+
+                              {/* Connections merged into Music tab */}
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '2rem', marginBottom: '1rem' }}>Connections in This Book</h4>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  📖 Dexter Gordon Albums
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 12: Doin' Allright (1961)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 15: GO (1962) ← You are here
+                                </p>
+                              </div>
+
+                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  🎨 Reid Miles Cover Designs
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.5rem' }}>
+                                  This bold typographic style appears on:
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 9: Thelonious Monk - Genius of Modern Music
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 14: Hank Mobley - A Caddy for Daddy
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 16: Wayne Shorter - The All Seeing Eye
+                                </p>
+                              </div>
+
+                              <div style={{ padding: '1rem', background: 'white', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                                  🎺 Hard Bop Era (1960-1962)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 11: Cannonball Adderley - Somethin' Else (1958)
+                                </p>
+                                <p style={{ fontSize: '14px', color: '#374151' }}>
+                                  • Page 12: Dexter Gordon - Doin' Allright (1961)
+                                </p>
+                              </div>
                             </div>
                           )}
 
-                          {discoveryTab === 'film' && (
+                          {discoveryTab === 'watch' && (
                             <div>
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>🎬 Round Midnight (1986)</h4>
 
@@ -4057,55 +4274,26 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </div>
                           )}
 
-                          {discoveryTab === 'connections' && (
+                          {discoveryTab === 'explorer' && (
                             <div>
-                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Connections in This Book</h4>
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>🤖 United AI Explorer</h4>
 
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
-                                  📖 Dexter Gordon Albums
+                              <div style={{ padding: '2rem', background: 'white', borderRadius: '6px', textAlign: 'center' }}>
+                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+                                  AI-Powered Discovery Coming Soon
                                 </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 12: Doin' Allright (1961)
+                                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.6' }}>
+                                  This tab will feature our special AI explorer API to help you discover deep connections
+                                  between artists, albums, and cultural movements.
                                 </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 15: GO (1962) ← You are here
-                                </p>
-                              </div>
-
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
-                                  🎨 Reid Miles Cover Designs
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.5rem' }}>
-                                  This bold typographic style appears on:
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 9: Thelonious Monk - Genius of Modern Music
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 14: Hank Mobley - A Caddy for Daddy
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 16: Wayne Shorter - The All Seeing Eye
-                                </p>
-                              </div>
-
-                              <div style={{ padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
-                                  🎺 Hard Bop Era (1960-1962)
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 11: Cannonball Adderley - Somethin' Else (1958)
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 12: Dexter Gordon - Doin' Allright (1961)
+                                <p style={{ fontSize: '14px', color: '#3b82f6', marginTop: '1rem' }}>
+                                  🔮 Stay tuned for intelligent recommendations and historical insights
                                 </p>
                               </div>
                             </div>
                           )}
 
-                          {discoveryTab === 'readlisten' && (
+                          {discoveryTab === 'read' && (
                             <div>
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>📚 Related Books & Audio</h4>
 
@@ -4261,7 +4449,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               </div>
                             </div>
                           )}
-                        </div>
+                          </div>
+                          </>
+                        )}
                       </div>
                     )}
 
@@ -5091,35 +5281,79 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       {/* Search Form */}
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                          <input
-                            type="text"
-                            className="united-tribes-search-input"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search UnitedTribes videos"
-                            style={{
-                              flex: 1,
-                              padding: '1rem 1.5rem',
-                              border: '2px solid #1e3a8a',
-                              borderRadius: '10px',
-                              fontSize: '24px',
-                              outline: 'none',
-                              fontWeight: '500',
-                              color: '#000',
-                              backgroundColor: 'white',
-                              lineHeight: '1.2'
-                            }}
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = '#3b82f6';
-                              e.currentTarget.style.backgroundColor = '#f0f9ff';
-                              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = '#1e3a8a';
-                              e.currentTarget.style.backgroundColor = 'white';
-                              e.currentTarget.style.boxShadow = 'none';
-                            }}
-                          />
+                          <div style={{ position: 'relative', flex: 1 }}>
+                            <input
+                              type="text"
+                              className="united-tribes-search-input"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              placeholder="Search UnitedTribes videos"
+                              style={{
+                                width: '100%',
+                                padding: '1rem 1.5rem',
+                                paddingRight: searchQuery ? '3.5rem' : '1.5rem',
+                                border: '2px solid #1e3a8a',
+                                borderRadius: '10px',
+                                fontSize: '24px',
+                                outline: 'none',
+                                fontWeight: '500',
+                                color: '#000',
+                                backgroundColor: 'white',
+                                lineHeight: '1.2'
+                              }}
+                              onFocus={(e) => {
+                                e.currentTarget.style.borderColor = '#3b82f6';
+                                e.currentTarget.style.backgroundColor = '#f0f9ff';
+                                e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.borderColor = '#1e3a8a';
+                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            />
+                            {searchQuery && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSearchQuery('');
+                                  setSearchResults([]);
+                                  setSearchError(null);
+                                }}
+                                style={{
+                                  position: 'absolute',
+                                  right: '1rem',
+                                  top: '50%',
+                                  transform: 'translateY(-50%)',
+                                  width: '28px',
+                                  height: '28px',
+                                  borderRadius: '50%',
+                                  border: '2px solid #6b7280',
+                                  background: 'white',
+                                  color: '#6b7280',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '16px',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = '#3b82f6';
+                                  e.currentTarget.style.borderColor = '#3b82f6';
+                                  e.currentTarget.style.color = 'white';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'white';
+                                  e.currentTarget.style.borderColor = '#6b7280';
+                                  e.currentTarget.style.color = '#6b7280';
+                                }}
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
                           <button
                             type="submit"
                             style={{
@@ -5794,35 +6028,79 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       {/* Search Form */}
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                          <input
-                            type="text"
-                            className="united-tribes-search-input"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search UnitedTribes videos"
-                            style={{
-                              flex: 1,
-                              padding: '1rem 1.5rem',
-                              border: '2px solid #1e3a8a',
-                              borderRadius: '10px',
-                              fontSize: '24px',
-                              outline: 'none',
-                              fontWeight: '500',
-                              color: '#000',
-                              backgroundColor: 'white',
-                              lineHeight: '1.2'
-                            }}
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = '#3b82f6';
-                              e.currentTarget.style.backgroundColor = '#f0f9ff';
-                              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = '#1e3a8a';
-                              e.currentTarget.style.backgroundColor = 'white';
-                              e.currentTarget.style.boxShadow = 'none';
-                            }}
-                          />
+                          <div style={{ position: 'relative', flex: 1 }}>
+                            <input
+                              type="text"
+                              className="united-tribes-search-input"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              placeholder="Search UnitedTribes videos"
+                              style={{
+                                width: '100%',
+                                padding: '1rem 1.5rem',
+                                paddingRight: searchQuery ? '3.5rem' : '1.5rem',
+                                border: '2px solid #1e3a8a',
+                                borderRadius: '10px',
+                                fontSize: '24px',
+                                outline: 'none',
+                                fontWeight: '500',
+                                color: '#000',
+                                backgroundColor: 'white',
+                                lineHeight: '1.2'
+                              }}
+                              onFocus={(e) => {
+                                e.currentTarget.style.borderColor = '#3b82f6';
+                                e.currentTarget.style.backgroundColor = '#f0f9ff';
+                                e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.borderColor = '#1e3a8a';
+                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            />
+                            {searchQuery && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSearchQuery('');
+                                  setSearchResults([]);
+                                  setSearchError(null);
+                                }}
+                                style={{
+                                  position: 'absolute',
+                                  right: '1rem',
+                                  top: '50%',
+                                  transform: 'translateY(-50%)',
+                                  width: '28px',
+                                  height: '28px',
+                                  borderRadius: '50%',
+                                  border: '2px solid #6b7280',
+                                  background: 'white',
+                                  color: '#6b7280',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '16px',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = '#3b82f6';
+                                  e.currentTarget.style.borderColor = '#3b82f6';
+                                  e.currentTarget.style.color = 'white';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'white';
+                                  e.currentTarget.style.borderColor = '#6b7280';
+                                  e.currentTarget.style.color = '#6b7280';
+                                }}
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
                           <button
                             type="submit"
                             style={{
@@ -6485,35 +6763,79 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                          <input
-                            type="text"
-                            className="united-tribes-search-input"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search UnitedTribes videos"
-                            style={{
-                              flex: 1,
-                              padding: '1rem 1.5rem',
-                              border: '2px solid #1e3a8a',
-                              borderRadius: '10px',
-                              fontSize: '24px',
-                              outline: 'none',
-                              fontWeight: '500',
-                              color: '#000',
-                              backgroundColor: 'white',
-                              lineHeight: '1.2'
-                            }}
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = '#3b82f6';
-                              e.currentTarget.style.backgroundColor = '#f0f9ff';
-                              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = '#1e3a8a';
-                              e.currentTarget.style.backgroundColor = 'white';
-                              e.currentTarget.style.boxShadow = 'none';
-                            }}
-                          />
+                          <div style={{ position: 'relative', flex: 1 }}>
+                            <input
+                              type="text"
+                              className="united-tribes-search-input"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              placeholder="Search UnitedTribes videos"
+                              style={{
+                                width: '100%',
+                                padding: '1rem 1.5rem',
+                                paddingRight: searchQuery ? '3.5rem' : '1.5rem',
+                                border: '2px solid #1e3a8a',
+                                borderRadius: '10px',
+                                fontSize: '24px',
+                                outline: 'none',
+                                fontWeight: '500',
+                                color: '#000',
+                                backgroundColor: 'white',
+                                lineHeight: '1.2'
+                              }}
+                              onFocus={(e) => {
+                                e.currentTarget.style.borderColor = '#3b82f6';
+                                e.currentTarget.style.backgroundColor = '#f0f9ff';
+                                e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.borderColor = '#1e3a8a';
+                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            />
+                            {searchQuery && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSearchQuery('');
+                                  setSearchResults([]);
+                                  setSearchError(null);
+                                }}
+                                style={{
+                                  position: 'absolute',
+                                  right: '1rem',
+                                  top: '50%',
+                                  transform: 'translateY(-50%)',
+                                  width: '28px',
+                                  height: '28px',
+                                  borderRadius: '50%',
+                                  border: '2px solid #6b7280',
+                                  background: 'white',
+                                  color: '#6b7280',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '16px',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = '#3b82f6';
+                                  e.currentTarget.style.borderColor = '#3b82f6';
+                                  e.currentTarget.style.color = 'white';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'white';
+                                  e.currentTarget.style.borderColor = '#6b7280';
+                                  e.currentTarget.style.color = '#6b7280';
+                                }}
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
                           <button
                             type="submit"
                             style={{
@@ -6538,6 +6860,172 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           </button>
                         </div>
                       </form>
+
+                      {/* Page 1 - Pre-populated Discovery Section */}
+                      {currentPage?.originalData?.page === 1 && (
+                        <div style={{ marginBottom: '2rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                              🎵 UnitedTribes AI-Enhanced Discovery
+                            </h3>
+                            <button
+                              onClick={() => setPage1DiscoveryExpanded(!page1DiscoveryExpanded)}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: '#f3f4f6',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                color: '#374151',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              {page1DiscoveryExpanded ? '▼ Collapse' : '▶ Expand'}
+                            </button>
+                          </div>
+
+                          {page1DiscoveryExpanded && (
+                            <div style={{ marginTop: '1rem' }}>
+                              <h4 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Featured Videos ({page1PreloadedVideos.length})
+                              </h4>
+                              {page1PreloadedVideos.length > 0 ? (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                  {page1PreloadedVideos.map((video: any) => (
+                                    <div
+                                      key={video.id}
+                                      style={{
+                                        cursor: 'pointer',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        background: 'white',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                        transition: 'transform 0.2s, box-shadow 0.2s'
+                                      }}
+                                      onClick={() => embedVideo(video)}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                      }}
+                                    >
+                                      {video.thumbnail && (
+                                        <img
+                                          src={video.thumbnail}
+                                          alt={video.title}
+                                          style={{ width: '100%', height: 'auto', display: 'block' }}
+                                        />
+                                      )}
+                                      <div style={{ padding: '1rem' }}>
+                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                          {video.title}
+                                        </p>
+                                        <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                          {video.channel} • {video.duration}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                  Loading videos...
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Page 4 - Pre-populated Discovery Section */}
+                      {currentPage?.originalData?.page === 4 && (
+                        <div style={{ marginBottom: '2rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                              🎵 UnitedTribes AI-Enhanced Discovery
+                            </h3>
+                            <button
+                              onClick={() => setPage4DiscoveryExpanded(!page4DiscoveryExpanded)}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: '#f3f4f6',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                color: '#374151',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              {page4DiscoveryExpanded ? '▼ Collapse' : '▶ Expand'}
+                            </button>
+                          </div>
+
+                          {page4DiscoveryExpanded && (
+                            <div style={{ marginTop: '1rem' }}>
+                              <h4 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Featured Videos ({page4PreloadedVideos.length})
+                              </h4>
+                              {page4PreloadedVideos.length > 0 ? (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                  {page4PreloadedVideos.map((video: any) => (
+                                    <div
+                                      key={video.id}
+                                      style={{
+                                        cursor: 'pointer',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        background: 'white',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                        transition: 'transform 0.2s, box-shadow 0.2s'
+                                      }}
+                                      onClick={() => embedVideo(video)}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                      }}
+                                    >
+                                      {video.thumbnail && (
+                                        <img
+                                          src={video.thumbnail}
+                                          alt={video.title}
+                                          style={{ width: '100%', height: 'auto', display: 'block' }}
+                                        />
+                                      )}
+                                      <div style={{ padding: '1rem' }}>
+                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                          {video.title}
+                                        </p>
+                                        <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                          {video.channel} • {video.duration}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                  Loading videos...
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       {searchLoading && (
                         <div style={{ textAlign: 'center', padding: '2rem', color: '#3b82f6', fontSize: '18px', fontWeight: '600' }}>
@@ -6997,6 +7485,90 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           </button>
                         </div>
                       </form>
+
+                      {/* Page 1 - Pre-populated Discovery Section */}
+                      {currentPage?.originalData?.page === 1 && (
+                        <div style={{ marginBottom: '2rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                              🎵 UnitedTribes AI-Enhanced Discovery
+                            </h3>
+                            <button
+                              onClick={() => setPage1DiscoveryExpanded(!page1DiscoveryExpanded)}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: '#f3f4f6',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                color: '#374151',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              {page1DiscoveryExpanded ? '▼ Collapse' : '▶ Expand'}
+                            </button>
+                          </div>
+
+                          {page1DiscoveryExpanded && (
+                            <div style={{ marginTop: '1rem' }}>
+                              <h4 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Featured Videos ({page1PreloadedVideos.length})
+                              </h4>
+                              {page1PreloadedVideos.length > 0 ? (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                  {page1PreloadedVideos.map((video: any) => (
+                                    <div
+                                      key={video.id}
+                                      style={{
+                                        cursor: 'pointer',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        background: 'white',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                        transition: 'transform 0.2s, box-shadow 0.2s'
+                                      }}
+                                      onClick={() => embedVideo(video)}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                      }}
+                                    >
+                                      {video.thumbnail && (
+                                        <img
+                                          src={video.thumbnail}
+                                          alt={video.title}
+                                          style={{ width: '100%', height: 'auto', display: 'block' }}
+                                        />
+                                      )}
+                                      <div style={{ padding: '1rem' }}>
+                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                          {video.title}
+                                        </p>
+                                        <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                          {video.channel} • {video.duration}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                  Loading videos...
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {searchLoading && (
                         <div style={{ textAlign: 'center', padding: '2rem', color: '#3b82f6', fontSize: '18px', fontWeight: '600' }}>
                           Searching videos...
@@ -7714,41 +8286,114 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         }
       `}</style>
 
-      {/* Return to Media Hub Button - positioned above chapters */}
-      <Link href="/">
-        <button style={{
-          position: 'fixed',
-          top: '50px',
-          left: '35px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          padding: '0.75rem 1.5rem',
-          fontSize: '1.125rem',
-          fontWeight: '500',
-          backgroundColor: '#7c3aed',
-          color: 'white',
-          border: 'none',
-          borderRadius: '0.5rem',
-          cursor: 'pointer',
-          transition: 'all 0.2s',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          zIndex: 10
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = '#6d28d9';
-          e.currentTarget.style.transform = 'translateY(-1px)';
-          e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = '#7c3aed';
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-        }}>
-          <Home size={20} />
-          <span>Return to Media Hub</span>
+      {/* Navigation Buttons - positioned above chapters */}
+      <div style={{
+        position: 'fixed',
+        top: '50px',
+        left: '35px',
+        display: 'flex',
+        gap: '0.5rem',
+        zIndex: 10
+      }}>
+        <Link href="/">
+          <button style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.75rem 1.5rem',
+            fontSize: '1.125rem',
+            fontWeight: '500',
+            backgroundColor: '#7c3aed',
+            color: 'white',
+            border: 'none',
+            borderRadius: '0.5rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = '#6d28d9';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = '#7c3aed';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+          }}>
+            <Home size={20} />
+            <span>Media Hub</span>
+          </button>
+        </Link>
+
+        <button
+          onClick={() => {
+            setCurrentPageIndex(0);
+            window.scrollTo(0, 0);
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.75rem 1.5rem',
+            fontSize: '1.125rem',
+            fontWeight: '500',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '0.5rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = '#2563eb';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = '#3b82f6';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+          }}>
+          <BookOpen size={20} />
+          <span>Cover</span>
         </button>
-      </Link>
+
+        <button
+          onClick={() => {
+            setCurrentPageIndex(1);
+            window.scrollTo(0, 0);
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.75rem 1.5rem',
+            fontSize: '1.125rem',
+            fontWeight: '500',
+            backgroundColor: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '0.5rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = '#059669';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = '#10b981';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+          }}>
+          <Search size={20} />
+          <span>Index</span>
+        </button>
+      </div>
 
       {/* Chapter Sidebar */}
       <div className="chapter-sidebar">
