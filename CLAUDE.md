@@ -1,24 +1,41 @@
 # United Tribes Audio Interface - Claude Code Documentation
 
-## 🚀 CURRENT DEVELOPMENT: Version 4.2.2 - October 1, 2025 - BLUE NOTE RECORDS INTEGRATION
+## 🚀 CURRENT DEVELOPMENT: Version 4.3.0 - October 3, 2025 - HARPERCOLLINS INTEGRATION
 
-### 📋 Version 4.2.2 Development Goals
-**Focus**: Blue Note Records book content integration and cover art features
-**Branch**: `v4.2.2-blue-note-integration`
+### 📋 Version 4.3.0 - STABLE ROLLBACK POINT
+**Focus**: Read & Listen tab with HarperCollins book integration
+**Branch**: `v4.3-development`
+**Git Tag**: `v4.3.0`
 **Base**: v4.2.1 stable release
+**Status**: ✅ STABLE - Completed and tested
 
-### 🎯 Planned Features for v4.2.2
-- [ ] Blue Note Records cover art integration
-- [ ] Blue Note Records album information display
-- [ ] Blue Note Records book page content
-- [ ] Enhanced UI with Blue Note Records branding
-- [ ] Integration with existing playlist functionality
+### ✅ Completed Features in v4.3.0
+- [x] Read & Listen discovery tab on page 15
+- [x] Four HarperCollins/Amazon books with working images
+- [x] Enhanced modal for Kansas City Lightning (purchase + audiobook + video)
+- [x] Toggleable audiobook player (no new tabs)
+- [x] Direct YouTube embed for Stanley Crouch interview
+- [x] Clean HarperCollins brand integration (#00563f)
 
-**Status**: Planning phase - ready to begin development
+**Documentation**: [README-v4.3.0-enhanced-book-modal.md](./README-v4.3.0-enhanced-book-modal.md)
+
+### 🎯 Books Integrated
+1. **Kansas City Lightning** by Stanley Crouch (HarperCollins) - Enhanced modal ✅
+2. **Strange Fruit** by David Margolick (HarperCollins) ✅
+3. **The Jazzmen** by Larry Tye (HarperCollins) ✅
+4. **Sophisticated Giant: The Life of Dexter Gordon** (Amazon) ✅
+
+### 🔄 To Return to This Version
+```bash
+git checkout v4.3-development
+# or
+git checkout v4.3.0
+PORT=3004 npm run dev
+```
 
 ---
 
-## 📦 STABLE RELEASE: Version 4.2.1 - October 1, 2025 - ROLLBACK POINT
+## 📦 PREVIOUS STABLE: Version 4.2.1 - October 1, 2025
 
 ### ⚠️ CRITICAL: Use This Version for Production Rollback
 **Git Tag**: `v4.2.1`
