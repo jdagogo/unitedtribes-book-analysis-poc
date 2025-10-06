@@ -54,7 +54,10 @@ function trackApiCall(endpoint, units = 100, keyUsed = currentKeyIndex) {
 const YOUTUBE_API_KEYS = [
   process.env.YOUTUBE_API_KEY,
   process.env.YOUTUBE_API_KEY_2,
-  process.env.YOUTUBE_API_KEY_3
+  process.env.YOUTUBE_API_KEY_3,
+  process.env.YOUTUBE_API_KEY_4,
+  process.env.YOUTUBE_API_KEY_5,
+  process.env.YOUTUBE_API_KEY_6
 ].filter(Boolean);
 
 let currentKeyIndex = 0;
@@ -339,6 +342,11 @@ router.get('/quota-status', async (req, res) => {
 
 // Search YouTube for a specific track (song + artist)
 router.get('/search-track', async (req, res) => {
+  // Disable caching for this endpoint
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   const { song, artist } = req.query;
 
   if (!song) {

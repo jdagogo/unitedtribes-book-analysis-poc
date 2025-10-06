@@ -478,8 +478,11 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         );
         const data = await response.json();
 
+        console.log(`Response for ${track.title}:`, data);
+
         // Handle response from our YouTube search endpoint
         if (data.videoId) {
+          console.log(`✓ Found video for ${track.title}: ${data.videoId}`);
           return {
             ...track,
             videoId: data.videoId,
@@ -487,6 +490,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
             channelTitle: data.channel || track.artist,
             thumbnail: `https://img.youtube.com/vi/${data.videoId}/hqdefault.jpg`
           };
+        } else {
+          console.log(`✗ No videoId in response for ${track.title}:`, data);
         }
       } catch (error) {
         console.error(`Failed to find video for ${track.title} by ${track.artist}:`, error);
@@ -2922,11 +2927,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   borderRadius: '8px',
                                   color: '#fff'
                                 }}>
-                                  <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                                    Now Playing: {playlistVideos[currentTrackIndex]?.title} - {playlistVideos[currentTrackIndex]?.artist}
+                                  <div style={{ fontSize: '14px', color: '#888', marginBottom: '0.5rem' }}>
+                                    Now Playing
+                                  </div>
+                                  <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#fff', marginBottom: '0.25rem' }}>
+                                    {playlistVideos[currentTrackIndex]?.title}
+                                  </div>
+                                  <div style={{ fontSize: '22px', color: '#10b981', fontWeight: '600' }}>
+                                    {playlistVideos[currentTrackIndex]?.artist}
                                   </div>
                                   {playlistVideos[currentTrackIndex]?.videoTitle && (
-                                    <div style={{ fontSize: '18px', color: '#10b981', marginTop: '0.5rem' }}>
+                                    <div style={{ fontSize: '16px', color: '#6b7280', marginTop: '0.75rem', fontStyle: 'italic' }}>
                                       YouTube: {playlistVideos[currentTrackIndex].videoTitle}
                                     </div>
                                   )}
@@ -3041,26 +3052,41 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       }}
                                     >
                                       <div style={{
-                                        fontSize: '18px',
-                                        fontWeight: idx === currentTrackIndex ? 'bold' : 'normal',
-                                        color: '#fff'
+                                        fontSize: '12px',
+                                        color: '#888',
+                                        marginBottom: '0.25rem'
                                       }}>
-                                        {idx + 1}. {video.title} - {video.artist}
+                                        Track {idx + 1}
+                                      </div>
+                                      <div style={{
+                                        fontSize: '18px',
+                                        fontWeight: 'bold',
+                                        color: '#fff',
+                                        marginBottom: '0.25rem'
+                                      }}>
+                                        {video.title}
+                                      </div>
+                                      <div style={{
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        color: '#10b981'
+                                      }}>
+                                        {video.artist}
                                       </div>
                                       {video.videoId && (
                                         <div style={{
-                                          fontSize: '14px',
-                                          color: idx === currentTrackIndex ? '#bfdbfe' : '#10b981',
-                                          marginTop: '0.25rem'
+                                          fontSize: '12px',
+                                          color: idx === currentTrackIndex ? '#bfdbfe' : '#888',
+                                          marginTop: '0.5rem'
                                         }}>
                                           ✓ Video found
                                         </div>
                                       )}
                                       {video.error && (
                                         <div style={{
-                                          fontSize: '14px',
+                                          fontSize: '12px',
                                           color: '#f87171',
-                                          marginTop: '0.25rem'
+                                          marginTop: '0.5rem'
                                         }}>
                                           ✗ No video
                                         </div>
@@ -3761,18 +3787,26 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       }}
                                     >
                                       <div style={{
-                                        color: 'white',
-                                        fontSize: '14px',
-                                        fontWeight: '600',
+                                        color: '#888',
+                                        fontSize: '12px',
                                         marginBottom: '0.25rem'
                                       }}>
-                                        {idx + 1}. {video.title}
+                                        Track {idx + 1}
                                       </div>
                                       <div style={{
-                                        color: '#999',
-                                        fontSize: '12px'
+                                        color: 'white',
+                                        fontSize: '18px',
+                                        fontWeight: 'bold',
+                                        marginBottom: '0.25rem'
                                       }}>
-                                        {video.channel}
+                                        {video.title}
+                                      </div>
+                                      <div style={{
+                                        color: '#10b981',
+                                        fontSize: '16px',
+                                        fontWeight: '600'
+                                      }}>
+                                        {video.artist}
                                       </div>
                                     </div>
                                   ))}
@@ -3980,8 +4014,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       </div>
                     )}
 
-                    {/* ENHANCED DISCOVERY PANEL - PAGE 15 ONLY */}
-                    {currentPage?.originalData?.page === 15 && (
+                    {/* ENHANCED DISCOVERY PANEL - PAGE 9 (Dexter Gordon) */}
+                    {currentPage?.originalData?.page === 9 && (
                       <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                           <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
@@ -5158,11 +5192,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       borderRadius: '8px',
                                       color: '#fff'
                                     }}>
-                                      <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                                        Now Playing: {playlistVideos[currentTrackIndex]?.title} - {playlistVideos[currentTrackIndex]?.artist}
+                                      <div style={{ fontSize: '14px', color: '#888', marginBottom: '0.5rem' }}>
+                                        Now Playing
+                                      </div>
+                                      <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#fff', marginBottom: '0.25rem' }}>
+                                        {playlistVideos[currentTrackIndex]?.title}
+                                      </div>
+                                      <div style={{ fontSize: '22px', color: '#10b981', fontWeight: '600' }}>
+                                        {playlistVideos[currentTrackIndex]?.artist}
                                       </div>
                                       {playlistVideos[currentTrackIndex]?.videoTitle && (
-                                        <div style={{ fontSize: '18px', color: '#10b981', marginTop: '0.5rem' }}>
+                                        <div style={{ fontSize: '16px', color: '#6b7280', marginTop: '0.75rem', fontStyle: 'italic' }}>
                                           YouTube: {playlistVideos[currentTrackIndex].videoTitle}
                                         </div>
                                       )}
@@ -6025,11 +6065,26 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         }}
                                       >
                                         <div style={{
-                                          fontSize: '18px',
-                                          fontWeight: idx === currentTrackIndex ? 'bold' : 'normal',
-                                          color: '#fff'
+                                          fontSize: '12px',
+                                          color: '#888',
+                                          marginBottom: '0.25rem'
                                         }}>
-                                          {idx + 1}. {video.title} - {video.artist}
+                                          Track {idx + 1}
+                                        </div>
+                                        <div style={{
+                                          fontSize: '18px',
+                                          fontWeight: 'bold',
+                                          color: '#fff',
+                                          marginBottom: '0.25rem'
+                                        }}>
+                                          {video.title}
+                                        </div>
+                                        <div style={{
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#10b981'
+                                        }}>
+                                          {video.artist}
                                         </div>
                                         {video.videoId && (
                                           <div style={{
@@ -6761,11 +6816,26 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         }}
                                       >
                                         <div style={{
-                                          fontSize: '18px',
-                                          fontWeight: idx === currentTrackIndex ? 'bold' : 'normal',
-                                          color: '#fff'
+                                          fontSize: '12px',
+                                          color: '#888',
+                                          marginBottom: '0.25rem'
                                         }}>
-                                          {idx + 1}. {video.title} - {video.artist}
+                                          Track {idx + 1}
+                                        </div>
+                                        <div style={{
+                                          fontSize: '18px',
+                                          fontWeight: 'bold',
+                                          color: '#fff',
+                                          marginBottom: '0.25rem'
+                                        }}>
+                                          {video.title}
+                                        </div>
+                                        <div style={{
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#10b981'
+                                        }}>
+                                          {video.artist}
                                         </div>
                                         {video.videoId && (
                                           <div style={{
@@ -7548,11 +7618,26 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         border: idx === currentTrackIndex ? '2px solid #60a5fa' : '2px solid transparent'
                                       }}>
                                         <div style={{
-                                          fontSize: '18px',
-                                          fontWeight: idx === currentTrackIndex ? 'bold' : 'normal',
-                                          color: '#fff'
+                                          fontSize: '12px',
+                                          color: '#888',
+                                          marginBottom: '0.25rem'
                                         }}>
-                                          {idx + 1}. {video.title} - {video.artist}
+                                          Track {idx + 1}
+                                        </div>
+                                        <div style={{
+                                          fontSize: '18px',
+                                          fontWeight: 'bold',
+                                          color: '#fff',
+                                          marginBottom: '0.25rem'
+                                        }}>
+                                          {video.title}
+                                        </div>
+                                        <div style={{
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#10b981'
+                                        }}>
+                                          {video.artist}
                                         </div>
                                         {video.videoId && (
                                           <div style={{
@@ -7787,8 +7872,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   );
                 }
 
-                // Page 17 (Sonny Rollins) - Collapsible discovery section
-                if (currentPage?.originalData?.page === 17) {
+                // Page 12 (Sonny Rollins) - Collapsible discovery section
+                if (currentPage?.originalData?.page === 12) {
                   return (
                     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>

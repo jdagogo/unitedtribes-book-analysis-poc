@@ -27,13 +27,13 @@
         },
         {
           "title": "Classic Albums",
-          "pages": [7, 9, 15, 10],
+          "pages": [7, 8, 9, 10],
           "albums": ["Blue Train", "Thelonious Monk", "GO", "Like Someone in Love"]
         },
         {
           "title": "More Classic Albums",
-          "pages": [14, 16, 17],
-          "albums": ["A Caddy for Daddy", "The All Seeing Eye", "Sonny Rollins Vol. 2"]
+          "pages": [11, 12],
+          "albums": ["A Caddy for Daddy", "Sonny Rollins Vol. 2"]
         }
       ],
       "note": "Click on any thumbnail to navigate directly"
@@ -67,7 +67,7 @@
       "entities": ["John Coltrane", "Blue Train"]
     },
     {
-      "page": 9,
+      "page": 8,
       "type": "album_showcase",
       "title": "Thelonious Monk - Genius of Modern Music Volume 1",
       "image": "/bluenote-page9.png",
@@ -84,7 +84,7 @@
       "entities": ["Thelonious Monk"]
     },
     {
-      "page": 15,
+      "page": 9,
       "type": "album_showcase",
       "title": "Dexter Gordon - GO",
       "image": "/bluenote-page15.png",
@@ -115,7 +115,7 @@
       "discovery_entities": ["Art Blakey", "Jazz Messengers", "Lee Morgan", "Wayne Shorter", "Bobby Timmons", "Jymie Merritt"]
     },
     {
-      "page": 14,
+      "page": 11,
       "type": "album_showcase",
       "title": "Hank Mobley - A Caddy for Daddy",
       "image": "/bluenote-page14.png",
@@ -130,22 +130,7 @@
       "discovery_entities": ["Hank Mobley", "Reid Miles"]
     },
     {
-      "page": 16,
-      "type": "album_showcase",
-      "title": "Wayne Shorter - The All Seeing Eye",
-      "image": "/bluenote-page16.png",
-      "album": {
-        "title": "THE ALL SEEING EYE",
-        "artist": "Wayne Shorter",
-        "catalog": "The finest in jazz since 1939",
-        "cover_image": "/bluenote-page16.png",
-        "cover_design": "Reid Miles",
-        "note": "Dramatic close-up portrait in orange tones"
-      },
-      "discovery_entities": ["Wayne Shorter", "Reid Miles"]
-    },
-    {
-      "page": 17,
+      "page": 12,
       "type": "album_showcase",
       "title": "Sonny Rollins - Vol. 2",
       "image": "/bluenote-page17.png",
