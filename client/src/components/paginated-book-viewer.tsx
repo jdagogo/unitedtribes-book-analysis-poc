@@ -108,7 +108,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
 
   // Discovery panel state for page 15
-  const [discoveryTab, setDiscoveryTab] = useState<'read' | 'watch' | 'music' | 'explorer'>('music');
+  const [discoveryTab, setDiscoveryTab] = useState<'featured' | 'read' | 'watch' | 'music' | 'explorer'>('featured');
   const [discoveryPanelExpanded, setDiscoveryPanelExpanded] = useState(false);
   const [discoveryResults, setDiscoveryResults] = useState<any[]>([]);
   const [selectedDiscoveryIndex, setSelectedDiscoveryIndex] = useState(0);
@@ -125,6 +125,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [page17DiscoveryExpanded, setPage17DiscoveryExpanded] = useState(false);
   const [defaultDiscoveryExpanded, setDefaultDiscoveryExpanded] = useState(false);
   const [defaultDiscoveryTab, setDefaultDiscoveryTab] = useState<'music'>('music');
+  const [page9PreloadedVideos, setPage9PreloadedVideos] = useState<any[]>([]);
 
   // Book modal state
   const [showBookModal, setShowBookModal] = useState(false);
@@ -290,6 +291,43 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       }
     };
     loadPage1Videos();
+  }, []);
+
+  // Preload page 9 featured videos
+  useEffect(() => {
+    const loadPage9Videos = async () => {
+      if (page9PreloadedVideos.length === 0) {
+        try {
+          const [dexterResponse, maxineResponse] = await Promise.all([
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Dexter Gordon Rare Interviews')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('maxine')}`)
+          ]);
+
+          const videos = [];
+
+          if (dexterResponse.ok) {
+            const dexterData = await dexterResponse.json();
+            const dexterResults = dexterData.results || [];
+            if (dexterResults.length > 0) {
+              videos.push(dexterResults[0]);
+            }
+          }
+
+          if (maxineResponse.ok) {
+            const maxineData = await maxineResponse.json();
+            const maxineResults = maxineData.results || [];
+            if (maxineResults.length > 0) {
+              videos.push(maxineResults[0]);
+            }
+          }
+
+          setPage9PreloadedVideos(videos);
+        } catch (error) {
+          console.error('Failed to preload page 9 videos:', error);
+        }
+      }
+    };
+    loadPage9Videos();
   }, []);
 
   // Embed video player
@@ -4046,6 +4084,21 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         {/* Tab Navigation */}
                         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
                           <button
+                            onClick={() => setDiscoveryTab('featured')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'featured' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'featured' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'featured' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Featured
+                          </button>
+                          <button
                             onClick={() => setDiscoveryTab('read')}
                             style={{
                               padding: '0.75rem 1.5rem',
@@ -4109,6 +4162,64 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
                           {/* Tab Content */}
                           <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          {discoveryTab === 'featured' && (
+                            <div>
+                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Featured Videos</h4>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                {page9PreloadedVideos.map((video: any, idx: number) => (
+                                  <div
+                                    key={idx}
+                                    onClick={() => embedVideo(video)}
+                                    style={{
+                                      cursor: 'pointer',
+                                      border: '1px solid #e5e7eb',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      transition: 'transform 0.2s',
+                                      background: 'white'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'scale(1.02)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'scale(1)';
+                                    }}
+                                  >
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      style={{
+                                        width: '100%',
+                                        height: '180px',
+                                        objectFit: 'cover'
+                                      }}
+                                    />
+                                    <div style={{ padding: '0.75rem' }}>
+                                      <div style={{
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        color: '#1f2937',
+                                        marginBottom: '0.25rem',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: 'vertical'
+                                      }}>
+                                        {video.title}
+                                      </div>
+                                      <div style={{
+                                        fontSize: '12px',
+                                        color: '#6b7280'
+                                      }}>
+                                        {video.channel}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                           {discoveryTab === 'music' && (
                             <div>
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Album Personnel</h4>
@@ -4533,6 +4644,420 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 </div>
 
                               </div>
+                            </div>
+                          )}
+                          </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    {/* DISCOVERY PANEL - PAGE 10 (Art Blakey - Like Someone in Love) */}
+                    {currentPage?.originalData?.page === 10 && (
+                      <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                            🎵 UnitedTribes AI-Enhanced Discovery
+                          </h3>
+                          <button
+                            onClick={() => setDiscoveryPanelExpanded(!discoveryPanelExpanded)}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              background: '#f3f4f6',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              color: '#374151'
+                            }}
+                          >
+                            {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
+                          </button>
+                        </div>
+
+                        {discoveryPanelExpanded && (
+                          <>
+                        {/* Tab Navigation */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
+                          <button
+                            onClick={() => setDiscoveryTab('featured')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'featured' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'featured' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'featured' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Featured
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('read')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'read' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'read' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'read' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Read
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('watch')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'watch' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'watch' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'watch' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Watch
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('music')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'music' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'music' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'music' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Music
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('explorer')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'explorer' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'explorer' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'explorer' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            United AI Explorer
+                          </button>
+                        </div>
+
+                          {/* Tab Content */}
+                          <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          {discoveryTab === 'featured' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Featured content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'read' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Read content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'watch' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Watch content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'music' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'explorer' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Explorer content coming soon...</p>
+                            </div>
+                          )}
+                          </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    {/* DISCOVERY PANEL - PAGE 11 */}
+                    {currentPage?.originalData?.page === 11 && (
+                      <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                            🎵 UnitedTribes AI-Enhanced Discovery
+                          </h3>
+                          <button
+                            onClick={() => setDiscoveryPanelExpanded(!discoveryPanelExpanded)}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              background: '#f3f4f6',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              color: '#374151'
+                            }}
+                          >
+                            {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
+                          </button>
+                        </div>
+
+                        {discoveryPanelExpanded && (
+                          <>
+                        {/* Tab Navigation */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
+                          <button
+                            onClick={() => setDiscoveryTab('featured')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'featured' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'featured' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'featured' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Featured
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('read')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'read' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'read' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'read' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Read
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('watch')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'watch' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'watch' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'watch' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Watch
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('music')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'music' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'music' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'music' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Music
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('explorer')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'explorer' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'explorer' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'explorer' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            United AI Explorer
+                          </button>
+                        </div>
+
+                          {/* Tab Content */}
+                          <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          {discoveryTab === 'featured' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Featured content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'read' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Read content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'watch' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Watch content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'music' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'explorer' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Explorer content coming soon...</p>
+                            </div>
+                          )}
+                          </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    {/* DISCOVERY PANEL - PAGE 12 */}
+                    {currentPage?.originalData?.page === 12 && (
+                      <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                            🎵 UnitedTribes AI-Enhanced Discovery
+                          </h3>
+                          <button
+                            onClick={() => setDiscoveryPanelExpanded(!discoveryPanelExpanded)}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              background: '#f3f4f6',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              color: '#374151'
+                            }}
+                          >
+                            {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
+                          </button>
+                        </div>
+
+                        {discoveryPanelExpanded && (
+                          <>
+                        {/* Tab Navigation */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid #e5e7eb' }}>
+                          <button
+                            onClick={() => setDiscoveryTab('featured')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'featured' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'featured' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'featured' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Featured
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('read')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'read' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'read' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'read' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Read
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('watch')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'watch' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'watch' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'watch' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Watch
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('music')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'music' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'music' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'music' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            Music
+                          </button>
+                          <button
+                            onClick={() => setDiscoveryTab('explorer')}
+                            style={{
+                              padding: '0.75rem 1.5rem',
+                              background: discoveryTab === 'explorer' ? '#3b82f6' : 'transparent',
+                              color: discoveryTab === 'explorer' ? 'white' : '#6b7280',
+                              border: 'none',
+                              borderBottom: discoveryTab === 'explorer' ? '2px solid #3b82f6' : '2px solid transparent',
+                              cursor: 'pointer',
+                              fontSize: '16px',
+                              fontWeight: '600'
+                            }}
+                          >
+                            United AI Explorer
+                          </button>
+                        </div>
+
+                          {/* Tab Content */}
+                          <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          {discoveryTab === 'featured' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Featured content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'read' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Read content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'watch' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Watch content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'music' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                            </div>
+                          )}
+                          {discoveryTab === 'explorer' && (
+                            <div>
+                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Explorer content coming soon...</p>
                             </div>
                           )}
                           </div>
