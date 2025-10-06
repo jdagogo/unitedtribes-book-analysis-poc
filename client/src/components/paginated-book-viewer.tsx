@@ -8102,6 +8102,147 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                         </div>
                       )}
+
+                      {/* DISCOVERY PANEL - PAGE 6 (Cover Story) */}
+                      {currentPage?.originalData?.page === 6 && (
+                        <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
+                              🎵 UnitedTribes AI-Enhanced Discovery
+                            </h3>
+                            <button
+                              onClick={() => setDiscoveryPanelExpanded(!discoveryPanelExpanded)}
+                              style={{
+                                padding: '0.5rem 1rem',
+                                background: '#f3f4f6',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                color: '#374151',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                              }}
+                            >
+                              {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
+                            </button>
+                          </div>
+
+                          {discoveryPanelExpanded && (
+                            <div>
+                              {/* Tabs */}
+                              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '2px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+                                <button
+                                  onClick={() => setDiscoveryTab('featured')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'featured' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'featured' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Featured
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('read')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'read' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'read' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Read
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('watch')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'watch' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'watch' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Watch
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('music')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'music' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'music' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Music
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('explorer')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'explorer' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'explorer' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Explorer
+                                </button>
+                              </div>
+
+                              {/* Tab Content */}
+                              <div style={{ padding: '1rem' }}>
+                                {discoveryTab === 'featured' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Featured content coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'read' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Reading recommendations coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'watch' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Video content coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'music' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Music content coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'explorer' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Explorer content coming soon...
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
