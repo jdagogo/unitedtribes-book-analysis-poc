@@ -253,15 +253,77 @@
     <div class="container">
         <h1>🚀 United Tribes Fresh - Version Control</h1>
 
-        <div class="quickstart">
-            <h2>⚡ Quick Commands</h2>
-            <div class="command">
-                cd ~/Desktop/my-claude/united-tribes-fresh-v4
-                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+        <!-- QUICK START GUIDE -->
+        <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <h2 style="color: white; margin-bottom: 20px; font-size: 2em;">📖 Quick Start Guide</h2>
+
+            <!-- Current Status -->
+            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.3);">
+                <h3 style="color: white; margin-bottom: 15px; font-size: 1.4em;">✅ Current Stable Version</h3>
+                <div style="color: white; font-size: 1.1em; line-height: 1.8;">
+                    <strong>Branch:</strong> v4.3.1-development<br>
+                    <strong>Commit:</strong> 354f3f0<br>
+                    <strong>Port:</strong> 3004<br>
+                    <strong>Status:</strong> ✅ Running & Verified
+                </div>
             </div>
-            <div class="command">
-                npm run dev
-                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+
+            <!-- Step-by-Step Instructions -->
+            <div style="background: white; border-radius: 10px; padding: 25px;">
+                <h3 style="color: #1f2937; margin-bottom: 20px; font-size: 1.3em;">🎯 How to Start the Application</h3>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #22c55e; margin-bottom: 15px;">
+                        <strong style="color: #166534; display: block; margin-bottom: 8px;">Step 1: Navigate to Project Directory</strong>
+                        <div class="command" style="background: #1e293b; color: #10b981; padding: 12px; border-radius: 6px; font-family: monospace; position: relative;">
+cd ~/Desktop/my-claude/united-tribes-fresh-v4
+                            <button class="copy-btn" onclick="copyCommand(this)" style="position: absolute; right: 10px; top: 10px;">Copy</button>
+                        </div>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #22c55e; margin-bottom: 15px;">
+                        <strong style="color: #166534; display: block; margin-bottom: 8px;">Step 2: Verify You're on the Stable Branch</strong>
+                        <div class="command" style="background: #1e293b; color: #10b981; padding: 12px; border-radius: 6px; font-family: monospace; position: relative;">
+git status
+                            <button class="copy-btn" onclick="copyCommand(this)" style="position: absolute; right: 10px; top: 10px;">Copy</button>
+                        </div>
+                        <div style="color: #6b7280; font-size: 0.9em; margin-top: 8px; font-style: italic;">
+                            Should show: "On branch v4.3.1-development"
+                        </div>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #22c55e; margin-bottom: 15px;">
+                        <strong style="color: #166534; display: block; margin-bottom: 8px;">Step 3: Start the Development Server</strong>
+                        <div class="command" style="background: #1e293b; color: #10b981; padding: 12px; border-radius: 6px; font-family: monospace; position: relative;">
+PORT=3004 npm run dev
+                            <button class="copy-btn" onclick="copyCommand(this)" style="position: absolute; right: 10px; top: 10px;">Copy</button>
+                        </div>
+                        <div style="color: #6b7280; font-size: 0.9em; margin-top: 8px; font-style: italic;">
+                            Server will start on http://localhost:3004
+                        </div>
+                    </div>
+
+                    <div style="background: #dbeafe; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                        <strong style="color: #1e40af; display: block; margin-bottom: 8px;">Step 4: Open in Browser</strong>
+                        <a href="http://localhost:3004" target="_blank" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 8px;">
+                            🌐 Open http://localhost:3004
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Emergency Commands -->
+                <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 15px; margin-top: 20px;">
+                    <h4 style="color: #92400e; margin-bottom: 10px;">⚠️ If Something Goes Wrong</h4>
+                    <div style="color: #78350f; font-size: 0.95em; line-height: 1.6;">
+                        <strong>Server won't start?</strong><br>
+                        1. Press Ctrl+C to stop any running servers<br>
+                        2. Run: <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">lsof -ti:3004 | xargs kill -9</code><br>
+                        3. Try starting again<br><br>
+
+                        <strong>Wrong version running?</strong><br>
+                        Run: <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">git checkout v4.3.1-development</code>
+                    </div>
+                </div>
             </div>
         </div>
 
