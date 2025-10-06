@@ -7865,15 +7865,15 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         </div>
                       )}
 
-                      {/* Page 4 - Pre-populated Discovery Section */}
+                      {/* DISCOVERY PANEL - PAGE 4 (Blue Note Chiefs) */}
                       {currentPage?.originalData?.page === 4 && (
-                        <div style={{ marginBottom: '2rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '1rem', background: '#f9fafb', borderRadius: '8px', border: '2px solid #e5e7eb' }}>
+                        <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1f2937', margin: 0 }}>
                               🎵 UnitedTribes AI-Enhanced Discovery
                             </h3>
                             <button
-                              onClick={() => setPage4DiscoveryExpanded(!page4DiscoveryExpanded)}
+                              onClick={() => setDiscoveryPanelExpanded(!discoveryPanelExpanded)}
                               style={{
                                 padding: '0.5rem 1rem',
                                 background: '#f3f4f6',
@@ -7888,61 +7888,164 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 gap: '0.5rem'
                               }}
                             >
-                              {page4DiscoveryExpanded ? '▼ Collapse' : '▶ Expand'}
+                              {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
                             </button>
                           </div>
 
-                          {page4DiscoveryExpanded && (
-                            <div style={{ marginTop: '1rem' }}>
-                              <h4 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                                Featured Videos ({page4PreloadedVideos.length})
-                              </h4>
-                              {page4PreloadedVideos.length > 0 ? (
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                                  {page4PreloadedVideos.map((video: any) => (
-                                    <div
-                                      key={video.id}
-                                      style={{
-                                        cursor: 'pointer',
-                                        borderRadius: '8px',
-                                        overflow: 'hidden',
-                                        background: 'white',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                        transition: 'transform 0.2s, box-shadow 0.2s'
-                                      }}
-                                      onClick={() => embedVideo(video)}
-                                      onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(-2px)';
-                                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(0)';
-                                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                                      }}
-                                    >
-                                      {video.thumbnail && (
-                                        <img
-                                          src={video.thumbnail}
-                                          alt={video.title}
-                                          style={{ width: '100%', height: 'auto', display: 'block' }}
-                                        />
-                                      )}
-                                      <div style={{ padding: '1rem' }}>
-                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
-                                          {video.title}
-                                        </p>
-                                        <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
-                                          {video.channel} • {video.duration}
-                                        </p>
+                          {discoveryPanelExpanded && (
+                            <div>
+                              {/* Tabs */}
+                              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '2px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+                                <button
+                                  onClick={() => setDiscoveryTab('featured')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'featured' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'featured' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Featured
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('read')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'read' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'read' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Read
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('watch')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'watch' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'watch' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Watch
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('music')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'music' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'music' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  Music
+                                </button>
+                                <button
+                                  onClick={() => setDiscoveryTab('explorer')}
+                                  style={{
+                                    padding: '0.5rem 1rem',
+                                    background: discoveryTab === 'explorer' ? '#3b82f6' : '#f3f4f6',
+                                    color: discoveryTab === 'explorer' ? 'white' : '#374151',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600'
+                                  }}
+                                >
+                                  United AI Explorer
+                                </button>
+                              </div>
+
+                              {/* Tab Content */}
+                              <div style={{ padding: '1rem' }}>
+                                {discoveryTab === 'featured' && (
+                                  <div>
+                                    {page4PreloadedVideos.length > 0 ? (
+                                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                        {page4PreloadedVideos.map((video: any) => (
+                                          <div
+                                            key={video.id}
+                                            style={{
+                                              cursor: 'pointer',
+                                              borderRadius: '8px',
+                                              overflow: 'hidden',
+                                              background: 'white',
+                                              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                              transition: 'transform 0.2s, box-shadow 0.2s'
+                                            }}
+                                            onClick={() => embedVideo(video)}
+                                            onMouseEnter={(e) => {
+                                              e.currentTarget.style.transform = 'translateY(-2px)';
+                                              e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                              e.currentTarget.style.transform = 'translateY(0)';
+                                              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                            }}
+                                          >
+                                            {video.thumbnail && (
+                                              <img
+                                                src={video.thumbnail}
+                                                alt={video.title}
+                                                style={{ width: '100%', height: 'auto', display: 'block' }}
+                                              />
+                                            )}
+                                            <div style={{ padding: '1rem' }}>
+                                              <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                                {video.title}
+                                              </p>
+                                              <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                                {video.channel} • {video.duration}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        ))}
                                       </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                  Loading videos...
-                                </div>
-                              )}
+                                    ) : (
+                                      <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                        Loading featured videos...
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                {discoveryTab === 'read' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Reading recommendations coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'watch' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Video content coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'music' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Music content coming soon...
+                                  </div>
+                                )}
+                                {discoveryTab === 'explorer' && (
+                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                    Explorer content coming soon...
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
@@ -8128,7 +8231,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     fontWeight: '600'
                                   }}
                                 >
-                                  Explorer
+                                  United AI Explorer
                                 </button>
                               </div>
 
@@ -8348,7 +8451,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     fontWeight: '600'
                                   }}
                                 >
-                                  Explorer
+                                  United AI Explorer
                                 </button>
                               </div>
 
