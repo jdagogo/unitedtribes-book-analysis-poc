@@ -2440,10 +2440,11 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   <img
                                     src={
                                       page === 7 ? '/bluenote-page7-bluetrain-thumb.png' :
-                                      page === 9 ? '/bluenote-page9-thumb.png' :
+                                      page === 8 ? '/bluenote-page9-thumb.png' :
+                                      page === 9 ? '/bluenote-page15-thumb.png' :
                                       page === 10 ? '/bluenote-page10-correct-thumb.png' :
-                                      page === 11 ? '/bluenote-page11-thumb.png' :
-                                      page === 12 ? '/bluenote-page12-thumb.png' :
+                                      page === 11 ? '/bluenote-page14-thumb.png' :
+                                      page === 12 ? '/bluenote-page17-thumb.png' :
                                       page === 13 ? '/bluenote-page13-thumb.png' :
                                       page === 14 ? '/bluenote-page14-thumb.png' :
                                       page === 15 ? '/bluenote-page15-thumb.png' :
