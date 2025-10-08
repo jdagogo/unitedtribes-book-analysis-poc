@@ -112,29 +112,31 @@ export default function Analyze() {
             </Button>
           </Link>
 
-          {/* Quick Media Navigation */}
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-amber-800 mb-3 text-center font-medium">🎵 Quick Access to All Merle Haggard Content</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button variant="outline" size="sm" className="bg-white border-blue-300 hover:bg-blue-50">
-                <Play className="mr-2 h-4 w-4" />
-                Podcast (Current)
-              </Button>
-              <Link href="/book">
-                <Button variant="outline" size="sm" className="bg-white border-green-300 hover:bg-green-50">
-                  <Book className="mr-2 h-4 w-4" />
-                  Book Reader
-                </Button>
-              </Link>
-              <Link href="/cross-media">
-                <Button variant="outline" size="sm" className="bg-white border-purple-300 hover:bg-purple-50">
-                  <Link2 className="mr-2 h-4 w-4" />
-                  Cross-Media
-                </Button>
-              </Link>
-            </div>
-          </div>
           {!showDemo && !podcastId && (
+            <>
+              {/* Quick Media Navigation */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-amber-800 mb-3 text-center font-medium">🎵 Quick Access to All Merle Haggard Content</p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <Button variant="outline" size="sm" className="bg-white border-blue-300 hover:bg-blue-50">
+                    <Play className="mr-2 h-4 w-4" />
+                    Podcast (Current)
+                  </Button>
+                  <Link href="/book">
+                    <Button variant="outline" size="sm" className="bg-white border-green-300 hover:bg-green-50">
+                      <Book className="mr-2 h-4 w-4" />
+                      Book Reader
+                    </Button>
+                  </Link>
+                  <Link href="/cross-media">
+                    <Button variant="outline" size="sm" className="bg-white border-purple-300 hover:bg-purple-50">
+                      <Link2 className="mr-2 h-4 w-4" />
+                      Cross-Media
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </>
             <div className="text-center">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Media Discovery Analysis
