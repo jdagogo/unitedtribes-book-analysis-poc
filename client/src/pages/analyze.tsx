@@ -136,8 +136,8 @@ export default function Analyze() {
                   </Link>
                 </div>
               </div>
-            </>
-            <div className="text-center">
+
+              <div className="text-center">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Media Discovery Analysis
               </h1>
@@ -174,7 +174,8 @@ export default function Analyze() {
                   {analyzePDFMutation.isPending ? 'Processing...' : 'Analyze Justin Bieber PDF'}
                 </Button>
               </div>
-            </div>
+              </div>
+            </>
           )}
         </div>
 
@@ -207,57 +208,15 @@ export default function Analyze() {
         )}
 
         {/* Demo Results */}
-        {showDemo && (
-          <Card className="mb-8">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
-                  {showDemo === 'merle' ? 'Real Merle Haggard Analysis' : 'Justin Bieber Analysis Demo'}
-                </CardTitle>
-                <Button variant="ghost" onClick={() => setShowDemo(null)}>×</Button>
-              </div>
-              <CardDescription>
-                {showDemo === 'merle' 
-                  ? 'This is actual UnitedTribes analysis from the uploaded PDF - real entity extraction and contextual navigation'
-                  : 'This is what proper UnitedTribes analysis should look like - 80-150+ navigation triggers'
-                }
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {showDemo === 'merle' ? (
-                <ResultsDashboard 
-                  analysis={authenticMerleAnalysis} 
-                  initialTimestamp={(() => {
-                    const urlParams = new URLSearchParams(location.split('?')[1] || '');
-                    const timestamp = urlParams.get('t');
-                    return timestamp ? parseInt(timestamp) : undefined;
-                  })()} 
-                />
-              ) : (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {Object.entries(justinBieberDemoAnalysis.categories).map(([category, data]) => (
-                      <div key={category} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                        <h3 className="font-semibold text-sm mb-2">{category}</h3>
-                        <div className="text-2xl font-bold text-purple-600">{data.count}</div>
-                        <div className="text-xs text-muted-foreground">triggers</div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                    <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-2">
-                      Total Navigation Triggers: {justinBieberDemoAnalysis.totalNavigationTriggers}
-                    </h3>
-                    <p className="text-purple-700 dark:text-purple-300">
-                      This demonstrates UnitedTribes' power - comprehensive entity extraction for seamless media discovery
-                    </p>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        {showDemo && showDemo === 'merle' && (
+          <ResultsDashboard
+            analysis={authenticMerleAnalysis}
+            initialTimestamp={(() => {
+              const urlParams = new URLSearchParams(location.split('?')[1] || '');
+              const timestamp = urlParams.get('t');
+              return timestamp ? parseInt(timestamp) : undefined;
+            })()}
+          />
         )}
 
         {/* Analysis Input */}
