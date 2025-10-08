@@ -322,7 +322,7 @@ export function PodcastPlayer({
   const currentMentions = getCurrentMentions();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Audio Element */}
       {workingAudioUrl && (
         <audio
@@ -333,20 +333,20 @@ export function PodcastPlayer({
       )}
 
       {/* Two-Column Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* LEFT COLUMN - Media Player and Timeline */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 space-y-4">
           {/* Main Player Controls */}
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <Play className="h-6 w-6" />
                 Contextual Media Player
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 pt-0">
               {/* Progress Bar */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Slider
                   value={[currentTime]}
                   max={duration}
@@ -411,9 +411,9 @@ export function PodcastPlayer({
               </div>
 
               {!hasValidAudioUrl && !workingAudioUrl && (
-                <div className="text-center py-4 text-muted-foreground">
+                <div className="text-center py-2 text-muted-foreground">
                   <div className="relative">
-                    <Clock className={`h-8 w-8 mx-auto mb-2 transition-transform ${isPlaying ? 'animate-spin' : ''}`} />
+                    <Clock className={`h-8 w-8 mx-auto mb-1 transition-transform ${isPlaying ? 'animate-spin' : ''}`} />
                     {isPlaying && (
                       <div className="absolute inset-0 rounded-full border-2 border-blue-500 animate-ping" />
                     )}
@@ -425,7 +425,7 @@ export function PodcastPlayer({
                     {isPlaying ? 'Pause to stop simulation' : 'Click play to explore contextual navigation'}
                   </p>
                   {isPlaying && (
-                    <div className="mt-2 flex justify-center">
+                    <div className="mt-1 flex justify-center">
                       <div className="flex gap-1">
                         {[...Array(5)].map((_, i) => (
                           <div
@@ -444,7 +444,7 @@ export function PodcastPlayer({
               )}
 
               {workingAudioUrl && (
-                <div className="text-center py-2 text-muted-foreground">
+                <div className="text-center py-1 text-muted-foreground">
                   <p className="text-base flex items-center justify-center gap-2">
                     <Volume2 className="h-5 w-5" />
                     {isPlaying ? 'Audio Playing' : 'Audio Ready'}
@@ -453,7 +453,7 @@ export function PodcastPlayer({
                     </span>
                   </p>
                   {audioTitle && freshAirAudio && (
-                    <p className="text-sm text-muted-foreground mt-1 font-medium">
+                    <p className="text-sm text-muted-foreground mt-0.5 font-medium">
                       "{audioTitle}"
                     </p>
                   )}
@@ -573,17 +573,17 @@ export function PodcastPlayer({
         {/* RIGHT COLUMN - Live Entities Panel */}
         <div className="lg:col-span-2">
           <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 lg:sticky lg:top-6">
-            <CardHeader>
+            <CardHeader className="pb-2">
               <CardTitle className="text-2xl">
                 Live Entities ({currentMentions.length})
-                <span className="block text-base font-normal text-muted-foreground mt-1">
+                <span className="block text-base font-normal text-muted-foreground mt-0.5">
                   Current context at {formatTime(currentTime)}
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="max-h-[600px] overflow-y-auto">
               {currentMentions.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {currentMentions.map((mention, index) => {
                     const entity = entitiesMap.get(mention.entityId);
                     if (!entity) return null;
@@ -591,19 +591,19 @@ export function PodcastPlayer({
                     return (
                       <div
                         key={`context-${mention.id}-${index}`}
-                        className="p-4 bg-white dark:bg-slate-800 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                        className="p-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:bg-slate-800 rounded-lg border-2 border-blue-200 cursor-pointer hover:from-blue-100 hover:to-indigo-100 hover:border-blue-400 hover:shadow-md dark:hover:bg-slate-700 transition-all duration-200"
                         onClick={() => onEntityClick(entity, mention)}
                       >
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline" className="text-base px-2 py-0.5">
+                            <Badge variant="outline" className="text-base px-2 py-0.5 border-blue-300 bg-blue-50">
                               {entity.category}
                             </Badge>
-                            <span className="text-lg font-medium text-muted-foreground">
+                            <span className="text-lg font-medium text-blue-600">
                               @{formatTime(mention.timestamp)}
                             </span>
                             {mention.confidence && (
-                              <Badge variant="secondary" className="text-base">
+                              <Badge variant="secondary" className="text-base bg-purple-100 text-purple-800">
                                 {mention.confidence}%
                               </Badge>
                             )}
@@ -620,7 +620,7 @@ export function PodcastPlayer({
                             )}
                           </div>
 
-                          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                          <h3 className="text-xl font-bold text-blue-900 dark:text-blue-300">
                             {entity.name}
                           </h3>
 
@@ -641,7 +641,7 @@ export function PodcastPlayer({
                             </div>
                           )}
 
-                          <div className="flex gap-2 pt-2">
+                          <div className="flex gap-2 pt-1">
                             <Button
                               variant="ghost"
                               size="sm"
@@ -668,7 +668,7 @@ export function PodcastPlayer({
                   })}
                 </div>
               ) : (
-                <div className="text-center py-8 text-muted-foreground space-y-2">
+                <div className="text-center py-6 text-muted-foreground space-y-1.5">
                   <p className="text-lg">No entities mentioned in current timeframe</p>
                   <p className="text-base">Total entities: {entities.length} | Total mentions: {entityMentions.length}</p>
                   <p className="text-base">Navigate timeline to explore {entityMentions.length} contextual triggers</p>
