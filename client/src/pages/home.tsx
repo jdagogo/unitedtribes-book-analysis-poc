@@ -270,9 +270,7 @@ export default function Home() {
 
               <div className="text-center mb-6">
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  {activeHub === "merle" ? "🎵 Merle Haggard Media Hub" :
-                   activeHub === "patti" ? "🎸 Patti Smith Media Hub" :
-                   "🔵 Blue Note Media Hub"}
+                  🎵 UnitedTribes POC Media Hub 📚
                 </h2>
                 <p className="text-lg text-gray-700">
                   {activeHub === "merle"
