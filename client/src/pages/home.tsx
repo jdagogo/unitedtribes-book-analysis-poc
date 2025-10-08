@@ -443,18 +443,33 @@ export default function Home() {
               </div>
 
               {/* Development Branch Indicator */}
-              <div className="mt-6 p-3 bg-gradient-to-r from-orange-100 to-amber-100 border-2 border-orange-300 rounded-lg">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
-                    <span className="font-bold text-orange-900">Stable Rollback:</span>
+              <div className="mt-6 space-y-2">
+                <div className="p-3 bg-gradient-to-r from-emerald-100 to-green-100 border-2 border-emerald-300 rounded-lg">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                      <span className="font-bold text-emerald-900">Latest Stable:</span>
+                    </div>
+                    <code className="bg-emerald-200 px-3 py-1 rounded font-mono text-sm text-emerald-900 font-bold">
+                      v4.4-STABLE-CHECKPOINT
+                    </code>
+                    <span className="text-emerald-700 text-sm">
+                      | Commit: <span className="font-semibold">59ee77d</span>
+                    </span>
                   </div>
-                  <code className="bg-orange-200 px-3 py-1 rounded font-mono text-sm text-orange-900 font-bold">
-                    v4.3.2
-                  </code>
-                  <span className="text-orange-700 text-sm">
-                    | Commit: <span className="font-semibold">483adad</span>
-                  </span>
+                </div>
+                <div className="p-3 bg-gradient-to-r from-orange-100 to-amber-100 border-2 border-orange-300 rounded-lg">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-orange-900">Previous Stable:</span>
+                    </div>
+                    <code className="bg-orange-200 px-3 py-1 rounded font-mono text-sm text-orange-900 font-bold">
+                      v4.3.2
+                    </code>
+                    <span className="text-orange-700 text-sm">
+                      | Commit: <span className="font-semibold">483adad</span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </CardContent>
