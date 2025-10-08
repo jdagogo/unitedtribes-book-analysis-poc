@@ -4166,18 +4166,18 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           {discoveryTab === 'featured' && (
                             <div>
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Featured Videos</h4>
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                                 {page9PreloadedVideos.map((video: any, idx: number) => (
                                   <div
                                     key={idx}
                                     onClick={() => embedVideo(video)}
                                     style={{
                                       cursor: 'pointer',
-                                      border: '1px solid #e5e7eb',
                                       borderRadius: '8px',
                                       overflow: 'hidden',
-                                      transition: 'transform 0.2s',
-                                      background: 'white'
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
                                     }}
                                     onMouseEnter={(e) => {
                                       e.currentTarget.style.transform = 'scale(1.02)';
@@ -4186,35 +4186,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       e.currentTarget.style.transform = 'scale(1)';
                                     }}
                                   >
-                                    <img
-                                      src={video.thumbnail}
-                                      alt={video.title}
-                                      style={{
-                                        width: '100%',
-                                        height: '180px',
-                                        objectFit: 'cover'
-                                      }}
-                                    />
-                                    <div style={{ padding: '0.75rem' }}>
-                                      <div style={{
-                                        fontSize: '14px',
-                                        fontWeight: '600',
-                                        color: '#1f2937',
-                                        marginBottom: '0.25rem',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: 'vertical'
-                                      }}>
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
                                         {video.title}
-                                      </div>
-                                      <div style={{
-                                        fontSize: '12px',
-                                        color: '#6b7280'
-                                      }}>
-                                        {video.channel}
-                                      </div>
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
                                     </div>
                                   </div>
                                 ))}
@@ -4495,7 +4480,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             <div>
                               <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>📚 Related Books & Audio</h4>
 
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: '1.5rem' }}>
 
                                 {/* Kansas City Lightning */}
                                 <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
