@@ -339,7 +339,7 @@ export function PodcastPlayer({
           {/* Main Player Controls */}
           <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
+              <CardTitle className="flex items-center gap-2 text-2xl">
                 <Play className="h-6 w-6" />
                 Contextual Media Player
               </CardTitle>
@@ -354,7 +354,7 @@ export function PodcastPlayer({
                   onValueChange={handleSeek}
                   className="w-full"
                 />
-                <div className="flex justify-between text-base font-medium text-muted-foreground">
+                <div className="flex justify-between text-lg font-medium text-muted-foreground">
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(duration)}</span>
                 </div>
@@ -418,10 +418,10 @@ export function PodcastPlayer({
                       <div className="absolute inset-0 rounded-full border-2 border-blue-500 animate-ping" />
                     )}
                   </div>
-                  <p className="font-medium">
+                  <p className="font-medium text-lg">
                     {isPlaying ? '🎵 Demo Audio Playing...' : 'Demo Mode - Simulated Audio Player'}
                   </p>
-                  <p className="text-sm">
+                  <p className="text-base">
                     {isPlaying ? 'Pause to stop simulation' : 'Click play to explore contextual navigation'}
                   </p>
                   {isPlaying && (
@@ -445,15 +445,15 @@ export function PodcastPlayer({
 
               {workingAudioUrl && (
                 <div className="text-center py-2 text-muted-foreground">
-                  <p className="text-sm flex items-center justify-center gap-2">
-                    <Volume2 className="h-4 w-4" />
+                  <p className="text-base flex items-center justify-center gap-2">
+                    <Volume2 className="h-5 w-5" />
                     {isPlaying ? 'Audio Playing' : 'Audio Ready'}
-                    <span className={`text-xs ${freshAirAudio ? 'text-blue-600' : 'text-green-600'}`}>
+                    <span className={`text-sm ${freshAirAudio ? 'text-blue-600' : 'text-green-600'}`}>
                       ● {freshAirAudio ? 'Fresh Air (NPR)' : 'Real Audio'}
                     </span>
                   </p>
                   {audioTitle && freshAirAudio && (
-                    <p className="text-xs text-muted-foreground mt-1 font-medium">
+                    <p className="text-sm text-muted-foreground mt-1 font-medium">
                       "{audioTitle}"
                     </p>
                   )}
@@ -465,7 +465,7 @@ export function PodcastPlayer({
           {/* Enhanced Timeline Navigation */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl">Navigation Timeline ({entityMentions.length} contextual triggers)</CardTitle>
+              <CardTitle className="text-2xl">Navigation Timeline ({entityMentions.length} contextual triggers)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="relative">
@@ -498,7 +498,7 @@ export function PodcastPlayer({
                 </div>
 
                 {/* Timeline labels */}
-                <div className="flex justify-between text-base font-medium text-muted-foreground mt-2">
+                <div className="flex justify-between text-lg font-medium text-muted-foreground mt-2">
                   <span>0:00</span>
                   <span>{formatTime(duration)}</span>
                 </div>
@@ -507,30 +507,30 @@ export function PodcastPlayer({
               {/* Navigation Statistics */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-3 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{entities.length}</div>
-                  <div className="text-sm text-muted-foreground">Unique Entities</div>
+                  <div className="text-3xl font-bold text-blue-600">{entities.length}</div>
+                  <div className="text-base text-muted-foreground">Unique Entities</div>
                 </div>
                 <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">{entityMentions.length}</div>
-                  <div className="text-sm text-muted-foreground">Total Mentions</div>
+                  <div className="text-3xl font-bold text-green-600">{entityMentions.length}</div>
+                  <div className="text-base text-muted-foreground">Total Mentions</div>
                 </div>
                 <div className="text-center p-3 bg-orange-50 rounded-lg">
-                  <div className="text-2xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-orange-600">
                     {entities.filter(e => e.importance && e.importance >= 70).length}
                   </div>
-                  <div className="text-sm text-muted-foreground">High Importance</div>
+                  <div className="text-base text-muted-foreground">High Importance</div>
                 </div>
                 <div className="text-center p-3 bg-purple-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-3xl font-bold text-purple-600">
                     {new Set(entities.map(e => e.category)).size}
                   </div>
-                  <div className="text-sm text-muted-foreground">Categories</div>
+                  <div className="text-base text-muted-foreground">Categories</div>
                 </div>
               </div>
 
               {/* Entity Categories */}
               <div>
-                <h4 className="font-semibold text-base mb-3">Navigation Categories</h4>
+                <h4 className="font-semibold text-lg mb-3">Navigation Categories</h4>
                 <div className="flex flex-wrap gap-2">
                   {Array.from(new Set(entities.map(e => e.category))).map((category) => {
                     const count = entities.filter(e => e.category === category).length;
@@ -538,7 +538,7 @@ export function PodcastPlayer({
                       <Badge
                         key={category}
                         variant="outline"
-                        className="text-sm cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors px-3 py-1"
+                        className="text-base cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors px-3 py-1"
                         onClick={() => {
                           onCategoryClick?.(category);
                         }}
@@ -552,17 +552,17 @@ export function PodcastPlayer({
               </div>
 
               {/* Legend */}
-              <div className="text-sm text-muted-foreground space-y-1">
+              <div className="text-base text-muted-foreground space-y-1">
                 <p className="flex items-center gap-2">
-                  <span className="inline-block w-3 h-3 bg-red-500 rounded"></span>
+                  <span className="inline-block w-4 h-4 bg-red-500 rounded"></span>
                   High importance (80%+)
                 </p>
                 <p className="flex items-center gap-2">
-                  <span className="inline-block w-3 h-3 bg-orange-500 rounded"></span>
+                  <span className="inline-block w-4 h-4 bg-orange-500 rounded"></span>
                   Medium importance (60-79%)
                 </p>
                 <p className="flex items-center gap-2">
-                  <span className="inline-block w-3 h-3 bg-green-500 rounded"></span>
+                  <span className="inline-block w-4 h-4 bg-green-500 rounded"></span>
                   Standard importance (&lt;60%)
                 </p>
               </div>
@@ -574,9 +574,9 @@ export function PodcastPlayer({
         <div className="lg:col-span-2">
           <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 lg:sticky lg:top-6">
             <CardHeader>
-              <CardTitle className="text-xl">
+              <CardTitle className="text-2xl">
                 Live Entities ({currentMentions.length})
-                <span className="block text-sm font-normal text-muted-foreground mt-1">
+                <span className="block text-base font-normal text-muted-foreground mt-1">
                   Current context at {formatTime(currentTime)}
                 </span>
               </CardTitle>
@@ -596,20 +596,20 @@ export function PodcastPlayer({
                       >
                         <div className="space-y-3">
                           <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline" className="text-sm px-2 py-0.5">
+                            <Badge variant="outline" className="text-base px-2 py-0.5">
                               {entity.category}
                             </Badge>
-                            <span className="text-base font-medium text-muted-foreground">
+                            <span className="text-lg font-medium text-muted-foreground">
                               @{formatTime(mention.timestamp)}
                             </span>
                             {mention.confidence && (
-                              <Badge variant="secondary" className="text-sm">
+                              <Badge variant="secondary" className="text-base">
                                 {mention.confidence}%
                               </Badge>
                             )}
                             {mention.sentiment && (
                               <Badge
-                                className={`text-sm ${
+                                className={`text-base ${
                                   mention.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
                                   mention.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
                                   'bg-gray-100 text-gray-800'
@@ -620,18 +620,18 @@ export function PodcastPlayer({
                             )}
                           </div>
 
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             {entity.name}
                           </h3>
 
-                          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                             {mention.context}
                           </p>
 
                           {entity.importance && (
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-muted-foreground">Importance:</span>
-                              <span className={`text-sm font-semibold ${
+                              <span className="text-base text-muted-foreground">Importance:</span>
+                              <span className={`text-base font-semibold ${
                                 entity.importance >= 80 ? 'text-red-600' :
                                 entity.importance >= 60 ? 'text-orange-600' :
                                 'text-gray-600'
@@ -645,6 +645,7 @@ export function PodcastPlayer({
                             <Button
                               variant="ghost"
                               size="sm"
+                              className="text-base"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 jumpToMention(mention.timestamp);
@@ -655,6 +656,7 @@ export function PodcastPlayer({
                             <Button
                               variant="outline"
                               size="sm"
+                              className="text-base"
                               onClick={() => onEntityClick(entity, mention)}
                             >
                               Explore
@@ -667,9 +669,9 @@ export function PodcastPlayer({
                 </div>
               ) : (
                 <div className="text-center py-8 text-muted-foreground space-y-2">
-                  <p className="text-base">No entities mentioned in current timeframe</p>
-                  <p className="text-sm">Total entities: {entities.length} | Total mentions: {entityMentions.length}</p>
-                  <p className="text-sm">Navigate timeline to explore {entityMentions.length} contextual triggers</p>
+                  <p className="text-lg">No entities mentioned in current timeframe</p>
+                  <p className="text-base">Total entities: {entities.length} | Total mentions: {entityMentions.length}</p>
+                  <p className="text-base">Navigate timeline to explore {entityMentions.length} contextual triggers</p>
                 </div>
               )}
             </CardContent>

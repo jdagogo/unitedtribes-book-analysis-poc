@@ -285,22 +285,22 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
                 />
               ) : null}
               <div className="w-full h-full bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-col" style={{display: analysis.podcast.artworkUrl ? 'none' : 'flex'}}>
-                <div className="text-lg font-black">FRESH</div>
-                <div className="text-lg font-black -mt-1">AIR</div>
-                <div className="text-xs font-medium mt-1">NPR</div>
+                <div className="text-3xl font-black">FRESH</div>
+                <div className="text-3xl font-black -mt-1">AIR</div>
+                <div className="text-lg font-medium mt-1">NPR</div>
               </div>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-semibold text-gray-900">{analysis.podcast.title}</h2>
-              <p className="text-gray-600">{analysis.podcast.showName}</p>
-              <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+              <h2 className="text-3xl font-bold text-gray-900">{analysis.podcast.title}</h2>
+              <p className="text-xl text-blue-700 font-medium mt-2">{analysis.podcast.showName}</p>
+              <div className="flex items-center space-x-4 mt-3 text-lg text-blue-600 font-medium">
                 {analysis.podcast.duration && (
                   <span>{formatDuration(analysis.podcast.duration)}</span>
                 )}
                 {analysis.podcast.publishedDate && (
                   <span>{new Date(analysis.podcast.publishedDate).toLocaleDateString()}</span>
                 )}
-                <Badge className="bg-green-100 text-green-800">Analysis Complete</Badge>
+                <Badge className="bg-green-100 text-green-800 text-base px-3 py-1">Analysis Complete</Badge>
               </div>
             </div>
           </div>
@@ -308,56 +308,56 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
         
         <CardContent className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="text-center cursor-pointer hover:bg-gray-50 p-2 rounded" 
+            <div className="text-center cursor-pointer hover:bg-gray-50 p-3 rounded"
                  onClick={() => {
                    setModalEntityType('all');
                    setShowEntityModal(true);
                  }}
                  data-testid="button-entities-found">
-              <div className="text-2xl font-bold text-primary">{analysis.entityAnalysis?.length || 0}</div>
-              <div className="text-sm text-gray-600">Entities Found</div>
+              <div className="text-3xl font-bold text-primary">{analysis.entityAnalysis?.length || 0}</div>
+              <div className="text-base text-gray-900 font-semibold mt-2">Entities Found</div>
             </div>
-            <div className="text-center cursor-pointer hover:bg-gray-50 p-2 rounded" 
+            <div className="text-center cursor-pointer hover:bg-gray-50 p-3 rounded"
                  onClick={() => {
                    setModalEntityType('people');
                    setShowEntityModal(true);
                  }}
                  data-testid="button-people-mentioned">
-              <div className="text-2xl font-bold text-primary">
+              <div className="text-3xl font-bold text-primary">
                 {analysis.entityAnalysis?.filter((ea: any) => ea.entity.category === 'musician' || ea.entity.category === 'person' || ea.entity.category === 'journalist').length || 0}
               </div>
-              <div className="text-sm text-gray-600">People Mentioned</div>
+              <div className="text-base text-gray-900 font-semibold mt-2">People Mentioned</div>
             </div>
-            <div className="text-center cursor-pointer hover:bg-gray-50 p-2 rounded" 
+            <div className="text-center cursor-pointer hover:bg-gray-50 p-3 rounded"
                  onClick={() => {
                    setModalEntityType('music');
                    setShowEntityModal(true);
                  }}
                  data-testid="button-music-mentioned">
-              <div className="text-2xl font-bold text-primary">
+              <div className="text-3xl font-bold text-primary">
                 {analysis.entityAnalysis?.filter((ea: any) => ea.entity.category === 'music' || ea.entity.category === 'music festival').length || 0}
               </div>
-              <div className="text-sm text-gray-600">Music Mentioned</div>
+              <div className="text-base text-gray-900 font-semibold mt-2">Music Mentioned</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{analysis.transcription?.accuracy || 95}%</div>
-              <div className="text-sm text-gray-600">Transcription Accuracy</div>
+            <div className="text-center p-3">
+              <div className="text-3xl font-bold text-primary">{analysis.transcription?.accuracy || 95}%</div>
+              <div className="text-base text-gray-900 font-semibold mt-2">Transcription Accuracy</div>
             </div>
-            <div className="text-center">
-              <Badge className={`text-lg px-3 py-1 ${
+            <div className="text-center p-3">
+              <Badge className={`text-xl px-4 py-2 ${
                 analysis.insights?.overallSentiment === 'positive' ? 'bg-green-100 text-green-800' :
                 analysis.insights?.overallSentiment === 'negative' ? 'bg-red-100 text-red-800' :
                 'bg-gray-100 text-gray-800'
               }`}>
                 {analysis.insights?.overallSentiment || 'reflective'}
               </Badge>
-              <div className="text-sm text-gray-600">Overall Sentiment</div>
+              <div className="text-base text-gray-900 font-semibold mt-2">Overall Sentiment</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">
+            <div className="text-center p-3">
+              <div className="text-3xl font-bold text-primary">
                 {analysis.entityAnalysis?.reduce((acc: number, ea: any) => acc + ea.mentions.length, 0) || 0}
               </div>
-              <div className="text-sm text-gray-600">Total Mentions</div>
+              <div className="text-base text-gray-900 font-semibold mt-2">Total Mentions</div>
             </div>
           </div>
         </CardContent>
@@ -366,7 +366,7 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
       {/* Entity Search - Compact and Centered */}
       <div className="mb-6">
         <div className="flex justify-center">
-          <div className="relative w-full max-w-lg">
+          <div className="relative w-full max-w-xl">
             <EntitySearch
               entities={analysis.entityAnalysis?.map((ea: any) => ea.entity) || []}
               onEntitySelect={(entity) => {

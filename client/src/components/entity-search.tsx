@@ -161,11 +161,11 @@ export function EntitySearch({ entities, onEntitySelect, placeholder = "Search e
   return (
     <div className={`relative ${className}`}>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-800 h-6 w-6" />
         {!query && (
-          <div className="absolute left-10 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <span className="text-blue-600 font-bold">Search entities</span>
-            <span className="text-gray-500 ml-1">(e.g., San Quentin, Johnny Cash, Mama Tried...)</span>
+          <div className="absolute left-14 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <span className="text-blue-700 font-bold text-lg">Search entities</span>
+            <span className="text-gray-800 ml-1 text-base">(e.g., San Quentin, Johnny Cash, Mama Tried...)</span>
           </div>
         )}
         <Input
@@ -176,7 +176,7 @@ export function EntitySearch({ entities, onEntitySelect, placeholder = "Search e
           }}
           onFocus={() => setIsOpen(query.length > 0)}
           placeholder=""
-          className="pl-10 pr-10 bg-amber-50/90 border-amber-200/60 shadow-sm hover:bg-amber-50 focus:bg-white focus:border-amber-300 transition-colors font-medium text-gray-800 rounded-lg"
+          className="pl-14 pr-12 py-6 text-lg bg-amber-50/90 border-amber-200/60 shadow-sm hover:bg-amber-50 focus:bg-white focus:border-amber-300 transition-colors font-semibold text-gray-900 rounded-lg"
           data-testid="input-entity-search"
         />
         {query && (

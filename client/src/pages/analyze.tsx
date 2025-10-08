@@ -110,8 +110,8 @@ export default function Analyze() {
         {/* Header */}
         <div className="mb-8">
           <Link href="/">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+            <Button variant="ghost" className="mb-4 text-xl font-bold hover:bg-gray-100">
+              <ArrowLeft className="mr-3 h-6 w-6" />
               Back to UnitedTribes
             </Button>
           </Link>
