@@ -134,44 +134,46 @@ export default function Analyze() {
               </Link>
             </div>
           </div>
-          <div className="text-center">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              Media Discovery Analysis
-            </h1>
-            <p className="text-lg text-slate-600 dark:text-slate-300">
-              Extract navigation triggers and cross-media connections from podcast content
-            </p>
-            
-            {/* Demo Buttons */}
-            <div className="flex flex-wrap justify-center gap-3 mt-6">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowDemo('merle')}
-                className="bg-green-50 border-green-200 hover:bg-green-100"
-              >
-                <Zap className="mr-2 h-4 w-4" />
-                See Real Merle Haggard Analysis
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  // Start processing Justin Bieber PDF
-                  const pdfData = {
-                    pdfUrl: "https://storage.googleapis.com/replit-objstore-845adf3a-0ac1-4c6c-9d54-667ba86aad52/attached_assets/Justin%20Bieber,%20NYTimes%20Popcast_1754196885272.pdf",
-                    title: "Justin Bieber Analysis",
-                    showName: "NYTimes Popcast",
-                    duration: 2400
-                  };
-                  analyzePDFMutation.mutate(pdfData);
-                }}
-                className="bg-purple-50 border-purple-200 hover:bg-purple-100"
-                disabled={analyzePDFMutation.isPending}
-              >
-                <Zap className="mr-2 h-4 w-4" />
-                {analyzePDFMutation.isPending ? 'Processing...' : 'Analyze Justin Bieber PDF'}
-              </Button>
+          {!showDemo && !podcastId && (
+            <div className="text-center">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                Media Discovery Analysis
+              </h1>
+              <p className="text-lg text-slate-600 dark:text-slate-300">
+                Extract navigation triggers and cross-media connections from podcast content
+              </p>
+
+              {/* Demo Buttons */}
+              <div className="flex flex-wrap justify-center gap-3 mt-6">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDemo('merle')}
+                  className="bg-green-50 border-green-200 hover:bg-green-100"
+                >
+                  <Zap className="mr-2 h-4 w-4" />
+                  See Real Merle Haggard Analysis
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    // Start processing Justin Bieber PDF
+                    const pdfData = {
+                      pdfUrl: "https://storage.googleapis.com/replit-objstore-845adf3a-0ac1-4c6c-9d54-667ba86aad52/attached_assets/Justin%20Bieber,%20NYTimes%20Popcast_1754196885272.pdf",
+                      title: "Justin Bieber Analysis",
+                      showName: "NYTimes Popcast",
+                      duration: 2400
+                    };
+                    analyzePDFMutation.mutate(pdfData);
+                  }}
+                  className="bg-purple-50 border-purple-200 hover:bg-purple-100"
+                  disabled={analyzePDFMutation.isPending}
+                >
+                  <Zap className="mr-2 h-4 w-4" />
+                  {analyzePDFMutation.isPending ? 'Processing...' : 'Analyze Justin Bieber PDF'}
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Processing State */}
