@@ -24,9 +24,13 @@ export default function Analyze() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.split('?')[1] || '');
     const timestamp = urlParams.get('t');
-    
+    const demoParam = urlParams.get('demo');
+
     if (timestamp && location.includes('/results')) {
       // Show the Merle Haggard analysis with timestamp
+      setShowDemo('merle');
+    } else if (demoParam === 'merle') {
+      // Auto-trigger Merle demo from home page
       setShowDemo('merle');
     }
   }, [location]);

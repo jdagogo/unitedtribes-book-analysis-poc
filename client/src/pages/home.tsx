@@ -284,7 +284,7 @@ export default function Home() {
               {activeHub === "merle" ? (
                 <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                 {/* Podcast Analysis */}
-                <Link href="/discover">
+                <Link href="/analyze?demo=merle">
                   <Card className="h-full hover:shadow-lg transition-all hover:scale-105 cursor-pointer bg-white border-2 border-blue-200 hover:border-blue-400">
                     <CardContent className="p-6 text-center">
                       <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
