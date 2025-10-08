@@ -332,327 +332,350 @@ export function PodcastPlayer({
         />
       )}
 
-      {/* Main Player Controls */}
-      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Play className="h-5 w-5" />
-            Contextual Media Player
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Progress Bar */}
-          <div className="space-y-2">
-            <Slider
-              value={[currentTime]}
-              max={duration}
-              step={1}
-              onValueChange={handleSeek}
-              className="w-full"
-            />
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
-
-          {/* Control Buttons */}
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => skipTime(-15)}
-            >
-              <SkipBack className="h-4 w-4" />
-              15s
-            </Button>
-
-            <Button
-              onClick={handlePlayPause}
-              size="lg"
-              className="h-12 w-12 rounded-full"
-              disabled={false}
-            >
-              {isPlaying ? 
-                <Pause className="h-6 w-6" /> : 
+      {/* Two-Column Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* LEFT COLUMN - Media Player and Timeline */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Main Player Controls */}
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-xl">
                 <Play className="h-6 w-6" />
-              }
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => skipTime(15)}
-            >
-              <SkipForward className="h-4 w-4" />
-              15s
-            </Button>
-          </div>
-
-          {/* Volume Control */}
-          <div className="flex items-center gap-2">
-            <Volume2 className="h-4 w-4" />
-            <Slider
-              value={[volume]}
-              max={1}
-              step={0.1}
-              onValueChange={(value) => {
-                setVolume(value[0]);
-                if (audioRef.current) {
-                  audioRef.current.volume = value[0];
-                }
-              }}
-              className="w-24"
-            />
-          </div>
-
-          {!hasValidAudioUrl && !workingAudioUrl && (
-            <div className="text-center py-4 text-muted-foreground">
-              <div className="relative">
-                <Clock className={`h-8 w-8 mx-auto mb-2 transition-transform ${isPlaying ? 'animate-spin' : ''}`} />
-                {isPlaying && (
-                  <div className="absolute inset-0 rounded-full border-2 border-blue-500 animate-ping" />
-                )}
+                Contextual Media Player
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Progress Bar */}
+              <div className="space-y-2">
+                <Slider
+                  value={[currentTime]}
+                  max={duration}
+                  step={1}
+                  onValueChange={handleSeek}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-base font-medium text-muted-foreground">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
               </div>
-              <p className="font-medium">
-                {isPlaying ? '🎵 Demo Audio Playing...' : 'Demo Mode - Simulated Audio Player'}
-              </p>
-              <p className="text-sm">
-                {isPlaying ? 'Pause to stop simulation' : 'Click play to explore contextual navigation'}
-              </p>
-              {isPlaying && (
-                <div className="mt-2 flex justify-center">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-1 bg-blue-500 rounded-full animate-bounce`}
-                        style={{ 
-                          height: `${Math.random() * 20 + 10}px`,
-                          animationDelay: `${i * 0.1}s` 
-                        }}
-                      />
-                    ))}
+
+              {/* Control Buttons */}
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => skipTime(-15)}
+                >
+                  <SkipBack className="h-4 w-4" />
+                  15s
+                </Button>
+
+                <Button
+                  onClick={handlePlayPause}
+                  size="lg"
+                  className="h-12 w-12 rounded-full"
+                  disabled={false}
+                >
+                  {isPlaying ?
+                    <Pause className="h-6 w-6" /> :
+                    <Play className="h-6 w-6" />
+                  }
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => skipTime(15)}
+                >
+                  <SkipForward className="h-4 w-4" />
+                  15s
+                </Button>
+              </div>
+
+              {/* Volume Control */}
+              <div className="flex items-center gap-2">
+                <Volume2 className="h-4 w-4" />
+                <Slider
+                  value={[volume]}
+                  max={1}
+                  step={0.1}
+                  onValueChange={(value) => {
+                    setVolume(value[0]);
+                    if (audioRef.current) {
+                      audioRef.current.volume = value[0];
+                    }
+                  }}
+                  className="w-24"
+                />
+              </div>
+
+              {!hasValidAudioUrl && !workingAudioUrl && (
+                <div className="text-center py-4 text-muted-foreground">
+                  <div className="relative">
+                    <Clock className={`h-8 w-8 mx-auto mb-2 transition-transform ${isPlaying ? 'animate-spin' : ''}`} />
+                    {isPlaying && (
+                      <div className="absolute inset-0 rounded-full border-2 border-blue-500 animate-ping" />
+                    )}
                   </div>
+                  <p className="font-medium">
+                    {isPlaying ? '🎵 Demo Audio Playing...' : 'Demo Mode - Simulated Audio Player'}
+                  </p>
+                  <p className="text-sm">
+                    {isPlaying ? 'Pause to stop simulation' : 'Click play to explore contextual navigation'}
+                  </p>
+                  {isPlaying && (
+                    <div className="mt-2 flex justify-center">
+                      <div className="flex gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-1 bg-blue-500 rounded-full animate-bounce`}
+                            style={{
+                              height: `${Math.random() * 20 + 10}px`,
+                              animationDelay: `${i * 0.1}s`
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
-          
-          {workingAudioUrl && (
-            <div className="text-center py-2 text-muted-foreground">
-              <p className="text-sm flex items-center justify-center gap-2">
-                <Volume2 className="h-4 w-4" />
-                {isPlaying ? 'Audio Playing' : 'Audio Ready'}
-                <span className={`text-xs ${freshAirAudio ? 'text-blue-600' : 'text-green-600'}`}>
-                  ● {freshAirAudio ? 'Fresh Air (NPR)' : 'Real Audio'}
-                </span>
-              </p>
-              {audioTitle && freshAirAudio && (
-                <p className="text-xs text-muted-foreground mt-1 font-medium">
-                  "{audioTitle}"
-                </p>
+
+              {workingAudioUrl && (
+                <div className="text-center py-2 text-muted-foreground">
+                  <p className="text-sm flex items-center justify-center gap-2">
+                    <Volume2 className="h-4 w-4" />
+                    {isPlaying ? 'Audio Playing' : 'Audio Ready'}
+                    <span className={`text-xs ${freshAirAudio ? 'text-blue-600' : 'text-green-600'}`}>
+                      ● {freshAirAudio ? 'Fresh Air (NPR)' : 'Real Audio'}
+                    </span>
+                  </p>
+                  {audioTitle && freshAirAudio && (
+                    <p className="text-xs text-muted-foreground mt-1 font-medium">
+                      "{audioTitle}"
+                    </p>
+                  )}
+                </div>
               )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* Current Context Panel */}
-      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
-        <CardHeader>
-          <CardTitle className="text-lg">
-            Current Context ({currentMentions.length} mentions)
-            <span className="text-sm font-normal text-muted-foreground ml-2">
-              (±15 seconds from {formatTime(currentTime)})
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {currentMentions.length > 0 ? (
-            <div className="space-y-3">
-              {currentMentions.map((mention, index) => {
-                const entity = entitiesMap.get(mention.entityId);
-                if (!entity) return null;
-
-                return (
+          {/* Enhanced Timeline Navigation */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Navigation Timeline ({entityMentions.length} contextual triggers)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="relative">
+                {/* Timeline bar */}
+                <div className="h-4 bg-gray-200 rounded-full relative overflow-hidden">
+                  {/* Current position indicator */}
                   <div
-                    key={`context-${mention.id}-${index}`}
-                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
-                    onClick={() => onEntityClick(entity, mention)}
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="outline" className="text-xs">
-                          {entity.category}
-                        </Badge>
-                        <span className="font-medium">{entity.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          @{formatTime(mention.timestamp)}
-                        </span>
-                        {mention.confidence && (
-                          <Badge variant="secondary" className="text-xs">
-                            {mention.confidence}%
-                          </Badge>
-                        )}
-                        {mention.sentiment && (
-                          <Badge 
-                            className={`text-xs ${
-                              mention.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
-                              mention.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-800'
-                            }`}
-                          >
-                            {mention.sentiment}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {mention.context}
-                      </p>
-                      {entity.importance && (
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="text-xs text-muted-foreground">Importance:</span>
-                          <span className={`text-xs font-medium ${
-                            entity.importance >= 80 ? 'text-red-600' :
-                            entity.importance >= 60 ? 'text-orange-600' :
-                            'text-gray-600'
-                          }`}>
-                            {entity.importance}%
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          jumpToMention(mention.timestamp);
+                    className="absolute top-0 w-1 h-full bg-blue-500 transition-all duration-100 z-10"
+                    style={{ left: `${(currentTime / duration) * 100}%` }}
+                  />
+
+                  {/* Entity mention markers with importance-based colors */}
+                  {entityMentions.map((mention) => {
+                    const entity = entitiesMap.get(mention.entityId);
+                    const importance = entity?.importance || 50;
+                    const color = importance >= 80 ? 'bg-red-500 hover:bg-red-600' :
+                                 importance >= 60 ? 'bg-orange-500 hover:bg-orange-600' :
+                                 'bg-green-500 hover:bg-green-600';
+
+                    return (
+                      <div
+                        key={mention.id}
+                        className={`absolute top-0 w-2 h-full cursor-pointer transition-colors ${color}`}
+                        style={{ left: `${(mention.timestamp / duration) * 100}%` }}
+                        onClick={() => jumpToMention(mention.timestamp)}
+                        title={`${entity?.name} (${importance}% importance) at ${formatTime(mention.timestamp)}\n${mention.context.substring(0, 100)}...`}
+                      />
+                    );
+                  })}
+                </div>
+
+                {/* Timeline labels */}
+                <div className="flex justify-between text-base font-medium text-muted-foreground mt-2">
+                  <span>0:00</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+
+              {/* Navigation Statistics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-3 bg-blue-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{entities.length}</div>
+                  <div className="text-sm text-muted-foreground">Unique Entities</div>
+                </div>
+                <div className="text-center p-3 bg-green-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{entityMentions.length}</div>
+                  <div className="text-sm text-muted-foreground">Total Mentions</div>
+                </div>
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {entities.filter(e => e.importance && e.importance >= 70).length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">High Importance</div>
+                </div>
+                <div className="text-center p-3 bg-purple-50 rounded-lg">
+                  <div className="text-2xl font-bold text-purple-600">
+                    {new Set(entities.map(e => e.category)).size}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Categories</div>
+                </div>
+              </div>
+
+              {/* Entity Categories */}
+              <div>
+                <h4 className="font-semibold text-base mb-3">Navigation Categories</h4>
+                <div className="flex flex-wrap gap-2">
+                  {Array.from(new Set(entities.map(e => e.category))).map((category) => {
+                    const count = entities.filter(e => e.category === category).length;
+                    return (
+                      <Badge
+                        key={category}
+                        variant="outline"
+                        className="text-sm cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors px-3 py-1"
+                        onClick={() => {
+                          onCategoryClick?.(category);
                         }}
+                        data-testid={`nav-category-${category.replace(/\s+/g, '-')}`}
                       >
-                        Jump
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
+                        {category} ({count})
+                      </Badge>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="text-sm text-muted-foreground space-y-1">
+                <p className="flex items-center gap-2">
+                  <span className="inline-block w-3 h-3 bg-red-500 rounded"></span>
+                  High importance (80%+)
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="inline-block w-3 h-3 bg-orange-500 rounded"></span>
+                  Medium importance (60-79%)
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="inline-block w-3 h-3 bg-green-500 rounded"></span>
+                  Standard importance (&lt;60%)
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* RIGHT COLUMN - Live Entities Panel */}
+        <div className="lg:col-span-2">
+          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 lg:sticky lg:top-6">
+            <CardHeader>
+              <CardTitle className="text-xl">
+                Live Entities ({currentMentions.length})
+                <span className="block text-sm font-normal text-muted-foreground mt-1">
+                  Current context at {formatTime(currentTime)}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {currentMentions.length > 0 ? (
+                <div className="space-y-4">
+                  {currentMentions.map((mention, index) => {
+                    const entity = entitiesMap.get(mention.entityId);
+                    if (!entity) return null;
+
+                    return (
+                      <div
+                        key={`context-${mention.id}-${index}`}
+                        className="p-4 bg-white dark:bg-slate-800 rounded-lg border cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
                         onClick={() => onEntityClick(entity, mention)}
                       >
-                        Explore
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              <p>No entities mentioned in current timeframe</p>
-              <p className="text-sm">Total entities: {entities.length} | Total mentions: {entityMentions.length}</p>
-              <p className="text-sm">Navigate timeline below to explore {entityMentions.length} contextual triggers</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                        <div className="space-y-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant="outline" className="text-sm px-2 py-0.5">
+                              {entity.category}
+                            </Badge>
+                            <span className="text-base font-medium text-muted-foreground">
+                              @{formatTime(mention.timestamp)}
+                            </span>
+                            {mention.confidence && (
+                              <Badge variant="secondary" className="text-sm">
+                                {mention.confidence}%
+                              </Badge>
+                            )}
+                            {mention.sentiment && (
+                              <Badge
+                                className={`text-sm ${
+                                  mention.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
+                                  mention.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
+                                  'bg-gray-100 text-gray-800'
+                                }`}
+                              >
+                                {mention.sentiment}
+                              </Badge>
+                            )}
+                          </div>
 
-      {/* Enhanced Timeline Navigation */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Navigation Timeline ({entityMentions.length} contextual triggers)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="relative">
-            {/* Timeline bar */}
-            <div className="h-4 bg-gray-200 rounded-full relative overflow-hidden">
-              {/* Current position indicator */}
-              <div 
-                className="absolute top-0 w-1 h-full bg-blue-500 transition-all duration-100 z-10"
-                style={{ left: `${(currentTime / duration) * 100}%` }}
-              />
-              
-              {/* Entity mention markers with importance-based colors */}
-              {entityMentions.map((mention) => {
-                const entity = entitiesMap.get(mention.entityId);
-                const importance = entity?.importance || 50;
-                const color = importance >= 80 ? 'bg-red-500 hover:bg-red-600' :
-                             importance >= 60 ? 'bg-orange-500 hover:bg-orange-600' :
-                             'bg-green-500 hover:bg-green-600';
-                
-                return (
-                  <div
-                    key={mention.id}
-                    className={`absolute top-0 w-2 h-full cursor-pointer transition-colors ${color}`}
-                    style={{ left: `${(mention.timestamp / duration) * 100}%` }}
-                    onClick={() => jumpToMention(mention.timestamp)}
-                    title={`${entity?.name} (${importance}% importance) at ${formatTime(mention.timestamp)}\n${mention.context.substring(0, 100)}...`}
-                  />
-                );
-              })}
-            </div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            {entity.name}
+                          </h3>
 
-            {/* Timeline labels */}
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
-              <span>0:00</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
+                          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {mention.context}
+                          </p>
 
-          {/* Navigation Statistics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <div className="text-xl font-bold text-blue-600">{entities.length}</div>
-              <div className="text-xs text-muted-foreground">Unique Entities</div>
-            </div>
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <div className="text-xl font-bold text-green-600">{entityMentions.length}</div>
-              <div className="text-xs text-muted-foreground">Total Mentions</div>
-            </div>
-            <div className="text-center p-3 bg-orange-50 rounded-lg">
-              <div className="text-xl font-bold text-orange-600">
-                {entities.filter(e => e.importance && e.importance >= 70).length}
-              </div>
-              <div className="text-xs text-muted-foreground">High Importance</div>
-            </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <div className="text-xl font-bold text-purple-600">
-                {new Set(entities.map(e => e.category)).size}
-              </div>
-              <div className="text-xs text-muted-foreground">Categories</div>
-            </div>
-          </div>
+                          {entity.importance && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-muted-foreground">Importance:</span>
+                              <span className={`text-sm font-semibold ${
+                                entity.importance >= 80 ? 'text-red-600' :
+                                entity.importance >= 60 ? 'text-orange-600' :
+                                'text-gray-600'
+                              }`}>
+                                {entity.importance}%
+                              </span>
+                            </div>
+                          )}
 
-          {/* Entity Categories */}
-          <div>
-            <h4 className="font-medium mb-2">Navigation Categories</h4>
-            <div className="flex flex-wrap gap-2">
-              {Array.from(new Set(entities.map(e => e.category))).map((category) => {
-                const count = entities.filter(e => e.category === category).length;
-                return (
-                  <Badge 
-                    key={category} 
-                    variant="outline" 
-                    className="text-xs cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                    onClick={() => {
-                      onCategoryClick?.(category);
-                    }}
-                    data-testid={`nav-category-${category.replace(/\s+/g, '-')}`}
-                  >
-                    {category} ({count})
-                  </Badge>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div className="text-xs text-muted-foreground">
-            <p><span className="inline-block w-3 h-3 bg-red-500 rounded mr-1"></span>High importance (80%+)</p>
-            <p><span className="inline-block w-3 h-3 bg-orange-500 rounded mr-1"></span>Medium importance (60-79%)</p>
-            <p><span className="inline-block w-3 h-3 bg-green-500 rounded mr-1"></span>Standard importance (&lt;60%)</p>
-          </div>
-        </CardContent>
-      </Card>
+                          <div className="flex gap-2 pt-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                jumpToMention(mention.timestamp);
+                              }}
+                            >
+                              Jump
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => onEntityClick(entity, mention)}
+                            >
+                              Explore
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground space-y-2">
+                  <p className="text-base">No entities mentioned in current timeframe</p>
+                  <p className="text-sm">Total entities: {entities.length} | Total mentions: {entityMentions.length}</p>
+                  <p className="text-sm">Navigate timeline to explore {entityMentions.length} contextual triggers</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
