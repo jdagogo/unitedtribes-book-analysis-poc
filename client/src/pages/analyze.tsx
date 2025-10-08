@@ -26,11 +26,15 @@ export default function Analyze() {
     const timestamp = urlParams.get('t');
     const demoParam = urlParams.get('demo');
 
+    console.log('🔍 URL Analysis:', { location, timestamp, demoParam, showDemo });
+
     if (timestamp && location.includes('/results')) {
       // Show the Merle Haggard analysis with timestamp
+      console.log('✅ Setting showDemo to merle (timestamp path)');
       setShowDemo('merle');
     } else if (demoParam === 'merle') {
       // Auto-trigger Merle demo from home page
+      console.log('✅ Setting showDemo to merle (demo param path)');
       setShowDemo('merle');
     }
   }, [location]);
@@ -114,6 +118,7 @@ export default function Analyze() {
 
           {!showDemo && !podcastId && (
             <>
+              {console.log('📍 Rendering landing page content - showDemo:', showDemo, 'podcastId:', podcastId)}
               {/* Quick Media Navigation */}
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-amber-800 mb-3 text-center font-medium">🎵 Quick Access to All Merle Haggard Content</p>
@@ -209,14 +214,17 @@ export default function Analyze() {
 
         {/* Demo Results */}
         {showDemo && showDemo === 'merle' && (
-          <ResultsDashboard
-            analysis={authenticMerleAnalysis}
-            initialTimestamp={(() => {
-              const urlParams = new URLSearchParams(location.split('?')[1] || '');
-              const timestamp = urlParams.get('t');
-              return timestamp ? parseInt(timestamp) : undefined;
-            })()}
-          />
+          <>
+            {console.log('🎯 Rendering Merle demo ResultsDashboard - showDemo:', showDemo)}
+            <ResultsDashboard
+              analysis={authenticMerleAnalysis}
+              initialTimestamp={(() => {
+                const urlParams = new URLSearchParams(location.split('?')[1] || '');
+                const timestamp = urlParams.get('t');
+                return timestamp ? parseInt(timestamp) : undefined;
+              })()}
+            />
+          </>
         )}
 
         {/* Analysis Input */}
