@@ -22,11 +22,11 @@ export default function Analyze() {
   
   // Handle timestamp parameter from URL
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.split('?')[1] || '');
+    const urlParams = new URLSearchParams(window.location.search);
     const timestamp = urlParams.get('t');
     const demoParam = urlParams.get('demo');
 
-    console.log('🔍 URL Analysis:', { location, timestamp, demoParam, showDemo });
+    console.log('🔍 URL Analysis:', { location, search: window.location.search, timestamp, demoParam, showDemo });
 
     if (timestamp && location.includes('/results')) {
       // Show the Merle Haggard analysis with timestamp
@@ -37,7 +37,7 @@ export default function Analyze() {
       console.log('✅ Setting showDemo to merle (demo param path)');
       setShowDemo('merle');
     }
-  }, [location]);
+  }, [location, window.location.search]);
   
   // Demo podcast IDs - using real completed analysis
   const MERLE_HAGGARD_DEMO_ID = "e75f6415-5238-488d-9de5-5583c2d0a3d6"; // Latest test analysis with more entities
