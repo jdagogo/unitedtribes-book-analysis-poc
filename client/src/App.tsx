@@ -13,6 +13,7 @@ import { BookPage } from "@/pages/book.tsx";
 import { CrossMediaDiscoveryPage } from "@/pages/cross-media-discovery.tsx";
 import ProcessAudiobook from "@/pages/process-audiobook.tsx";
 import AudiobookReader from "@/pages/audiobook-reader.tsx";
+import AudiobookPage from "@/pages/audiobook.tsx";
 import AudioSyncTest from "@/pages/audio-sync-test.tsx";
 import AudioSyncCalibration from "@/pages/audio-sync-calibration.tsx";
 import RealSync from "@/pages/real-sync.tsx";
@@ -34,7 +35,8 @@ function Router() {
       <Route path="/cross-media" component={CrossMediaDiscoveryPage} />
       <Route path="/cross-media-discovery" component={CrossMediaDiscoveryPage} />
       <Route path="/process-audiobook" component={ProcessAudiobook} />
-      <Route path="/audiobook" component={AudiobookReader} />
+      <Route path="/audiobook" component={AudiobookPage} />
+      <Route path="/audiobook-old" component={AudiobookReader} />
       <Route path="/audio-sync-test" component={AudioSyncTest} />
       <Route path="/audio-sync-calibration" component={AudioSyncCalibration} />
       <Route path="/real-sync" component={RealSync} />

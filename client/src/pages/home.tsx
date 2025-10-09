@@ -298,15 +298,15 @@ export default function Home() {
                 </a>
 
                 {/* Book */}
-                <Link href="/book">
+                <Link href="/audiobook">
                   <Card className="h-full hover:shadow-lg transition-all hover:scale-105 cursor-pointer bg-white border-2 border-green-200 hover:border-green-400">
                     <CardContent className="p-6 text-center">
                       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Book className="h-8 w-8 text-green-600" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">My House of Memories</h3>
-                      <p className="text-gray-600 text-sm mb-3">Full 43,229-word autobiography with chapter navigation & entity highlighting</p>
-                      <Badge className="bg-green-100 text-green-800 text-xs">Interactive Reader</Badge>
+                      <p className="text-gray-600 text-sm mb-3">Chapters 14-15: Music Career & Marriage - 30 min audiobook with contextual discovery</p>
+                      <Badge className="bg-green-100 text-green-800 text-xs">Audio + Discovery</Badge>
                     </CardContent>
                   </Card>
                 </Link>
