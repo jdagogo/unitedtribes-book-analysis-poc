@@ -364,38 +364,40 @@ export function PodcastPlayer({
               <div className="flex items-center justify-center gap-4">
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="lg"
                   onClick={() => skipTime(-15)}
+                  className="px-4 py-6"
                 >
-                  <SkipBack className="h-4 w-4" />
-                  15s
+                  <SkipBack className="h-6 w-6 mr-2" />
+                  <span className="text-lg font-semibold">15s</span>
                 </Button>
 
                 <Button
                   onClick={handlePlayPause}
                   size="lg"
-                  className="h-12 w-12 rounded-full"
+                  className="h-16 w-16 rounded-full"
                   disabled={false}
                 >
                   {isPlaying ?
-                    <Pause className="h-6 w-6" /> :
-                    <Play className="h-6 w-6" />
+                    <Pause className="h-8 w-8" /> :
+                    <Play className="h-8 w-8" />
                   }
                 </Button>
 
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="lg"
                   onClick={() => skipTime(15)}
+                  className="px-4 py-6"
                 >
-                  <SkipForward className="h-4 w-4" />
-                  15s
+                  <SkipForward className="h-6 w-6 mr-2" />
+                  <span className="text-lg font-semibold">15s</span>
                 </Button>
               </div>
 
               {/* Volume Control */}
-              <div className="flex items-center gap-2">
-                <Volume2 className="h-4 w-4" />
+              <div className="flex items-center gap-3">
+                <Volume2 className="h-6 w-6" />
                 <Slider
                   value={[volume]}
                   max={1}
@@ -406,7 +408,7 @@ export function PodcastPlayer({
                       audioRef.current.volume = value[0];
                     }
                   }}
-                  className="w-24"
+                  className="w-32"
                 />
               </div>
 
@@ -444,16 +446,16 @@ export function PodcastPlayer({
               )}
 
               {workingAudioUrl && (
-                <div className="text-center py-1 text-muted-foreground">
-                  <p className="text-base flex items-center justify-center gap-2">
+                <div className="text-center py-2 text-gray-800">
+                  <p className="text-base flex items-center justify-center gap-2 font-semibold">
                     <Volume2 className="h-5 w-5" />
                     {isPlaying ? 'Audio Playing' : 'Audio Ready'}
-                    <span className={`text-sm ${freshAirAudio ? 'text-blue-600' : 'text-green-600'}`}>
+                    <span className={`text-base font-bold ${freshAirAudio ? 'text-blue-600' : 'text-green-600'}`}>
                       ● {freshAirAudio ? 'Fresh Air (NPR)' : 'Real Audio'}
                     </span>
                   </p>
                   {audioTitle && freshAirAudio && (
-                    <p className="text-sm text-muted-foreground mt-0.5 font-medium">
+                    <p className="text-sm text-gray-700 mt-0.5 font-medium">
                       "{audioTitle}"
                     </p>
                   )}
@@ -581,7 +583,7 @@ export function PodcastPlayer({
                 </span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="max-h-[600px] overflow-y-auto">
+            <CardContent className="max-h-[800px] overflow-y-auto pb-2">
               {currentMentions.length > 0 ? (
                 <div className="space-y-3">
                   {currentMentions.map((mention, index) => {
