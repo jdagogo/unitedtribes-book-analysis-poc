@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart3, Clock, FileText, Download, TrendingUp, Network, Play } from "lucide-react";
+import { BarChart3, Clock, FileText, Play } from "lucide-react";
 import { EntityAnalysis } from "./entity-analysis.tsx";
 import { TimelineView } from "./timeline-view.tsx";
-import { ExportModal } from "./export-modal.tsx";
-import { RelationshipNetwork } from "./relationship-network.tsx";
-import { SentimentAnalysis } from "./sentiment-analysis.tsx";
 import { PodcastPlayer } from "./podcast-player.tsx";
 import { EntityDeepDive } from "./entity-deep-dive.tsx";
 import { EntityQuickView } from "./entity-quick-view.tsx";
@@ -26,7 +23,6 @@ interface ResultsDashboardProps {
 }
 
 export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initialTimestamp }: ResultsDashboardProps) {
-  const [showExportModal, setShowExportModal] = useState(false);
   const [showTimelineContext, setShowTimelineContext] = useState(false);
 
   const [selectedTimestamp, setSelectedTimestamp] = useState<number>(0);
@@ -37,6 +33,9 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
   const [modalEntityType, setModalEntityType] = useState<string>("");
   const [showEntityDetail, setShowEntityDetail] = useState(false);
   const [selectedEntityDetail, setSelectedEntityDetail] = useState<{ entity: any; mentions: any[] } | null>(null);
+
+  // Ref to store podcast pause function
+  const podcastPauseRef = useRef<(() => void) | null>(null);
 
 
 
@@ -229,7 +228,7 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
               <button
                 key={`entity-${index}-${entityId}`}
                 onClick={() => handleEntityClick(entityData.entity, entityData.mentions[0])}
-                className="font-bold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-1 py-0.5 rounded transition-colors cursor-pointer underline decoration-blue-300"
+                className="font-bold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-1 py-0.5 rounded transition-colors cursor-pointer underline decoration-blue-300 text-2xl"
                 title={`Click to explore ${entityData.entity.name}`}
               >
                 {entityName}
@@ -306,18 +305,18 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
           </div>
         </div>
         
-        <CardContent className="p-6">
+        <CardContent className="p-4">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="text-center cursor-pointer hover:bg-gray-50 p-3 rounded"
+            <div className="text-center cursor-pointer hover:bg-gray-50 py-2 px-3 rounded"
                  onClick={() => {
                    setModalEntityType('all');
                    setShowEntityModal(true);
                  }}
                  data-testid="button-entities-found">
               <div className="text-3xl font-bold text-primary">{analysis.entityAnalysis?.length || 0}</div>
-              <div className="text-base text-gray-900 font-semibold mt-2">Entities Found</div>
+              <div className="text-base text-gray-900 font-semibold mt-1">Entities Found</div>
             </div>
-            <div className="text-center cursor-pointer hover:bg-gray-50 p-3 rounded"
+            <div className="text-center cursor-pointer hover:bg-gray-50 py-2 px-3 rounded"
                  onClick={() => {
                    setModalEntityType('people');
                    setShowEntityModal(true);
@@ -326,9 +325,9 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
               <div className="text-3xl font-bold text-primary">
                 {analysis.entityAnalysis?.filter((ea: any) => ea.entity.category === 'musician' || ea.entity.category === 'person' || ea.entity.category === 'journalist').length || 0}
               </div>
-              <div className="text-base text-gray-900 font-semibold mt-2">People Mentioned</div>
+              <div className="text-base text-gray-900 font-semibold mt-1">People Mentioned</div>
             </div>
-            <div className="text-center cursor-pointer hover:bg-gray-50 p-3 rounded"
+            <div className="text-center cursor-pointer hover:bg-gray-50 py-2 px-3 rounded"
                  onClick={() => {
                    setModalEntityType('music');
                    setShowEntityModal(true);
@@ -337,13 +336,13 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
               <div className="text-3xl font-bold text-primary">
                 {analysis.entityAnalysis?.filter((ea: any) => ea.entity.category === 'music' || ea.entity.category === 'music festival').length || 0}
               </div>
-              <div className="text-base text-gray-900 font-semibold mt-2">Music Mentioned</div>
+              <div className="text-base text-gray-900 font-semibold mt-1">Music Mentioned</div>
             </div>
-            <div className="text-center p-3">
+            <div className="text-center py-2 px-3">
               <div className="text-3xl font-bold text-primary">{analysis.transcription?.accuracy || 95}%</div>
-              <div className="text-base text-gray-900 font-semibold mt-2">Transcription Accuracy</div>
+              <div className="text-base text-gray-900 font-semibold mt-1">Transcription Accuracy</div>
             </div>
-            <div className="text-center p-3">
+            <div className="text-center py-2 px-3">
               <Badge className={`text-xl px-4 py-2 ${
                 analysis.insights?.overallSentiment === 'positive' ? 'bg-green-100 text-green-800' :
                 analysis.insights?.overallSentiment === 'negative' ? 'bg-red-100 text-red-800' :
@@ -351,13 +350,13 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
               }`}>
                 {analysis.insights?.overallSentiment || 'reflective'}
               </Badge>
-              <div className="text-base text-gray-900 font-semibold mt-2">Overall Sentiment</div>
+              <div className="text-base text-gray-900 font-semibold mt-1">Overall Sentiment</div>
             </div>
-            <div className="text-center p-3">
+            <div className="text-center py-2 px-3">
               <div className="text-3xl font-bold text-primary">
                 {analysis.entityAnalysis?.reduce((acc: number, ea: any) => acc + ea.mentions.length, 0) || 0}
               </div>
-              <div className="text-base text-gray-900 font-semibold mt-2">Total Mentions</div>
+              <div className="text-base text-gray-900 font-semibold mt-1">Total Mentions</div>
             </div>
           </div>
         </CardContent>
@@ -387,56 +386,34 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
       <Card className="shadow-sm border">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="border-b">
-            <TabsList className="grid w-full grid-cols-7 h-auto p-0 bg-transparent">
-              <TabsTrigger 
-                value="player" 
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
+            <TabsList className="grid w-full grid-cols-4 h-auto p-0 bg-transparent">
+              <TabsTrigger
+                value="player"
+                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-lg font-semibold"
               >
-                <Play className="mr-2 h-4 w-4" />
+                <Play className="mr-2 h-6 w-6" />
                 Player
               </TabsTrigger>
-              <TabsTrigger 
-                value="analysis" 
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
+              <TabsTrigger
+                value="analysis"
+                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-lg font-semibold"
               >
-                <BarChart3 className="mr-2 h-4 w-4" />
+                <BarChart3 className="mr-2 h-6 w-6" />
                 Entities
               </TabsTrigger>
-              <TabsTrigger 
-                value="sentiment"
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
-              >
-                <TrendingUp className="mr-2 h-4 w-4" />
-                Sentiment
-              </TabsTrigger>
-              <TabsTrigger 
-                value="network"
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
-              >
-                <Network className="mr-2 h-4 w-4" />
-                Network
-              </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="timeline"
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
+                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-lg font-semibold"
               >
-                <Clock className="mr-2 h-4 w-4" />
+                <Clock className="mr-2 h-6 w-6" />
                 Timeline
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="transcript"
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
+                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-lg font-semibold"
               >
-                <FileText className="mr-2 h-4 w-4" />
+                <FileText className="mr-2 h-6 w-6" />
                 Transcript
-              </TabsTrigger>
-              <TabsTrigger 
-                value="export"
-                className="py-4 px-4 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary rounded-none text-sm"
-                onClick={() => setShowExportModal(true)}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Export
               </TabsTrigger>
             </TabsList>
           </div>
@@ -454,6 +431,9 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
                 setShowEntityModal(true);
               }}
               initialTimestamp={initialTimestamp}
+              onPauseRefSet={(pauseFn) => {
+                podcastPauseRef.current = pauseFn;
+              }}
             />
           </TabsContent>
 
@@ -470,14 +450,6 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
                 setShowEntityModal(true);
               }}
             />
-          </TabsContent>
-
-          <TabsContent value="sentiment" className="p-6">
-            <SentimentAnalysis analysis={analysis} />
-          </TabsContent>
-
-          <TabsContent value="network" className="p-6">
-            <RelationshipNetwork analysis={analysis} />
           </TabsContent>
 
           <TabsContent value="timeline" className="p-6">
@@ -502,7 +474,7 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
             <div className="max-w-4xl mx-auto">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Full Transcript</h3>
               <div className="bg-gray-50 rounded-lg p-6">
-                <div className="text-black leading-relaxed whitespace-pre-wrap">
+                <div className="text-black leading-relaxed whitespace-pre-wrap text-2xl">
                   {renderInteractiveTranscript(analysis.transcription?.fullText || "Transcript not available")}
                 </div>
               </div>
@@ -510,12 +482,6 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
           </TabsContent>
         </Tabs>
       </Card>
-
-      <ExportModal 
-        isOpen={showExportModal}
-        onClose={() => setShowExportModal(false)}
-        analysis={analysis}
-      />
 
       <EntityQuickView
         analysis={analysis}
@@ -562,6 +528,11 @@ export function ResultsDashboard({ podcastId, analysis: providedAnalysis, initia
           }
         }}
         analysis={analysis}
+        onPausePodcast={() => {
+          if (podcastPauseRef.current) {
+            podcastPauseRef.current();
+          }
+        }}
       />
 
       <TimelineContextModal

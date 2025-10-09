@@ -83,10 +83,10 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" data-testid="entities-section">
       {/* Entity Categories */}
       <div className="lg:col-span-1">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Entity Categories</h3>
+        <h3 className="text-2xl font-semibold text-gray-900 mb-4">Entity Categories</h3>
         <div className="space-y-3">
-          <div 
-            className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+          <div
+            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors ${
               selectedCategory === "all" ? "bg-primary bg-opacity-10 border-primary" : "hover:bg-gray-50"
             }`}
             onClick={() => {
@@ -96,15 +96,15 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
             data-testid="category-all"
           >
             <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-              <span className="font-medium">All Categories</span>
+              <div className="w-4 h-4 bg-gray-500 rounded-full"></div>
+              <span className="font-medium text-lg">All Categories</span>
             </div>
-            <span className="text-sm text-gray-600 hover:text-blue-600 font-medium">{analysis.entityAnalysis.length}</span>
+            <span className="text-base text-gray-600 hover:text-blue-600 font-medium">{analysis.entityAnalysis.length}</span>
           </div>
 
           {/* Special filter categories */}
-          <div 
-            className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+          <div
+            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors ${
               selectedCategory === "people" ? "bg-primary bg-opacity-10 border-primary" : "hover:bg-gray-50"
             }`}
             onClick={() => {
@@ -114,16 +114,16 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
             data-testid="category-people"
           >
             <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span className="font-medium">People</span>
+              <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+              <span className="font-medium text-lg">People</span>
             </div>
-            <span className="text-sm text-gray-600 hover:text-blue-600 font-medium">
+            <span className="text-base text-gray-600 hover:text-blue-600 font-medium">
               {analysis.entityAnalysis.filter(ea => ea.entity.category === 'musician' || ea.entity.category === 'person' || ea.entity.category === 'journalist').length}
             </span>
           </div>
 
-          <div 
-            className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+          <div
+            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors ${
               selectedCategory === "music" ? "bg-primary bg-opacity-10 border-primary" : "hover:bg-gray-50"
             }`}
             onClick={() => {
@@ -133,10 +133,10 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
             data-testid="category-music"
           >
             <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span className="font-medium">Music</span>
+              <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+              <span className="font-medium text-lg">Music</span>
             </div>
-            <span className="text-sm text-gray-600 hover:text-blue-600 font-medium">
+            <span className="text-base text-gray-600 hover:text-blue-600 font-medium">
               {analysis.entityAnalysis.filter(ea => ea.entity.category === 'music' || ea.entity.category === 'music festival').length}
             </span>
           </div>
@@ -146,7 +146,7 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
             .map(([category, count]) => (
             <div
               key={category}
-              className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors ${
                 selectedCategory === category ? "bg-primary bg-opacity-10 border-primary" : "hover:bg-gray-50"
               }`}
               onClick={() => {
@@ -156,10 +156,10 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
               data-testid={`category-${category}`}
             >
               <div className="flex items-center space-x-3">
-                <div className={`w-3 h-3 rounded-full ${getCategoryColor(category)}`}></div>
-                <span className="font-medium capitalize">{category}</span>
+                <div className={`w-4 h-4 rounded-full ${getCategoryColor(category)}`}></div>
+                <span className="font-medium capitalize text-lg">{category}</span>
               </div>
-              <span className="text-sm text-gray-600 hover:text-blue-600 font-medium">{count}</span>
+              <span className="text-base text-gray-600 hover:text-blue-600 font-medium">{count}</span>
             </div>
           ))}
         </div>
@@ -168,7 +168,7 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
       {/* Top Entities */}
       <div className="lg:col-span-2">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Top Entities by Mentions</h3>
+          <h3 className="text-2xl font-semibold text-gray-900">Top Entities by Mentions</h3>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="All Categories" />
@@ -195,29 +195,29 @@ export function EntityAnalysis({ analysis, initialFilter, onEntityClick, onCateg
               })}
               data-testid={`entity-card-${entityAnalysis.entity.name.toLowerCase().replace(/\s+/g, '-')}`}
             >
-              <CardContent className="p-4">
+              <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-1">
-                      <span className="font-medium text-gray-900">{entityAnalysis.entity.name}</span>
-                      <Badge className={getCategoryBadgeColor(entityAnalysis.entity.category)}>
+                    <div className="flex items-center space-x-3 mb-2">
+                      <span className="font-medium text-gray-900 text-xl">{entityAnalysis.entity.name}</span>
+                      <Badge className={`${getCategoryBadgeColor(entityAnalysis.entity.category)} text-base px-3 py-1`}>
                         {entityAnalysis.entity.category}
                       </Badge>
                     </div>
-                    <div className="text-sm text-gray-600 mb-2">
+                    <div className="text-base text-gray-600 mb-3">
                       {entityAnalysis.entity.description || `${entityAnalysis.entity.type} entity`}
                     </div>
-                    <Progress 
-                      value={(entityAnalysis.mentionCount / maxMentions) * 100} 
-                      className="h-2"
+                    <Progress
+                      value={(entityAnalysis.mentionCount / maxMentions) * 100}
+                      className="h-3"
                     />
                   </div>
-                  <div 
-                    className="text-right ml-4 hover:bg-blue-50 rounded p-2 transition-colors"
+                  <div
+                    className="text-right ml-4 hover:bg-blue-50 rounded p-3 transition-colors"
                     data-testid={`mention-count-${entityAnalysis.entity.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    <div className="text-lg font-semibold text-primary hover:text-blue-700">{entityAnalysis.mentionCount}</div>
-                    <div className="text-sm text-gray-500">mentions</div>
+                    <div className="text-2xl font-semibold text-primary hover:text-blue-700">{entityAnalysis.mentionCount}</div>
+                    <div className="text-base text-gray-500">mentions</div>
                   </div>
                 </div>
               </CardContent>

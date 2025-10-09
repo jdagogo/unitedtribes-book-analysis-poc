@@ -92,26 +92,26 @@ export function EntityQuickView({ analysis, entityType, isOpen, onClose, onViewA
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center space-x-4">
-            <h2 className="text-xl font-semibold text-gray-900">{getTitle()}</h2>
-            <Badge variant="secondary">{sortedEntities.length} entities</Badge>
+            <h2 className="text-3xl font-semibold text-gray-900">{getTitle()}</h2>
+            <Badge variant="secondary" className="text-lg px-3 py-1">{sortedEntities.length} entities</Badge>
           </div>
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm"
+            <Button
+              variant="outline"
+              size="lg"
               onClick={onViewAll}
               className="flex items-center space-x-2"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span>View Full Analysis</span>
+              <ArrowLeft className="h-5 w-5" />
+              <span className="text-base">View Full Analysis</span>
             </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
+            <Button
+              variant="ghost"
+              size="lg"
               onClick={onClose}
-              className="p-2"
+              className="p-4 hover:bg-red-50"
             >
-              <X className="h-4 w-4" />
+              <X className="h-10 w-10" />
             </Button>
           </div>
         </div>
@@ -122,16 +122,16 @@ export function EntityQuickView({ analysis, entityType, isOpen, onClose, onViewA
             {sortedEntities.map((entityAnalysis, index) => (
               <div
                 key={`${entityAnalysis.entity.id}-${index}`}
-                className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                className="p-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-lg border-2 border-blue-200 cursor-pointer hover:from-blue-100 hover:to-indigo-100 hover:border-blue-400 hover:shadow-md transition-all duration-200"
                 data-testid={`entity-${entityAnalysis.entity.name.toLowerCase().replace(/\s+/g, '-')}`}
                 onClick={() => onEntityClick?.({
                   entity: entityAnalysis.entity,
                   mentions: entityAnalysis.mentions || []
                 })}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <h4 
-                    className="font-medium text-gray-900 flex-1 pr-2 hover:text-blue-600 cursor-pointer"
+                <div className="flex items-start justify-between mb-3">
+                  <h4
+                    className="font-bold text-blue-900 flex-1 pr-2 text-xl cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       onEntityClick?.({
@@ -142,8 +142,8 @@ export function EntityQuickView({ analysis, entityType, isOpen, onClose, onViewA
                   >
                     {entityAnalysis.entity.name}
                   </h4>
-                  <Badge 
-                    className={`${getCategoryBadgeColor(entityAnalysis.entity.category)} cursor-pointer hover:opacity-80`}
+                  <Badge
+                    className={`${getCategoryBadgeColor(entityAnalysis.entity.category)} cursor-pointer hover:opacity-80 text-base px-3 py-1 border-blue-300 bg-blue-50`}
                     onClick={(e) => {
                       e.stopPropagation();
                       onCategoryClick?.(entityAnalysis.entity.category);
@@ -152,14 +152,14 @@ export function EntityQuickView({ analysis, entityType, isOpen, onClose, onViewA
                     {entityAnalysis.entity.category}
                   </Badge>
                 </div>
-                
-                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+
+                <p className="text-base text-gray-700 mb-3 line-clamp-2">
                   {entityAnalysis.entity.description}
                 </p>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <span 
-                    className="text-gray-500 hover:text-blue-600 cursor-pointer font-medium"
+
+                <div className="flex items-center justify-between text-base">
+                  <span
+                    className="text-blue-600 hover:text-blue-800 cursor-pointer font-semibold"
                     onClick={(e) => {
                       e.stopPropagation();
                       onEntityClick?.({
@@ -175,10 +175,10 @@ export function EntityQuickView({ analysis, entityType, isOpen, onClose, onViewA
                       entityAnalysis.sentiment === 'positive' ? 'default' :
                       entityAnalysis.sentiment === 'negative' ? 'destructive' :
                       'secondary'
-                    }>
+                    } className="text-sm px-2 py-0.5 bg-purple-100 text-purple-800">
                       {entityAnalysis.sentiment}
                     </Badge>
-                    <span className="text-gray-500">
+                    <span className="text-gray-700 font-medium">
                       {entityAnalysis.importance}% importance
                     </span>
                   </div>

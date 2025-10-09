@@ -34,9 +34,10 @@ interface EntityDetailModalProps {
   onEntityClick?: (entity: any) => void;
   onTimestampClick?: (timestamp: number) => void;
   analysis?: PodcastAnalysis | BookAnalysis;
+  onPausePodcast?: () => void;
 }
 
-export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, onCategoryClick, onEntityClick, onTimestampClick, analysis }: EntityDetailModalProps) {
+export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, onCategoryClick, onEntityClick, onTimestampClick, analysis, onPausePodcast }: EntityDetailModalProps) {
   console.log('🔗 EntityDetailModal rendering with props:');
   console.log('🔗 - onEntityClick type:', typeof onEntityClick);
   console.log('🔗 - onEntityClick function:', onEntityClick);
@@ -71,10 +72,15 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   }, [entity?.id]);
 
   const handleVideoClick = (videoId: string) => {
+    // Pause podcast if playing
+    if (onPausePodcast) {
+      onPausePodcast();
+    }
+
     // Stop any currently playing video
     setActiveVideoId(null);
     globalVideoState.clearPlaying();
-    
+
     // Start the new video after a brief delay
     setTimeout(() => {
       setActiveVideoId(videoId);
@@ -712,74 +718,82 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   const sentiment = entityAnalysis?.sentiment || entity.sentiment || 'neutral';
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-8">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-8"
+      onClick={(e) => {
+        // Close modal when clicking the backdrop
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div className="bg-white rounded-lg max-w-5xl w-full max-h-[80vh] flex flex-col">
         {/* Top Header - Analysis Title - MODAL STARTS HERE */}
-        <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0">
+        <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-gray-900 flex items-center mb-2">
+              <h1 className="text-lg font-bold text-gray-900 flex items-center mb-1">
                 ⚡ Real Merle Haggard Analysis
               </h1>
               <p className="text-sm text-gray-600">
                 This is actual UnitedTribes analysis from the uploaded PDF - real entity extraction and contextual navigation
               </p>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm"
+            <Button
+              variant="ghost"
+              size="lg"
               onClick={() => {
                 console.log('🔗 Close button (X) clicked in EntityDetailModal');
                 onClose();
               }}
-              className="p-2"
+              className="p-4 hover:bg-red-100 bg-white border-2 border-gray-300 hover:border-red-400 shadow-sm"
             >
-              <X className="h-4 w-4" />
+              <X className="h-12 w-12 text-gray-700 hover:text-red-600" />
             </Button>
           </div>
         </div>
 
         {/* Entity Header */}
-        <div className="flex items-center justify-between p-4 border-b bg-white flex-shrink-0">
+        <div className="flex items-center justify-between p-6 border-b bg-white flex-shrink-0">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-4">
               {onBack && (
-                <Button 
-                  variant="ghost" 
-                  size="sm"
+                <Button
+                  variant="ghost"
+                  size="lg"
                   onClick={() => {
                     console.log('🔗 Back button clicked in EntityDetailModal');
                     onBack();
                   }}
-                  className="p-2"
+                  className="p-3"
                 >
-                  <ArrowLeft className="h-4 w-4" />
+                  <ArrowLeft className="h-6 w-6" />
                 </Button>
               )}
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">{entity.name}</h2>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Badge 
-                    className={`${getCategoryBadgeColor(entity.category)} ${onCategoryClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                <h2 className="text-3xl font-semibold text-gray-900">{entity.name}</h2>
+                <div className="flex items-center space-x-3 mt-2">
+                  <Badge
+                    className={`${getCategoryBadgeColor(entity.category)} ${onCategoryClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''} text-base px-3 py-1`}
                     onClick={onCategoryClick ? () => onCategoryClick(entity.category) : undefined}
                   >
                     {entity.category}
                   </Badge>
-                  <Badge className={getSentimentBadgeColor(sentiment)}>
+                  <Badge className={`${getSentimentBadgeColor(sentiment)} text-base px-3 py-1`}>
                     {sentiment}
                   </Badge>
-                  <span className="text-sm text-gray-500">{importance}% importance</span>
+                  <span className="text-base text-gray-700 font-medium">{importance}% importance</span>
                 </div>
               </div>
             </div>
             <Button
               variant="outline"
-              size="sm"
+              size="lg"
               onClick={() => setShowWikipedia(true)}
               className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
             >
-              <Globe className="h-4 w-4" />
-              Wikipedia
+              <Globe className="h-5 w-5" />
+              <span className="text-base">Wikipedia</span>
             </Button>
           </div>
         </div>
@@ -788,7 +802,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
         <div className="p-8 overflow-y-auto flex-1 min-h-0" style={{ maxHeight: 'calc(80vh - 160px)' }} data-modal-content>
           {/* Entity Description */}
           <div className="mb-6">
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed text-lg">
               <SmartEntityText 
                 text={entity.description || "No description available for this entity."}
                 analysis={analysis || { entityAnalysis: [] } as any}

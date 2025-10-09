@@ -17,17 +17,19 @@ interface PodcastPlayerProps {
   onEntityClick: (entity: Entity, mention: EntityMention) => void;
   onCategoryClick?: (category: string) => void;
   initialTimestamp?: number;
+  onPauseRefSet?: (pauseFn: () => void) => void;
 }
 
-export function PodcastPlayer({ 
-  audioUrl, 
-  duration, 
-  entityMentions, 
-  entities, 
+export function PodcastPlayer({
+  audioUrl,
+  duration,
+  entityMentions,
+  entities,
   transcript,
   onEntityClick,
   onCategoryClick,
-  initialTimestamp = 0
+  initialTimestamp = 0,
+  onPauseRefSet
 }: PodcastPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(initialTimestamp);
@@ -70,6 +72,21 @@ export function PodcastPlayer({
       setCurrentTime(initialTimestamp);
     }
   }, [freshAirAudio, audioUrl, initialTimestamp]);
+
+  // Provide pause function to parent
+  useEffect(() => {
+    if (onPauseRefSet) {
+      const pauseFn = () => {
+        console.log('🎵 Pause called from modal, audioRef:', !!audioRef.current);
+        if (audioRef.current) {
+          audioRef.current.pause();
+          console.log('🎵 Audio paused successfully');
+        }
+        setIsPlaying(false);
+      };
+      onPauseRefSet(pauseFn);
+    }
+  }, [onPauseRefSet]);
 
   // Use Fresh Air audio if available, otherwise fall back to provided audio or demo
   const demoAudioUrl = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3";
