@@ -6,6 +6,7 @@ import { Home, Play } from 'lucide-react';
 import { Link } from 'wouter';
 import { YouTubePlayerSimple } from '@/components/youtube-player-simple';
 import { SynchronizedTranscript } from '@/components/synchronized-transcript';
+import { DiscoveryModal } from '@/components/discovery-modal';
 
 // Chapters 14-15 data (extended for more entities)
 // Starting from "I'd done everything I could do to keep my past quiet"
@@ -29,6 +30,9 @@ export default function AudiobookPage() {
   const [currentWordIndex, setCurrentWordIndex] = useState(-1);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalSearchQuery, setModalSearchQuery] = useState('');
+  const [modalEntityType, setModalEntityType] = useState<'person' | 'work' | 'place' | 'organization' | 'song'>('person');
 
   // Use refs to maintain handler persistence and avoid stale closures
   const wordClickHandlerRef = useRef<(wordIndex: number, timestamp: number) => void>();
@@ -170,6 +174,14 @@ export default function AudiobookPage() {
     }
   }, []);
 
+  // Handle discovery item clicks
+  const handleDiscoveryClick = useCallback((query: string, type: 'person' | 'work' | 'place' | 'organization' | 'song' = 'person') => {
+    console.log('🔍 Discovery clicked:', query, type);
+    setModalSearchQuery(query);
+    setModalEntityType(type);
+    setModalOpen(true);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -234,33 +246,143 @@ export default function AudiobookPage() {
             </Card>
           </div>
 
-          {/* Discovery Panel - Ready for analysis data */}
+          {/* Discovery Panel */}
           <div className="lg:col-span-1">
             <Card className="border-2 border-purple-300 sticky top-8">
               <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
                 <CardTitle className="text-2xl">Contextual Discovery</CardTitle>
-                <p className="text-sm text-gray-600">Videos, playlists & entities from this chapter</p>
+                <p className="text-sm text-gray-600">Playlists & entities from this chapter</p>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="space-y-4">
-                  {/* Placeholder for analysis data */}
-                  <div className="text-center py-8 text-gray-500">
-                    <Play className="h-12 w-12 mx-auto mb-4 text-purple-300" />
-                    <p className="font-semibold">Analysis Loading...</p>
-                    <p className="text-sm mt-2">
-                      Discovery content will appear here once analysis is complete
-                    </p>
-                    <p className="text-xs mt-4 text-gray-400">
-                      Segment: 3:09:23 - 3:35:00 (25 min)
-                    </p>
+                <div className="space-y-6">
+                  {/* Entities */}
+                  <div>
+                    <h3 className="font-bold text-lg mb-3 text-purple-900">Key People & Places</h3>
+                    <div className="space-y-2">
+                      <div
+                        className="p-2 bg-purple-50 rounded hover:bg-purple-100 cursor-pointer transition-colors"
+                        onClick={() => handleDiscoveryClick('Johnny Cash', 'person')}
+                      >
+                        <span className="font-semibold">Johnny Cash</span>
+                        <span className="text-sm text-gray-600 ml-2">• Person</span>
+                      </div>
+                      <div
+                        className="p-2 bg-purple-50 rounded hover:bg-purple-100 cursor-pointer transition-colors"
+                        onClick={() => handleDiscoveryClick('June Carter Cash', 'person')}
+                      >
+                        <span className="font-semibold">June Carter Cash</span>
+                        <span className="text-sm text-gray-600 ml-2">• Person</span>
+                      </div>
+                      <div
+                        className="p-2 bg-purple-50 rounded hover:bg-purple-100 cursor-pointer transition-colors"
+                        onClick={() => handleDiscoveryClick('George Jones', 'person')}
+                      >
+                        <span className="font-semibold">George Jones</span>
+                        <span className="text-sm text-gray-600 ml-2">• Person</span>
+                      </div>
+                      <div
+                        className="p-2 bg-purple-50 rounded hover:bg-purple-100 cursor-pointer transition-colors"
+                        onClick={() => handleDiscoveryClick('Bob Wills', 'person')}
+                      >
+                        <span className="font-semibold">Bob Wills</span>
+                        <span className="text-sm text-gray-600 ml-2">• Person</span>
+                      </div>
+                      <div
+                        className="p-2 bg-purple-50 rounded hover:bg-purple-100 cursor-pointer transition-colors"
+                        onClick={() => handleDiscoveryClick('San Quentin State Prison', 'place')}
+                      >
+                        <span className="font-semibold">San Quentin</span>
+                        <span className="text-sm text-gray-600 ml-2">• Place</span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* This section will be populated with:
-                      - Extracted entities (Wynn Stewart, Blackboard Club, Las Vegas, etc.)
-                      - Related videos
-                      - Generated playlists
-                      - Cross-media connections
-                  */}
+                  {/* Discovery Playlists */}
+                  <div>
+                    <h3 className="font-bold text-lg mb-3 text-purple-900">Discovery Playlists</h3>
+                    <div className="space-y-4">
+                      {/* Johnny Cash Playlist */}
+                      <div className="border border-purple-200 rounded-lg p-3">
+                        <h4 className="font-semibold text-sm mb-2">Johnny Cash at Folsom/San Quentin</h4>
+                        <div className="space-y-1 text-sm">
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('Folsom Prison Blues Johnny Cash', 'song')}
+                          >
+                            • Folsom Prison Blues
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('I Walk the Line Johnny Cash', 'song')}
+                          >
+                            • I Walk the Line
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('Ring of Fire Johnny Cash', 'song')}
+                          >
+                            • Ring of Fire
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('A Boy Named Sue Johnny Cash', 'song')}
+                          >
+                            • A Boy Named Sue
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* George Jones Playlist */}
+                      <div className="border border-purple-200 rounded-lg p-3">
+                        <h4 className="font-semibold text-sm mb-2">George Jones Honky Tonk Classics</h4>
+                        <div className="space-y-1 text-sm">
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('The Grand Tour George Jones', 'song')}
+                          >
+                            • The Grand Tour
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('He Stopped Loving Her Today George Jones', 'song')}
+                          >
+                            • He Stopped Loving Her Today
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('White Lightning George Jones', 'song')}
+                          >
+                            • White Lightning
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bob Wills Playlist */}
+                      <div className="border border-purple-200 rounded-lg p-3">
+                        <h4 className="font-semibold text-sm mb-2">Bob Wills and Texas Playboys</h4>
+                        <div className="space-y-1 text-sm">
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('San Antonio Rose Bob Wills', 'song')}
+                          >
+                            • San Antonio Rose
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('Faded Love Bob Wills', 'song')}
+                          >
+                            • Faded Love
+                          </div>
+                          <div
+                            className="text-gray-700 hover:text-purple-700 cursor-pointer transition-colors"
+                            onClick={() => handleDiscoveryClick('Take Me Back to Tulsa Bob Wills', 'song')}
+                          >
+                            • Take Me Back to Tulsa
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -294,6 +416,14 @@ export default function AudiobookPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Discovery Modal */}
+      <DiscoveryModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        searchQuery={modalSearchQuery}
+        entityType={modalEntityType}
+      />
     </div>
   );
 }
