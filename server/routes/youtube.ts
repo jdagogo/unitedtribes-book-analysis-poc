@@ -57,7 +57,8 @@ const YOUTUBE_API_KEYS = [
   process.env.YOUTUBE_API_KEY_3,
   process.env.YOUTUBE_API_KEY_4,
   process.env.YOUTUBE_API_KEY_5,
-  process.env.YOUTUBE_API_KEY_6
+  process.env.YOUTUBE_API_KEY_6,
+  process.env.YOUTUBE_API_KEY_7
 ].filter(Boolean);
 
 let currentKeyIndex = 0;

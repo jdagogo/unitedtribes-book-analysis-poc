@@ -27,10 +27,12 @@ export function DiscoveryModal({ isOpen, onClose, searchQuery, entityType = 'per
   const [results, setResults] = useState<VideoResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen && searchQuery) {
       searchYouTube();
+      setSelectedVideoId(null); // Reset selected video when modal opens
     }
   }, [isOpen, searchQuery]);
 
@@ -39,8 +41,11 @@ export function DiscoveryModal({ isOpen, onClose, searchQuery, entityType = 'per
     setError(null);
 
     try {
-      // Use the YouTube Analysis API on port 3003
-      const url = `http://localhost:3003/api/youtube-search?song=${encodeURIComponent(searchQuery)}`;
+      // Use the local YouTube API with auto-rotating keys (prioritizes VEVO/Official)
+      // Parse the search query to extract song and artist if it's in "Song Artist official" format
+      const queryParts = searchQuery.split(' official')[0]; // Remove "official" suffix
+      const url = `/api/youtube/search-track?song=${encodeURIComponent(queryParts)}`;
+
       console.log('🔍 Searching YouTube for:', searchQuery);
       console.log('📡 API URL:', url);
 
@@ -53,23 +58,24 @@ export function DiscoveryModal({ isOpen, onClose, searchQuery, entityType = 'per
       const data = await response.json();
       console.log('📦 API Response:', data);
 
-      // Transform the response into VideoResult format
-      const videos: VideoResult[] = data.map((item: any) => {
-        // Extract video ID from URL (format: https://www.youtube.com/watch?v=VIDEO_ID)
-        const urlParams = new URL(item.url).searchParams;
-        const videoId = urlParams.get('v') || '';
-
-        return {
-          url: item.url,
-          title: item.title,
-          channel: item.channel,
-          videoId,
-          thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+      // The search-track endpoint returns a single video object
+      if (data.videoId) {
+        const video: VideoResult = {
+          url: `https://www.youtube.com/watch?v=${data.videoId}`,
+          title: data.title,
+          channel: data.channel,
+          videoId: data.videoId,
+          thumbnail: `https://img.youtube.com/vi/${data.videoId}/mqdefault.jpg`
         };
-      });
 
-      setResults(videos);
-      console.log('✅ Found', videos.length, 'videos');
+        setResults([video]);
+        // Automatically play the first (and only) result
+        setSelectedVideoId(data.videoId);
+        console.log('✅ Found video:', video.title, 'by', video.channel);
+      } else {
+        setResults([]);
+        console.log('⚠️ No video found');
+      }
     } catch (err) {
       console.error('❌ Search failed:', err);
       setError(err instanceof Error ? err.message : 'Failed to search YouTube');
@@ -79,8 +85,8 @@ export function DiscoveryModal({ isOpen, onClose, searchQuery, entityType = 'per
   };
 
   const handleVideoClick = (videoId: string) => {
-    // Open video in new tab
-    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+    // Play video embedded in modal
+    setSelectedVideoId(videoId);
   };
 
   return (
@@ -122,7 +128,30 @@ export function DiscoveryModal({ isOpen, onClose, searchQuery, entityType = 'per
             </div>
           )}
 
-          {!isLoading && !error && results.length > 0 && (
+          {/* Embedded Video Player */}
+          {selectedVideoId && (
+            <div className="mb-6">
+              <div className="aspect-video bg-black rounded-lg overflow-hidden">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              {results.length > 0 && (
+                <div className="mt-3 p-3 bg-purple-50 rounded-lg">
+                  <h3 className="font-bold text-lg text-purple-900">{results[0].title}</h3>
+                  <p className="text-sm text-gray-600">{results[0].channel}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!isLoading && !error && results.length > 0 && !selectedVideoId && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {results.map((video, index) => (
                 <div
