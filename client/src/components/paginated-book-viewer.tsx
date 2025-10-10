@@ -2740,7 +2740,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         right: 0,
                         bottom: 0,
                         background: 'rgba(0, 0, 0, 0.7)',
-                        zIndex: 50,
+                        zIndex: 10000,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -3513,7 +3513,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             right: 0,
                             bottom: 0,
                             background: 'rgba(0, 0, 0, 0.7)',
-                            zIndex: 50,
+                            zIndex: 10000,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center'
@@ -5619,7 +5619,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             right: 0,
                             bottom: 0,
                             background: 'rgba(0, 0, 0, 0.7)',
-                            zIndex: 50,
+                            zIndex: 10000,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center'
@@ -6737,7 +6737,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             right: 0,
                             bottom: 0,
                             background: 'rgba(0, 0, 0, 0.7)',
-                            zIndex: 50,
+                            zIndex: 10000,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center'
@@ -7499,7 +7499,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             right: 0,
                             bottom: 0,
                             background: 'rgba(0, 0, 0, 0.7)',
-                            zIndex: 50,
+                            zIndex: 10000,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center'
@@ -8872,7 +8872,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         <>
                           <div style={{
                             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                            background: 'rgba(0, 0, 0, 0.7)', zIndex: 50,
+                            background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000,
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                           }} onClick={() => setShowPlaylistView(false)}>
                             <div style={{
@@ -9018,7 +9018,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         <>
                           <div style={{
                             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                            background: 'rgba(0, 0, 0, 0.8)', zIndex: 60,
+                            background: 'rgba(0, 0, 0, 0.8)', zIndex: 10000,
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                           }} onClick={() => {
                             setShowPlaylistPlayer(false);
