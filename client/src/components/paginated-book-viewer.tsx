@@ -9996,16 +9996,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         border: '2px solid #d1d5db',
                         overflow: 'auto'
                       }}>
-                        {/* Publication image - takes up 2/3 of space */}
+                        {/* Publication image - takes up most space */}
                         <div style={{
                           width: '100%',
-                          flex: '2',
-                          minHeight: '400px',
+                          flex: '1',
+                          minHeight: '500px',
                           borderRadius: '8px',
                           display: 'flex',
-                          alignItems: 'center',
+                          alignItems: 'flex-start',
                           justifyContent: 'center',
-                          marginBottom: '1.5rem',
+                          marginBottom: '0.75rem',
                           overflow: 'hidden',
                           background: '#f3f4f6'
                         }}>
@@ -10016,7 +10016,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               style={{
                                 width: '100%',
                                 height: '100%',
-                                objectFit: 'cover'
+                                objectFit: 'contain'
                               }}
                             />
                           ) : (
@@ -10032,13 +10032,110 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                         </div>
 
+                        {/* Purchase options - three colorful cards */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(3, 1fr)',
+                          gap: '0.75rem',
+                          marginBottom: '1rem'
+                        }}>
+                          {/* Option 1: Authenticate and Read - Purple */}
+                          <div style={{
+                            background: '#f3f0ff',
+                            borderRadius: '8px',
+                            padding: '1rem',
+                            border: '1px solid #e9d5ff'
+                          }}>
+                            <button
+                              style={{
+                                width: '100%',
+                                background: '#7c3aed',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.75rem',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'opacity 0.2s'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                            >
+                              Authenticate and Read Pitchfork Here
+                            </button>
+                          </div>
+
+                          {/* Option 2: Digital Wallet - Green */}
+                          <div style={{
+                            background: '#f0fdf4',
+                            borderRadius: '8px',
+                            padding: '1rem',
+                            border: '1px solid #bbf7d0'
+                          }}>
+                            <button
+                              style={{
+                                width: '100%',
+                                background: '#16a34a',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.75rem',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'opacity 0.2s',
+                                marginBottom: '0.5rem'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                            >
+                              Buy Here Using Your United Tribes Digital Wallet
+                            </button>
+                            <div style={{ fontSize: '12px', color: '#000000', textAlign: 'center', fontWeight: '600' }}>
+                              Only 25¢
+                            </div>
+                          </div>
+
+                          {/* Option 3: Purchase from Pitchfork - Blue */}
+                          <div style={{
+                            background: '#eff6ff',
+                            borderRadius: '8px',
+                            padding: '1rem',
+                            border: '1px solid #bfdbfe'
+                          }}>
+                            <button
+                              style={{
+                                width: '100%',
+                                background: '#2563eb',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.75rem',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'opacity 0.2s',
+                                marginBottom: '0.5rem'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                            >
+                              Purchase from Pitchfork
+                            </button>
+                            <div style={{ fontSize: '12px', color: '#000000', textAlign: 'center', fontWeight: '600' }}>
+                              Only 25¢
+                            </div>
+                          </div>
+                        </div>
+
                         {/* Article title if available - remove brackets */}
                         {selectedArticle.articleRef && (
                           <h3 style={{
-                            fontSize: '20px',
+                            fontSize: '18px',
                             fontWeight: '700',
                             color: '#3b82f6',
-                            marginBottom: '0.75rem',
+                            marginBottom: '0.5rem',
                             lineHeight: '1.4'
                           }}>
                             {selectedArticle.articleRef.replace(/^\[|\]$/g, '')}
@@ -10047,85 +10144,21 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
                         {/* Source name */}
                         <h4 style={{
-                          fontSize: '16px',
+                          fontSize: '14px',
                           fontWeight: '600',
                           color: '#000000',
-                          marginBottom: '1.5rem'
+                          marginBottom: '0.75rem'
                         }}>
                           Source: {selectedArticle.publication}
                         </h4>
 
                         {/* Context/excerpt */}
                         <div style={{
-                          fontSize: '15px',
+                          fontSize: '14px',
                           color: '#000000',
-                          lineHeight: '1.7',
-                          marginBottom: '2rem',
-                          flex: 1
+                          lineHeight: '1.6'
                         }}>
                           {selectedArticle.context}
-                        </div>
-
-                        {/* Purchase buttons */}
-                        <div style={{
-                          display: 'flex',
-                          gap: '0.75rem',
-                          marginTop: 'auto'
-                        }}>
-                          <button
-                            style={{
-                              flex: 1,
-                              background: '#10b981',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.875rem',
-                              fontSize: '14px',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                          >
-                            $0.99
-                          </button>
-                          <button
-                            style={{
-                              flex: 1,
-                              background: '#f59e0b',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.875rem',
-                              fontSize: '14px',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                          >
-                            UT Credits
-                          </button>
-                          <button
-                            style={{
-                              flex: 1,
-                              background: '#3b82f6',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.875rem',
-                              fontSize: '14px',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                          >
-                            Authenticate
-                          </button>
                         </div>
                       </div>
                     </>
