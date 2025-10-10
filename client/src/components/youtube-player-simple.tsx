@@ -11,12 +11,14 @@ interface YouTubePlayerSimpleProps {
   videoId: string;
   onTimeUpdate?: (time: number) => void;
   onReady?: () => void;
+  startTime?: number;
 }
 
-export function YouTubePlayerSimple({ 
-  videoId, 
+export function YouTubePlayerSimple({
+  videoId,
   onTimeUpdate,
-  onReady 
+  onReady,
+  startTime = 0
 }: YouTubePlayerSimpleProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -97,7 +99,8 @@ export function YouTubePlayerSimple({
           controls: 0,
           modestbranding: 1,
           enablejsapi: 1,
-          origin: window.location.origin
+          origin: window.location.origin,
+          start: startTime || 0
         },
         events: {
           onReady: handlePlayerReady,
@@ -248,12 +251,6 @@ export function YouTubePlayerSimple({
     if (onReady) {
       onReady();
     }
-    
-    // Test basic seeks after 2 seconds
-    setTimeout(() => {
-      console.log('🧪 [PLAYER] Testing basic seeks...');
-      testBasicSeeks();
-    }, 2000);
   };
 
   // Handle state changes
@@ -357,14 +354,14 @@ export function YouTubePlayerSimple({
   };
 
   const handleSkipBack = () => {
-    const newTime = Math.max(0, currentTime - 10);
-    console.log(`⏪ [CONTROL] Skip back to ${newTime}s`);
+    const newTime = Math.max(0, currentTime - 15);
+    console.log(`⏪ [CONTROL] Skip back 15s to ${newTime}s`);
     window.audioSync?.seekTo(newTime);
   };
 
   const handleSkipForward = () => {
-    const newTime = Math.min(duration, currentTime + 10);
-    console.log(`⏩ [CONTROL] Skip forward to ${newTime}s`);
+    const newTime = Math.min(duration, currentTime + 15);
+    console.log(`⏩ [CONTROL] Skip forward 15s to ${newTime}s`);
     window.audioSync?.seekTo(newTime);
   };
 
@@ -396,10 +393,10 @@ export function YouTubePlayerSimple({
       <div ref={playerRef} style={{ display: 'none' }} />
       
       {/* Controls UI */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
-        <div className="mb-4">
+      <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg">
+        <div className="mb-3">
           {!playerReady ? (
-            <div className="text-center text-gray-500">
+            <div className="text-center text-gray-500 text-lg">
               ⏳ Loading YouTube player...
             </div>
           ) : (
@@ -410,9 +407,9 @@ export function YouTubePlayerSimple({
                 onValueChange={handleSeek}
                 max={duration}
                 step={1}
-                className="w-full mb-2"
+                className="w-full mb-2 h-3"
               />
-              <div className="flex justify-between text-sm text-gray-500">
+              <div className="flex justify-between text-lg text-gray-500 font-medium">
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
@@ -421,47 +418,49 @@ export function YouTubePlayerSimple({
         </div>
 
         {/* Playback controls */}
-        <div className="flex items-center justify-center gap-4 mb-4">
+        <div className="flex items-center justify-center gap-8 mb-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={handleSkipBack}
             disabled={!playerReady}
+            className="h-16 w-16"
           >
-            <SkipBack className="h-5 w-5" />
+            <SkipBack className="h-24 w-24" />
           </Button>
-          
+
           <Button
             variant="default"
             size="icon"
             onClick={handlePlayPause}
             disabled={!playerReady}
-            className="h-12 w-12"
+            className="h-20 w-20"
           >
-            {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+            {isPlaying ? <Pause className="h-28 w-28" /> : <Play className="h-28 w-28" />}
           </Button>
-          
+
           <Button
             variant="ghost"
             size="icon"
             onClick={handleSkipForward}
             disabled={!playerReady}
+            className="h-16 w-16"
           >
-            <SkipForward className="h-5 w-5" />
+            <SkipForward className="h-24 w-24" />
           </Button>
         </div>
 
         {/* Volume control */}
-        <div className="flex items-center gap-2">
-          <Volume2 className="h-4 w-4 text-gray-500" />
+        <div className="flex items-center gap-3">
+          <Volume2 className="h-6 w-6 text-gray-500" />
           <Slider
             value={[volume]}
             onValueChange={handleVolumeChange}
             max={100}
             step={1}
-            className="w-32"
+            className="w-40 h-2"
           />
-          <span className="text-sm text-gray-500 w-10">{volume}%</span>
+          <span className="text-base text-gray-500 w-12 font-medium">{volume}%</span>
         </div>
 
         {/* Debug info and recovery */}

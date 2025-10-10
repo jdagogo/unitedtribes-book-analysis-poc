@@ -217,11 +217,12 @@ export function SynchronizedTranscript({
         'bg-white dark:bg-gray-900',
         'rounded-lg',
         'shadow-inner',
+        'text-lg',
         className
       )}
     >
       {paragraphs.map((paragraph, pIndex) => (
-        <p key={`paragraph-${pIndex}`} className="mb-4 leading-relaxed">
+        <p key={`paragraph-${pIndex}`} className="mb-4 leading-relaxed text-lg">
           {paragraph.map((word) => renderWord(word, word.index))}
         </p>
       ))}
