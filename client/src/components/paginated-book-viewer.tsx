@@ -9996,22 +9996,40 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         border: '2px solid #d1d5db',
                         overflow: 'auto'
                       }}>
-                        {/* Generic publication image placeholder - takes up 2/3 of space */}
+                        {/* Publication image - takes up 2/3 of space */}
                         <div style={{
                           width: '100%',
                           flex: '2',
                           minHeight: '400px',
-                          background: '#f3f4f6',
                           borderRadius: '8px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           marginBottom: '1.5rem',
-                          fontSize: '18px',
-                          fontWeight: '600',
-                          color: '#6b7280'
+                          overflow: 'hidden',
+                          background: '#f3f4f6'
                         }}>
-                          Generic Publication Image (You'll provide)
+                          {selectedArticle.publication === 'Pitchfork' ? (
+                            <img
+                              src="/pitchfork-article.png"
+                              alt="Pitchfork Article"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover'
+                              }}
+                            />
+                          ) : (
+                            <div style={{
+                              fontSize: '18px',
+                              fontWeight: '600',
+                              color: '#6b7280',
+                              textAlign: 'center',
+                              padding: '2rem'
+                            }}>
+                              {selectedArticle.publication} Article Image (Placeholder)
+                            </div>
+                          )}
                         </div>
 
                         {/* Article title if available - remove brackets */}
