@@ -695,94 +695,54 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     }
   };
 
-  // Helper function to format narrative text with bold headers
+  // Helper function to format narrative text with bold blue headers
   const formatNarrative = (text: string) => {
-    // Split by sentences and detect headers
-    const parts: JSX.Element[] = [];
-    let currentText = text;
-    let keyIndex = 0;
+    console.log('🎨 formatNarrative called with text length:', text.length);
+    console.log('🎨 Raw text preview:', text.substring(0, 500));
 
-    // Find all potential headers (text ending with colon)
-    const headerRegex = /([^.!?]*?[A-Z][^:]*?:)/g;
-    let lastIndex = 0;
-    let match;
+    // Split by any combination of newlines (handles \n\n, \n, or any mix)
+    const lines = text.split('\n').filter(line => line.trim());
+    console.log('🎨 Total lines after split:', lines.length);
 
-    while ((match = headerRegex.exec(text)) !== null) {
-      const header = match[1].trim();
+    return lines.map((line, idx) => {
+      const trimmed = line.trim();
+      if (!trimmed) return null;
 
-      // Add text before header if any
-      if (match.index > lastIndex) {
-        const beforeText = text.substring(lastIndex, match.index).trim();
-        if (beforeText) {
-          parts.push(
-            <p key={keyIndex++} style={{
-              margin: '0.5rem 0',
-              fontSize: '16px',
-              color: '#1f2937',
-              lineHeight: '1.6'
-            }}>
-              {beforeText}
-            </p>
-          );
-        }
-      }
+      // Header detection: ends with colon AND is relatively short (< 80 chars) AND not a sentence
+      const isHeader = trimmed.endsWith(':') &&
+                      trimmed.length < 80 &&
+                      !trimmed.includes('.') &&
+                      !trimmed.includes('?');
 
-      // Add header
-      if (header.length < 100) { // Only treat short colon-ending text as headers
-        parts.push(
-          <p key={keyIndex++} style={{
-            margin: '1rem 0 0.5rem 0',
+      if (isHeader) {
+        console.log('🎨 ✓ HEADER:', trimmed);
+        return (
+          <div key={idx} style={{
+            marginTop: idx === 0 ? '0' : '1.5rem',
+            marginBottom: '0.75rem',
             fontWeight: '800',
-            fontSize: '17px',
-            color: '#2563eb'
+            fontSize: '18px',
+            color: '#2563eb',
+            lineHeight: '1.4'
           }}>
-            {header}
-          </p>
-        );
-      } else {
-        // Too long, treat as regular text
-        parts.push(
-          <p key={keyIndex++} style={{
-            margin: '0.5rem 0',
-            fontSize: '16px',
-            color: '#1f2937',
-            lineHeight: '1.6'
-          }}>
-            {header}
-          </p>
+            {trimmed}
+          </div>
         );
       }
 
-      lastIndex = match.index + match[0].length;
-    }
-
-    // Add remaining text
-    if (lastIndex < text.length) {
-      const remaining = text.substring(lastIndex).trim();
-      if (remaining) {
-        parts.push(
-          <p key={keyIndex++} style={{
-            margin: '0.5rem 0',
-            fontSize: '16px',
-            color: '#1f2937',
-            lineHeight: '1.6'
-          }}>
-            {remaining}
-          </p>
-        );
-      }
-    }
-
-    return parts.length > 0 ? parts : (
-      <p style={{
-        margin: '0.5rem 0',
-        fontSize: '16px',
-        color: '#1f2937',
-        lineHeight: '1.6'
-      }}>
-        {text}
-      </p>
-    );
+      // Regular text line
+      console.log('🎨 → Body:', trimmed.substring(0, 60) + '...');
+      return (
+        <div key={idx} style={{
+          marginBottom: '0.75rem',
+          fontSize: '16px',
+          color: '#000000',
+          lineHeight: '1.7'
+        }}>
+          {trimmed}
+        </div>
+      );
+    }).filter(Boolean);
   };
 
   const handlePlayDiscoveryItem = (item: any) => {
