@@ -10032,101 +10032,105 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                         </div>
 
-                        {/* Purchase options - three colorful cards */}
+                        {/* Three compact purchase buttons */}
                         <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(3, 1fr)',
-                          gap: '0.75rem',
-                          marginBottom: '1rem'
+                          display: 'flex',
+                          gap: '0.5rem',
+                          marginBottom: '1rem',
+                          justifyContent: 'center'
                         }}>
-                          {/* Option 1: Authenticate and Read - Purple */}
-                          <div style={{
-                            background: '#f3f0ff',
-                            borderRadius: '8px',
-                            padding: '1rem',
-                            border: '1px solid #e9d5ff'
-                          }}>
-                            <button
-                              style={{
-                                width: '100%',
-                                background: '#7c3aed',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '0.75rem',
-                                fontSize: '13px',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'opacity 0.2s'
-                              }}
-                              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                            >
-                              Authenticate and Read Pitchfork Here
-                            </button>
-                          </div>
+                          {/* Option 1: Authenticate - Purple */}
+                          <button
+                            style={{
+                              width: '200px',
+                              background: '#7c3aed',
+                              color: 'white',
+                              border: '2px solid #6d28d9',
+                              borderRadius: '8px',
+                              padding: '0.625rem 0.75rem',
+                              fontSize: '13px',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s',
+                              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
+                              textAlign: 'center',
+                              lineHeight: '1.3'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#6d28d9';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#7c3aed';
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(124, 58, 237, 0.3)';
+                            }}
+                          >
+                            Authenticate and Read<br/>Pitchfork Here
+                          </button>
 
                           {/* Option 2: Digital Wallet - Green */}
-                          <div style={{
-                            background: '#f0fdf4',
-                            borderRadius: '8px',
-                            padding: '1rem',
-                            border: '1px solid #bbf7d0'
-                          }}>
-                            <button
-                              style={{
-                                width: '100%',
-                                background: '#16a34a',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '0.75rem',
-                                fontSize: '13px',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'opacity 0.2s',
-                                marginBottom: '0.5rem'
-                              }}
-                              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                            >
-                              Buy Here Using Your United Tribes Digital Wallet
-                            </button>
-                            <div style={{ fontSize: '12px', color: '#000000', textAlign: 'center', fontWeight: '600' }}>
-                              Only 25¢
-                            </div>
-                          </div>
+                          <button
+                            style={{
+                              width: '200px',
+                              background: '#16a34a',
+                              color: 'white',
+                              border: '2px solid #15803d',
+                              borderRadius: '8px',
+                              padding: '0.625rem 0.75rem',
+                              fontSize: '13px',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s',
+                              boxShadow: '0 2px 8px rgba(22, 163, 74, 0.3)',
+                              textAlign: 'center',
+                              lineHeight: '1.3'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#15803d';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(22, 163, 74, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#16a34a';
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(22, 163, 74, 0.3)';
+                            }}
+                          >
+                            Buy Using UnitedTribes<br/>Digital Wallet — <strong>25¢</strong>
+                          </button>
 
-                          {/* Option 3: Purchase from Pitchfork - Blue */}
-                          <div style={{
-                            background: '#eff6ff',
-                            borderRadius: '8px',
-                            padding: '1rem',
-                            border: '1px solid #bfdbfe'
-                          }}>
-                            <button
-                              style={{
-                                width: '100%',
-                                background: '#2563eb',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '0.75rem',
-                                fontSize: '13px',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'opacity 0.2s',
-                                marginBottom: '0.5rem'
-                              }}
-                              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                            >
-                              Purchase from Pitchfork
-                            </button>
-                            <div style={{ fontSize: '12px', color: '#000000', textAlign: 'center', fontWeight: '600' }}>
-                              Only 25¢
-                            </div>
-                          </div>
+                          {/* Option 3: Purchase - Blue */}
+                          <button
+                            style={{
+                              width: '200px',
+                              background: '#2563eb',
+                              color: 'white',
+                              border: '2px solid #1d4ed8',
+                              borderRadius: '8px',
+                              padding: '0.625rem 0.75rem',
+                              fontSize: '13px',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s',
+                              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)',
+                              textAlign: 'center',
+                              lineHeight: '1.3'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#1d4ed8';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#2563eb';
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(37, 99, 235, 0.3)';
+                            }}
+                          >
+                            Purchase from<br/>Pitchfork — <strong>25¢</strong>
+                          </button>
                         </div>
 
                         {/* Article title if available - remove brackets */}
