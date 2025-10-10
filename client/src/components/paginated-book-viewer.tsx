@@ -143,6 +143,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [aiResults, setAiResults] = useState<any>(null);
   const [isAiSearching, setIsAiSearching] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [aiMatchedVideos, setAiMatchedVideos] = useState<any[]>([]);
 
   // Debug: Log when visualization modal state changes
   // Modal state tracking removed - working correctly
@@ -687,6 +688,22 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       const data = await response.json();
       console.log('✅ Received data:', data);
       setAiResults(data);
+
+      // Also search for matching analyzed videos
+      try {
+        console.log('🎥 Searching for matching analyzed videos...');
+        const videoResponse = await fetch(
+          `/api/youtube/search?q=${encodeURIComponent(aiQuery)}`
+        );
+        if (videoResponse.ok) {
+          const videoData = await videoResponse.json();
+          console.log('✅ Found matching videos:', videoData.results?.length || 0);
+          setAiMatchedVideos(videoData.results || []);
+        }
+      } catch (videoError) {
+        console.error('⚠️ Video search error (non-critical):', videoError);
+        // Don't fail the whole search if video matching fails
+      }
     } catch (error) {
       console.error('❌ UnitedAI search error:', error);
       setAiError(error instanceof Error ? error.message : 'Search failed');
@@ -9882,6 +9899,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             setAiResults(null);
                             setAiQuery('');
                             setAiError(null);
+                            setAiMatchedVideos([]);
                           }}
                           style={{
                             position: 'absolute',
@@ -9904,6 +9922,91 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         </button>
                         <div style={{ paddingTop: '2.5rem' }}>
                           {formatNarrative(aiResults.narrative)}
+
+                          {/* Related Videos Section */}
+                          {aiMatchedVideos.length > 0 && (
+                            <div style={{
+                              marginTop: '2rem',
+                              paddingTop: '2rem',
+                              borderTop: '2px solid #e5e7eb'
+                            }}>
+                              <h3 style={{
+                                fontSize: '20px',
+                                fontWeight: '700',
+                                color: '#2563eb',
+                                marginBottom: '1rem'
+                              }}>
+                                Related Analyzed Videos ({aiMatchedVideos.length})
+                              </h3>
+                              <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                                gap: '1rem'
+                              }}>
+                                {aiMatchedVideos.map((video, idx) => (
+                                  <div
+                                    key={idx}
+                                    onClick={() => {
+                                      console.log('🎬 Loading video:', video);
+                                      setSelectedVideo(video);
+                                      setShowAiModal(false); // Close modal and show video in left panel
+                                    }}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      border: '2px solid #e5e7eb',
+                                      transition: 'all 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.borderColor = '#3b82f6';
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.borderColor = '#e5e7eb';
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                      e.currentTarget.style.boxShadow = 'none';
+                                    }}
+                                  >
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      style={{
+                                        width: '100%',
+                                        aspectRatio: '16/9',
+                                        objectFit: 'cover'
+                                      }}
+                                    />
+                                    <div style={{ padding: '0.75rem' }}>
+                                      <p style={{
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        color: '#1f2937',
+                                        margin: 0,
+                                        lineHeight: '1.4',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: 'vertical',
+                                        overflow: 'hidden'
+                                      }}>
+                                        {video.title}
+                                      </p>
+                                      {video.channel && (
+                                        <p style={{
+                                          fontSize: '12px',
+                                          color: '#6b7280',
+                                          margin: '0.25rem 0 0 0'
+                                        }}>
+                                          {video.channel}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </>
                     ) : aiError ? (
