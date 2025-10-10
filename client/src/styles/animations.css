@@ -88,3 +88,28 @@
 .recovering-icon {
   animation: recover 1s linear infinite;
 }
+
+/* Dots animation for loading text */
+@keyframes dots {
+  0%, 20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Subtle pulse for loading button */
+@keyframes buttonPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}

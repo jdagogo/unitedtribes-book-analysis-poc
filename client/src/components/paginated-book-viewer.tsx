@@ -6490,7 +6490,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     onClick={handleUnitedAISearch}
                                     disabled={isAiSearching || !aiQuery.trim()}
                                     style={{
-                                      background: isAiSearching ? '#9ca3af' : '#3b82f6',
+                                      background: isAiSearching ? '#2563eb' : '#3b82f6',
                                       color: 'white',
                                       border: 'none',
                                       borderRadius: '8px',
@@ -6498,7 +6498,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       fontSize: '16px',
                                       fontWeight: '600',
                                       cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
-                                      transition: 'background 0.2s'
+                                      transition: 'background 0.2s',
+                                      animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
                                     }}
                                   >
                                     {isAiSearching ? 'Searching...' : 'Search'}
@@ -10972,7 +10973,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       onClick={handleUnitedAISearch}
                       disabled={isAiSearching || !aiQuery.trim()}
                       style={{
-                        background: isAiSearching ? '#9ca3af' : '#3b82f6',
+                        background: isAiSearching ? '#2563eb' : '#3b82f6',
                         color: 'white',
                         border: 'none',
                         borderRadius: '8px',
@@ -10980,7 +10981,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         fontSize: '16px',
                         fontWeight: '600',
                         cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
-                        whiteSpace: 'nowrap'
+                        whiteSpace: 'nowrap',
+                        transition: 'background 0.2s',
+                        animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
                       }}
                     >
                       {isAiSearching ? 'Searching...' : 'Search'}
@@ -10997,6 +11000,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   border: '2px solid #e5e7eb',
                   overflowY: 'auto'
                 }}>
+                  {(() => {
+                    console.log('🎨 Modal rendering - aiResults:', aiResults);
+                    console.log('🎨 Modal rendering - aiQuery:', aiQuery);
+                    console.log('🎨 Modal rendering - isAiSearching:', isAiSearching);
+                    return null;
+                  })()}
                   {aiResults ? (
                     <div style={{
                       fontSize: '16px',
