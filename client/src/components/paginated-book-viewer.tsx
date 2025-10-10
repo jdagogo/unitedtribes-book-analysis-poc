@@ -834,8 +834,78 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         );
       }
 
-      // Regular text line
+      // Regular text line - check for publication mentions and make them clickable
       console.log('🎨 → Body:', trimmed.substring(0, 60) + '...');
+
+      // Define publications to detect
+      const publications = [
+        { name: 'Rolling Stone', color: '#e63946', image: '/rolling-stone-logo.png' },
+        { name: 'Pitchfork', color: '#ff3864', image: '/pitchfork-logo.png' },
+        { name: 'DownBeat', color: '#1a5490', image: '/downbeat-logo.png' },
+        { name: 'The New Yorker', color: '#000000', image: '/new-yorker-logo.png' },
+        { name: 'NPR', color: '#db0a34', image: '/npr-logo.png' },
+        { name: 'The Guardian', color: '#052962', image: '/guardian-logo.png' }
+      ];
+
+      // Check if line contains any publication names and make full article references clickable
+      let processedLine: any = trimmed;
+      publications.forEach(pub => {
+        // Match article references: captures text before publication name that looks like an article title
+        // Patterns: "article title" + publication, 'article title' + publication, or just publication
+        const articleRefRegex = new RegExp(
+          `((?:["']([^"']+)["']|([^,\\.]+?))\\s+(?:from|in|by|on|via|according to)?\\s+)?(${pub.name})`,
+          'gi'
+        );
+
+        const matches = [...trimmed.matchAll(articleRefRegex)];
+        if (matches.length > 0) {
+          let lastIndex = 0;
+          const newParts: any[] = [];
+
+          matches.forEach((match, matchIdx) => {
+            const fullMatch = match[0];
+            const matchStart = match.index!;
+
+            // Add text before this match
+            if (matchStart > lastIndex) {
+              newParts.push(trimmed.substring(lastIndex, matchStart));
+            }
+
+            // Add clickable article reference
+            newParts.push(
+              <span
+                key={`${idx}-article-${matchIdx}`}
+                onClick={() => setSelectedArticle({
+                  publication: pub.name,
+                  color: pub.color,
+                  image: pub.image,
+                  context: trimmed
+                })}
+                style={{
+                  color: '#3b82f6',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+              >
+                {fullMatch}
+              </span>
+            );
+
+            lastIndex = matchStart + fullMatch.length;
+          });
+
+          // Add remaining text after last match
+          if (lastIndex < trimmed.length) {
+            newParts.push(trimmed.substring(lastIndex));
+          }
+
+          processedLine = newParts;
+        }
+      });
+
       return (
         <div key={idx} style={{
           marginBottom: '0.75rem',
@@ -843,7 +913,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           color: '#000000',
           lineHeight: '1.7'
         }}>
-          {trimmed}
+          {processedLine}
         </div>
       );
     }).filter(Boolean);
@@ -9906,119 +9976,130 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     </>
                   )}
 
-                  {/* Article References Section */}
-                  {aiArticleReferences.length > 0 && (
-                    <div style={{
-                      marginTop: '1rem',
-                      padding: '1rem',
-                      background: '#f9fafb',
-                      borderRadius: '8px',
-                      border: '2px solid #e5e7eb'
-                    }}>
-                      <h3 style={{
-                        fontSize: '16px',
-                        fontWeight: '700',
-                        color: '#1f2937',
-                        marginBottom: '1rem'
-                      }}>
-                        📰 Referenced Articles ({aiArticleReferences.length})
-                      </h3>
+                  {/* Selected Article Card - only shows when clicked */}
+                  {selectedArticle && (
+                    <>
+                      <button
+                        onClick={() => setSelectedArticle(null)}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          marginBottom: '0.5rem',
+                          alignSelf: 'flex-start'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                      >
+                        Back to Visualization
+                      </button>
                       <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.75rem'
+                        background: 'white',
+                        borderRadius: '8px',
+                        padding: '1.5rem',
+                        border: `3px solid ${selectedArticle.color}`
                       }}>
-                        {aiArticleReferences.map((article, idx) => (
-                          <div
-                            key={idx}
+                        {/* Publication Image - placeholder for now */}
+                        <div style={{
+                          width: '100%',
+                          height: '200px',
+                          background: '#f3f4f6',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '1rem',
+                          fontSize: '18px',
+                          fontWeight: '700',
+                          color: selectedArticle.color
+                        }}>
+                          {selectedArticle.publication} Article
+                        </div>
+
+                        <h3 style={{
+                          fontSize: '18px',
+                          fontWeight: '700',
+                          color: selectedArticle.color,
+                          marginBottom: '1rem'
+                        }}>
+                          {selectedArticle.publication}
+                        </h3>
+
+                        <div style={{
+                          fontSize: '14px',
+                          color: '#4b5563',
+                          lineHeight: '1.6',
+                          marginBottom: '1.5rem'
+                        }}>
+                          {selectedArticle.context}
+                        </div>
+
+                        <div style={{
+                          display: 'flex',
+                          gap: '0.5rem'
+                        }}>
+                          <button
                             style={{
-                              background: 'white',
-                              borderRadius: '8px',
-                              padding: '1rem',
-                              border: `2px solid ${article.color}`,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '0.5rem'
-                            }}
-                          >
-                            <div style={{
+                              flex: 1,
+                              background: '#10b981',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.75rem',
                               fontSize: '14px',
-                              fontWeight: '700',
-                              color: article.color
-                            }}>
-                              {article.publication}
-                            </div>
-                            <div style={{
-                              fontSize: '13px',
-                              color: '#4b5563',
-                              lineHeight: '1.5'
-                            }}>
-                              {article.context}
-                            </div>
-                            <div style={{
-                              display: 'flex',
-                              gap: '0.5rem',
-                              marginTop: '0.5rem'
-                            }}>
-                              <button
-                                style={{
-                                  flex: 1,
-                                  background: '#10b981',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  padding: '0.4rem 0.6rem',
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  cursor: 'pointer',
-                                  transition: 'opacity 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                              >
-                                $0.99
-                              </button>
-                              <button
-                                style={{
-                                  flex: 1,
-                                  background: '#f59e0b',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  padding: '0.4rem 0.6rem',
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  cursor: 'pointer',
-                                  transition: 'opacity 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                              >
-                                UT Credits
-                              </button>
-                              <button
-                                style={{
-                                  flex: 1,
-                                  background: '#3b82f6',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  padding: '0.4rem 0.6rem',
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  cursor: 'pointer',
-                                  transition: 'opacity 0.2s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                              >
-                                Authenticate
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                          >
+                            $0.99
+                          </button>
+                          <button
+                            style={{
+                              flex: 1,
+                              background: '#f59e0b',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.75rem',
+                              fontSize: '14px',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                          >
+                            UT Credits
+                          </button>
+                          <button
+                            style={{
+                              flex: 1,
+                              background: '#3b82f6',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.75rem',
+                              fontSize: '14px',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                          >
+                            Authenticate
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
 
