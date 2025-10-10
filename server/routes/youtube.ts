@@ -17,7 +17,10 @@ const VIDEO_DATA_PATH = process.env.VIDEO_DATA_PATH ||
 // Cache file for tracking API usage
 const API_CACHE_PATH = path.join(__dirname, '../../data/youtube-api-cache.json');
 
-// Load or create cache
+// Cache file for song-to-video mappings
+const VIDEO_CACHE_PATH = path.join(__dirname, '../../data/youtube-video-cache.json');
+
+// Load or create API call cache
 let apiCache = {};
 try {
   if (fs.existsSync(API_CACHE_PATH)) {
@@ -26,6 +29,17 @@ try {
 } catch (error) {
   console.error('Error loading API cache:', error);
   apiCache = {};
+}
+
+// Load or create video cache
+let videoCache = {};
+try {
+  if (fs.existsSync(VIDEO_CACHE_PATH)) {
+    videoCache = JSON.parse(fs.readFileSync(VIDEO_CACHE_PATH, 'utf-8'));
+  }
+} catch (error) {
+  console.error('Error loading video cache:', error);
+  videoCache = {};
 }
 
 // Function to track API calls
@@ -50,6 +64,43 @@ function trackApiCall(endpoint, units = 100, keyUsed = currentKeyIndex) {
   }
 }
 
+// Function to create cache key from song and artist
+function createCacheKey(song: string, artist?: string): string {
+  const normalizedSong = song.toLowerCase().trim();
+  const normalizedArtist = artist?.toLowerCase().trim() || '';
+  return `${normalizedSong}|${normalizedArtist}`;
+}
+
+// Function to get cached video
+function getCachedVideo(song: string, artist?: string) {
+  const key = createCacheKey(song, artist);
+  return videoCache[key];
+}
+
+// Function to save video to cache
+function saveVideoToCache(song: string, artist: string | undefined, videoData: any) {
+  const key = createCacheKey(song, artist);
+  videoCache[key] = {
+    ...videoData,
+    cachedAt: new Date().toISOString(),
+    song,
+    artist
+  };
+
+  // Save to file
+  try {
+    // Ensure data directory exists
+    const dataDir = path.dirname(VIDEO_CACHE_PATH);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(VIDEO_CACHE_PATH, JSON.stringify(videoCache, null, 2));
+    console.log(`💾 Cached video for: ${song} - ${artist}`);
+  } catch (error) {
+    console.error('Error saving video cache:', error);
+  }
+}
+
 // YouTube API keys with rotation
 const YOUTUBE_API_KEYS = [
   process.env.YOUTUBE_API_KEY,
@@ -58,7 +109,9 @@ const YOUTUBE_API_KEYS = [
   process.env.YOUTUBE_API_KEY_4,
   process.env.YOUTUBE_API_KEY_5,
   process.env.YOUTUBE_API_KEY_6,
-  process.env.YOUTUBE_API_KEY_7
+  process.env.YOUTUBE_API_KEY_7,
+  process.env.YOUTUBE_API_KEY_8,
+  process.env.YOUTUBE_API_KEY_9
 ].filter(Boolean);
 
 let currentKeyIndex = 0;
@@ -341,9 +394,92 @@ router.get('/quota-status', async (req, res) => {
   });
 });
 
+// Helper function to try search with all available keys
+async function trySearchWithAllKeys(query: string, song: string, artist: string | undefined, startKeyIndex: number = 0): Promise<any> {
+  let attemptsRemaining = YOUTUBE_API_KEYS.length;
+  let keyIndex = startKeyIndex;
+
+  while (attemptsRemaining > 0) {
+    const apiKey = YOUTUBE_API_KEYS[keyIndex];
+
+    if (!apiKey) {
+      keyIndex = (keyIndex + 1) % YOUTUBE_API_KEYS.length;
+      attemptsRemaining--;
+      continue;
+    }
+
+    console.log(`🔑 Trying API key ${keyIndex + 1}/${YOUTUBE_API_KEYS.length}...`);
+
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=5&key=${apiKey}`;
+
+    try {
+      const result: any = await new Promise((resolve, reject) => {
+        https.get(searchUrl, (response) => {
+          let data = '';
+          response.on('data', (chunk) => { data += chunk; });
+          response.on('end', () => {
+            try {
+              resolve(JSON.parse(data));
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }).on('error', reject);
+      });
+
+      // Check if we got an error
+      if (result.error) {
+        if (result.error.code === 403 || result.error.code === 429) {
+          console.log(`❌ Key ${keyIndex + 1} quota exceeded, trying next...`);
+          keyIndex = (keyIndex + 1) % YOUTUBE_API_KEYS.length;
+          attemptsRemaining--;
+          continue;
+        } else {
+          throw new Error(result.error.message);
+        }
+      }
+
+      // Success! Process and return results
+      if (result.items && result.items.length > 0) {
+        trackApiCall('search-track', 100, keyIndex);
+
+        // Sort by priority
+        const sortedVideos = result.items.sort((a: any, b: any) => {
+          const channelA = a.snippet.channelTitle || '';
+          const channelB = b.snippet.channelTitle || '';
+          const isVevoA = channelA.toUpperCase().includes('VEVO');
+          const isVevoB = channelB.toUpperCase().includes('VEVO');
+          if (isVevoA && !isVevoB) return -1;
+          if (!isVevoA && isVevoB) return 1;
+          return 0;
+        });
+
+        const video = sortedVideos[0];
+        const videoData = {
+          videoId: video.id.videoId,
+          title: video.snippet.title,
+          channel: video.snippet.channelTitle
+        };
+
+        console.log(`✅ Found: "${video.snippet.title}" by ${video.snippet.channelTitle}`);
+        saveVideoToCache(song, artist, videoData);
+        return videoData;
+      } else {
+        return { videoId: null, error: 'No results found' };
+      }
+    } catch (error) {
+      console.error(`Error with key ${keyIndex + 1}:`, error);
+      keyIndex = (keyIndex + 1) % YOUTUBE_API_KEYS.length;
+      attemptsRemaining--;
+    }
+  }
+
+  // All keys exhausted
+  return { videoId: null, error: 'All API keys exhausted or invalid' };
+}
+
 // Search YouTube for a specific track (song + artist)
 router.get('/search-track', async (req, res) => {
-  // Disable caching for this endpoint
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
@@ -354,124 +490,29 @@ router.get('/search-track', async (req, res) => {
     return res.status(400).json({ error: 'Song title required' });
   }
 
-  // Search for the song and artist, we'll prioritize VEVO/Official in the results
-  const query = artist ? `${song} ${artist}` : song as string;
-  const apiKey = getNextApiKey();
-
-  // Track this API call (search costs 100 units)
-  trackApiCall('search-track', 100, currentKeyIndex - 1);
-
-  if (!apiKey) {
-    return res.status(500).json({ error: 'No YouTube API keys configured' });
+  // Check cache first
+  const cached = getCachedVideo(song as string, artist as string);
+  if (cached) {
+    console.log(`✅ Cache hit for: ${song} - ${artist}`);
+    return res.json({
+      videoId: cached.videoId,
+      title: cached.title,
+      channel: cached.channel,
+      fromCache: true
+    });
   }
 
-  // Get more results so we can prioritize VEVO
-  const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=5&key=${apiKey}`;
+  console.log(`❌ Cache miss for: ${song} - ${artist}, searching YouTube...`);
 
-  return new Promise((resolve, reject) => {
-    https.get(searchUrl, (response) => {
-      let data = '';
+  const query = artist ? `${song} ${artist}` : song as string;
 
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
-
-      response.on('end', () => {
-        try {
-          const result = JSON.parse(data);
-
-          if (result.error) {
-            console.log('YouTube API error details:', result.error);
-            // Try next API key if quota exceeded (403) or forbidden (403)
-            if ((result.error.code === 403 || result.error.code === 429) && YOUTUBE_API_KEYS.length > 1) {
-              console.log('API quota exceeded, trying next key...');
-              const nextKey = getNextApiKey();
-              if (nextKey) {
-                // Recursive call with next key
-                const nextUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=1&key=${nextKey}`;
-                https.get(nextUrl, (resp) => {
-                  let nextData = '';
-                  resp.on('data', (chunk) => { nextData += chunk; });
-                  resp.on('end', () => {
-                    const nextResult = JSON.parse(nextData);
-                    if (nextResult.items && nextResult.items.length > 0) {
-                      const video = nextResult.items[0];
-                      res.json({
-                        videoId: video.id.videoId,
-                        title: video.snippet.title,
-                        channel: video.snippet.channelTitle
-                      });
-                    } else {
-                      res.json({ videoId: null, error: 'No results found' });
-                    }
-                  });
-                });
-                return;
-              }
-            }
-            console.error('YouTube API error:', result.error);
-            res.status(500).json({ error: result.error.message });
-          } else if (result.items && result.items.length > 0) {
-            // Sort videos by priority:
-            // 1. VEVO channels (ends with "VEVO")
-            // 2. Official artist channels (includes artist name or "Official")
-            // 3. Everything else
-            const sortedVideos = result.items.sort((a, b) => {
-              const channelA = a.snippet.channelTitle || '';
-              const channelB = b.snippet.channelTitle || '';
-              const titleA = a.snippet.title || '';
-              const titleB = b.snippet.title || '';
-
-              // Check if VEVO
-              const isVevoA = channelA.toUpperCase().includes('VEVO');
-              const isVevoB = channelB.toUpperCase().includes('VEVO');
-
-              if (isVevoA && !isVevoB) return -1;
-              if (!isVevoA && isVevoB) return 1;
-
-              // Check if official artist channel
-              const artistName = (artist as string || '').toLowerCase();
-              const isOfficialA = channelA.toLowerCase().includes(artistName) ||
-                                  channelA.toLowerCase().includes('official') ||
-                                  titleA.toLowerCase().includes('official');
-              const isOfficialB = channelB.toLowerCase().includes(artistName) ||
-                                  channelB.toLowerCase().includes('official') ||
-                                  titleB.toLowerCase().includes('official');
-
-              if (isOfficialA && !isOfficialB) return -1;
-              if (!isOfficialA && isOfficialB) return 1;
-
-              return 0;
-            });
-
-            const video = sortedVideos[0];
-            const channelName = video.snippet.channelTitle;
-            const isVevo = channelName.toUpperCase().includes('VEVO');
-            const isOfficial = channelName.toLowerCase().includes('official') ||
-                              channelName.includes('- Topic') ||
-                              video.snippet.title.toLowerCase().includes('official');
-
-            console.log(`Selected video: "${video.snippet.title}" by ${channelName}`);
-            console.log(`  → VEVO: ${isVevo ? '✓' : '✗'} | Official: ${isOfficial ? '✓' : '✗'}`);
-
-            res.json({
-              videoId: video.id.videoId,
-              title: video.snippet.title,
-              channel: video.snippet.channelTitle
-            });
-          } else {
-            res.json({ videoId: null, error: 'No results found' });
-          }
-        } catch (error) {
-          console.error('Error parsing YouTube response:', error);
-          res.status(500).json({ error: 'Failed to parse YouTube response' });
-        }
-      });
-    }).on('error', (error) => {
-      console.error('YouTube API request failed:', error);
-      res.status(500).json({ error: 'Failed to search YouTube' });
-    });
-  });
+  try {
+    const result = await trySearchWithAllKeys(query, song as string, artist as string, currentKeyIndex);
+    res.json(result);
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({ error: 'Search failed' });
+  }
 });
 
 export default router;
