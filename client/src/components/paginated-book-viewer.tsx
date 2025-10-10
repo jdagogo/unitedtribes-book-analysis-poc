@@ -9013,6 +9013,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           ← Back to Search
                         </button>
                         <button onClick={() => {
+                          console.log('🎵 Playlist button clicked - stopping video');
+                          // Save current video and clear it to stop playback
+                          if (videoEmbedHtml) {
+                            console.log('✅ Saving and clearing video HTML');
+                            setSavedVideoEmbedHtml(videoEmbedHtml);
+                            setVideoEmbedHtml('');
+                          }
                           if (selectedVideo?.id) {
                             fetchPlaylistData(selectedVideo.id);
                           }
@@ -9034,7 +9041,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                             background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000,
                             display: 'flex', alignItems: 'center', justifyContent: 'center'
-                          }} onClick={() => setShowPlaylistView(false)}>
+                          }} onClick={() => {
+                            setShowPlaylistView(false);
+                            // Restore video when closing playlist
+                            if (savedVideoEmbedHtml) {
+                              setVideoEmbedHtml(savedVideoEmbedHtml);
+                              setSavedVideoEmbedHtml('');
+                            }
+                          }}>
                             <div style={{
                               position: 'relative', width: '90%', maxWidth: '600px', maxHeight: '90vh',
                               background: 'white', borderRadius: '12px', padding: '1.5rem',
@@ -9063,7 +9077,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       }}>Clear</button>
                                     </>
                                   )}
-                                  <button onClick={() => setShowPlaylistView(false)} style={{
+                                  <button onClick={() => {
+                                    setShowPlaylistView(false);
+                                    // Restore video when closing playlist
+                                    if (savedVideoEmbedHtml) {
+                                      setVideoEmbedHtml(savedVideoEmbedHtml);
+                                      setSavedVideoEmbedHtml('');
+                                    }
+                                  }} style={{
                                     background: '#ef4444', color: 'white', border: 'none',
                                     borderRadius: '6px', padding: '0.5rem 1rem',
                                     cursor: 'pointer', fontSize: '16px', fontWeight: '600'
