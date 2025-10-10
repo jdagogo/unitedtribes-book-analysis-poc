@@ -690,10 +690,27 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       setAiResults(data);
 
       // Also search for matching analyzed videos
+      // Extract key terms from the query for better matching
       try {
         console.log('🎥 Searching for matching analyzed videos...');
+
+        // Extract key music-related terms from the query
+        const musicTerms = ['Coltrane', 'Miles', 'Davis', 'Blue Train', 'Love Supreme',
+                           'Kind of Blue', 'Monk', 'Thelonious', 'Dexter', 'Gordon',
+                           'Bill', 'Charlap', 'jazz', 'bebop', 'hard bop'];
+
+        // Find which terms appear in the query
+        const queryLower = aiQuery.toLowerCase();
+        const matchedTerms = musicTerms.filter(term =>
+          queryLower.includes(term.toLowerCase())
+        );
+
+        // Use matched terms if found, otherwise use full query
+        const searchTerm = matchedTerms.length > 0 ? matchedTerms[0] : aiQuery;
+
+        console.log('🎵 Searching videos with term:', searchTerm);
         const videoResponse = await fetch(
-          `/api/youtube/search?q=${encodeURIComponent(aiQuery)}`
+          `/api/youtube/search?q=${encodeURIComponent(searchTerm)}`
         );
         if (videoResponse.ok) {
           const videoData = await videoResponse.json();
@@ -9737,7 +9754,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 padding: '1.5rem',
                 overflow: 'hidden'
               }}>
-                {/* Left Side - Visualization */}
+                {/* Left Side - Visualization or Video */}
                 <div style={{
                   flex: 2,
                   display: 'flex',
@@ -9745,31 +9762,79 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   gap: '1rem',
                   minWidth: 0
                 }}>
-                  <div style={{
-                    flex: 1,
-                    border: '2px solid #d1d5db',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    background: '#f9fafb'
-                  }}>
-                    <iframe
-                      src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/john-coltrane-network.html"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        border: 'none'
-                      }}
-                      title="John Coltrane Network Visualization - Expanded"
-                    />
-                  </div>
-                  <p style={{
-                    fontSize: '14px',
-                    color: '#6b7280',
-                    margin: 0,
-                    textAlign: 'center'
-                  }}>
-                    Interactive network showing connections between John Coltrane and related artists
-                  </p>
+                  {selectedVideo ? (
+                    /* Video Player View */
+                    <>
+                      <button
+                        onClick={() => setSelectedVideo(null)}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          marginBottom: '0.5rem',
+                          alignSelf: 'flex-start'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                      >
+                        ← Back to Visualization
+                      </button>
+                      <div style={{
+                        flex: 1,
+                        border: '2px solid #d1d5db',
+                        borderRadius: '8px',
+                        overflow: 'auto',
+                        background: '#000',
+                        minHeight: 0
+                      }}>
+                        <iframe
+                          src={`/api/videos/${selectedVideo.id}/embed-html`}
+                          style={{
+                            width: '100%',
+                            height: '800px',
+                            border: 'none'
+                          }}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          title={selectedVideo.title}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    /* Visualization View */
+                    <>
+                      <div style={{
+                        flex: 1,
+                        border: '2px solid #d1d5db',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        background: '#f9fafb'
+                      }}>
+                        <iframe
+                          src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/john-coltrane-network.html"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none'
+                          }}
+                          title="John Coltrane Network Visualization - Expanded"
+                        />
+                      </div>
+                      <p style={{
+                        fontSize: '14px',
+                        color: '#6b7280',
+                        margin: 0,
+                        textAlign: 'center'
+                      }}>
+                        Interactive network showing connections between John Coltrane and related artists
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 {/* Right Side - Search Interface */}
@@ -9947,9 +10012,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   <div
                                     key={idx}
                                     onClick={() => {
-                                      console.log('🎬 Loading video:', video);
+                                      console.log('🎬 Loading video from UnitedAI results:', video);
                                       setSelectedVideo(video);
-                                      setShowAiModal(false); // Close modal and show video in left panel
+                                      // Modal stays open, video replaces visualization on left side
                                     }}
                                     style={{
                                       cursor: 'pointer',
