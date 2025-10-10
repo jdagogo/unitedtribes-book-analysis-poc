@@ -939,8 +939,40 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   };
 
   const handlePlayDiscoveryItem = (item: any) => {
-    console.log('Playing discovery item:', item);
-    // TODO: Implement play functionality
+    console.log('🎵 Playing discovery item:', item);
+    console.log('🎬 Current selectedVideo:', selectedVideo);
+    console.log('🎥 videoIframeRef.current:', videoIframeRef.current);
+
+    // Pause any currently playing video
+    // Since the video is in a nested iframe (srcDoc), we need to access it differently
+    if (selectedVideo && videoIframeRef.current && videoIframeRef.current.contentWindow) {
+      console.log('✅ Attempting to pause video...');
+      try {
+        // Get all iframes in the embedded document
+        const iframes = videoIframeRef.current.contentWindow.document.getElementsByTagName('iframe');
+        console.log('📹 Found iframes:', iframes.length);
+        if (iframes.length > 0) {
+          // Send pause command to the YouTube iframe
+          iframes[0].contentWindow?.postMessage(
+            '{"event":"command","func":"pauseVideo","args":""}',
+            '*'
+          );
+          console.log('⏸️ Sent pause command to video');
+        } else {
+          console.log('❌ No iframes found in srcDoc');
+        }
+      } catch (e) {
+        console.error('❌ Failed to pause video:', e);
+      }
+    } else {
+      console.log('❌ Cannot pause - missing:', {
+        hasSelectedVideo: !!selectedVideo,
+        hasIframeRef: !!videoIframeRef.current,
+        hasContentWindow: !!(videoIframeRef.current && videoIframeRef.current.contentWindow)
+      });
+    }
+
+    // TODO: Implement full play functionality for discovery items
   };
 
   // Apply dual highlighting: entity (yellow) and context (light blue)
@@ -10047,14 +10079,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               color: 'white',
                               border: '2px solid #6d28d9',
                               borderRadius: '8px',
-                              padding: '0.625rem 0.75rem',
-                              fontSize: '13px',
+                              padding: '0.5rem 0.5rem',
+                              fontSize: '11px',
                               fontWeight: '700',
                               cursor: 'pointer',
                               transition: 'all 0.2s',
                               boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
                               textAlign: 'center',
-                              lineHeight: '1.3'
+                              lineHeight: '1.2'
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background = '#6d28d9';
@@ -10078,14 +10110,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               color: 'white',
                               border: '2px solid #15803d',
                               borderRadius: '8px',
-                              padding: '0.625rem 0.75rem',
-                              fontSize: '13px',
+                              padding: '0.5rem 0.5rem',
+                              fontSize: '11px',
                               fontWeight: '700',
                               cursor: 'pointer',
                               transition: 'all 0.2s',
                               boxShadow: '0 2px 8px rgba(22, 163, 74, 0.3)',
                               textAlign: 'center',
-                              lineHeight: '1.3'
+                              lineHeight: '1.2'
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background = '#15803d';
@@ -10098,7 +10130,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               e.currentTarget.style.boxShadow = '0 2px 8px rgba(22, 163, 74, 0.3)';
                             }}
                           >
-                            Buy Using UnitedTribes<br/>Digital Wallet — <strong>25¢</strong>
+                            UnitedTribes Digital<br/>Wallet — <strong>25¢</strong>
                           </button>
 
                           {/* Option 3: Purchase - Blue */}
@@ -10109,14 +10141,14 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               color: 'white',
                               border: '2px solid #1d4ed8',
                               borderRadius: '8px',
-                              padding: '0.625rem 0.75rem',
-                              fontSize: '13px',
+                              padding: '0.5rem 0.5rem',
+                              fontSize: '11px',
                               fontWeight: '700',
                               cursor: 'pointer',
                               transition: 'all 0.2s',
                               boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)',
                               textAlign: 'center',
-                              lineHeight: '1.3'
+                              lineHeight: '1.2'
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.background = '#1d4ed8';
