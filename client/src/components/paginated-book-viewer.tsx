@@ -658,12 +658,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
   // UnitedAI Search handler
   const handleUnitedAISearch = async () => {
-    if (!aiQuery.trim()) return;
+    console.log('🔍 UnitedAI Search called with query:', aiQuery);
+    if (!aiQuery.trim()) {
+      console.log('❌ Query is empty, returning');
+      return;
+    }
 
     setIsAiSearching(true);
     setAiError(null);
 
     try {
+      console.log('📡 Sending request to UnitedAI API...');
       const response = await fetch('https://166ws8jk15.execute-api.us-east-1.amazonaws.com/prod/v2/broker', {
         method: 'POST',
         headers: {
@@ -675,18 +680,44 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         })
       });
 
+      console.log('📥 Response status:', response.status);
+
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('✅ Received data:', data);
       setAiResults(data);
     } catch (error) {
-      console.error('UnitedAI search error:', error);
+      console.error('❌ UnitedAI search error:', error);
       setAiError(error instanceof Error ? error.message : 'Search failed');
     } finally {
       setIsAiSearching(false);
     }
+  };
+
+  // Helper function to format narrative text with bold headers
+  const formatNarrative = (text: string) => {
+    const lines = text.split('\n');
+    return lines.map((line, idx) => {
+      // Check if line ends with a colon (likely a header)
+      if (line.trim().endsWith(':') || /^[A-Z][^.!?]*:/.test(line.trim())) {
+        return (
+          <p key={idx} style={{ margin: '0.75rem 0 0.25rem 0', fontWeight: '700', fontSize: '16px' }}>
+            {line}
+          </p>
+        );
+      }
+      // Regular text
+      return line.trim() ? (
+        <p key={idx} style={{ margin: '0.25rem 0' }}>
+          {line}
+        </p>
+      ) : (
+        <br key={idx} />
+      );
+    });
   };
 
   const handlePlayDiscoveryItem = (item: any) => {
@@ -6431,19 +6462,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 {aiResults && (
                                   <div style={{
                                     marginTop: '1rem',
-                                    padding: '1rem',
+                                    padding: '1.5rem',
                                     background: 'white',
                                     borderRadius: '8px',
                                     border: '1px solid #e5e7eb',
-                                    maxHeight: '300px',
+                                    maxHeight: '400px',
                                     overflowY: 'auto'
                                   }}>
-                                    <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                                      Results:
-                                    </h4>
-                                    <p style={{ fontSize: '14px', color: '#1f2937', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                                      {aiResults.narrative}
-                                    </p>
+                                    <div style={{
+                                      fontSize: '15px',
+                                      color: '#374151',
+                                      lineHeight: '1.7'
+                                    }}>
+                                      {formatNarrative(aiResults.narrative)}
+                                    </div>
                                   </div>
                                 )}
 
@@ -10846,7 +10878,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     />
                     <button
                       onClick={handleUnitedAISearch}
-                      disabled={isAiSearching || !searchQuery.trim()}
+                      disabled={isAiSearching || !aiQuery.trim()}
                       style={{
                         background: isAiSearching ? '#9ca3af' : '#3b82f6',
                         color: 'white',
@@ -10855,7 +10887,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         padding: '1rem 1.5rem',
                         fontSize: '16px',
                         fontWeight: '600',
-                        cursor: isAiSearching || !searchQuery.trim() ? 'not-allowed' : 'pointer',
+                        cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
                         whiteSpace: 'nowrap'
                       }}
                     >
@@ -10874,21 +10906,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   overflowY: 'auto'
                 }}>
                   {aiResults ? (
-                    <div>
-                      <h4 style={{ margin: '0 0 1rem 0', fontSize: '16px', fontWeight: '600', color: '#374151' }}>
-                        Results:
-                      </h4>
-                      <p style={{ fontSize: '14px', color: '#1f2937', lineHeight: '1.6', whiteSpace: 'pre-wrap', margin: 0 }}>
-                        {aiResults.narrative}
-                      </p>
+                    <div style={{
+                      fontSize: '16px',
+                      color: '#374151',
+                      lineHeight: '1.7'
+                    }}>
+                      {formatNarrative(aiResults.narrative)}
                     </div>
-                  ) : searchError ? (
-                    <p style={{ fontSize: '14px', color: '#ef4444', margin: 0 }}>
-                      Error: {searchError}
+                  ) : aiError ? (
+                    <p style={{ fontSize: '16px', color: '#ef4444', margin: 0, textAlign: 'center' }}>
+                      Error: {aiError}
                     </p>
                   ) : (
                     <p style={{
-                      fontSize: '16px',
+                      fontSize: '18px',
                       color: '#6b7280',
                       textAlign: 'center',
                       margin: 0
