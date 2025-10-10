@@ -95,7 +95,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
   // Clear search state when page changes
   useEffect(() => {
-    setSearchQuery('');
+    setAiQuery('');
     setSearchResults([]);
     setSearchError(null);
     setSelectedVideo(null);
@@ -134,6 +134,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [bookModalVideoHtml, setBookModalVideoHtml] = useState('');
   const [bookModalVideoData, setBookModalVideoData] = useState<any>(null);
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+
+  // Visualization modal state
+  const [showVisualizationModal, setShowVisualizationModal] = useState(false);
+
+  // UnitedAI Search state
+  const [aiQuery, setAiQuery] = useState('');
+  const [aiResults, setAiResults] = useState<any>(null);
+  const [isAiSearching, setIsAiSearching] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  // Debug: Log when visualization modal state changes
+  useEffect(() => {
+    console.log('🔍 showVisualizationModal changed:', showVisualizationModal);
+  }, [showVisualizationModal]);
 
   // Track items added by each "Add All" button for toggle functionality
   const [addedWorksMain, setAddedWorksMain] = useState<Set<string>>(new Set());
@@ -640,6 +654,39 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const handleClearDiscoveryPlaylist = () => {
     setDiscoveryPlaylist(new Set());
     setDiscoveryItems(new Map());
+  };
+
+  // UnitedAI Search handler
+  const handleUnitedAISearch = async () => {
+    if (!aiQuery.trim()) return;
+
+    setIsAiSearching(true);
+    setAiError(null);
+
+    try {
+      const response = await fetch('https://166ws8jk15.execute-api.us-east-1.amazonaws.com/prod/v2/broker', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: aiQuery,
+          domain: 'music'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setAiResults(data);
+    } catch (error) {
+      console.error('UnitedAI search error:', error);
+      setAiError(error instanceof Error ? error.message : 'Search failed');
+    } finally {
+      setIsAiSearching(false);
+    }
   };
 
   const handlePlayDiscoveryItem = (item: any) => {
@@ -3172,8 +3219,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <input
                       type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      value={aiQuery}
+                      onChange={(e) => setAiQuery(e.target.value)}
                       placeholder="Enter search term..."
                       style={{
                         flex: 1,
@@ -3231,7 +3278,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       <button
                         key={subject}
                         onClick={() => {
-                          setSearchQuery(subject);
+                          setAiQuery(subject);
                           searchVideos(subject);
                         }}
                         style={{
@@ -3274,13 +3321,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 )}
 
                 {/* Search Results */}
-                {searchResults.length > 0 && (
+                {aiResults.length > 0 && (
                   <div style={{ marginTop: '2rem' }}>
                     <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                      Search Results ({searchResults.length})
+                      Search Results ({aiResults.length})
                     </h4>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                      {searchResults.map((video: any) => (
+                      {aiResults.map((video: any) => (
                         <div
                           key={video.id}
                           style={{
@@ -3883,8 +3930,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           <input
                             type="text"
                             className="united-tribes-search-input"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            value={aiQuery}
+                            onChange={(e) => setAiQuery(e.target.value)}
                             placeholder="Search UnitedTribes videos"
                             style={{
                               width: '100%',
@@ -3913,7 +3960,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             <button
                               type="button"
                               onClick={() => {
-                                setSearchQuery('');
+                                setAiQuery('');
                                 setSearchResults([]);
                                 setSearchError(null);
                               }}
@@ -3995,13 +4042,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       </div>
                     )}
 
-                    {!searchLoading && searchResults.length > 0 && (
+                    {!searchLoading && aiResults.length > 0 && (
                       <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
                         <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                          Search Results ({searchResults.length})
+                          Search Results ({aiResults.length})
                         </h4>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                          {searchResults.map((video: any) => (
+                          {aiResults.map((video: any) => (
                             <div
                               key={video.id}
                               style={{
@@ -6026,8 +6073,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             <input
                               type="text"
                               className="united-tribes-search-input"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
+                              value={aiQuery}
+                              onChange={(e) => setAiQuery(e.target.value)}
                               placeholder="Search UnitedTribes videos"
                               style={{
                                 width: '100%',
@@ -6057,7 +6104,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setSearchQuery('');
+                                  setAiQuery('');
                                   setSearchResults([]);
                                   setSearchError(null);
                                 }}
@@ -6324,8 +6371,152 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
-                            <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Explorer content coming soon...</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                              {/* Search Interface */}
+                              <div>
+                                <label style={{
+                                  display: 'block',
+                                  fontSize: '16px',
+                                  fontWeight: '600',
+                                  color: '#1f2937',
+                                  marginBottom: '0.5rem'
+                                }}>
+                                  UnitedAI Chat Explorer
+                                </label>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                  <input
+                                    type="text"
+                                    value={aiQuery}
+                                    onChange={(e) => setAiQuery(e.target.value)}
+                                    onKeyPress={(e) => {
+                                      if (e.key === 'Enter' && !isAiSearching) {
+                                        handleUnitedAISearch();
+                                      }
+                                    }}
+                                    placeholder="Ask about John Coltrane and Blue Train..."
+                                    disabled={isAiSearching}
+                                    style={{
+                                      flex: 1,
+                                      padding: '0.75rem',
+                                      fontSize: '16px',
+                                      border: '2px solid #d1d5db',
+                                      borderRadius: '8px',
+                                      outline: 'none',
+                                      transition: 'border-color 0.2s',
+                                      opacity: isAiSearching ? 0.6 : 1
+                                    }}
+                                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                    onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                  />
+                                  <button
+                                    onClick={handleUnitedAISearch}
+                                    disabled={isAiSearching || !aiQuery.trim()}
+                                    style={{
+                                      background: isAiSearching ? '#9ca3af' : '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      padding: '0.75rem 1.5rem',
+                                      fontSize: '16px',
+                                      fontWeight: '600',
+                                      cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                      transition: 'background 0.2s'
+                                    }}
+                                  >
+                                    {isAiSearching ? 'Searching...' : 'Search'}
+                                  </button>
+                                </div>
+
+                                {/* Search Results */}
+                                {aiResults && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '1rem',
+                                    background: 'white',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e5e7eb',
+                                    maxHeight: '300px',
+                                    overflowY: 'auto'
+                                  }}>
+                                    <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+                                      Results:
+                                    </h4>
+                                    <p style={{ fontSize: '14px', color: '#1f2937', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                      {aiResults.narrative}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {aiError && (
+                                  <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                    Error: {aiError}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Network Visualization */}
+                              <div>
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: '0.5rem'
+                                }}>
+                                  <label style={{
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: '#1f2937'
+                                  }}>
+                                    John Coltrane Network Visualization
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      console.log('Expand button clicked!');
+                                      setShowVisualizationModal(true);
+                                    }}
+                                    style={{
+                                      background: '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '0.5rem',
+                                      transition: 'background 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                  >
+                                    <span>⤢</span> Expand
+                                  </button>
+                                </div>
+                                <div style={{
+                                  border: '2px solid #d1d5db',
+                                  borderRadius: '8px',
+                                  overflow: 'hidden',
+                                  background: '#f9fafb'
+                                }}>
+                                  <iframe
+                                    src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/john-coltrane-network.html"
+                                    style={{
+                                      width: '100%',
+                                      height: '400px',
+                                      border: 'none'
+                                    }}
+                                    title="John Coltrane Network Visualization"
+                                  />
+                                </div>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Interactive network showing connections between John Coltrane and related artists
+                                </p>
+                              </div>
                             </div>
                           )}
                           </div>
@@ -6924,8 +7115,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             <input
                               type="text"
                               className="united-tribes-search-input"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
+                              value={aiQuery}
+                              onChange={(e) => setAiQuery(e.target.value)}
                               placeholder="Search UnitedTribes videos"
                               style={{
                                 width: '100%',
@@ -6955,7 +7146,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setSearchQuery('');
+                                  setAiQuery('');
                                   setSearchResults([]);
                                   setSearchError(null);
                                 }}
@@ -7674,8 +7865,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             <input
                               type="text"
                               className="united-tribes-search-input"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
+                              value={aiQuery}
+                              onChange={(e) => setAiQuery(e.target.value)}
                               placeholder="Search UnitedTribes videos"
                               style={{
                                 width: '100%',
@@ -7705,7 +7896,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setSearchQuery('');
+                                  setAiQuery('');
                                   setSearchResults([]);
                                   setSearchError(null);
                                 }}
@@ -8843,7 +9034,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
                           <input type="text" className="united-tribes-search-input"
-                            value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                            value={aiQuery} onChange={(e) => setAiQuery(e.target.value)}
                             placeholder="Search UnitedTribes videos"
                             style={{
                               flex: 1, padding: '1rem 1.5rem', border: '2px solid #1e3a8a',
@@ -9325,6 +9516,178 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
               }
           })()}
         </div>
+
+        {/* Visualization Modal */}
+        {(() => {
+          console.log('🎬 Blue Note - Rendering modal section, showVisualizationModal:', showVisualizationModal);
+          return null;
+        })()}
+        {showVisualizationModal && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.75)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: '2rem'
+            }}
+            onClick={() => setShowVisualizationModal(false)}
+          >
+            <div
+              style={{
+                background: 'white',
+                borderRadius: '12px',
+                width: '95%',
+                maxWidth: '1400px',
+                height: '90vh',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div style={{
+                padding: '1.5rem',
+                borderBottom: '2px solid #e5e7eb',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                background: '#f9fafb'
+              }}>
+                <h2 style={{
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  color: '#1f2937',
+                  margin: 0
+                }}>
+                  John Coltrane Network Visualization
+                </h2>
+                <button
+                  onClick={() => setShowVisualizationModal(false)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    fontSize: '32px',
+                    color: '#6b7280',
+                    cursor: 'pointer',
+                    padding: '0.5rem',
+                    lineHeight: 1,
+                    fontWeight: '300'
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div style={{
+                flex: 1,
+                display: 'flex',
+                gap: '1.5rem',
+                padding: '1.5rem',
+                overflow: 'hidden'
+              }}>
+                {/* Left Side - Visualization */}
+                <div style={{
+                  flex: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  minWidth: 0
+                }}>
+                  <div style={{
+                    flex: 1,
+                    border: '2px solid #d1d5db',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    background: '#f9fafb'
+                  }}>
+                    <iframe
+                      src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/john-coltrane-network.html"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        border: 'none'
+                      }}
+                      title="John Coltrane Network Visualization - Expanded"
+                    />
+                  </div>
+                  <p style={{
+                    fontSize: '14px',
+                    color: '#6b7280',
+                    margin: 0,
+                    textAlign: 'center'
+                  }}>
+                    Interactive network showing connections between John Coltrane and related artists
+                  </p>
+                </div>
+
+                {/* Right Side - Search Interface */}
+                <div style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  minWidth: '300px'
+                }}>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      color: '#1f2937',
+                      marginBottom: '0.75rem'
+                    }}>
+                      UnitedAI Chat Explorer
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ask about John Coltrane and Blue Train..."
+                      style={{
+                        width: '100%',
+                        padding: '1rem',
+                        fontSize: '16px',
+                        border: '2px solid #d1d5db',
+                        borderRadius: '8px',
+                        outline: 'none',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                    />
+                  </div>
+                  <div style={{
+                    flex: 1,
+                    padding: '1.5rem',
+                    background: '#f9fafb',
+                    borderRadius: '8px',
+                    border: '2px solid #e5e7eb',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <p style={{
+                      fontSize: '16px',
+                      color: '#6b7280',
+                      textAlign: 'center',
+                      margin: 0
+                    }}>
+                      Chat interface integration coming soon
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -10324,6 +10687,221 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         onRemoveItem={handleRemoveFromDiscoveryPlaylist}
         onClearPlaylist={handleClearDiscoveryPlaylist}
       />
+
+      {/* Visualization Modal */}
+      {(() => {
+        console.log('🎬 Rendering modal section, showVisualizationModal:', showVisualizationModal);
+        return null;
+      })()}
+      {showVisualizationModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '2rem'
+          }}
+          onClick={() => setShowVisualizationModal(false)}
+        >
+          <div
+            style={{
+              background: 'white',
+              borderRadius: '12px',
+              width: '95%',
+              maxWidth: '1400px',
+              height: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '1.5rem',
+              borderBottom: '2px solid #e5e7eb',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: '#f9fafb'
+            }}>
+              <h2 style={{
+                fontSize: '24px',
+                fontWeight: '700',
+                color: '#1f2937',
+                margin: 0
+              }}>
+                John Coltrane Network Visualization
+              </h2>
+              <button
+                onClick={() => setShowVisualizationModal(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  fontSize: '32px',
+                  color: '#6b7280',
+                  cursor: 'pointer',
+                  padding: '0.5rem',
+                  lineHeight: 1,
+                  fontWeight: '300'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div style={{
+              flex: 1,
+              display: 'flex',
+              gap: '1.5rem',
+              padding: '1.5rem',
+              overflow: 'hidden'
+            }}>
+              {/* Left Side - Visualization */}
+              <div style={{
+                flex: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+                minWidth: 0
+              }}>
+                <div style={{
+                  flex: 1,
+                  border: '2px solid #d1d5db',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  background: '#f9fafb'
+                }}>
+                  <iframe
+                    src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/john-coltrane-network.html"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none'
+                    }}
+                    title="John Coltrane Network Visualization - Expanded"
+                  />
+                </div>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  margin: 0,
+                  textAlign: 'center'
+                }}>
+                  Interactive network showing connections between John Coltrane and related artists
+                </p>
+              </div>
+
+              {/* Right Side - Search Interface */}
+              <div style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+                minWidth: '300px'
+              }}>
+                <div>
+                  <label style={{
+                    display: 'block',
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    color: '#1f2937',
+                    marginBottom: '0.75rem'
+                  }}>
+                    UnitedAI Chat Explorer
+                  </label>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <input
+                      type="text"
+                      value={aiQuery}
+                      onChange={(e) => setAiQuery(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !isAiSearching) {
+                          handleUnitedAISearch();
+                        }
+                      }}
+                      placeholder="Ask about John Coltrane and Blue Train..."
+                      disabled={isAiSearching}
+                      style={{
+                        flex: 1,
+                        padding: '1rem',
+                        fontSize: '16px',
+                        border: '2px solid #d1d5db',
+                        borderRadius: '8px',
+                        outline: 'none',
+                        transition: 'border-color 0.2s',
+                        opacity: isAiSearching ? 0.6 : 1
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                    />
+                    <button
+                      onClick={handleUnitedAISearch}
+                      disabled={isAiSearching || !searchQuery.trim()}
+                      style={{
+                        background: isAiSearching ? '#9ca3af' : '#3b82f6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '1rem 1.5rem',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        cursor: isAiSearching || !searchQuery.trim() ? 'not-allowed' : 'pointer',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {isAiSearching ? 'Searching...' : 'Search'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Results Area */}
+                <div style={{
+                  flex: 1,
+                  padding: '1.5rem',
+                  background: '#f9fafb',
+                  borderRadius: '8px',
+                  border: '2px solid #e5e7eb',
+                  overflowY: 'auto'
+                }}>
+                  {aiResults ? (
+                    <div>
+                      <h4 style={{ margin: '0 0 1rem 0', fontSize: '16px', fontWeight: '600', color: '#374151' }}>
+                        Results:
+                      </h4>
+                      <p style={{ fontSize: '14px', color: '#1f2937', lineHeight: '1.6', whiteSpace: 'pre-wrap', margin: 0 }}>
+                        {aiResults.narrative}
+                      </p>
+                    </div>
+                  ) : searchError ? (
+                    <p style={{ fontSize: '14px', color: '#ef4444', margin: 0 }}>
+                      Error: {searchError}
+                    </p>
+                  ) : (
+                    <p style={{
+                      fontSize: '16px',
+                      color: '#6b7280',
+                      textAlign: 'center',
+                      margin: 0
+                    }}>
+                      {isAiSearching ? 'Searching UnitedAI...' : 'Enter a question and click Search'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
