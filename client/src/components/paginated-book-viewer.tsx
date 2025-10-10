@@ -850,15 +850,30 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       // Check if line contains any publication names and make full article references clickable
       let processedLine: any = trimmed;
       publications.forEach(pub => {
-        // Match article references: captures text before publication name that looks like an article title
-        // Patterns: "article title" + publication, 'article title' + publication, or just publication
+        // Enhanced regex to capture more context around publication mentions
+        // Captures patterns like:
+        // - "article title" in/from/by Publication
+        // - article title from Publication
+        // - review in Publication
+        // - according to Publication
+        // - source: Publication
         const articleRefRegex = new RegExp(
-          `((?:["']([^"']+)["']|([^,\\.]+?))\\s+(?:from|in|by|on|via|according to)?\\s+)?(${pub.name})`,
+          // Look back up to 100 characters for article context
+          `([^.!?]{0,100}?(?:["'][^"']+["']|\\b[A-Z][^,;.!?]{3,60}?))\\s*` + // Article title (quoted or title case)
+          `(?:in|from|by|on|via|according to|source:|per|reports?|noted in|published in|featured in|\\-\\s*)?\\s*` + // Connector words
+          `(${pub.name})` + // Publication name
+          `|` + // OR
+          `(source:|according to|per|via|in)\\s+(${pub.name})` + // Publication-first patterns
+          `|` + // OR
+          `(${pub.name})(?:'s?)?\\s+(?:article|review|piece|story|report|interview)`, // Publication's article
           'gi'
         );
 
         const matches = [...trimmed.matchAll(articleRefRegex)];
         if (matches.length > 0) {
+          console.log('🔍 Found publication matches in line:', trimmed);
+          console.log('🔍 Matches:', matches.map(m => m[0]));
+
           let lastIndex = 0;
           const newParts: any[] = [];
 
@@ -871,16 +886,20 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
               newParts.push(trimmed.substring(lastIndex, matchStart));
             }
 
-            // Add clickable article reference
+            // Add clickable article reference with full context
             newParts.push(
               <span
                 key={`${idx}-article-${matchIdx}`}
-                onClick={() => setSelectedArticle({
-                  publication: pub.name,
-                  color: pub.color,
-                  image: pub.image,
-                  context: trimmed
-                })}
+                onClick={() => {
+                  console.log('📰 Clicked article reference:', fullMatch);
+                  setSelectedArticle({
+                    publication: pub.name,
+                    color: pub.color,
+                    image: pub.image,
+                    context: trimmed,
+                    articleRef: fullMatch.trim()
+                  });
+                }}
                 style={{
                   color: '#3b82f6',
                   textDecoration: 'underline',
@@ -9945,6 +9964,152 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         />
                       </div>
                     </>
+                  ) : selectedArticle ? (
+                    /* Article Card View */
+                    <>
+                      <button
+                        onClick={() => setSelectedArticle(null)}
+                        style={{
+                          padding: '0.25rem 0.5rem',
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          marginBottom: '0.5rem',
+                          alignSelf: 'flex-start'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                      >
+                        ← Back to Visualization
+                      </button>
+                      <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        background: 'white',
+                        borderRadius: '8px',
+                        padding: '1.5rem',
+                        border: '2px solid #d1d5db',
+                        overflow: 'auto'
+                      }}>
+                        {/* Generic publication image placeholder */}
+                        <div style={{
+                          width: '100%',
+                          height: '250px',
+                          background: '#f3f4f6',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '1.5rem',
+                          fontSize: '18px',
+                          fontWeight: '600',
+                          color: '#6b7280'
+                        }}>
+                          Generic Publication Image (You'll provide)
+                        </div>
+
+                        {/* Article title if available */}
+                        {selectedArticle.articleRef && (
+                          <h3 style={{
+                            fontSize: '20px',
+                            fontWeight: '700',
+                            color: '#1f2937',
+                            marginBottom: '0.75rem',
+                            lineHeight: '1.4'
+                          }}>
+                            {selectedArticle.articleRef}
+                          </h3>
+                        )}
+
+                        {/* Source name */}
+                        <h4 style={{
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          color: '#6b7280',
+                          marginBottom: '1.5rem'
+                        }}>
+                          Source: {selectedArticle.publication}
+                        </h4>
+
+                        {/* Context/excerpt */}
+                        <div style={{
+                          fontSize: '15px',
+                          color: '#4b5563',
+                          lineHeight: '1.7',
+                          marginBottom: '2rem',
+                          flex: 1
+                        }}>
+                          {selectedArticle.context}
+                        </div>
+
+                        {/* Purchase buttons */}
+                        <div style={{
+                          display: 'flex',
+                          gap: '0.75rem',
+                          marginTop: 'auto'
+                        }}>
+                          <button
+                            style={{
+                              flex: 1,
+                              background: '#10b981',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.875rem',
+                              fontSize: '14px',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                          >
+                            $0.99
+                          </button>
+                          <button
+                            style={{
+                              flex: 1,
+                              background: '#f59e0b',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.875rem',
+                              fontSize: '14px',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                          >
+                            UT Credits
+                          </button>
+                          <button
+                            style={{
+                              flex: 1,
+                              background: '#3b82f6',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.875rem',
+                              fontSize: '14px',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                          >
+                            Authenticate
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     /* Visualization View */
                     <>
@@ -9973,132 +10138,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       }}>
                         Interactive network showing connections between John Coltrane and related artists
                       </p>
-                    </>
-                  )}
-
-                  {/* Selected Article Card - only shows when clicked */}
-                  {selectedArticle && (
-                    <>
-                      <button
-                        onClick={() => setSelectedArticle(null)}
-                        style={{
-                          padding: '0.25rem 0.5rem',
-                          background: '#3b82f6',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '12px',
-                          fontWeight: '500',
-                          marginBottom: '0.5rem',
-                          alignSelf: 'flex-start'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
-                      >
-                        Back to Visualization
-                      </button>
-                      <div style={{
-                        background: 'white',
-                        borderRadius: '8px',
-                        padding: '1.5rem',
-                        border: `3px solid ${selectedArticle.color}`
-                      }}>
-                        {/* Publication Image - placeholder for now */}
-                        <div style={{
-                          width: '100%',
-                          height: '200px',
-                          background: '#f3f4f6',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: '1rem',
-                          fontSize: '18px',
-                          fontWeight: '700',
-                          color: selectedArticle.color
-                        }}>
-                          {selectedArticle.publication} Article
-                        </div>
-
-                        <h3 style={{
-                          fontSize: '18px',
-                          fontWeight: '700',
-                          color: selectedArticle.color,
-                          marginBottom: '1rem'
-                        }}>
-                          {selectedArticle.publication}
-                        </h3>
-
-                        <div style={{
-                          fontSize: '14px',
-                          color: '#4b5563',
-                          lineHeight: '1.6',
-                          marginBottom: '1.5rem'
-                        }}>
-                          {selectedArticle.context}
-                        </div>
-
-                        <div style={{
-                          display: 'flex',
-                          gap: '0.5rem'
-                        }}>
-                          <button
-                            style={{
-                              flex: 1,
-                              background: '#10b981',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.75rem',
-                              fontSize: '14px',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                          >
-                            $0.99
-                          </button>
-                          <button
-                            style={{
-                              flex: 1,
-                              background: '#f59e0b',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.75rem',
-                              fontSize: '14px',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                          >
-                            UT Credits
-                          </button>
-                          <button
-                            style={{
-                              flex: 1,
-                              background: '#3b82f6',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.75rem',
-                              fontSize: '14px',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'opacity 0.2s'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                          >
-                            Authenticate
-                          </button>
-                        </div>
-                      </div>
                     </>
                   )}
                 </div>
