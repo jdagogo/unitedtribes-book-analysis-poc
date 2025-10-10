@@ -144,6 +144,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [isAiSearching, setIsAiSearching] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const [aiMatchedVideos, setAiMatchedVideos] = useState<any[]>([]);
+  const [aiArticleReferences, setAiArticleReferences] = useState<any[]>([]);
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
 
   // Debug: Log when visualization modal state changes
   // Modal state tracking removed - working correctly
@@ -675,7 +677,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         },
         body: JSON.stringify({
           query: aiQuery,
-          domain: 'music'
+          domain: 'music',
+          format_instructions: 'Please format your response with clear section headers. Use headers that end with a colon (:) for each major topic or section. For example: "Early Influences:", "Musical Collaboration:", "Historical Context:", etc.'
         })
       });
 
@@ -688,6 +691,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       const data = await response.json();
       console.log('✅ Received data:', data);
       setAiResults(data);
+
+      // Extract article references from the narrative
+      if (data.narrative) {
+        const references = extractArticleReferences(data.narrative);
+        console.log('📰 Found article references:', references);
+        setAiArticleReferences(references);
+      }
 
       // Also search for matching analyzed videos
       // Extract key terms from the query for better matching
@@ -729,6 +739,41 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     }
   };
 
+  // Helper function to extract article references from narrative text
+  const extractArticleReferences = (text: string) => {
+    const publications = [
+      { name: 'Rolling Stone', pattern: /Rolling Stone/gi, color: '#e63946', image: '/rolling-stone-logo.png' },
+      { name: 'Pitchfork', pattern: /Pitchfork/gi, color: '#ff3864', image: '/pitchfork-logo.png' },
+      { name: 'DownBeat', pattern: /DownBeat/gi, color: '#1a5490', image: '/downbeat-logo.png' },
+      { name: 'The New Yorker', pattern: /The New Yorker/gi, color: '#000000', image: '/new-yorker-logo.png' },
+      { name: 'NPR', pattern: /NPR/gi, color: '#db0a34', image: '/npr-logo.png' },
+      { name: 'The Guardian', pattern: /The Guardian/gi, color: '#052962', image: '/guardian-logo.png' }
+    ];
+
+    const references: any[] = [];
+
+    publications.forEach(pub => {
+      const matches = text.match(pub.pattern);
+      if (matches && matches.length > 0) {
+        // Extract context around the mention to create a title
+        const lines = text.split('\n');
+        lines.forEach(line => {
+          if (pub.pattern.test(line)) {
+            references.push({
+              publication: pub.name,
+              context: line.trim().substring(0, 200), // First 200 chars of the line
+              color: pub.color,
+              image: pub.image,
+              url: `https://www.google.com/search?q=${encodeURIComponent(pub.name + ' ' + aiQuery)}`
+            });
+          }
+        });
+      }
+    });
+
+    return references;
+  };
+
   // Helper function to format narrative text with bold blue headers
   const formatNarrative = (text: string) => {
     console.log('🎨 formatNarrative called with text length:', text.length);
@@ -742,14 +787,39 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       const trimmed = line.trim();
       if (!trimmed) return null;
 
-      // Header detection: ends with colon AND is relatively short (< 80 chars) AND not a sentence
-      const isHeader = trimmed.endsWith(':') &&
-                      trimmed.length < 80 &&
-                      !trimmed.includes('.') &&
-                      !trimmed.includes('?');
+      // Enhanced header detection with multiple patterns:
+      const endsWithColon = trimmed.endsWith(':') &&
+                           trimmed.length < 80 &&
+                           !trimmed.includes('.') &&
+                           !trimmed.includes('?');
+
+      // Detect markdown-style headers (## Header or ### Header)
+      const isMarkdownHeader = /^#{1,3}\s+/.test(trimmed);
+
+      // Detect numbered sections (1. Header or I. Header or A. Header)
+      const isNumberedHeader = /^(\d+\.|[IVX]+\.|[A-Z]\.)\s+[A-Z]/.test(trimmed) &&
+                              trimmed.length < 100 &&
+                              !trimmed.match(/\.\s+[A-Z].*\./); // Not a sentence with period
+
+      // Detect all-caps short lines (common header style)
+      const isAllCaps = trimmed === trimmed.toUpperCase() &&
+                       trimmed.length < 60 &&
+                       trimmed.length > 3 &&
+                       /^[A-Z\s]+$/.test(trimmed);
+
+      // Detect title case short lines starting with strong words
+      const isTitleCase = /^(Early|Musical|The|A |Key|Important|Notable|Historical|Critical|Major|Primary|Influence|Legacy|Impact|Relationship|Connection|Background|Overview|Summary|Context)/.test(trimmed) &&
+                         trimmed.length < 80 &&
+                         !trimmed.includes('.') &&
+                         !trimmed.includes(',') &&
+                         trimmed.split(' ').length <= 8;
+
+      const isHeader = endsWithColon || isMarkdownHeader || isNumberedHeader || isAllCaps || isTitleCase;
 
       if (isHeader) {
-        console.log('🎨 ✓ HEADER:', trimmed);
+        // Remove markdown symbols if present
+        const cleanedText = trimmed.replace(/^#{1,3}\s+/, '');
+        console.log('🎨 ✓ HEADER:', cleanedText);
         return (
           <div key={idx} style={{
             marginTop: idx === 0 ? '0' : '1.5rem',
@@ -759,7 +829,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
             color: '#2563eb',
             lineHeight: '1.4'
           }}>
-            {trimmed}
+            {cleanedText}
           </div>
         );
       }
@@ -9834,6 +9904,121 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         Interactive network showing connections between John Coltrane and related artists
                       </p>
                     </>
+                  )}
+
+                  {/* Article References Section */}
+                  {aiArticleReferences.length > 0 && (
+                    <div style={{
+                      marginTop: '1rem',
+                      padding: '1rem',
+                      background: '#f9fafb',
+                      borderRadius: '8px',
+                      border: '2px solid #e5e7eb'
+                    }}>
+                      <h3 style={{
+                        fontSize: '16px',
+                        fontWeight: '700',
+                        color: '#1f2937',
+                        marginBottom: '1rem'
+                      }}>
+                        📰 Referenced Articles ({aiArticleReferences.length})
+                      </h3>
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.75rem'
+                      }}>
+                        {aiArticleReferences.map((article, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              background: 'white',
+                              borderRadius: '8px',
+                              padding: '1rem',
+                              border: `2px solid ${article.color}`,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.5rem'
+                            }}
+                          >
+                            <div style={{
+                              fontSize: '14px',
+                              fontWeight: '700',
+                              color: article.color
+                            }}>
+                              {article.publication}
+                            </div>
+                            <div style={{
+                              fontSize: '13px',
+                              color: '#4b5563',
+                              lineHeight: '1.5'
+                            }}>
+                              {article.context}
+                            </div>
+                            <div style={{
+                              display: 'flex',
+                              gap: '0.5rem',
+                              marginTop: '0.5rem'
+                            }}>
+                              <button
+                                style={{
+                                  flex: 1,
+                                  background: '#10b981',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  padding: '0.4rem 0.6rem',
+                                  fontSize: '12px',
+                                  fontWeight: '600',
+                                  cursor: 'pointer',
+                                  transition: 'opacity 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                              >
+                                $0.99
+                              </button>
+                              <button
+                                style={{
+                                  flex: 1,
+                                  background: '#f59e0b',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  padding: '0.4rem 0.6rem',
+                                  fontSize: '12px',
+                                  fontWeight: '600',
+                                  cursor: 'pointer',
+                                  transition: 'opacity 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                              >
+                                UT Credits
+                              </button>
+                              <button
+                                style={{
+                                  flex: 1,
+                                  background: '#3b82f6',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  padding: '0.4rem 0.6rem',
+                                  fontSize: '12px',
+                                  fontWeight: '600',
+                                  cursor: 'pointer',
+                                  transition: 'opacity 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                              >
+                                Authenticate
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
 
