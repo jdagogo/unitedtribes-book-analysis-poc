@@ -3352,13 +3352,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 )}
 
                 {/* Search Results */}
-                {aiResults.length > 0 && (
+                {searchResults.length > 0 && (
                   <div style={{ marginTop: '2rem' }}>
                     <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                      Search Results ({aiResults.length})
+                      Search Results ({searchResults.length})
                     </h4>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                      {aiResults.map((video: any) => (
+                      {searchResults.map((video: any) => (
                         <div
                           key={video.id}
                           style={{
@@ -4073,13 +4073,13 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       </div>
                     )}
 
-                    {!searchLoading && aiResults.length > 0 && (
+                    {!searchLoading && searchResults.length > 0 && (
                       <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
                         <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                          Search Results ({aiResults.length})
+                          Search Results ({searchResults.length})
                         </h4>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                          {aiResults.map((video: any) => (
+                          {searchResults.map((video: any) => (
                             <div
                               key={video.id}
                               style={{
