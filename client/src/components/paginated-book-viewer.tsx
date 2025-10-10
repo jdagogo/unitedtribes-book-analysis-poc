@@ -850,22 +850,22 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       // Check if line contains any publication names and make full article references clickable
       let processedLine: any = trimmed;
       publications.forEach(pub => {
-        // Enhanced regex to capture more context around publication mentions
+        // Enhanced regex to capture complete article references including titles that come AFTER publication name
         // Captures patterns like:
-        // - "article title" in/from/by Publication
-        // - article title from Publication
-        // - review in Publication
-        // - according to Publication
-        // - source: Publication
+        // - [Source: Pitchfork Article: Title Here]
+        // - according to Rolling Stone's "Article Title"
+        // - in Pitchfork: Article Title
+        // - Pitchfork Article: Title
         const articleRefRegex = new RegExp(
-          // Look back up to 100 characters for article context
-          `([^.!?]{0,100}?(?:["'][^"']+["']|\\b[A-Z][^,;.!?]{3,60}?))\\s*` + // Article title (quoted or title case)
-          `(?:in|from|by|on|via|according to|source:|per|reports?|noted in|published in|featured in|\\-\\s*)?\\s*` + // Connector words
-          `(${pub.name})` + // Publication name
+          // Pattern 1: Source/prefix + Publication + Article title after
+          `(\\[?(?:source|Source):\\s*)?(${pub.name})` + // Optional [Source: Publication
+          `(?:\\s+(?:Article|Review|Interview|Piece|Story|Report))?` + // Optional descriptor
+          `(?::\\s*|\\s+-\\s+)` + // Separator (: or -)
+          `([^\\]\\[.!?]{3,100}?)(?:\\]|$|\\.|!)` + // Article title until ] or end
           `|` + // OR
-          `(source:|according to|per|via|in)\\s+(${pub.name})` + // Publication-first patterns
-          `|` + // OR
-          `(${pub.name})(?:'s?)?\\s+(?:article|review|piece|story|report|interview)`, // Publication's article
+          // Pattern 2: Prefix + Publication (shorter match)
+          `(according to|per|via|in|from)\\s+(${pub.name})` +
+          `(?:\\s+(?:Article|Review|Interview)?(?::\\s*|\\s+-\\s+)([^.!?]{3,100}?))?`, // Optional article title
           'gi'
         );
 
@@ -9996,10 +9996,11 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         border: '2px solid #d1d5db',
                         overflow: 'auto'
                       }}>
-                        {/* Generic publication image placeholder */}
+                        {/* Generic publication image placeholder - takes up 2/3 of space */}
                         <div style={{
                           width: '100%',
-                          height: '250px',
+                          flex: '2',
+                          minHeight: '400px',
                           background: '#f3f4f6',
                           borderRadius: '8px',
                           display: 'flex',
@@ -10013,16 +10014,16 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           Generic Publication Image (You'll provide)
                         </div>
 
-                        {/* Article title if available */}
+                        {/* Article title if available - remove brackets */}
                         {selectedArticle.articleRef && (
                           <h3 style={{
                             fontSize: '20px',
                             fontWeight: '700',
-                            color: '#1f2937',
+                            color: '#3b82f6',
                             marginBottom: '0.75rem',
                             lineHeight: '1.4'
                           }}>
-                            {selectedArticle.articleRef}
+                            {selectedArticle.articleRef.replace(/^\[|\]$/g, '')}
                           </h3>
                         )}
 
@@ -10030,7 +10031,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         <h4 style={{
                           fontSize: '16px',
                           fontWeight: '600',
-                          color: '#6b7280',
+                          color: '#000000',
                           marginBottom: '1.5rem'
                         }}>
                           Source: {selectedArticle.publication}
@@ -10039,7 +10040,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         {/* Context/excerpt */}
                         <div style={{
                           fontSize: '15px',
-                          color: '#4b5563',
+                          color: '#000000',
                           lineHeight: '1.7',
                           marginBottom: '2rem',
                           flex: 1
