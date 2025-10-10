@@ -145,11 +145,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [aiError, setAiError] = useState<string | null>(null);
 
   // Debug: Log when visualization modal state changes
-  useEffect(() => {
-    console.log('🔍 showVisualizationModal changed:', showVisualizationModal);
-    console.log('📝 Current aiQuery:', aiQuery);
-    console.log('📊 Current aiResults:', aiResults);
-  }, [showVisualizationModal]);
+  // Modal state tracking removed - working correctly
 
   // Track items added by each "Add All" button for toggle functionality
   const [addedWorksMain, setAddedWorksMain] = useState<Set<string>>(new Set());
@@ -701,25 +697,92 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
   // Helper function to format narrative text with bold headers
   const formatNarrative = (text: string) => {
-    const lines = text.split('\n');
-    return lines.map((line, idx) => {
-      // Check if line ends with a colon (likely a header)
-      if (line.trim().endsWith(':') || /^[A-Z][^.!?]*:/.test(line.trim())) {
-        return (
-          <p key={idx} style={{ margin: '0.75rem 0 0.25rem 0', fontWeight: '700', fontSize: '16px' }}>
-            {line}
+    // Split by sentences and detect headers
+    const parts: JSX.Element[] = [];
+    let currentText = text;
+    let keyIndex = 0;
+
+    // Find all potential headers (text ending with colon)
+    const headerRegex = /([^.!?]*?[A-Z][^:]*?:)/g;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = headerRegex.exec(text)) !== null) {
+      const header = match[1].trim();
+
+      // Add text before header if any
+      if (match.index > lastIndex) {
+        const beforeText = text.substring(lastIndex, match.index).trim();
+        if (beforeText) {
+          parts.push(
+            <p key={keyIndex++} style={{
+              margin: '0.5rem 0',
+              fontSize: '16px',
+              color: '#1f2937',
+              lineHeight: '1.6'
+            }}>
+              {beforeText}
+            </p>
+          );
+        }
+      }
+
+      // Add header
+      if (header.length < 100) { // Only treat short colon-ending text as headers
+        parts.push(
+          <p key={keyIndex++} style={{
+            margin: '1rem 0 0.5rem 0',
+            fontWeight: '800',
+            fontSize: '17px',
+            color: '#2563eb'
+          }}>
+            {header}
+          </p>
+        );
+      } else {
+        // Too long, treat as regular text
+        parts.push(
+          <p key={keyIndex++} style={{
+            margin: '0.5rem 0',
+            fontSize: '16px',
+            color: '#1f2937',
+            lineHeight: '1.6'
+          }}>
+            {header}
           </p>
         );
       }
-      // Regular text
-      return line.trim() ? (
-        <p key={idx} style={{ margin: '0.25rem 0' }}>
-          {line}
-        </p>
-      ) : (
-        <br key={idx} />
-      );
-    });
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      const remaining = text.substring(lastIndex).trim();
+      if (remaining) {
+        parts.push(
+          <p key={keyIndex++} style={{
+            margin: '0.5rem 0',
+            fontSize: '16px',
+            color: '#1f2937',
+            lineHeight: '1.6'
+          }}>
+            {remaining}
+          </p>
+        );
+      }
+    }
+
+    return parts.length > 0 ? parts : (
+      <p style={{
+        margin: '0.5rem 0',
+        fontSize: '16px',
+        color: '#1f2937',
+        lineHeight: '1.6'
+      }}>
+        {text}
+      </p>
+    );
   };
 
   const handlePlayDiscoveryItem = (item: any) => {
@@ -6515,13 +6578,35 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     borderRadius: '8px',
                                     border: '1px solid #e5e7eb',
                                     maxHeight: '400px',
-                                    overflowY: 'auto'
+                                    overflowY: 'auto',
+                                    position: 'relative'
                                   }}>
-                                    <div style={{
-                                      fontSize: '15px',
-                                      color: '#374151',
-                                      lineHeight: '1.7'
-                                    }}>
+                                    <button
+                                      onClick={() => {
+                                        setAiResults(null);
+                                        setAiQuery('');
+                                        setAiError(null);
+                                      }}
+                                      style={{
+                                        position: 'absolute',
+                                        top: '0.75rem',
+                                        right: '0.75rem',
+                                        background: '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 1rem',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                      }}
+                                      onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                      onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                    >
+                                      Clear Results
+                                    </button>
+                                    <div style={{ paddingTop: '2.5rem' }}>
                                       {formatNarrative(aiResults.narrative)}
                                     </div>
                                   </div>
@@ -9624,7 +9709,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 background: 'white',
                 borderRadius: '12px',
                 width: '95%',
-                maxWidth: '1400px',
+                maxWidth: '1800px',
                 height: '90vh',
                 display: 'flex',
                 flexDirection: 'column',
@@ -9728,40 +9813,153 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     }}>
                       UnitedAI Chat Explorer
                     </label>
-                    <input
-                      type="text"
-                      placeholder="Ask about John Coltrane and Blue Train..."
-                      style={{
-                        width: '100%',
-                        padding: '1rem',
-                        fontSize: '16px',
-                        border: '2px solid #d1d5db',
-                        borderRadius: '8px',
-                        outline: 'none',
-                        transition: 'border-color 0.2s'
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                    />
+                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                      <div style={{ position: 'relative', flex: 1 }}>
+                        <input
+                          type="text"
+                          value={aiQuery}
+                          onChange={(e) => setAiQuery(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !isAiSearching) {
+                              e.preventDefault();
+                              handleUnitedAISearch();
+                            }
+                          }}
+                          placeholder="Ask about John Coltrane and Blue Train..."
+                          disabled={isAiSearching}
+                          style={{
+                            width: '100%',
+                            padding: '1rem',
+                            paddingRight: aiQuery ? '3rem' : '1rem',
+                            fontSize: '16px',
+                            border: '2px solid #d1d5db',
+                            borderRadius: '8px',
+                            outline: 'none',
+                            transition: 'border-color 0.2s',
+                            opacity: isAiSearching ? 0.6 : 1
+                          }}
+                          onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                          onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                        />
+                        {aiQuery && (
+                          <button
+                            onClick={() => {
+                              setAiQuery('');
+                              setAiResults(null);
+                              setAiError(null);
+                            }}
+                            style={{
+                              position: 'absolute',
+                              right: '0.75rem',
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              background: '#e5e7eb',
+                              border: '2px solid #9ca3af',
+                              color: '#1f2937',
+                              fontSize: '24px',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              padding: 0,
+                              lineHeight: 1,
+                              borderRadius: '50%',
+                              width: '32px',
+                              height: '32px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#d1d5db';
+                              e.currentTarget.style.borderColor = '#6b7280';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#e5e7eb';
+                              e.currentTarget.style.borderColor = '#9ca3af';
+                            }}
+                            title="Clear"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={handleUnitedAISearch}
+                        disabled={isAiSearching || !aiQuery.trim()}
+                        style={{
+                          background: isAiSearching ? '#2563eb' : '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          padding: '1rem 1.5rem',
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                          whiteSpace: 'nowrap',
+                          transition: 'background 0.2s',
+                          animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                        }}
+                      >
+                        {isAiSearching ? 'Searching...' : 'Search'}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Results Area */}
                   <div style={{
                     flex: 1,
                     padding: '1.5rem',
                     background: '#f9fafb',
                     borderRadius: '8px',
                     border: '2px solid #e5e7eb',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    overflowY: 'auto',
+                    position: 'relative'
                   }}>
-                    <p style={{
-                      fontSize: '16px',
-                      color: '#6b7280',
-                      textAlign: 'center',
-                      margin: 0
-                    }}>
-                      Chat interface integration coming soon
-                    </p>
+                    {aiResults ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setAiResults(null);
+                            setAiQuery('');
+                            setAiError(null);
+                          }}
+                          style={{
+                            position: 'absolute',
+                            top: '0.75rem',
+                            right: '0.75rem',
+                            background: '#3b82f6',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '0.5rem 1rem',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                        >
+                          Clear Results
+                        </button>
+                        <div style={{ paddingTop: '2.5rem' }}>
+                          {formatNarrative(aiResults.narrative)}
+                        </div>
+                      </>
+                    ) : aiError ? (
+                      <p style={{ fontSize: '16px', color: '#ef4444', margin: 0, textAlign: 'center' }}>
+                        Error: {aiError}
+                      </p>
+                    ) : (
+                      <p style={{
+                        fontSize: '18px',
+                        color: '#6b7280',
+                        textAlign: 'center',
+                        margin: 0
+                      }}>
+                        {isAiSearching ? 'Searching UnitedAI...' : 'Enter a question and click Search'}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -10998,22 +11196,40 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   background: '#f9fafb',
                   borderRadius: '8px',
                   border: '2px solid #e5e7eb',
-                  overflowY: 'auto'
+                  overflowY: 'auto',
+                  position: 'relative'
                 }}>
-                  {(() => {
-                    console.log('🎨 Modal rendering - aiResults:', aiResults);
-                    console.log('🎨 Modal rendering - aiQuery:', aiQuery);
-                    console.log('🎨 Modal rendering - isAiSearching:', isAiSearching);
-                    return null;
-                  })()}
                   {aiResults ? (
-                    <div style={{
-                      fontSize: '16px',
-                      color: '#374151',
-                      lineHeight: '1.7'
-                    }}>
-                      {formatNarrative(aiResults.narrative)}
-                    </div>
+                    <>
+                      <button
+                        onClick={() => {
+                          setAiResults(null);
+                          setAiQuery('');
+                          setAiError(null);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: '0.75rem',
+                          right: '0.75rem',
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '0.5rem 1rem',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                      >
+                        Clear Results
+                      </button>
+                      <div style={{ paddingTop: '2.5rem' }}>
+                        {formatNarrative(aiResults.narrative)}
+                      </div>
+                    </>
                   ) : aiError ? (
                     <p style={{ fontSize: '16px', color: '#ef4444', margin: 0, textAlign: 'center' }}>
                       Error: {aiError}
