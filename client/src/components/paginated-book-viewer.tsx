@@ -657,6 +657,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     setDiscoveryItems(new Map());
   };
 
+
   // UnitedAI Search handler
   const handleUnitedAISearch = async () => {
     console.log('🔍 UnitedAI Search called with query:', aiQuery);
@@ -940,39 +941,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
   const handlePlayDiscoveryItem = (item: any) => {
     console.log('🎵 Playing discovery item:', item);
-    console.log('🎬 Current selectedVideo:', selectedVideo);
-    console.log('🎥 videoIframeRef.current:', videoIframeRef.current);
-
-    // Pause any currently playing video
-    // Since the video is in a nested iframe (srcDoc), we need to access it differently
-    if (selectedVideo && videoIframeRef.current && videoIframeRef.current.contentWindow) {
-      console.log('✅ Attempting to pause video...');
-      try {
-        // Get all iframes in the embedded document
-        const iframes = videoIframeRef.current.contentWindow.document.getElementsByTagName('iframe');
-        console.log('📹 Found iframes:', iframes.length);
-        if (iframes.length > 0) {
-          // Send pause command to the YouTube iframe
-          iframes[0].contentWindow?.postMessage(
-            '{"event":"command","func":"pauseVideo","args":""}',
-            '*'
-          );
-          console.log('⏸️ Sent pause command to video');
-        } else {
-          console.log('❌ No iframes found in srcDoc');
-        }
-      } catch (e) {
-        console.error('❌ Failed to pause video:', e);
-      }
-    } else {
-      console.log('❌ Cannot pause - missing:', {
-        hasSelectedVideo: !!selectedVideo,
-        hasIframeRef: !!videoIframeRef.current,
-        hasContentWindow: !!(videoIframeRef.current && videoIframeRef.current.contentWindow)
-      });
-    }
-
-    // TODO: Implement full play functionality for discovery items
+    // Video will be automatically hidden when playlist modal opens
   };
 
   // Apply dual highlighting: entity (yellow) and context (light blue)
@@ -1375,7 +1344,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                 relatedContent: event.data.data.relatedContent || []
               });
 
-              // Show the playlist modal immediately
+              // Show the playlist modal (video will be automatically hidden via display:none)
               console.log('📦 Setting showPlaylistView to true');
               setShowPlaylistView(true);
               console.log('✅ Modal should now be visible');
@@ -3314,7 +3283,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 {playlistVideos[currentTrackIndex]?.videoId ? (
                                   <iframe
                                     key={playlistVideos[currentTrackIndex].videoId}
-                                    src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1&rel=0`}
+                                    src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=0&rel=0`}
                                     style={{
                                       width: '100%',
                                       flex: 1,
@@ -4052,7 +4021,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         </p>
                                       </div>
                                       <iframe
-                                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1`}
+                                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=0`}
                                         style={{
                                           width: '100%',
                                           flex: 1,
@@ -9373,7 +9342,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       )}
 
                       <iframe ref={videoIframeRef} srcDoc={videoEmbedHtml} style={{
-                        width: '100%', height: '100%', border: 'none', flex: 1
+                        width: '100%', height: '100%', border: 'none', flex: 1,
+                        display: showPlaylistPlayer ? 'none' : 'block'
                       }} title={selectedVideo.title}
                       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
