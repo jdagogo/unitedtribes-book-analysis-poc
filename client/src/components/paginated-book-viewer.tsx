@@ -147,6 +147,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   // Debug: Log when visualization modal state changes
   useEffect(() => {
     console.log('🔍 showVisualizationModal changed:', showVisualizationModal);
+    console.log('📝 Current aiQuery:', aiQuery);
+    console.log('📊 Current aiResults:', aiResults);
   }, [showVisualizationModal]);
 
   // Track items added by each "Add All" button for toggle functionality
@@ -6415,30 +6417,75 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   UnitedAI Chat Explorer
                                 </label>
                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                  <input
-                                    type="text"
-                                    value={aiQuery}
-                                    onChange={(e) => setAiQuery(e.target.value)}
-                                    onKeyPress={(e) => {
-                                      if (e.key === 'Enter' && !isAiSearching) {
-                                        handleUnitedAISearch();
-                                      }
-                                    }}
-                                    placeholder="Ask about John Coltrane and Blue Train..."
-                                    disabled={isAiSearching}
-                                    style={{
-                                      flex: 1,
-                                      padding: '0.75rem',
-                                      fontSize: '16px',
-                                      border: '2px solid #d1d5db',
-                                      borderRadius: '8px',
-                                      outline: 'none',
-                                      transition: 'border-color 0.2s',
-                                      opacity: isAiSearching ? 0.6 : 1
-                                    }}
-                                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                                    onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                                  />
+                                  <div style={{ position: 'relative', flex: 1 }}>
+                                    <input
+                                      type="text"
+                                      value={aiQuery}
+                                      onChange={(e) => setAiQuery(e.target.value)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !isAiSearching) {
+                                          e.preventDefault();
+                                          handleUnitedAISearch();
+                                        }
+                                      }}
+                                      placeholder="Ask about John Coltrane and Blue Train..."
+                                      disabled={isAiSearching}
+                                      style={{
+                                        width: '100%',
+                                        padding: '0.75rem',
+                                        paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                        fontSize: '16px',
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        outline: 'none',
+                                        transition: 'border-color 0.2s',
+                                        opacity: isAiSearching ? 0.6 : 1
+                                      }}
+                                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                    />
+                                    {aiQuery && (
+                                      <button
+                                        onClick={() => {
+                                          setAiQuery('');
+                                          setAiResults(null);
+                                          setAiError(null);
+                                        }}
+                                        style={{
+                                          position: 'absolute',
+                                          right: '0.5rem',
+                                          top: '50%',
+                                          transform: 'translateY(-50%)',
+                                          background: '#e5e7eb',
+                                          border: '2px solid #9ca3af',
+                                          color: '#1f2937',
+                                          fontSize: '20px',
+                                          fontWeight: '700',
+                                          cursor: 'pointer',
+                                          padding: 0,
+                                          lineHeight: 1,
+                                          borderRadius: '50%',
+                                          width: '28px',
+                                          height: '28px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.background = '#d1d5db';
+                                          e.currentTarget.style.borderColor = '#6b7280';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.background = '#e5e7eb';
+                                          e.currentTarget.style.borderColor = '#9ca3af';
+                                        }}
+                                        title="Clear"
+                                      >
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
                                   <button
                                     onClick={handleUnitedAISearch}
                                     disabled={isAiSearching || !aiQuery.trim()}
@@ -10852,30 +10899,75 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     UnitedAI Chat Explorer
                   </label>
                   <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                    <input
-                      type="text"
-                      value={aiQuery}
-                      onChange={(e) => setAiQuery(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter' && !isAiSearching) {
-                          handleUnitedAISearch();
-                        }
-                      }}
-                      placeholder="Ask about John Coltrane and Blue Train..."
-                      disabled={isAiSearching}
-                      style={{
-                        flex: 1,
-                        padding: '1rem',
-                        fontSize: '16px',
-                        border: '2px solid #d1d5db',
-                        borderRadius: '8px',
-                        outline: 'none',
-                        transition: 'border-color 0.2s',
-                        opacity: isAiSearching ? 0.6 : 1
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                    />
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <input
+                        type="text"
+                        value={aiQuery}
+                        onChange={(e) => setAiQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !isAiSearching) {
+                            e.preventDefault();
+                            handleUnitedAISearch();
+                          }
+                        }}
+                        placeholder="Ask about John Coltrane and Blue Train..."
+                        disabled={isAiSearching}
+                        style={{
+                          width: '100%',
+                          padding: '1rem',
+                          paddingRight: aiQuery ? '3rem' : '1rem',
+                          fontSize: '16px',
+                          border: '2px solid #d1d5db',
+                          borderRadius: '8px',
+                          outline: 'none',
+                          transition: 'border-color 0.2s',
+                          opacity: isAiSearching ? 0.6 : 1
+                        }}
+                        onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                      />
+                      {aiQuery && (
+                        <button
+                          onClick={() => {
+                            setAiQuery('');
+                            setAiResults(null);
+                            setAiError(null);
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: '0.75rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: '#e5e7eb',
+                            border: '2px solid #9ca3af',
+                            color: '#1f2937',
+                            fontSize: '24px',
+                            fontWeight: '700',
+                            cursor: 'pointer',
+                            padding: 0,
+                            lineHeight: 1,
+                            borderRadius: '50%',
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#d1d5db';
+                            e.currentTarget.style.borderColor = '#6b7280';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#e5e7eb';
+                            e.currentTarget.style.borderColor = '#9ca3af';
+                          }}
+                          title="Clear"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
                     <button
                       onClick={handleUnitedAISearch}
                       disabled={isAiSearching || !aiQuery.trim()}
