@@ -2286,5 +2286,37 @@
     "units": 100,
     "keyIndex": 3,
     "keyName": "YOUTUBE_API_KEY_4"
+  },
+  "search-track_1760112041887_rmvfgb0vq": {
+    "endpoint": "search-track",
+    "timestamp": 1760112041887,
+    "date": "2025-10-10T16:00:41.887Z",
+    "units": 100,
+    "keyIndex": 4,
+    "keyName": "YOUTUBE_API_KEY_5"
+  },
+  "search-track_1760112041895_sgn549sk1": {
+    "endpoint": "search-track",
+    "timestamp": 1760112041895,
+    "date": "2025-10-10T16:00:41.895Z",
+    "units": 100,
+    "keyIndex": 5,
+    "keyName": "YOUTUBE_API_KEY_6"
+  },
+  "search-track_1760112041899_mjarmvfra": {
+    "endpoint": "search-track",
+    "timestamp": 1760112041899,
+    "date": "2025-10-10T16:00:41.899Z",
+    "units": 100,
+    "keyIndex": -1,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1760112041904_f167uj69u": {
+    "endpoint": "search-track",
+    "timestamp": 1760112041904,
+    "date": "2025-10-10T16:00:41.904Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
   }
 }
