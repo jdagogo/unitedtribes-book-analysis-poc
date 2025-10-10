@@ -650,6 +650,12 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       const button = document.getElementById('playlist-btn');
 
       if (!isPlaylistVisible) {
+        // Pause the video before showing playlists
+        if (player && typeof player.pauseVideo === 'function') {
+          console.log('⏸️ Pausing video');
+          player.pauseVideo();
+        }
+
         // Show the playlists modal
         if (button) {
           button.textContent = 'Works & Discovery Playlists ▲';
