@@ -103,18 +103,18 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
     }
 
     .title {
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: #374151;
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: #000;
       line-height: 1.4;
     }
 
     .channel {
-      color: #666;
-      margin-bottom: 1.5rem;
-      font-size: 1.125rem;
-      font-weight: 500;
+      color: #000;
+      font-size: 0.875rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
     }
 
     .player-wrapper {
