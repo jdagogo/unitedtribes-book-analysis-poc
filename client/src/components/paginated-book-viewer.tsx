@@ -7013,7 +7013,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 e.currentTarget.style.boxShadow = 'none';
                               }}
                             />
-                            {searchQuery && (
+                            {searchResults.length > 0 && (
                               <button
                                 type="button"
                                 onClick={() => {
@@ -7026,17 +7026,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   right: '1rem',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
-                                  width: '28px',
-                                  height: '28px',
+                                  width: '32px',
+                                  height: '32px',
                                   borderRadius: '50%',
-                                  border: '2px solid #6b7280',
+                                  border: '3px solid #6b7280',
                                   background: 'white',
                                   color: '#6b7280',
                                   cursor: 'pointer',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  fontSize: '16px',
+                                  fontSize: '18px',
                                   fontWeight: 'bold',
                                   transition: 'all 0.2s'
                                 }}
@@ -8330,7 +8330,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 e.currentTarget.style.boxShadow = 'none';
                               }}
                             />
-                            {searchQuery && (
+                            {searchResults.length > 0 && (
                               <button
                                 type="button"
                                 onClick={() => {
@@ -8343,17 +8343,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   right: '1rem',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
-                                  width: '28px',
-                                  height: '28px',
+                                  width: '32px',
+                                  height: '32px',
                                   borderRadius: '50%',
-                                  border: '2px solid #6b7280',
+                                  border: '3px solid #6b7280',
                                   background: 'white',
                                   color: '#6b7280',
                                   cursor: 'pointer',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  fontSize: '16px',
+                                  fontSize: '18px',
                                   fontWeight: 'bold',
                                   transition: 'all 0.2s'
                                 }}
@@ -9080,7 +9080,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 e.currentTarget.style.boxShadow = 'none';
                               }}
                             />
-                            {searchQuery && (
+                            {searchResults.length > 0 && (
                               <button
                                 type="button"
                                 onClick={() => {
@@ -9093,17 +9093,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   right: '1rem',
                                   top: '50%',
                                   transform: 'translateY(-50%)',
-                                  width: '28px',
-                                  height: '28px',
+                                  width: '32px',
+                                  height: '32px',
                                   borderRadius: '50%',
-                                  border: '2px solid #6b7280',
+                                  border: '3px solid #6b7280',
                                   background: 'white',
                                   color: '#6b7280',
                                   cursor: 'pointer',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  fontSize: '16px',
+                                  fontSize: '18px',
                                   fontWeight: 'bold',
                                   transition: 'all 0.2s'
                                 }}
