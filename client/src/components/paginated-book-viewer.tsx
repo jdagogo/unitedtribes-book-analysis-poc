@@ -9406,8 +9406,151 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   </div>
                                 )}
                                 {discoveryTab === 'explorer' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Explorer content coming soon...
+                                  <div>
+                                    <h2 style={{
+                                      fontSize: '24px',
+                                      fontWeight: '700',
+                                      color: '#1f2937',
+                                      marginBottom: '1rem',
+                                      marginTop: 0
+                                    }}>
+                                      UnitedAI Chat Explorer
+                                    </h2>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                      <div style={{ position: 'relative', flex: 1 }}>
+                                        <input
+                                          type="text"
+                                          value={aiQuery}
+                                          onChange={(e) => setAiQuery(e.target.value)}
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !isAiSearching) {
+                                              e.preventDefault();
+                                              handleUnitedAISearch();
+                                            }
+                                          }}
+                                          placeholder="Ask about Blue Note Records..."
+                                          disabled={isAiSearching}
+                                          style={{
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                            fontSize: '16px',
+                                            border: '2px solid #d1d5db',
+                                            borderRadius: '8px',
+                                            outline: 'none',
+                                            transition: 'border-color 0.2s',
+                                            opacity: isAiSearching ? 0.6 : 1
+                                          }}
+                                          onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                          onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                        />
+                                        {aiQuery && (
+                                          <button
+                                            onClick={() => {
+                                              setAiQuery('');
+                                              setAiResults(null);
+                                              setAiError(null);
+                                            }}
+                                            style={{
+                                              position: 'absolute',
+                                              right: '0.5rem',
+                                              top: '50%',
+                                              transform: 'translateY(-50%)',
+                                              background: '#e5e7eb',
+                                              border: '2px solid #9ca3af',
+                                              color: '#1f2937',
+                                              fontSize: '20px',
+                                              fontWeight: '700',
+                                              cursor: 'pointer',
+                                              padding: 0,
+                                              lineHeight: 1,
+                                              borderRadius: '50%',
+                                              width: '28px',
+                                              height: '28px',
+                                              display: 'flex',
+                                              alignItems: 'center',
+                                              justifyContent: 'center',
+                                              transition: 'all 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                              e.currentTarget.style.background = '#d1d5db';
+                                              e.currentTarget.style.borderColor = '#6b7280';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                              e.currentTarget.style.background = '#e5e7eb';
+                                              e.currentTarget.style.borderColor = '#9ca3af';
+                                            }}
+                                            title="Clear"
+                                          >
+                                            ×
+                                          </button>
+                                        )}
+                                      </div>
+                                      <button
+                                        onClick={handleUnitedAISearch}
+                                        disabled={isAiSearching || !aiQuery.trim()}
+                                        style={{
+                                          background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                          color: 'white',
+                                          border: 'none',
+                                          borderRadius: '8px',
+                                          padding: '0.75rem 1.5rem',
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                          transition: 'background 0.2s',
+                                          animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                                        }}
+                                      >
+                                        {isAiSearching ? 'Searching...' : 'Search'}
+                                      </button>
+                                    </div>
+
+                                    {/* AI Search Results */}
+                                    {isAiSearching && (
+                                      <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                        <div style={{ fontSize: '18px', fontWeight: '600' }}>🔍 Searching United AI...</div>
+                                      </div>
+                                    )}
+
+                                    {!isAiSearching && discoveryResults.length > 0 && (
+                                      <div>
+                                        <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.75rem', color: '#1f2937' }}>
+                                          Results ({discoveryResults.length})
+                                        </h5>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                          {discoveryResults.map((result, idx) => (
+                                            <div
+                                              key={idx}
+                                              style={{
+                                                padding: '1rem',
+                                                background: '#f9fafb',
+                                                borderRadius: '8px',
+                                                border: '1px solid #e5e7eb'
+                                              }}
+                                            >
+                                              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#3b82f6', marginBottom: '0.5rem' }}>
+                                                {result.type}
+                                              </div>
+                                              <div style={{ fontSize: '16px', color: '#1f2937' }}>
+                                                {result.title || result.name}
+                                              </div>
+                                              {result.description && (
+                                                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                                  {result.description}
+                                                </div>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {!isAiSearching && discoveryResults.length === 0 && aiQuery && (
+                                      <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                                        No results found. Try a different search term.
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>
