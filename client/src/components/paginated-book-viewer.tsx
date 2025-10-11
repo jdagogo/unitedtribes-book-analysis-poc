@@ -7023,7 +7023,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         </div>
 
                           {/* Tab Content */}
-                          <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                          <div style={{ padding: discoveryTab === 'music' ? '0' : '1rem', background: '#f9fafb', borderRadius: '8px' }}>
                           {discoveryTab === 'featured' && (
                             <div>
                               <p style={{ fontSize: '14px', color: '#6b7280' }}>Featured content coming soon...</p>
@@ -7041,7 +7041,70 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                           {discoveryTab === 'music' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                              {/* Blue Train Album Cover with Audio Player */}
+                              <div
+                                style={{
+                                  background: 'white',
+                                  padding: '1rem',
+                                  borderRadius: '8px',
+                                  boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                    console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} Blue Train`);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="https://store.everythingjazz.fr/cdn/shop/files/4.JC_BLUETRAIN_CM_EXPANDED.png?v=1728130386&width=1000"
+                                  alt="John Coltrane - Blue Train"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                    transition: 'opacity 0.3s ease'
+                                  }}
+                                />
+                                {isAlbumAudioPlaying && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    ♪ Playing...
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Hidden YouTube iframe for audio playback */}
+                              <iframe
+                                ref={albumAudioIframeRef}
+                                src="https://www.youtube.com/embed/HT_Zs5FKDZE?enablejsapi=1&controls=0"
+                                style={{
+                                  position: 'absolute',
+                                  width: '1px',
+                                  height: '1px',
+                                  opacity: 0,
+                                  pointerEvents: 'none'
+                                }}
+                                allow="autoplay"
+                              />
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
