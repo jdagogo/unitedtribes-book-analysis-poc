@@ -4206,7 +4206,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               e.currentTarget.style.boxShadow = 'none';
                             }}
                           />
-                          {searchQuery && (
+                          {searchResults.length > 0 && (
                             <button
                               type="button"
                               onClick={() => {
@@ -4219,17 +4219,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 right: '1rem',
                                 top: '50%',
                                 transform: 'translateY(-50%)',
-                                width: '28px',
-                                height: '28px',
+                                width: '32px',
+                                height: '32px',
                                 borderRadius: '50%',
-                                border: '2px solid #6b7280',
+                                border: '3px solid #6b7280',
                                 background: 'white',
                                 color: '#6b7280',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: '16px',
+                                fontSize: '18px',
                                 fontWeight: 'bold',
                                 transition: 'all 0.2s'
                               }}
@@ -10243,24 +10243,69 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                       <form onSubmit={handleSearchSubmit} style={{ marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                          <input type="text" className="united-tribes-search-input"
-                            value={aiQuery} onChange={(e) => setAiQuery(e.target.value)}
-                            placeholder="Search UnitedTribes videos"
-                            style={{
-                              flex: 1, padding: '1rem 1.5rem', border: '2px solid #1e3a8a',
-                              borderRadius: '10px', fontSize: '24px', outline: 'none',
-                              fontWeight: '500', color: '#000', backgroundColor: 'white', lineHeight: '1.2'
-                            }}
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = '#3b82f6';
-                              e.currentTarget.style.backgroundColor = '#f0f9ff';
-                              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = '#1e3a8a';
-                              e.currentTarget.style.backgroundColor = 'white';
-                              e.currentTarget.style.boxShadow = 'none';
-                            }} />
+                          <div style={{ position: 'relative', flex: 1 }}>
+                            <input type="text" className="united-tribes-search-input"
+                              value={aiQuery} onChange={(e) => setAiQuery(e.target.value)}
+                              placeholder="Search UnitedTribes videos"
+                              style={{
+                                width: '100%', padding: '1rem 1.5rem',
+                                paddingRight: searchResults.length > 0 ? '3.5rem' : '1.5rem',
+                                border: '2px solid #1e3a8a',
+                                borderRadius: '10px', fontSize: '24px', outline: 'none',
+                                fontWeight: '500', color: '#000', backgroundColor: 'white', lineHeight: '1.2'
+                              }}
+                              onFocus={(e) => {
+                                e.currentTarget.style.borderColor = '#3b82f6';
+                                e.currentTarget.style.backgroundColor = '#f0f9ff';
+                                e.currentTarget.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.2)';
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.borderColor = '#1e3a8a';
+                                e.currentTarget.style.backgroundColor = 'white';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }} />
+                            {searchResults.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setAiQuery('');
+                                  setSearchResults([]);
+                                  setSearchError(null);
+                                }}
+                                style={{
+                                  position: 'absolute',
+                                  right: '1rem',
+                                  top: '50%',
+                                  transform: 'translateY(-50%)',
+                                  width: '32px',
+                                  height: '32px',
+                                  borderRadius: '50%',
+                                  border: '3px solid #6b7280',
+                                  background: 'white',
+                                  color: '#6b7280',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '18px',
+                                  fontWeight: 'bold',
+                                  transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = '#3b82f6';
+                                  e.currentTarget.style.borderColor = '#3b82f6';
+                                  e.currentTarget.style.color = 'white';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'white';
+                                  e.currentTarget.style.borderColor = '#6b7280';
+                                  e.currentTarget.style.color = '#6b7280';
+                                }}
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
                           <button type="submit" style={{
                             padding: '1rem 2rem', background: '#3b82f6', color: 'white',
                             border: 'none', borderRadius: '10px', fontSize: '20px',
