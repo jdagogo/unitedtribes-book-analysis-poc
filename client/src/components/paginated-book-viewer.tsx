@@ -9408,7 +9408,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 {discoveryTab === 'explorer' && (
                                   <div>
                                     <h2 style={{
-                                      fontSize: '24px',
+                                      fontSize: '18px',
                                       fontWeight: '700',
                                       color: '#1f2937',
                                       marginBottom: '1rem',
