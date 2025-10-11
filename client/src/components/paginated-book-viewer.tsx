@@ -4505,83 +4505,70 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                           {discoveryTab === 'music' && (
                             <div>
-                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>Album Personnel</h4>
-
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🎷 Dexter Gordon - Tenor Saxophone</p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
-                                  Also appears on Page 12 (Doin' Allright)
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#3b82f6', marginTop: '0.5rem' }}>
-                                  🎬 Starred in "Round Midnight" (1986) - See Watch tab
-                                </p>
+                              {/* Dexter Gordon Album Cover with Audio Player */}
+                              <div
+                                style={{
+                                  background: 'white',
+                                  padding: '1rem',
+                                  borderRadius: '8px',
+                                  boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                    console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} Dexter Gordon - GO`);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="https://m.media-amazon.com/images/I/61GwLV5SVHL._UF1000,1000_QL80_.jpg"
+                                  alt="Dexter Gordon - GO"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                    transition: 'opacity 0.3s ease'
+                                  }}
+                                />
+                                {isAlbumAudioPlaying && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    ♪ Playing...
+                                  </div>
+                                )}
                               </div>
 
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🎹 Sonny Clark - Piano</p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
-                                  Blue Note session legend known for his bluesy, hard-swinging style
-                                </p>
-                              </div>
-
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🎸 Butch Warren - Bass</p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
-                                  Solid, swinging bassist who appeared on many Blue Note sessions
-                                </p>
-                              </div>
-
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937' }}>🥁 Billy Higgins - Drums</p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
-                                  One of the most recorded drummers in jazz history
-                                </p>
-                              </div>
-
-                              {/* Connections merged into Music tab */}
-                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '2rem', marginBottom: '1rem' }}>Connections in This Book</h4>
-
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
-                                  📖 Dexter Gordon Albums
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 12: Doin' Allright (1961)
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 15: GO (1962) ← You are here
-                                </p>
-                              </div>
-
-                              <div style={{ marginBottom: '1rem', padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
-                                  🎨 Reid Miles Cover Designs
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.5rem' }}>
-                                  This bold typographic style appears on:
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 9: Thelonious Monk - Genius of Modern Music
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 14: Hank Mobley - A Caddy for Daddy
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 16: Wayne Shorter - The All Seeing Eye
-                                </p>
-                              </div>
-
-                              <div style={{ padding: '1rem', background: 'white', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
-                                  🎺 Hard Bop Era (1960-1962)
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 11: Cannonball Adderley - Somethin' Else (1958)
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#374151' }}>
-                                  • Page 12: Dexter Gordon - Doin' Allright (1961)
-                                </p>
-                              </div>
+                              {/* Hidden YouTube iframe for audio playback */}
+                              <iframe
+                                ref={albumAudioIframeRef}
+                                src="https://www.youtube.com/embed/9u9XBnDZ8TA?enablejsapi=1&controls=0"
+                                style={{
+                                  position: 'absolute',
+                                  width: '1px',
+                                  height: '1px',
+                                  opacity: 0,
+                                  pointerEvents: 'none'
+                                }}
+                                allow="autoplay"
+                              />
                             </div>
                           )}
 
@@ -5059,7 +5046,70 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                           {discoveryTab === 'music' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                              {/* Thelonious Monk Album Cover with Audio Player */}
+                              <div
+                                style={{
+                                  background: 'white',
+                                  padding: '1rem',
+                                  borderRadius: '8px',
+                                  boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                    console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} Thelonious Monk`);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="https://images.genius.com/401b02f094dbcfc056a83d1107ee861e.600x600x1.jpg"
+                                  alt="Thelonious Monk - Genius of Modern Music"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                    transition: 'opacity 0.3s ease'
+                                  }}
+                                />
+                                {isAlbumAudioPlaying && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    ♪ Playing...
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Hidden YouTube iframe for audio playback */}
+                              <iframe
+                                ref={albumAudioIframeRef}
+                                src="https://www.youtube.com/embed/V_h5P2meI5I?enablejsapi=1&controls=0"
+                                style={{
+                                  position: 'absolute',
+                                  width: '1px',
+                                  height: '1px',
+                                  opacity: 0,
+                                  pointerEvents: 'none'
+                                }}
+                                allow="autoplay"
+                              />
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
