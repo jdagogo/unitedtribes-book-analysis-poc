@@ -5459,7 +5459,70 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                           {discoveryTab === 'music' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                              {/* Art Blakey Album Cover with Audio Player */}
+                              <div
+                                style={{
+                                  background: 'white',
+                                  padding: '1rem',
+                                  borderRadius: '8px',
+                                  boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                    console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} Art Blakey - Like Someone in Love`);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="https://store.bluenote.com/cdn/shop/files/ArtBlakey_LikeSomeoneInLoveLP.png?v=1731519659&width=800"
+                                  alt="Art Blakey and the Jazz Messengers - Like Someone in Love"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                    transition: 'opacity 0.3s ease'
+                                  }}
+                                />
+                                {isAlbumAudioPlaying && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    ♪ Playing...
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Hidden YouTube iframe for audio playback */}
+                              <iframe
+                                ref={albumAudioIframeRef}
+                                src="https://www.youtube.com/embed/6unIPgt_fCw?enablejsapi=1&controls=0"
+                                style={{
+                                  position: 'absolute',
+                                  width: '1px',
+                                  height: '1px',
+                                  opacity: 0,
+                                  pointerEvents: 'none'
+                                }}
+                                allow="autoplay"
+                              />
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
@@ -5809,7 +5872,70 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                           {discoveryTab === 'music' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                              {/* Hank Mobley Album Cover with Audio Player */}
+                              <div
+                                style={{
+                                  background: 'white',
+                                  padding: '1rem',
+                                  borderRadius: '8px',
+                                  boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                    console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} Hank Mobley - A Caddy for Daddy`);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="https://store.bluenote.com/cdn/shop/files/HankMobley-ACaddyForDaddy_UHQCD.png?v=1745436203"
+                                  alt="Hank Mobley - A Caddy for Daddy"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                    transition: 'opacity 0.3s ease'
+                                  }}
+                                />
+                                {isAlbumAudioPlaying && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    ♪ Playing...
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Hidden YouTube iframe for audio playback */}
+                              <iframe
+                                ref={albumAudioIframeRef}
+                                src="https://www.youtube.com/embed/MJQjQIoq7u8?enablejsapi=1&controls=0"
+                                style={{
+                                  position: 'absolute',
+                                  width: '1px',
+                                  height: '1px',
+                                  opacity: 0,
+                                  pointerEvents: 'none'
+                                }}
+                                allow="autoplay"
+                              />
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
@@ -5947,7 +6073,70 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
                           {discoveryTab === 'music' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Music content coming soon...</p>
+                              {/* Sonny Rollins Album Cover with Audio Player */}
+                              <div
+                                style={{
+                                  background: 'white',
+                                  padding: '1rem',
+                                  borderRadius: '8px',
+                                  boxShadow: isAlbumAudioPlaying ? '0 4px 20px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                  border: isAlbumAudioPlaying ? '2px solid #3b82f6' : '2px solid transparent'
+                                }}
+                                onClick={() => {
+                                  if (albumAudioIframeRef.current) {
+                                    const iframe = albumAudioIframeRef.current;
+                                    const command = isAlbumAudioPlaying ? 'pauseVideo' : 'playVideo';
+                                    iframe.contentWindow?.postMessage(
+                                      JSON.stringify({ event: 'command', func: command, args: [] }),
+                                      '*'
+                                    );
+                                    setIsAlbumAudioPlaying(!isAlbumAudioPlaying);
+                                    console.log(`🎵 ${isAlbumAudioPlaying ? 'Pausing' : 'Playing'} Sonny Rollins Vol. 2`);
+                                  }
+                                }}
+                              >
+                                <img
+                                  src="https://i.ebayimg.com/images/g/6MgAAOSwBI9ngV5j/s-l1600.webp"
+                                  alt="Sonny Rollins - Sonny Rollins Vol. 2"
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    opacity: isAlbumAudioPlaying ? 0.95 : 1,
+                                    transition: 'opacity 0.3s ease'
+                                  }}
+                                />
+                                {isAlbumAudioPlaying && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '16px',
+                                    fontWeight: '600'
+                                  }}>
+                                    ♪ Playing...
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Hidden YouTube iframe for audio playback */}
+                              <iframe
+                                ref={albumAudioIframeRef}
+                                src="https://www.youtube.com/embed/m2daCTUm2dU?enablejsapi=1&controls=0"
+                                style={{
+                                  position: 'absolute',
+                                  width: '1px',
+                                  height: '1px',
+                                  opacity: 0,
+                                  pointerEvents: 'none'
+                                }}
+                                allow="autoplay"
+                              />
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
