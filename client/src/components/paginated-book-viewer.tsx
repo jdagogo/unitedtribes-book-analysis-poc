@@ -203,8 +203,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   // Handle search form submission
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      searchVideos(searchQuery.trim());
+    if (aiQuery.trim()) {
+      searchVideos(aiQuery.trim());
     }
   };
 
@@ -7275,116 +7275,144 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               gap: '1rem',
                               padding: '0.5rem'
                             }}>
-                              {/* Book 1: Coltrane on Coltrane */}
+                              {/* Book 1 */}
                               <div style={{
                                 background: 'white',
                                 borderRadius: '8px',
                                 overflow: 'hidden',
                                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.2s',
-                                cursor: 'pointer'
+                                transition: 'transform 0.2s'
                               }}
                               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
                               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                              onClick={() => window.open('https://www.amazon.com/Coltrane-Interviews-Conversations-Musicians/dp/1556527888', '_blank')}
                               >
                                 <img
-                                  src="https://m.media-amazon.com/images/I/71uEJ3o7dPL._SL1500_.jpg"
-                                  alt="Coltrane on Coltrane"
-                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                  src="https://target.scene7.com/is/image/Target/GUEST_6dd22dce-0216-4a09-82ea-071ff97b03e6?wid=750&qlt=80"
+                                  alt="Book 1"
+                                  style={{ width: '100%', height: '400px', objectFit: 'cover', display: 'block' }}
                                 />
-                                <div style={{ padding: '0.75rem' }}>
-                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
-                                    Coltrane on Coltrane
-                                  </h4>
-                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
-                                    The John Coltrane Interviews
-                                  </p>
-                                </div>
+                                <button
+                                  onClick={() => window.open('https://www.target.com', '_blank')}
+                                  style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    border: 'none',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  Purchase
+                                </button>
                               </div>
 
-                              {/* Book 2: John Coltrane: His Life and Music */}
+                              {/* Book 2 */}
                               <div style={{
                                 background: 'white',
                                 borderRadius: '8px',
                                 overflow: 'hidden',
                                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.2s',
-                                cursor: 'pointer'
+                                transition: 'transform 0.2s'
                               }}
                               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
                               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                              onClick={() => window.open('https://www.amazon.com/John-Coltrane-Life-Music/dp/0472086650', '_blank')}
                               >
                                 <img
-                                  src="https://m.media-amazon.com/images/I/71xKCR0gkCL._SL1500_.jpg"
-                                  alt="John Coltrane: His Life and Music"
-                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                  src="https://target.scene7.com/is/image/Target/GUEST_5305f798-34dd-4dae-891f-84bb6609a78b?wid=750&qlt=80"
+                                  alt="Book 2"
+                                  style={{ width: '100%', height: '400px', objectFit: 'cover', display: 'block' }}
                                 />
-                                <div style={{ padding: '0.75rem' }}>
-                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
-                                    John Coltrane: His Life and Music
-                                  </h4>
-                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
-                                    By Lewis Porter
-                                  </p>
-                                </div>
+                                <button
+                                  onClick={() => window.open('https://www.target.com', '_blank')}
+                                  style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    border: 'none',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  Purchase
+                                </button>
                               </div>
 
-                              {/* Book 3: A Love Supreme */}
+                              {/* Book 3 */}
                               <div style={{
                                 background: 'white',
                                 borderRadius: '8px',
                                 overflow: 'hidden',
                                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.2s',
-                                cursor: 'pointer'
+                                transition: 'transform 0.2s'
                               }}
                               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
                               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                              onClick={() => window.open('https://www.amazon.com/Love-Supreme-Story-Coltranes-Signature/dp/0143034650', '_blank')}
                               >
                                 <img
-                                  src="https://m.media-amazon.com/images/I/71lXh0GCLNL._SL1500_.jpg"
-                                  alt="A Love Supreme: The Story of John Coltrane's Signature Album"
-                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                  src="https://i.thriftbooks.com/api/imagehandler/m/A9C33549018300D71A02C50321221A591058D4CA.jpeg"
+                                  alt="Book 3"
+                                  style={{ width: '100%', height: '400px', objectFit: 'cover', display: 'block' }}
                                 />
-                                <div style={{ padding: '0.75rem' }}>
-                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
-                                    A Love Supreme
-                                  </h4>
-                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
-                                    By Ashley Kahn
-                                  </p>
-                                </div>
+                                <button
+                                  onClick={() => window.open('https://www.thriftbooks.com', '_blank')}
+                                  style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    border: 'none',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  Purchase
+                                </button>
                               </div>
 
-                              {/* Book 4: Chasin' the Trane */}
+                              {/* Book 4 */}
                               <div style={{
                                 background: 'white',
                                 borderRadius: '8px',
                                 overflow: 'hidden',
                                 boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.2s',
-                                cursor: 'pointer'
+                                transition: 'transform 0.2s'
                               }}
                               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
                               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                              onClick={() => window.open('https://www.amazon.com/Chasin-Trane-Music-Mystique-Coltrane/dp/0306810204', '_blank')}
                               >
                                 <img
-                                  src="https://m.media-amazon.com/images/I/51aG3gxGO3L._SL1000_.jpg"
-                                  alt="Chasin' the Trane"
-                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                  src="https://m.media-amazon.com/images/I/81Cg4Xm7alL._UF1000,1000_QL80_.jpg"
+                                  alt="Book 4"
+                                  style={{ width: '100%', height: '400px', objectFit: 'cover', display: 'block' }}
                                 />
-                                <div style={{ padding: '0.75rem' }}>
-                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
-                                    Chasin' the Trane
-                                  </h4>
-                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
-                                    By J.C. Thomas
-                                  </p>
-                                </div>
+                                <button
+                                  onClick={() => window.open('https://www.amazon.com', '_blank')}
+                                  style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    background: '#3b82f6',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    border: 'none',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  Purchase
+                                </button>
                               </div>
                             </div>
                           )}
