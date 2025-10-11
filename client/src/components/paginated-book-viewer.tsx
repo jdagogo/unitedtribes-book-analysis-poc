@@ -7269,8 +7269,123 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </div>
                           )}
                           {discoveryTab === 'read' && (
-                            <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Read content coming soon...</p>
+                            <div style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(2, 1fr)',
+                              gap: '1rem',
+                              padding: '0.5rem'
+                            }}>
+                              {/* Book 1: Coltrane on Coltrane */}
+                              <div style={{
+                                background: 'white',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.2s',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                              onClick={() => window.open('https://www.amazon.com/Coltrane-Interviews-Conversations-Musicians/dp/1556527888', '_blank')}
+                              >
+                                <img
+                                  src="https://m.media-amazon.com/images/I/71uEJ3o7dPL._SL1500_.jpg"
+                                  alt="Coltrane on Coltrane"
+                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                />
+                                <div style={{ padding: '0.75rem' }}>
+                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
+                                    Coltrane on Coltrane
+                                  </h4>
+                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                                    The John Coltrane Interviews
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Book 2: John Coltrane: His Life and Music */}
+                              <div style={{
+                                background: 'white',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.2s',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                              onClick={() => window.open('https://www.amazon.com/John-Coltrane-Life-Music/dp/0472086650', '_blank')}
+                              >
+                                <img
+                                  src="https://m.media-amazon.com/images/I/71xKCR0gkCL._SL1500_.jpg"
+                                  alt="John Coltrane: His Life and Music"
+                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                />
+                                <div style={{ padding: '0.75rem' }}>
+                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
+                                    John Coltrane: His Life and Music
+                                  </h4>
+                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                                    By Lewis Porter
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Book 3: A Love Supreme */}
+                              <div style={{
+                                background: 'white',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.2s',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                              onClick={() => window.open('https://www.amazon.com/Love-Supreme-Story-Coltranes-Signature/dp/0143034650', '_blank')}
+                              >
+                                <img
+                                  src="https://m.media-amazon.com/images/I/71lXh0GCLNL._SL1500_.jpg"
+                                  alt="A Love Supreme: The Story of John Coltrane's Signature Album"
+                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                />
+                                <div style={{ padding: '0.75rem' }}>
+                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
+                                    A Love Supreme
+                                  </h4>
+                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                                    By Ashley Kahn
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Book 4: Chasin' the Trane */}
+                              <div style={{
+                                background: 'white',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.2s',
+                                cursor: 'pointer'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                              onClick={() => window.open('https://www.amazon.com/Chasin-Trane-Music-Mystique-Coltrane/dp/0306810204', '_blank')}
+                              >
+                                <img
+                                  src="https://m.media-amazon.com/images/I/51aG3gxGO3L._SL1000_.jpg"
+                                  alt="Chasin' the Trane"
+                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                />
+                                <div style={{ padding: '0.75rem' }}>
+                                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1f2937', margin: '0 0 0.25rem 0' }}>
+                                    Chasin' the Trane
+                                  </h4>
+                                  <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                                    By J.C. Thomas
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           )}
                           {discoveryTab === 'watch' && (
@@ -9492,7 +9607,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
 
                       {/* Album Cover Display with Hidden Audio Player */}
                       {!selectedVideo && !searchLoading && !searchQuery && searchResults.length === 0 && discoveryResults.length > 0 && discoveryResults[0].type === 'album_cover' && (
-                        <div style={{ marginTop: '0.25rem' }}>
+                        <div>
                           <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '1rem', color: '#1f2937' }}>
                             {discoveryResults[0].title}
                             {discoveryResults[0].subtitle && (
