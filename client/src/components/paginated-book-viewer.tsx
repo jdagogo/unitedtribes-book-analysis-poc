@@ -9156,7 +9156,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               </div>
 
                               {/* Tab Content */}
-                              <div style={{ padding: '1rem' }}>
+                              <div style={{ padding: discoveryTab === 'music' ? '0' : '1rem' }}>
                                 {discoveryTab === 'featured' && (
                                   <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
                                     Featured content coming soon...
@@ -9173,8 +9173,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   </div>
                                 )}
                                 {discoveryTab === 'music' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Music content coming soon...
+                                  <div>
+                                    {/* Music content displays via album cover below */}
                                   </div>
                                 )}
                                 {discoveryTab === 'explorer' && (
