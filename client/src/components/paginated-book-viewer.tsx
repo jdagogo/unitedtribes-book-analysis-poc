@@ -2402,6 +2402,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                   </div>
                 )}
 
+                {console.log('📄 Current Page Data:', 'Page:', currentPage.originalData?.page, 'Type:', currentPage.originalData?.type, 'Has Image:', !!currentPage.originalData?.image)}
+
                 {currentPage.originalData.type === 'page_image' && (
                   <div style={{
                     display: 'flex',
@@ -2409,12 +2411,40 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                     alignItems: 'center',
                     height: 'calc(100vh - 200px)'
                   }}>
+                    {console.log('🖼️ Rendering page_image type - Page:', currentPage.originalData?.page, 'Type:', currentPage.originalData.type)}
                     {currentPage.originalData.image && (
-                      <div style={{ position: 'relative', display: 'inline-block' }}>
+                      <div
+                        style={{
+                          position: 'relative',
+                          display: 'inline-block',
+                          cursor: currentPage.originalData?.page === 12 ? 'pointer' : 'default'
+                        }}
+                        onClick={() => {
+                          console.log('🖱️ DIV clicked! Page:', currentPage.originalData?.page, 'PageNumber:', currentPage.pageNumber);
+                          if (currentPage.originalData?.page === 12) {
+                            console.log('✅ Page 12 detected - opening music tab');
+                            setDiscoveryPanelExpanded(true);
+                            setDiscoveryTab('music');
+                            // Start playing the audio
+                            if (albumAudioIframeRef.current && !isAlbumAudioPlaying) {
+                              albumAudioIframeRef.current.contentWindow?.postMessage(
+                                JSON.stringify({ event: 'command', func: 'playVideo', args: [] }),
+                                '*'
+                              );
+                              setIsAlbumAudioPlaying(true);
+                            }
+                          }
+                        }}
+                      >
                         <img
                           src={currentPage.originalData.image}
                           alt={currentPage.originalData.title || "Page image"}
-                          style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
+                          style={{
+                            maxWidth: '88%',
+                            maxHeight: '85vh',
+                            height: 'auto',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                          }}
                         />
 
                         {/* FINAL INTERACTIVE HOTSPOTS for page 5 - STABLE POSITIONING */}
@@ -2630,7 +2660,29 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                       <img
                         src={currentPage.originalData.image}
                         alt={currentPage.originalData.title || "Album cover"}
-                        style={{ maxWidth: '88%', maxHeight: '85vh', height: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
+                        style={{
+                          maxWidth: '88%',
+                          maxHeight: '85vh',
+                          height: 'auto',
+                          boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                          cursor: currentPage.originalData?.page === 12 ? 'pointer' : 'default'
+                        }}
+                        onClick={() => {
+                          console.log('🎵 Album cover clicked! Page:', currentPage.originalData?.page);
+                          if (currentPage.originalData?.page === 12) {
+                            console.log('✅ Page 12 detected - opening music tab and playing audio');
+                            setDiscoveryPanelExpanded(true);
+                            setDiscoveryTab('music');
+                            // Start playing the audio
+                            if (albumAudioIframeRef.current && !isAlbumAudioPlaying) {
+                              albumAudioIframeRef.current.contentWindow?.postMessage(
+                                JSON.stringify({ event: 'command', func: 'playVideo', args: [] }),
+                                '*'
+                              );
+                              setIsAlbumAudioPlaying(true);
+                            }
+                          }
+                        }}
                       />
                     </div>
                   ) : (
@@ -4289,64 +4341,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         marginBottom: '1rem'
                       }}>
                         {searchError}
-                      </div>
-                    )}
-
-                    {!searchLoading && searchResults.length > 0 && (
-                      <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
-                        <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                          Search Results ({searchResults.length})
-                        </h4>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                          {searchResults.map((video: any) => (
-                            <div
-                              key={video.id}
-                              style={{
-                                cursor: 'pointer',
-                                borderRadius: '8px',
-                                overflow: 'hidden',
-                                background: 'white',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                transition: 'transform 0.2s, box-shadow 0.2s'
-                              }}
-                              onClick={() => embedVideo(video)}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                              }}
-                            >
-                              {video.thumbnail && (
-                                <img
-                                  src={video.thumbnail}
-                                  alt={video.title}
-                                  style={{ width: '100%', height: 'auto', display: 'block' }}
-                                />
-                              )}
-                              <div style={{ padding: '1rem' }}>
-                                <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
-                                  {video.title}
-                                </p>
-                                <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
-                                  {video.channel} • {video.duration}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
-                      <div style={{
-                        textAlign: 'center',
-                        padding: '2rem',
-                        color: '#6b7280'
-                      }}>
-                        No results found for "{searchQuery}"
                       </div>
                     )}
 
@@ -6770,6 +6764,65 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           </div>
                           </>
                         )}
+                      </div>
+                    )}
+
+                    {/* VIDEO SEARCH RESULTS - APPEARS AFTER ALL DISCOVERY PANELS */}
+                    {!searchLoading && searchResults.length > 0 && (
+                      <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
+                        <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                          Search Results ({searchResults.length})
+                        </h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                          {searchResults.map((video: any) => (
+                            <div
+                              key={video.id}
+                              style={{
+                                cursor: 'pointer',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                background: 'white',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.2s, box-shadow 0.2s'
+                              }}
+                              onClick={() => embedVideo(video)}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                              }}
+                            >
+                              {video.thumbnail && (
+                                <img
+                                  src={video.thumbnail}
+                                  alt={video.title}
+                                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                                />
+                              )}
+                              <div style={{ padding: '1rem' }}>
+                                <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                  {video.title}
+                                </p>
+                                <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                  {video.channel} • {video.duration}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
+                      <div style={{
+                        textAlign: 'center',
+                        padding: '2rem',
+                        color: '#6b7280'
+                      }}>
+                        No results found for "{searchQuery}"
                       </div>
                     )}
 
