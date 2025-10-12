@@ -4742,19 +4742,218 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           )}
 
                           {discoveryTab === 'explorer' && (
-                            <div>
-                              <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>🤖 United AI Explorer</h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                              {/* AI Search Section */}
+                              <div>
+                                <label style={{
+                                  fontSize: '16px',
+                                  fontWeight: '600',
+                                  color: '#1f2937',
+                                  marginBottom: '0.5rem',
+                                  display: 'block'
+                                }}>
+                                  Ask About Dexter Gordon
+                                </label>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                  <div style={{ position: 'relative', flex: 1 }}>
+                                    <input
+                                      type="text"
+                                      value={aiQuery}
+                                      onChange={(e) => setAiQuery(e.target.value)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !isAiSearching && aiQuery.trim()) {
+                                          handleUnitedAISearch();
+                                        }
+                                      }}
+                                      placeholder="What would you like to know about Dexter Gordon?"
+                                      disabled={isAiSearching}
+                                      style={{
+                                        width: '100%',
+                                        padding: '0.75rem',
+                                        paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                        fontSize: '16px',
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        outline: 'none',
+                                        transition: 'border-color 0.2s',
+                                        opacity: isAiSearching ? 0.6 : 1
+                                      }}
+                                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                    />
+                                    {aiQuery && (
+                                      <button
+                                        onClick={() => {
+                                          setAiQuery('');
+                                          setAiResults(null);
+                                          setAiError(null);
+                                        }}
+                                        style={{
+                                          position: 'absolute',
+                                          right: '0.5rem',
+                                          top: '50%',
+                                          transform: 'translateY(-50%)',
+                                          background: '#e5e7eb',
+                                          border: '2px solid #9ca3af',
+                                          color: '#1f2937',
+                                          fontSize: '20px',
+                                          fontWeight: '700',
+                                          cursor: 'pointer',
+                                          padding: 0,
+                                          lineHeight: 1,
+                                          borderRadius: '50%',
+                                          width: '28px',
+                                          height: '28px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.background = '#d1d5db';
+                                          e.currentTarget.style.borderColor = '#6b7280';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.background = '#e5e7eb';
+                                          e.currentTarget.style.borderColor = '#9ca3af';
+                                        }}
+                                        title="Clear"
+                                      >
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
+                                  <button
+                                    onClick={handleUnitedAISearch}
+                                    disabled={isAiSearching || !aiQuery.trim()}
+                                    style={{
+                                      background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      padding: '0.75rem 1.5rem',
+                                      fontSize: '16px',
+                                      fontWeight: '600',
+                                      cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                      transition: 'background 0.2s',
+                                      animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                                    }}
+                                  >
+                                    {isAiSearching ? 'Searching...' : 'Search'}
+                                  </button>
+                                </div>
 
-                              <div style={{ padding: '2rem', background: 'white', borderRadius: '6px', textAlign: 'center' }}>
-                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
-                                  AI-Powered Discovery Coming Soon
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.6' }}>
-                                  This tab will feature our special AI explorer API to help you discover deep connections
-                                  between artists, albums, and cultural movements.
-                                </p>
-                                <p style={{ fontSize: '14px', color: '#3b82f6', marginTop: '1rem' }}>
-                                  🔮 Stay tuned for intelligent recommendations and historical insights
+                                {/* Search Results */}
+                                {aiResults && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '1.5rem',
+                                    background: 'white',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e5e7eb',
+                                    maxHeight: '400px',
+                                    overflowY: 'auto',
+                                    position: 'relative'
+                                  }}>
+                                    <button
+                                      onClick={() => {
+                                        setAiResults(null);
+                                        setAiQuery('');
+                                        setAiError(null);
+                                      }}
+                                      style={{
+                                        position: 'absolute',
+                                        top: '0.75rem',
+                                        right: '0.75rem',
+                                        background: '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 1rem',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                      }}
+                                      onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                      onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                    >
+                                      Clear Results
+                                    </button>
+                                    <div style={{ paddingTop: '2.5rem' }}>
+                                      {formatNarrative(aiResults.narrative)}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {aiError && (
+                                  <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                    Error: {aiError}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Network Visualization */}
+                              <div>
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: '0.5rem'
+                                }}>
+                                  <label style={{
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: '#1f2937'
+                                  }}>
+                                    Blue Note Records Network Visualization
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      console.log('Expand button clicked!');
+                                      setShowVisualizationModal(true);
+                                    }}
+                                    style={{
+                                      background: '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '0.5rem',
+                                      transition: 'background 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                  >
+                                    <span>⤢</span> Expand
+                                  </button>
+                                </div>
+                                <div style={{
+                                  border: '2px solid #d1d5db',
+                                  borderRadius: '8px',
+                                  overflow: 'hidden',
+                                  background: '#f9fafb'
+                                }}>
+                                  <iframe
+                                    src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html"
+                                    style={{
+                                      width: '100%',
+                                      height: '400px',
+                                      border: 'none'
+                                    }}
+                                    title="Blue Note Records Network Visualization"
+                                  />
+                                </div>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Interactive network showing connections between Blue Note Records artists
                                 </p>
                               </div>
                             </div>
@@ -5939,8 +6138,220 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
-                            <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Explorer content coming soon...</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                              {/* AI Search Section */}
+                              <div>
+                                <label style={{
+                                  fontSize: '16px',
+                                  fontWeight: '600',
+                                  color: '#1f2937',
+                                  marginBottom: '0.5rem',
+                                  display: 'block'
+                                }}>
+                                  Ask About Hank Mobley
+                                </label>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                  <div style={{ position: 'relative', flex: 1 }}>
+                                    <input
+                                      type="text"
+                                      value={aiQuery}
+                                      onChange={(e) => setAiQuery(e.target.value)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !isAiSearching && aiQuery.trim()) {
+                                          handleUnitedAISearch();
+                                        }
+                                      }}
+                                      placeholder="What would you like to know about Hank Mobley?"
+                                      disabled={isAiSearching}
+                                      style={{
+                                        width: '100%',
+                                        padding: '0.75rem',
+                                        paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                        fontSize: '16px',
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        outline: 'none',
+                                        transition: 'border-color 0.2s',
+                                        opacity: isAiSearching ? 0.6 : 1
+                                      }}
+                                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                    />
+                                    {aiQuery && (
+                                      <button
+                                        onClick={() => {
+                                          setAiQuery('');
+                                          setAiResults(null);
+                                          setAiError(null);
+                                        }}
+                                        style={{
+                                          position: 'absolute',
+                                          right: '0.5rem',
+                                          top: '50%',
+                                          transform: 'translateY(-50%)',
+                                          background: '#e5e7eb',
+                                          border: '2px solid #9ca3af',
+                                          color: '#1f2937',
+                                          fontSize: '20px',
+                                          fontWeight: '700',
+                                          cursor: 'pointer',
+                                          padding: 0,
+                                          lineHeight: 1,
+                                          borderRadius: '50%',
+                                          width: '28px',
+                                          height: '28px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.background = '#d1d5db';
+                                          e.currentTarget.style.borderColor = '#6b7280';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.background = '#e5e7eb';
+                                          e.currentTarget.style.borderColor = '#9ca3af';
+                                        }}
+                                        title="Clear"
+                                      >
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
+                                  <button
+                                    onClick={handleUnitedAISearch}
+                                    disabled={isAiSearching || !aiQuery.trim()}
+                                    style={{
+                                      background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      padding: '0.75rem 1.5rem',
+                                      fontSize: '16px',
+                                      fontWeight: '600',
+                                      cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                      transition: 'background 0.2s',
+                                      animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                                    }}
+                                  >
+                                    {isAiSearching ? 'Searching...' : 'Search'}
+                                  </button>
+                                </div>
+
+                                {/* Search Results */}
+                                {aiResults && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '1.5rem',
+                                    background: 'white',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e5e7eb',
+                                    maxHeight: '400px',
+                                    overflowY: 'auto',
+                                    position: 'relative'
+                                  }}>
+                                    <button
+                                      onClick={() => {
+                                        setAiResults(null);
+                                        setAiQuery('');
+                                        setAiError(null);
+                                      }}
+                                      style={{
+                                        position: 'absolute',
+                                        top: '0.75rem',
+                                        right: '0.75rem',
+                                        background: '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 1rem',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                      }}
+                                      onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                      onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                    >
+                                      Clear Results
+                                    </button>
+                                    <div style={{ paddingTop: '2.5rem' }}>
+                                      {formatNarrative(aiResults.narrative)}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {aiError && (
+                                  <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                    Error: {aiError}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Network Visualization */}
+                              <div>
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: '0.5rem'
+                                }}>
+                                  <label style={{
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: '#1f2937'
+                                  }}>
+                                    Blue Note Records Network Visualization
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      console.log('Expand button clicked!');
+                                      setShowVisualizationModal(true);
+                                    }}
+                                    style={{
+                                      background: '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '0.5rem',
+                                      transition: 'background 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                  >
+                                    <span>⤢</span> Expand
+                                  </button>
+                                </div>
+                                <div style={{
+                                  border: '2px solid #d1d5db',
+                                  borderRadius: '8px',
+                                  overflow: 'hidden',
+                                  background: '#f9fafb'
+                                }}>
+                                  <iframe
+                                    src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html"
+                                    style={{
+                                      width: '100%',
+                                      height: '400px',
+                                      border: 'none'
+                                    }}
+                                    title="Blue Note Records Network Visualization"
+                                  />
+                                </div>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Interactive network showing connections between Blue Note Records artists
+                                </p>
+                              </div>
                             </div>
                           )}
                           </div>
@@ -6140,8 +6551,220 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </div>
                           )}
                           {discoveryTab === 'explorer' && (
-                            <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Explorer content coming soon...</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                              {/* AI Search Section */}
+                              <div>
+                                <label style={{
+                                  fontSize: '16px',
+                                  fontWeight: '600',
+                                  color: '#1f2937',
+                                  marginBottom: '0.5rem',
+                                  display: 'block'
+                                }}>
+                                  Ask About Sonny Rollins
+                                </label>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                  <div style={{ position: 'relative', flex: 1 }}>
+                                    <input
+                                      type="text"
+                                      value={aiQuery}
+                                      onChange={(e) => setAiQuery(e.target.value)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !isAiSearching && aiQuery.trim()) {
+                                          handleUnitedAISearch();
+                                        }
+                                      }}
+                                      placeholder="What would you like to know about Sonny Rollins?"
+                                      disabled={isAiSearching}
+                                      style={{
+                                        width: '100%',
+                                        padding: '0.75rem',
+                                        paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                        fontSize: '16px',
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        outline: 'none',
+                                        transition: 'border-color 0.2s',
+                                        opacity: isAiSearching ? 0.6 : 1
+                                      }}
+                                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                      onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                    />
+                                    {aiQuery && (
+                                      <button
+                                        onClick={() => {
+                                          setAiQuery('');
+                                          setAiResults(null);
+                                          setAiError(null);
+                                        }}
+                                        style={{
+                                          position: 'absolute',
+                                          right: '0.5rem',
+                                          top: '50%',
+                                          transform: 'translateY(-50%)',
+                                          background: '#e5e7eb',
+                                          border: '2px solid #9ca3af',
+                                          color: '#1f2937',
+                                          fontSize: '20px',
+                                          fontWeight: '700',
+                                          cursor: 'pointer',
+                                          padding: 0,
+                                          lineHeight: 1,
+                                          borderRadius: '50%',
+                                          width: '28px',
+                                          height: '28px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.background = '#d1d5db';
+                                          e.currentTarget.style.borderColor = '#6b7280';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.background = '#e5e7eb';
+                                          e.currentTarget.style.borderColor = '#9ca3af';
+                                        }}
+                                        title="Clear"
+                                      >
+                                        ×
+                                      </button>
+                                    )}
+                                  </div>
+                                  <button
+                                    onClick={handleUnitedAISearch}
+                                    disabled={isAiSearching || !aiQuery.trim()}
+                                    style={{
+                                      background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      padding: '0.75rem 1.5rem',
+                                      fontSize: '16px',
+                                      fontWeight: '600',
+                                      cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                      transition: 'background 0.2s',
+                                      animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                                    }}
+                                  >
+                                    {isAiSearching ? 'Searching...' : 'Search'}
+                                  </button>
+                                </div>
+
+                                {/* Search Results */}
+                                {aiResults && (
+                                  <div style={{
+                                    marginTop: '1rem',
+                                    padding: '1.5rem',
+                                    background: 'white',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e5e7eb',
+                                    maxHeight: '400px',
+                                    overflowY: 'auto',
+                                    position: 'relative'
+                                  }}>
+                                    <button
+                                      onClick={() => {
+                                        setAiResults(null);
+                                        setAiQuery('');
+                                        setAiError(null);
+                                      }}
+                                      style={{
+                                        position: 'absolute',
+                                        top: '0.75rem',
+                                        right: '0.75rem',
+                                        background: '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 1rem',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.2s'
+                                      }}
+                                      onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                      onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                    >
+                                      Clear Results
+                                    </button>
+                                    <div style={{ paddingTop: '2.5rem' }}>
+                                      {formatNarrative(aiResults.narrative)}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {aiError && (
+                                  <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                    Error: {aiError}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Network Visualization */}
+                              <div>
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: '0.5rem'
+                                }}>
+                                  <label style={{
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: '#1f2937'
+                                  }}>
+                                    Blue Note Records Network Visualization
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      console.log('Expand button clicked!');
+                                      setShowVisualizationModal(true);
+                                    }}
+                                    style={{
+                                      background: '#3b82f6',
+                                      color: 'white',
+                                      border: 'none',
+                                      borderRadius: '6px',
+                                      padding: '0.5rem 1rem',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '0.5rem',
+                                      transition: 'background 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                  >
+                                    <span>⤢</span> Expand
+                                  </button>
+                                </div>
+                                <div style={{
+                                  border: '2px solid #d1d5db',
+                                  borderRadius: '8px',
+                                  overflow: 'hidden',
+                                  background: '#f9fafb'
+                                }}>
+                                  <iframe
+                                    src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html"
+                                    style={{
+                                      width: '100%',
+                                      height: '400px',
+                                      border: 'none'
+                                    }}
+                                    title="Blue Note Records Network Visualization"
+                                  />
+                                </div>
+                                <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                  Interactive network showing connections between Blue Note Records artists
+                                </p>
+                              </div>
                             </div>
                           )}
                           </div>
@@ -10928,12 +11551,21 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
           } : currentPage?.originalData?.page === 8 ? {
             artist: 'Thelonious Monk',
             url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/thelonious-monk-network.html'
+          } : currentPage?.originalData?.page === 9 ? {
+            artist: 'Blue Note Records',
+            url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html'
           } : currentPage?.originalData?.page === 10 ? {
             artist: 'Art Blakey',
             url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/art-blakey-network.html'
+          } : currentPage?.originalData?.page === 11 ? {
+            artist: 'Blue Note Records',
+            url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html'
+          } : currentPage?.originalData?.page === 12 ? {
+            artist: 'Blue Note Records',
+            url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html'
           } : {
-            artist: 'John Coltrane',
-            url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/john-coltrane-network.html'
+            artist: 'Blue Note Records',
+            url: 'http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html'
           };
 
           return (
