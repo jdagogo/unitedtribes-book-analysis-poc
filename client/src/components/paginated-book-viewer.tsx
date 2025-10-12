@@ -2417,12 +2417,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         style={{
                           position: 'relative',
                           display: 'inline-block',
-                          cursor: currentPage.originalData?.page === 12 ? 'pointer' : 'default'
+                          cursor: [7, 12].includes(currentPage.originalData?.page) ? 'pointer' : 'default'
                         }}
                         onClick={() => {
                           console.log('🖱️ DIV clicked! Page:', currentPage.originalData?.page, 'PageNumber:', currentPage.pageNumber);
-                          if (currentPage.originalData?.page === 12) {
-                            console.log('✅ Page 12 detected - opening music tab');
+                          if ([7, 12].includes(currentPage.originalData?.page)) {
+                            console.log('✅ Album cover page detected - opening music tab');
                             setDiscoveryPanelExpanded(true);
                             setDiscoveryTab('music');
                             // Start playing the audio
@@ -2665,12 +2665,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           maxHeight: '85vh',
                           height: 'auto',
                           boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                          cursor: currentPage.originalData?.page === 12 ? 'pointer' : 'default'
+                          cursor: [7, 8, 9, 10, 11, 12].includes(currentPage.originalData?.page) ? 'pointer' : 'default'
                         }}
                         onClick={() => {
                           console.log('🎵 Album cover clicked! Page:', currentPage.originalData?.page);
-                          if (currentPage.originalData?.page === 12) {
-                            console.log('✅ Page 12 detected - opening music tab and playing audio');
+                          if ([7, 8, 9, 10, 11, 12].includes(currentPage.originalData?.page)) {
+                            console.log('✅ Album cover page detected - opening music tab and playing audio');
                             setDiscoveryPanelExpanded(true);
                             setDiscoveryTab('music');
                             // Start playing the audio
@@ -7775,64 +7775,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         </div>
                       )}
 
-                      {!searchLoading && searchResults.length > 0 && (
-                        <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
-                          <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                            Search Results ({searchResults.length})
-                          </h4>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                            {searchResults.map((video: any) => (
-                              <div
-                                key={video.id}
-                                style={{
-                                  cursor: 'pointer',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden',
-                                  background: 'white',
-                                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                  transition: 'transform 0.2s, box-shadow 0.2s'
-                                }}
-                                onClick={() => embedVideo(video)}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.transform = 'translateY(-2px)';
-                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.transform = 'translateY(0)';
-                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                                }}
-                              >
-                                {video.thumbnail && (
-                                  <img
-                                    src={video.thumbnail}
-                                    alt={video.title}
-                                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                                  />
-                                )}
-                                <div style={{ padding: '1rem' }}>
-                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
-                                    {video.title}
-                                  </p>
-                                  <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
-                                    {video.channel} • {video.duration}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
-                        <div style={{
-                          textAlign: 'center',
-                          padding: '2rem',
-                          color: '#6b7280'
-                        }}>
-                          No results found for "{searchQuery}"
-                        </div>
-                      )}
-
                       {/* DISCOVERY PANEL - PAGE 7 */}
                       <div style={{ marginTop: '2rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
@@ -8381,6 +8323,65 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   Interactive network showing connections between John Coltrane and related artists
                                 </p>
                               </div>
+                            </div>
+                          )}
+
+                          {/* VIDEO SEARCH RESULTS - APPEARS WITHIN ACTIVE TAB */}
+                          {!searchLoading && searchResults.length > 0 && (
+                            <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+                              <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Search Results ({searchResults.length})
+                              </h4>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {searchResults.map((video: any) => (
+                                  <div
+                                    key={video.id}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
+                                    }}
+                                    onClick={() => embedVideo(video)}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                    }}
+                                  >
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                        {video.title}
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
+                            <div style={{
+                              textAlign: 'center',
+                              padding: '2rem',
+                              color: '#6b7280'
+                            }}>
+                              No results found for "{searchQuery}"
                             </div>
                           )}
                           </div>
