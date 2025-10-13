@@ -106,7 +106,7 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       font-size: 1.125rem;
       font-weight: 700;
       margin-bottom: 0.25rem;
-      color: #000;
+      color: #1e40af;
       line-height: 1.4;
     }
 
