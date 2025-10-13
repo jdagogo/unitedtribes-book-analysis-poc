@@ -3814,5 +3814,21 @@
     "units": 100,
     "keyIndex": 0,
     "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1760386193891_74kubnqff": {
+    "endpoint": "search-track",
+    "timestamp": 1760386193891,
+    "date": "2025-10-13T20:09:53.891Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
+  },
+  "search-track_1760386532464_biemb4jqs": {
+    "endpoint": "search-track",
+    "timestamp": 1760386532464,
+    "date": "2025-10-13T20:15:32.464Z",
+    "units": 100,
+    "keyIndex": 0,
+    "keyName": "YOUTUBE_API_KEY"
   }
 }

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { X, ArrowLeft, Clock, MapPin, Globe, Play, ExternalLink } from "lucide-react";
+import { X, ArrowLeft, Clock, MapPin, Globe, Play, ExternalLink, Search, XCircle, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import WikipediaIntegration from './wikipedia-integration';
 import { SmartEntityText } from './smart-entity-text';
+import { DiscoveryModal } from './discovery-modal';
+import { VideoPlayerModal } from './video-player-modal';
 import type { PodcastAnalysis, BookAnalysis } from "@shared/schema";
 
 // Global video state manager - simplified approach
@@ -52,6 +54,19 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   }
 
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const [videoSearchQuery, setVideoSearchQuery] = useState<string>("");
+  const [videoSearchResults, setVideoSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Video player modal state
+  const [showVideoPlayerModal, setShowVideoPlayerModal] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
+  const [isLoadingVideo, setIsLoadingVideo] = useState(false);
+
+  // Discovery modal state
+  const [showDiscoveryModal, setShowDiscoveryModal] = useState(false);
+  const [discoverySearchQuery, setDiscoverySearchQuery] = useState<string>("");
 
   // Generate unique video ID
   const generateVideoId = (baseId: string) => `${entity?.id || 'unknown'}-${baseId}`;
@@ -60,6 +75,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   useEffect(() => {
     if (!isOpen) {
       setActiveVideoId(null);
+      setSelectedVideo(null);
+      setVideoEmbedHtml('');
+      setShowVideoPlayerModal(false);
       globalVideoState.clearPlaying();
     }
   }, [isOpen]);
@@ -67,11 +85,16 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   useEffect(() => {
     if (entity?.id) {
       setActiveVideoId(null);
+      setSelectedVideo(null);
+      setVideoEmbedHtml('');
+      setShowVideoPlayerModal(false);
       globalVideoState.clearPlaying();
     }
   }, [entity?.id]);
 
-  const handleVideoClick = (videoId: string) => {
+  const handleVideoClick = async (video: any) => {
+    console.log('🎬 handleVideoClick called with video:', video);
+
     // Pause podcast if playing
     if (onPausePodcast) {
       onPausePodcast();
@@ -81,11 +104,69 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
     setActiveVideoId(null);
     globalVideoState.clearPlaying();
 
-    // Start the new video after a brief delay
-    setTimeout(() => {
-      setActiveVideoId(videoId);
-      globalVideoState.setPlaying(videoId);
-    }, 100);
+    setIsLoadingVideo(true);
+    setSelectedVideo(video);
+
+    try {
+      const videoIdToUse = video.id || video.videoId;
+      console.log(`🎬 Fetching embed HTML for: ${videoIdToUse}`);
+
+      const response = await fetch(`/api/videos/${videoIdToUse}/embed-html`);
+      console.log(`📡 Response status: ${response.status}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const htmlContent = await response.text();
+      console.log(`📄 Received HTML content (${htmlContent.length} chars)`);
+
+      setVideoEmbedHtml(htmlContent);
+      setActiveVideoId(videoIdToUse);
+      globalVideoState.setPlaying(videoIdToUse);
+      setShowVideoPlayerModal(true);
+
+      console.log(`✅ Video modal opened successfully.`);
+    } catch (error) {
+      console.error('❌ Error loading video:', error);
+      alert(`Failed to load video "${video.title}".`);
+    } finally {
+      setIsLoadingVideo(false);
+    }
+  };
+
+  // Handler to open discovery modal
+  const handleOpenDiscovery = () => {
+    if (selectedVideo) {
+      setDiscoverySearchQuery(selectedVideo.title || '');
+      setShowDiscoveryModal(true);
+    }
+  };
+
+  // Video search handler - uses UnitedTribes video search API
+  const handleVideoSearch = async (query: string) => {
+    if (!query.trim()) {
+      setVideoSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const response = await fetch(`/api/youtube/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      setVideoSearchResults(data.results || []);
+    } catch (error) {
+      console.error('Video search error:', error);
+      setVideoSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Clear search
+  const handleClearSearch = () => {
+    setVideoSearchQuery("");
+    setVideoSearchResults([]);
   };
 
   // Create a working entity click handler that doesn't depend on undefined props
@@ -2237,6 +2318,88 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                 </div>
               </div>
 
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-xl font-semibold text-gray-900">🔍 Search Farm Aid 1985 Videos</h4>
+                  <p className="text-base text-gray-600 mt-1">Powered by UnitedTribes Video Discovery</p>
+                </div>
+
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-base"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button
+                            key={index}
+                            onClick={() => handleVideoClick(video)}
+                            className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden"
+                          >
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img
+                                src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+                                alt={video.title}
+                                className="absolute top-0 left-0 w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <div className="font-semibold text-base text-gray-900 mb-1 line-clamp-2">{video.title}</div>
+                              <div className="text-sm text-gray-600 line-clamp-1">{video.channel}</div>
+                              {video.duration && (
+                                <div className="text-xs text-gray-500 mt-1">{video.duration}</div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms like "Willie Nelson", "Merle Haggard", or "Bob Dylan"</div>
+                    </div>
+                  )}
+
               {/* Interactive Artist Catalog */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
@@ -2649,6 +2812,26 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
         onEntityClick={handleWikipediaEntityClick}
         existingEntities={[...(analysis?.entityAnalysis || (analysis as any)?.entities || []), ...expandedEntities.map(e => ({ entity: e }))]}
         onKnowledgeExpanded={handleKnowledgeExpanded}
+      />
+
+      {/* Discovery Modal - Works & Discovery Playlists */}
+      <DiscoveryModal
+        isOpen={showDiscoveryModal}
+        onClose={() => setShowDiscoveryModal(false)}
+        searchQuery={discoverySearchQuery}
+        entityType="song"
+      />
+
+      {/* Video Player Modal */}
+      <VideoPlayerModal
+        isOpen={showVideoPlayerModal}
+        onClose={() => {
+          setShowVideoPlayerModal(false);
+          setActiveVideoId(null);
+          globalVideoState.clearPlaying();
+        }}
+        videoEmbedHtml={videoEmbedHtml}
+        videoTitle={selectedVideo?.title || ''}
       />
     </div>
   );
