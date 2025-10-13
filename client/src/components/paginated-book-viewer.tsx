@@ -3658,7 +3658,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             />
                           )}
                           <div style={{ padding: '1rem' }}>
-                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                               {video.title}
                             </p>
                             <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -4407,7 +4407,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     />
                                   )}
                                   <div style={{ padding: '1rem' }}>
-                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                       {video.title}
                                     </p>
                                     <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -4534,7 +4534,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       />
                                     )}
                                     <div style={{ padding: '1rem' }}>
-                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                         {video.title}
                                       </p>
                                       <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -5224,7 +5224,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     />
                                   )}
                                   <div style={{ padding: '1rem' }}>
-                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                       {video.title}
                                     </p>
                                     <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -5686,7 +5686,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     />
                                   )}
                                   <div style={{ padding: '1rem' }}>
-                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                       {video.title}
                                     </p>
                                     <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -6950,7 +6950,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                 />
                               )}
                               <div style={{ padding: '1rem' }}>
-                                <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                   {video.title}
                                 </p>
                                 <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -7981,7 +7981,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     />
                                   )}
                                   <div style={{ padding: '1rem' }}>
-                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                       {video.title}
                                     </p>
                                     <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -8558,7 +8558,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       />
                                     )}
                                     <div style={{ padding: '1rem' }}>
-                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                         {video.title}
                                       </p>
                                       <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -9324,7 +9324,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   />
                                 )}
                                 <div style={{ padding: '1rem' }}>
-                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                     {video.title}
                                   </p>
                                   <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -10083,7 +10083,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         />
                                       )}
                                       <div style={{ padding: '1rem' }}>
-                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                           {video.title}
                                         </p>
                                         <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -10166,7 +10166,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       />
                                     )}
                                     <div style={{ padding: '1rem' }}>
-                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                         {video.title}
                                       </p>
                                       <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -10295,7 +10295,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                               />
                                             )}
                                             <div style={{ padding: '1rem' }}>
-                                              <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                              <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                                 {video.title}
                                               </p>
                                               <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -10581,7 +10581,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                             />
                                           )}
                                           <div style={{ padding: '1rem' }}>
-                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                               {video.title}
                                             </p>
                                             <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -10680,7 +10680,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       />
                                     )}
                                     <div style={{ padding: '1rem' }}>
-                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                         {video.title}
                                       </p>
                                       <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -11050,7 +11050,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                             />
                                           )}
                                           <div style={{ padding: '1rem' }}>
-                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                               {video.title}
                                             </p>
                                             <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -11210,7 +11210,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       />
                                     )}
                                     <div style={{ padding: '1rem' }}>
-                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                         {video.title}
                                       </p>
                                       <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -11580,7 +11580,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                             />
                                           )}
                                           <div style={{ padding: '1rem' }}>
-                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                               {video.title}
                                             </p>
                                             <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -12126,7 +12126,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                         />
                                       )}
                                       <div style={{ padding: '1rem' }}>
-                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                        <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                           {video.title}
                                         </p>
                                         <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
@@ -12185,7 +12185,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                     style={{ width: '100%', height: 'auto', display: 'block' }} />
                                 )}
                                 <div style={{ padding: '1rem' }}>
-                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
                                     {video.title}
                                   </p>
                                   <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
