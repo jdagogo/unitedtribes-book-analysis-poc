@@ -72,6 +72,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
   const [showPlayerView, setShowPlayerView] = useState(false);
   const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
+  const [videoAnalysisContent, setVideoAnalysisContent] = useState<string>('');
 
   // Discovery modal state
   const [showDiscoveryModal, setShowDiscoveryModal] = useState(false);
@@ -187,6 +188,40 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
     }
   };
 
+  // Handler for Video Analysis button click
+  const handleShowAnalysis = async () => {
+    if (!selectedVideo) return;
+
+    const videoIdToUse = selectedVideo.id || selectedVideo.videoId;
+    console.log('📄 Fetching analysis for:', videoIdToUse);
+
+    try {
+      // Fetch the embed HTML to extract analysis
+      const response = await fetch(`/api/videos/${videoIdToUse}/embed-html`);
+      if (!response.ok) {
+        console.error('Failed to fetch video data');
+        return;
+      }
+
+      const htmlContent = await response.text();
+
+      // Extract analysis text from the HTML
+      const analysisMatch = htmlContent.match(/<div class="analysis-text" id="analysis-text">\s*([\s\S]*?)\s*<\/div>/);
+      if (analysisMatch && analysisMatch[1]) {
+        const rawAnalysis = analysisMatch[1];
+        console.log('📊 Extracted analysis:', rawAnalysis.substring(0, 200) + '...');
+        setVideoAnalysisContent(rawAnalysis);
+        setShowPlayerView(true);
+      } else {
+        console.error('No analysis found in embed HTML');
+        setVideoAnalysisContent('No analysis available for this video.');
+        setShowPlayerView(true);
+      }
+    } catch (error) {
+      console.error('Error fetching analysis:', error);
+    }
+  };
+
   // Clear active video when modal closes or entity changes
   useEffect(() => {
     if (!isOpen) {
@@ -197,6 +232,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
       setShowInlineVideo(false);
       setShowPlaylistView(false);
       setShowPlayerView(false);
+      setVideoPlaylistData(null);
+      setVideoAnalysisContent('');
+      setCurrentPlaylist([]);
       globalVideoState.clearPlaying();
     }
   }, [isOpen]);
@@ -210,6 +248,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
       setShowInlineVideo(false);
       setShowPlaylistView(false);
       setShowPlayerView(false);
+      setVideoPlaylistData(null);
+      setVideoAnalysisContent('');
+      setCurrentPlaylist([]);
       globalVideoState.clearPlaying();
     }
   }, [entity?.id]);
@@ -1058,9 +1099,13 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                                 allowFullScreen
                               />
                               {!isActive && (
-                                <div 
+                                <div
                                   className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black bg-opacity-30 hover:bg-opacity-40 transition-all"
-                                  onClick={() => handleVideoClick(videoId)}
+                                  onClick={() => {
+                                    if (onPausePodcast) onPausePodcast();
+                                    setActiveVideoId(videoId);
+                                    globalVideoState.setPlaying(videoId);
+                                  }}
                                 >
                                   <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
                                     <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -1098,9 +1143,13 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                                 allowFullScreen
                               />
                               {!isActive && (
-                                <div 
+                                <div
                                   className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black bg-opacity-30 hover:bg-opacity-40 transition-all"
-                                  onClick={() => handleVideoClick(videoId)}
+                                  onClick={() => {
+                                    if (onPausePodcast) onPausePodcast();
+                                    setActiveVideoId(videoId);
+                                    globalVideoState.setPlaying(videoId);
+                                  }}
                                 >
                                   <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
                                     <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -1158,6 +1207,14 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                     {(() => {
                       const videoId = generateVideoId('main');
                       const isActive = activeVideoId === videoId;
+                      // Extract actual YouTube video ID from embed URL
+                      const youtubeVideoId = youtubeUrl.match(/embed\/([^?]+)/)?.[1] || '';
+                      const videoObj = {
+                        videoId: youtubeVideoId,
+                        id: youtubeVideoId,
+                        title: entity.name,
+                        channel: entity.category
+                      };
                       return (
                         <>
                           <iframe
@@ -1170,9 +1227,13 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                             allowFullScreen
                           />
                           {!isActive && (
-                            <div 
+                            <div
                               className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black bg-opacity-30 hover:bg-opacity-40 transition-all"
-                              onClick={() => handleVideoClick(videoId)}
+                              onClick={() => {
+                                if (onPausePodcast) onPausePodcast();
+                                setActiveVideoId(videoId);
+                                globalVideoState.setPlaying(videoId);
+                              }}
                             >
                               <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
                                 <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -1228,6 +1289,12 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   {(() => {
                     const videoId = generateVideoId('ken-burns');
                     const isActive = activeVideoId === videoId;
+                    const videoObj = {
+                      videoId: 'zqZxRr3dAZk',
+                      id: 'zqZxRr3dAZk',
+                      title: 'Ken Burns Country Music: The Bakersfield Sound',
+                      channel: 'PBS'
+                    };
                     return (
                       <>
                         <iframe
@@ -1240,9 +1307,13 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                           allowFullScreen
                         />
                         {!isActive && (
-                          <div 
+                          <div
                             className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black bg-opacity-30 hover:bg-opacity-40 transition-all"
-                            onClick={() => handleVideoClick(videoId)}
+                            onClick={() => {
+                              if (onPausePodcast) onPausePodcast();
+                              setActiveVideoId(videoId);
+                              globalVideoState.setPlaying(videoId);
+                            }}
                           >
                             <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
                               <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -1363,7 +1434,24 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {entity.videoResources.map((video: any, index: number) => {
                 const videoId = generateVideoId(`video-${entity.id}-${index}`);
                 const isActive = activeVideoId === videoId;
-                
+                // Extract YouTube video ID from URL (handles both /watch?v= and /embed/ formats)
+                let youtubeVideoId = '';
+                if (video.url) {
+                  if (video.url.includes('watch?v=')) {
+                    youtubeVideoId = video.url.split('watch?v=')[1]?.split('&')[0] || '';
+                  } else if (video.url.includes('youtu.be/')) {
+                    youtubeVideoId = video.url.split('youtu.be/')[1]?.split('?')[0] || '';
+                  } else {
+                    youtubeVideoId = video.url.split('/').pop() || '';
+                  }
+                }
+                const videoObj = {
+                  videoId: youtubeVideoId,
+                  id: youtubeVideoId,
+                  title: video.title,
+                  channel: video.description || entity.name
+                };
+
                 return (
                   <div key={`video-${entity.id}-${index}`} className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mb-4">
                     <div className="mb-4">
@@ -1376,9 +1464,13 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                     
                     <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                       {!isActive ? (
-                        <div 
+                        <div
                           className="absolute inset-0 cursor-pointer group"
-                          onClick={() => handleVideoClick(videoId)}
+                          onClick={() => {
+                            if (onPausePodcast) onPausePodcast();
+                            setActiveVideoId(videoId);
+                            globalVideoState.setPlaying(videoId);
+                          }}
                         >
                           {video.thumbnail && (
                             <img 
@@ -1396,7 +1488,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                         </div>
                       ) : (
                         <iframe
-                          src={`https://www.youtube.com/embed/${video.url.split('/').pop()}?rel=0&modestbranding=1&autoplay=1`}
+                          src={`https://www.youtube.com/embed/${youtubeVideoId}?rel=0&modestbranding=1&autoplay=1`}
                           title={video.title}
                           className="absolute top-0 left-0 w-full h-full"
                           frameBorder="0"
@@ -2601,7 +2693,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                         Works & Discovery Playlists
                       </button>
                       <button
-                        onClick={() => setShowPlayerView(true)}
+                        onClick={handleShowAnalysis}
                         style={{
                           backgroundColor: '#4a90e2',
                           color: 'white',
@@ -3187,6 +3279,40 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Video Analysis Modal (Blue Note style) */}
+      {showPlayerView && videoAnalysisContent && (
+        <>
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000,
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }} onClick={() => setShowPlayerView(false)}>
+            <div style={{
+              position: 'relative', width: '90%', maxWidth: '800px', maxHeight: '90vh',
+              background: 'white', borderRadius: '12px', padding: '1.5rem',
+              overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+            }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#000' }}>📄 Video Analysis</h3>
+                <button onClick={() => setShowPlayerView(false)} style={{
+                  background: '#ef4444', color: 'white', border: 'none',
+                  borderRadius: '6px', padding: '0.5rem 1rem',
+                  cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                }}>✕ Close</button>
+              </div>
+              <div
+                style={{
+                  fontSize: '18px',
+                  lineHeight: '1.7',
+                  color: '#000'
+                }}
+                dangerouslySetInnerHTML={{ __html: videoAnalysisContent }}
+              />
             </div>
           </div>
         </>
