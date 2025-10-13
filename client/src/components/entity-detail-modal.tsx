@@ -64,6 +64,14 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
   const [isLoadingVideo, setIsLoadingVideo] = useState(false);
 
+  // Inline video player state (Blue Note style)
+  const [showInlineVideo, setShowInlineVideo] = useState(false);
+
+  // Playlist and Player modal state (Blue Note style)
+  const [showPlaylistView, setShowPlaylistView] = useState(false);
+  const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
+  const [showPlayerView, setShowPlayerView] = useState(false);
+
   // Discovery modal state
   const [showDiscoveryModal, setShowDiscoveryModal] = useState(false);
   const [discoverySearchQuery, setDiscoverySearchQuery] = useState<string>("");
@@ -78,6 +86,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
       setSelectedVideo(null);
       setVideoEmbedHtml('');
       setShowVideoPlayerModal(false);
+      setShowInlineVideo(false);
+      setShowPlaylistView(false);
+      setShowPlayerView(false);
       globalVideoState.clearPlaying();
     }
   }, [isOpen]);
@@ -88,9 +99,33 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
       setSelectedVideo(null);
       setVideoEmbedHtml('');
       setShowVideoPlayerModal(false);
+      setShowInlineVideo(false);
+      setShowPlaylistView(false);
+      setShowPlayerView(false);
       globalVideoState.clearPlaying();
     }
   }, [entity?.id]);
+
+  // postMessage listener for playlist data from iframe (Blue Note style)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      console.log('📨 Received postMessage:', event.data);
+
+      if (event.data.type === 'SHOW_PLAYLIST_DATA') {
+        console.log('📋 Opening playlist modal with data:', event.data.data);
+        setVideoPlaylistData(event.data.data);
+        setShowPlaylistView(true);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    console.log('✅ postMessage listener registered');
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      console.log('🗑️ postMessage listener removed');
+    };
+  }, []);
 
   const handleVideoClick = async (video: any) => {
     console.log('🎬 handleVideoClick called with video:', video);
@@ -109,24 +144,21 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
 
     try {
       const videoIdToUse = video.id || video.videoId;
-      console.log(`🎬 Fetching embed HTML for: ${videoIdToUse}`);
+      console.log(`🎬 Loading video: ${videoIdToUse}`);
 
+      // Fetch video data for metadata
       const response = await fetch(`/api/videos/${videoIdToUse}/embed-html`);
-      console.log(`📡 Response status: ${response.status}`);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (response.ok) {
+        const htmlContent = await response.text();
+        setVideoEmbedHtml(htmlContent);
       }
 
-      const htmlContent = await response.text();
-      console.log(`📄 Received HTML content (${htmlContent.length} chars)`);
-
-      setVideoEmbedHtml(htmlContent);
       setActiveVideoId(videoIdToUse);
       globalVideoState.setPlaying(videoIdToUse);
-      setShowVideoPlayerModal(true);
+      setShowInlineVideo(true);
 
-      console.log(`✅ Video modal opened successfully.`);
+      console.log(`✅ Inline video displayed successfully.`);
     } catch (error) {
       console.error('❌ Error loading video:', error);
       alert(`Failed to load video "${video.title}".`);
@@ -2354,7 +2386,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                 </div>
               </div>
 
-              {/* Video Search Results */}
+              {/* Video Search Results - Hidden when video is playing */}
+              {!showInlineVideo && (
+                <>
                   {isSearching && (
                     <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
                       <div className="animate-pulse">Searching UnitedTribes video library...</div>
@@ -2381,8 +2415,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                               />
                             </div>
                             <div className="p-3">
-                              <div className="font-semibold text-base text-gray-900 mb-1 line-clamp-2">{video.title}</div>
-                              <div className="text-sm text-gray-600 line-clamp-1">{video.channel}</div>
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
                               {video.duration && (
                                 <div className="text-xs text-gray-500 mt-1">{video.duration}</div>
                               )}
@@ -2399,6 +2433,87 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                       <div className="text-sm">Try different search terms like "Willie Nelson", "Merle Haggard", or "Bob Dylan"</div>
                     </div>
                   )}
+                </>
+              )}
+
+              {/* Inline Video Player (Blue Note style) - Replaces search results */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  {/* Back to Search Button */}
+                  <button
+                    onClick={() => {
+                      setShowInlineVideo(false);
+                      setActiveVideoId(null);
+                      globalVideoState.clearPlaying();
+                    }}
+                    className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+
+                  {/* Video Title and Channel */}
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+
+                  {/* Video Container - Clean YouTube embed */}
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`}
+                        className="absolute top-0 left-0 w-full h-full rounded-lg"
+                        style={{ border: 'none' }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+
+                  {/* Button Container - Flush with video edges */}
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button
+                        onClick={() => setShowPlaylistView(true)}
+                        style={{
+                          backgroundColor: '#4a90e2',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}
+                      >
+                        Works & Discovery Playlists
+                      </button>
+                      <button
+                        onClick={() => setShowPlayerView(true)}
+                        style={{
+                          backgroundColor: '#4a90e2',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}
+                      >
+                        Video Analysis
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Interactive Artist Catalog */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4">
@@ -2822,8 +2937,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
         entityType="song"
       />
 
-      {/* Video Player Modal */}
-      <VideoPlayerModal
+      {/* Video Player Modal - Disabled in favor of inline video player */}
+      {/* <VideoPlayerModal
         isOpen={showVideoPlayerModal}
         onClose={() => {
           setShowVideoPlayerModal(false);
@@ -2832,7 +2947,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
         }}
         videoEmbedHtml={videoEmbedHtml}
         videoTitle={selectedVideo?.title || ''}
-      />
+      /> */}
     </div>
   );
 }
