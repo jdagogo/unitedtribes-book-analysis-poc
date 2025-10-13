@@ -4371,6 +4371,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           </button>
                         </div>
 
+                        {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                        {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                          <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                            <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                              Search Results ({searchResults.length})
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                              {searchResults.map((video: any) => (
+                                <div
+                                  key={video.id}
+                                  style={{
+                                    cursor: 'pointer',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    background: 'white',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    transition: 'transform 0.2s, box-shadow 0.2s'
+                                  }}
+                                  onClick={() => embedVideo(video)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                  }}
+                                >
+                                  {video.thumbnail && (
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      style={{ width: '100%', height: 'auto', display: 'block' }}
+                                    />
+                                  )}
+                                  <div style={{ padding: '1rem' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      {video.title}
+                                    </p>
+                                    <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                      {video.channel} • {video.duration}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {discoveryPanelExpanded && (
                           <>
                         {/* Tab Navigation */}
@@ -5139,6 +5188,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           </button>
                         </div>
 
+                        {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                        {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                          <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                            <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                              Search Results ({searchResults.length})
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                              {searchResults.map((video: any) => (
+                                <div
+                                  key={video.id}
+                                  style={{
+                                    cursor: 'pointer',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    background: 'white',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    transition: 'transform 0.2s, box-shadow 0.2s'
+                                  }}
+                                  onClick={() => embedVideo(video)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                  }}
+                                >
+                                  {video.thumbnail && (
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      style={{ width: '100%', height: 'auto', display: 'block' }}
+                                    />
+                                  )}
+                                  <div style={{ padding: '1rem' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      {video.title}
+                                    </p>
+                                    <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                      {video.channel} • {video.duration}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {discoveryPanelExpanded && (
                           <>
                         {/* Tab Navigation */}
@@ -5551,6 +5649,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
                           </button>
                         </div>
+
+                        {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                        {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                          <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                            <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                              Search Results ({searchResults.length})
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                              {searchResults.map((video: any) => (
+                                <div
+                                  key={video.id}
+                                  style={{
+                                    cursor: 'pointer',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    background: 'white',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    transition: 'transform 0.2s, box-shadow 0.2s'
+                                  }}
+                                  onClick={() => embedVideo(video)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                  }}
+                                >
+                                  {video.thumbnail && (
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      style={{ width: '100%', height: 'auto', display: 'block' }}
+                                    />
+                                  )}
+                                  <div style={{ padding: '1rem' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      {video.title}
+                                    </p>
+                                    <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                      {video.channel} • {video.duration}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
                         {discoveryPanelExpanded && (
                           <>
@@ -7798,6 +7945,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           </button>
                         </div>
 
+                        {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                        {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                          <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                            <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                              Search Results ({searchResults.length})
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                              {searchResults.map((video: any) => (
+                                <div
+                                  key={video.id}
+                                  style={{
+                                    cursor: 'pointer',
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    background: 'white',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    transition: 'transform 0.2s, box-shadow 0.2s'
+                                  }}
+                                  onClick={() => embedVideo(video)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                  }}
+                                >
+                                  {video.thumbnail && (
+                                    <img
+                                      src={video.thumbnail}
+                                      alt={video.title}
+                                      style={{ width: '100%', height: 'auto', display: 'block' }}
+                                    />
+                                  )}
+                                  <div style={{ padding: '1rem' }}>
+                                    <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                      {video.title}
+                                    </p>
+                                    <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                      {video.channel} • {video.duration}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {discoveryPanelExpanded && (
                           <>
                         {/* Tab Navigation */}
@@ -9934,6 +10130,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </button>
                           </div>
 
+                          {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                          {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                            <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                              <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Search Results ({searchResults.length})
+                              </h4>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {searchResults.map((video: any) => (
+                                  <div
+                                    key={video.id}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
+                                    }}
+                                    onClick={() => embedVideo(video)}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                    }}
+                                  >
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                        {video.title}
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
                           {discoveryPanelExpanded && (
                             <div>
                               {/* Tabs */}
@@ -10083,151 +10328,269 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   </div>
                                 )}
                                 {discoveryTab === 'explorer' && (
-                                  <div>
-                                    <h2 style={{
-                                      fontSize: '18px',
-                                      fontWeight: '700',
-                                      color: '#1f2937',
-                                      marginBottom: '1rem',
-                                      marginTop: 0
-                                    }}>
-                                      UnitedAI Chat Explorer
-                                    </h2>
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                      <div style={{ position: 'relative', flex: 1 }}>
-                                        <input
-                                          type="text"
-                                          value={aiQuery}
-                                          onChange={(e) => setAiQuery(e.target.value)}
-                                          onKeyDown={(e) => {
-                                            if (e.key === 'Enter' && !isAiSearching) {
-                                              e.preventDefault();
-                                              handleUnitedAISearch();
-                                            }
-                                          }}
-                                          placeholder="Ask about Blue Note Records..."
-                                          disabled={isAiSearching}
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                    {/* AI Search Section */}
+                                    <div>
+                                      <label style={{
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        color: '#1f2937',
+                                        marginBottom: '0.5rem',
+                                        display: 'block'
+                                      }}>
+                                        Ask About Blue Note Records
+                                      </label>
+                                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                        <div style={{ position: 'relative', flex: 1 }}>
+                                          <input
+                                            type="text"
+                                            value={aiQuery}
+                                            onChange={(e) => setAiQuery(e.target.value)}
+                                            onKeyDown={(e) => {
+                                              if (e.key === 'Enter' && !isAiSearching && aiQuery.trim()) {
+                                                handleUnitedAISearch();
+                                              }
+                                            }}
+                                            placeholder="What would you like to know about Blue Note Records?"
+                                            disabled={isAiSearching}
+                                            style={{
+                                              width: '100%',
+                                              padding: '0.75rem',
+                                              paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                              fontSize: '16px',
+                                              border: '2px solid #d1d5db',
+                                              borderRadius: '8px',
+                                              outline: 'none',
+                                              transition: 'border-color 0.2s',
+                                              opacity: isAiSearching ? 0.6 : 1
+                                            }}
+                                            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                            onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                          />
+                                          {aiQuery && (
+                                            <button
+                                              onClick={() => {
+                                                setAiQuery('');
+                                                setAiResults(null);
+                                                setAiError(null);
+                                              }}
+                                              style={{
+                                                position: 'absolute',
+                                                right: '0.5rem',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: '#e5e7eb',
+                                                border: '2px solid #9ca3af',
+                                                color: '#1f2937',
+                                                fontSize: '20px',
+                                                fontWeight: '700',
+                                                cursor: 'pointer',
+                                                padding: 0,
+                                                lineHeight: 1,
+                                                borderRadius: '50%',
+                                                width: '28px',
+                                                height: '28px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transition: 'all 0.2s'
+                                              }}
+                                              onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = '#d1d5db';
+                                                e.currentTarget.style.borderColor = '#6b7280';
+                                              }}
+                                              onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = '#e5e7eb';
+                                                e.currentTarget.style.borderColor = '#9ca3af';
+                                              }}
+                                              title="Clear"
+                                            >
+                                              ×
+                                            </button>
+                                          )}
+                                        </div>
+                                        <button
+                                          onClick={handleUnitedAISearch}
+                                          disabled={isAiSearching || !aiQuery.trim()}
                                           style={{
-                                            width: '100%',
-                                            padding: '0.75rem',
-                                            paddingRight: aiQuery ? '2.5rem' : '0.75rem',
-                                            fontSize: '16px',
-                                            border: '2px solid #d1d5db',
+                                            background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
                                             borderRadius: '8px',
-                                            outline: 'none',
-                                            transition: 'border-color 0.2s',
-                                            opacity: isAiSearching ? 0.6 : 1
+                                            padding: '0.75rem 1.5rem',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                            transition: 'background 0.2s',
+                                            animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
                                           }}
-                                          onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                                          onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                                        />
-                                        {aiQuery && (
+                                        >
+                                          {isAiSearching ? 'Searching...' : 'Search'}
+                                        </button>
+                                      </div>
+
+                                      {/* Search Results */}
+                                      {aiResults && (
+                                        <div style={{
+                                          marginTop: '1rem',
+                                          padding: '1.5rem',
+                                          background: 'white',
+                                          borderRadius: '8px',
+                                          border: '1px solid #e5e7eb',
+                                          maxHeight: '400px',
+                                          overflowY: 'auto',
+                                          position: 'relative'
+                                        }}>
                                           <button
                                             onClick={() => {
-                                              setAiQuery('');
                                               setAiResults(null);
+                                              setAiQuery('');
                                               setAiError(null);
                                             }}
                                             style={{
                                               position: 'absolute',
-                                              right: '0.5rem',
-                                              top: '50%',
-                                              transform: 'translateY(-50%)',
-                                              background: '#e5e7eb',
-                                              border: '2px solid #9ca3af',
-                                              color: '#1f2937',
-                                              fontSize: '20px',
-                                              fontWeight: '700',
+                                              top: '0.75rem',
+                                              right: '0.75rem',
+                                              background: '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '6px',
+                                              padding: '0.5rem 1rem',
+                                              fontSize: '14px',
+                                              fontWeight: '600',
                                               cursor: 'pointer',
-                                              padding: 0,
-                                              lineHeight: 1,
-                                              borderRadius: '50%',
-                                              width: '28px',
-                                              height: '28px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              justifyContent: 'center',
-                                              transition: 'all 0.2s'
+                                              transition: 'background 0.2s'
                                             }}
-                                            onMouseEnter={(e) => {
-                                              e.currentTarget.style.background = '#d1d5db';
-                                              e.currentTarget.style.borderColor = '#6b7280';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                              e.currentTarget.style.background = '#e5e7eb';
-                                              e.currentTarget.style.borderColor = '#9ca3af';
-                                            }}
-                                            title="Clear"
+                                            onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
                                           >
-                                            ×
+                                            Clear Results
                                           </button>
-                                        )}
-                                      </div>
-                                      <button
-                                        onClick={handleUnitedAISearch}
-                                        disabled={isAiSearching || !aiQuery.trim()}
-                                        style={{
-                                          background: isAiSearching ? '#2563eb' : '#3b82f6',
-                                          color: 'white',
-                                          border: 'none',
-                                          borderRadius: '8px',
-                                          padding: '0.75rem 1.5rem',
-                                          fontSize: '16px',
-                                          fontWeight: '600',
-                                          cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
-                                          transition: 'background 0.2s',
-                                          animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
-                                        }}
-                                      >
-                                        {isAiSearching ? 'Searching...' : 'Search'}
-                                      </button>
+                                          <div style={{ paddingTop: '2.5rem' }}>
+                                            {formatNarrative(aiResults.narrative)}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {aiError && (
+                                        <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                          Error: {aiError}
+                                        </p>
+                                      )}
                                     </div>
 
-                                    {/* AI Search Results */}
-                                    {isAiSearching && (
-                                      <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                        <div style={{ fontSize: '18px', fontWeight: '600' }}>🔍 Searching United AI...</div>
+                                    {/* Network Visualization */}
+                                    <div>
+                                      <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        marginBottom: '0.5rem'
+                                      }}>
+                                        <label style={{
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#1f2937'
+                                        }}>
+                                          Blue Note Records Network Visualization
+                                        </label>
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            console.log('Expand button clicked!');
+                                            setShowVisualizationModal(true);
+                                          }}
+                                          style={{
+                                            background: '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '14px',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            transition: 'background 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                          onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                        >
+                                          <span>⤢</span> Expand
+                                        </button>
                                       </div>
-                                    )}
+                                      <div style={{
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        background: '#f9fafb'
+                                      }}>
+                                        <iframe
+                                          src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html"
+                                          style={{
+                                            width: '100%',
+                                            height: '400px',
+                                            border: 'none'
+                                          }}
+                                          title="Blue Note Records Network Visualization"
+                                        />
+                                      </div>
+                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                        Interactive network showing connections between Blue Note Records artists
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
 
-                                    {!isAiSearching && discoveryResults.length > 0 && (
-                                      <div>
-                                        <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.75rem', color: '#1f2937' }}>
-                                          Results ({discoveryResults.length})
-                                        </h5>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                          {discoveryResults.map((result, idx) => (
-                                            <div
-                                              key={idx}
-                                              style={{
-                                                padding: '1rem',
-                                                background: '#f9fafb',
-                                                borderRadius: '8px',
-                                                border: '1px solid #e5e7eb'
-                                              }}
-                                            >
-                                              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#3b82f6', marginBottom: '0.5rem' }}>
-                                                {result.type}
-                                              </div>
-                                              <div style={{ fontSize: '16px', color: '#1f2937' }}>
-                                                {result.title || result.name}
-                                              </div>
-                                              {result.description && (
-                                                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
-                                                  {result.description}
-                                                </div>
-                                              )}
-                                            </div>
-                                          ))}
+                                {/* VIDEO SEARCH RESULTS - APPEARS WITHIN ACTIVE TAB */}
+                                {!searchLoading && searchResults.length > 0 && (
+                                  <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                      Search Results ({searchResults.length})
+                                    </h4>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                      {searchResults.map((video: any) => (
+                                        <div
+                                          key={video.id}
+                                          style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            background: 'white',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            transition: 'transform 0.2s, box-shadow 0.2s'
+                                          }}
+                                          onClick={() => embedVideo(video)}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                          }}
+                                        >
+                                          {video.thumbnail && (
+                                            <img
+                                              src={video.thumbnail}
+                                              alt={video.title}
+                                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                          )}
+                                          <div style={{ padding: '1rem' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                              {video.title}
+                                            </p>
+                                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                              {video.channel} • {video.duration}
+                                            </p>
+                                          </div>
                                         </div>
-                                      </div>
-                                    )}
-
-                                    {!isAiSearching && discoveryResults.length === 0 && aiQuery && (
-                                      <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                        No results found. Try a different search term.
-                                      </div>
-                                    )}
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -10251,64 +10614,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           marginBottom: '1rem'
                         }}>
                           {searchError}
-                        </div>
-                      )}
-
-                      {!searchLoading && searchResults.length > 0 && (
-                        <div style={{ marginTop: '2rem', flex: 1, overflowY: 'auto' }}>
-                          <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
-                            Search Results ({searchResults.length})
-                          </h4>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                            {searchResults.map((video: any) => (
-                              <div
-                                key={video.id}
-                                style={{
-                                  cursor: 'pointer',
-                                  borderRadius: '8px',
-                                  overflow: 'hidden',
-                                  background: 'white',
-                                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                  transition: 'transform 0.2s, box-shadow 0.2s'
-                                }}
-                                onClick={() => embedVideo(video)}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.transform = 'translateY(-2px)';
-                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.transform = 'translateY(0)';
-                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                                }}
-                              >
-                                {video.thumbnail && (
-                                  <img
-                                    src={video.thumbnail}
-                                    alt={video.title}
-                                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                                  />
-                                )}
-                                <div style={{ padding: '1rem' }}>
-                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
-                                    {video.title}
-                                  </p>
-                                  <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
-                                    {video.channel} • {video.duration}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {!searchLoading && !searchError && searchResults.length === 0 && searchQuery && (
-                        <div style={{
-                          textAlign: 'center',
-                          padding: '2rem',
-                          color: '#6b7280'
-                        }}>
-                          No results found for "{searchQuery}"
                         </div>
                       )}
 
@@ -10338,6 +10643,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               {discoveryPanelExpanded ? '▼ Collapse' : '▶ Expand'}
                             </button>
                           </div>
+
+                          {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                          {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                            <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                              <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Search Results ({searchResults.length})
+                              </h4>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {searchResults.map((video: any) => (
+                                  <div
+                                    key={video.id}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
+                                    }}
+                                    onClick={() => embedVideo(video)}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                    }}
+                                  >
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                        {video.title}
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
                           {discoveryPanelExpanded && (
                             <div>
@@ -10443,8 +10797,269 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   </div>
                                 )}
                                 {discoveryTab === 'explorer' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Explorer content coming soon...
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                    {/* AI Search Section */}
+                                    <div>
+                                      <label style={{
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        color: '#1f2937',
+                                        marginBottom: '0.5rem',
+                                        display: 'block'
+                                      }}>
+                                        Ask About Blue Note Records
+                                      </label>
+                                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                        <div style={{ position: 'relative', flex: 1 }}>
+                                          <input
+                                            type="text"
+                                            value={aiQuery}
+                                            onChange={(e) => setAiQuery(e.target.value)}
+                                            onKeyDown={(e) => {
+                                              if (e.key === 'Enter' && !isAiSearching && aiQuery.trim()) {
+                                                handleUnitedAISearch();
+                                              }
+                                            }}
+                                            placeholder="What would you like to know about Blue Note Records?"
+                                            disabled={isAiSearching}
+                                            style={{
+                                              width: '100%',
+                                              padding: '0.75rem',
+                                              paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                              fontSize: '16px',
+                                              border: '2px solid #d1d5db',
+                                              borderRadius: '8px',
+                                              outline: 'none',
+                                              transition: 'border-color 0.2s',
+                                              opacity: isAiSearching ? 0.6 : 1
+                                            }}
+                                            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                            onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                          />
+                                          {aiQuery && (
+                                            <button
+                                              onClick={() => {
+                                                setAiQuery('');
+                                                setAiResults(null);
+                                                setAiError(null);
+                                              }}
+                                              style={{
+                                                position: 'absolute',
+                                                right: '0.5rem',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: '#e5e7eb',
+                                                border: '2px solid #9ca3af',
+                                                color: '#1f2937',
+                                                fontSize: '20px',
+                                                fontWeight: '700',
+                                                cursor: 'pointer',
+                                                padding: 0,
+                                                lineHeight: 1,
+                                                borderRadius: '50%',
+                                                width: '28px',
+                                                height: '28px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transition: 'all 0.2s'
+                                              }}
+                                              onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = '#d1d5db';
+                                                e.currentTarget.style.borderColor = '#6b7280';
+                                              }}
+                                              onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = '#e5e7eb';
+                                                e.currentTarget.style.borderColor = '#9ca3af';
+                                              }}
+                                              title="Clear"
+                                            >
+                                              ×
+                                            </button>
+                                          )}
+                                        </div>
+                                        <button
+                                          onClick={handleUnitedAISearch}
+                                          disabled={isAiSearching || !aiQuery.trim()}
+                                          style={{
+                                            background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            padding: '0.75rem 1.5rem',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                            transition: 'background 0.2s',
+                                            animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                                          }}
+                                        >
+                                          {isAiSearching ? 'Searching...' : 'Search'}
+                                        </button>
+                                      </div>
+
+                                      {/* Search Results */}
+                                      {aiResults && (
+                                        <div style={{
+                                          marginTop: '1rem',
+                                          padding: '1.5rem',
+                                          background: 'white',
+                                          borderRadius: '8px',
+                                          border: '1px solid #e5e7eb',
+                                          maxHeight: '400px',
+                                          overflowY: 'auto',
+                                          position: 'relative'
+                                        }}>
+                                          <button
+                                            onClick={() => {
+                                              setAiResults(null);
+                                              setAiQuery('');
+                                              setAiError(null);
+                                            }}
+                                            style={{
+                                              position: 'absolute',
+                                              top: '0.75rem',
+                                              right: '0.75rem',
+                                              background: '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '6px',
+                                              padding: '0.5rem 1rem',
+                                              fontSize: '14px',
+                                              fontWeight: '600',
+                                              cursor: 'pointer',
+                                              transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                          >
+                                            Clear Results
+                                          </button>
+                                          <div style={{ paddingTop: '2.5rem' }}>
+                                            {formatNarrative(aiResults.narrative)}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {aiError && (
+                                        <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                          Error: {aiError}
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    {/* Network Visualization */}
+                                    <div>
+                                      <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        marginBottom: '0.5rem'
+                                      }}>
+                                        <label style={{
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#1f2937'
+                                        }}>
+                                          Blue Note Records Network Visualization
+                                        </label>
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            console.log('Expand button clicked!');
+                                            setShowVisualizationModal(true);
+                                          }}
+                                          style={{
+                                            background: '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '14px',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            transition: 'background 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                          onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                        >
+                                          <span>⤢</span> Expand
+                                        </button>
+                                      </div>
+                                      <div style={{
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        background: '#f9fafb'
+                                      }}>
+                                        <iframe
+                                          src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html"
+                                          style={{
+                                            width: '100%',
+                                            height: '400px',
+                                            border: 'none'
+                                          }}
+                                          title="Blue Note Records Network Visualization"
+                                        />
+                                      </div>
+                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                        Interactive network showing connections between Blue Note Records artists
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* VIDEO SEARCH RESULTS - APPEARS WITHIN ACTIVE TAB */}
+                                {!searchLoading && searchResults.length > 0 && (
+                                  <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                      Search Results ({searchResults.length})
+                                    </h4>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                      {searchResults.map((video: any) => (
+                                        <div
+                                          key={video.id}
+                                          style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            background: 'white',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            transition: 'transform 0.2s, box-shadow 0.2s'
+                                          }}
+                                          onClick={() => embedVideo(video)}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                          }}
+                                        >
+                                          {video.thumbnail && (
+                                            <img
+                                              src={video.thumbnail}
+                                              alt={video.title}
+                                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                          )}
+                                          <div style={{ padding: '1rem' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                              {video.title}
+                                            </p>
+                                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                              {video.channel} • {video.duration}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -10559,6 +11174,55 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                             </button>
                           </div>
 
+                          {/* VIDEO SEARCH RESULTS - WHEN PANEL IS COLLAPSED */}
+                          {!discoveryPanelExpanded && !searchLoading && searchResults.length > 0 && (
+                            <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+                              <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                Search Results ({searchResults.length})
+                              </h4>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {searchResults.map((video: any) => (
+                                  <div
+                                    key={video.id}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
+                                    }}
+                                    onClick={() => embedVideo(video)}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                    }}
+                                  >
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                        {video.title}
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
                           {discoveryPanelExpanded && (
                             <div>
                               {/* Tabs */}
@@ -10663,8 +11327,269 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                   </div>
                                 )}
                                 {discoveryTab === 'explorer' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Explorer content coming soon...
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                    {/* AI Search Section */}
+                                    <div>
+                                      <label style={{
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        color: '#1f2937',
+                                        marginBottom: '0.5rem',
+                                        display: 'block'
+                                      }}>
+                                        Ask About Blue Note Records
+                                      </label>
+                                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                                        <div style={{ position: 'relative', flex: 1 }}>
+                                          <input
+                                            type="text"
+                                            value={aiQuery}
+                                            onChange={(e) => setAiQuery(e.target.value)}
+                                            onKeyDown={(e) => {
+                                              if (e.key === 'Enter' && !isAiSearching && aiQuery.trim()) {
+                                                handleUnitedAISearch();
+                                              }
+                                            }}
+                                            placeholder="What would you like to know about Blue Note Records?"
+                                            disabled={isAiSearching}
+                                            style={{
+                                              width: '100%',
+                                              padding: '0.75rem',
+                                              paddingRight: aiQuery ? '2.5rem' : '0.75rem',
+                                              fontSize: '16px',
+                                              border: '2px solid #d1d5db',
+                                              borderRadius: '8px',
+                                              outline: 'none',
+                                              transition: 'border-color 0.2s',
+                                              opacity: isAiSearching ? 0.6 : 1
+                                            }}
+                                            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                            onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                          />
+                                          {aiQuery && (
+                                            <button
+                                              onClick={() => {
+                                                setAiQuery('');
+                                                setAiResults(null);
+                                                setAiError(null);
+                                              }}
+                                              style={{
+                                                position: 'absolute',
+                                                right: '0.5rem',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: '#e5e7eb',
+                                                border: '2px solid #9ca3af',
+                                                color: '#1f2937',
+                                                fontSize: '20px',
+                                                fontWeight: '700',
+                                                cursor: 'pointer',
+                                                padding: 0,
+                                                lineHeight: 1,
+                                                borderRadius: '50%',
+                                                width: '28px',
+                                                height: '28px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transition: 'all 0.2s'
+                                              }}
+                                              onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = '#d1d5db';
+                                                e.currentTarget.style.borderColor = '#6b7280';
+                                              }}
+                                              onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = '#e5e7eb';
+                                                e.currentTarget.style.borderColor = '#9ca3af';
+                                              }}
+                                              title="Clear"
+                                            >
+                                              ×
+                                            </button>
+                                          )}
+                                        </div>
+                                        <button
+                                          onClick={handleUnitedAISearch}
+                                          disabled={isAiSearching || !aiQuery.trim()}
+                                          style={{
+                                            background: isAiSearching ? '#2563eb' : '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '8px',
+                                            padding: '0.75rem 1.5rem',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            cursor: isAiSearching || !aiQuery.trim() ? 'not-allowed' : 'pointer',
+                                            transition: 'background 0.2s',
+                                            animation: isAiSearching ? 'buttonPulse 1.5s ease-in-out infinite' : 'none'
+                                          }}
+                                        >
+                                          {isAiSearching ? 'Searching...' : 'Search'}
+                                        </button>
+                                      </div>
+
+                                      {/* Search Results */}
+                                      {aiResults && (
+                                        <div style={{
+                                          marginTop: '1rem',
+                                          padding: '1.5rem',
+                                          background: 'white',
+                                          borderRadius: '8px',
+                                          border: '1px solid #e5e7eb',
+                                          maxHeight: '400px',
+                                          overflowY: 'auto',
+                                          position: 'relative'
+                                        }}>
+                                          <button
+                                            onClick={() => {
+                                              setAiResults(null);
+                                              setAiQuery('');
+                                              setAiError(null);
+                                            }}
+                                            style={{
+                                              position: 'absolute',
+                                              top: '0.75rem',
+                                              right: '0.75rem',
+                                              background: '#3b82f6',
+                                              color: 'white',
+                                              border: 'none',
+                                              borderRadius: '6px',
+                                              padding: '0.5rem 1rem',
+                                              fontSize: '14px',
+                                              fontWeight: '600',
+                                              cursor: 'pointer',
+                                              transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                          >
+                                            Clear Results
+                                          </button>
+                                          <div style={{ paddingTop: '2.5rem' }}>
+                                            {formatNarrative(aiResults.narrative)}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {aiError && (
+                                        <p style={{ fontSize: '14px', color: '#ef4444', marginTop: '0.5rem' }}>
+                                          Error: {aiError}
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    {/* Network Visualization */}
+                                    <div>
+                                      <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        marginBottom: '0.5rem'
+                                      }}>
+                                        <label style={{
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#1f2937'
+                                        }}>
+                                          Blue Note Records Network Visualization
+                                        </label>
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            console.log('Expand button clicked!');
+                                            setShowVisualizationModal(true);
+                                          }}
+                                          style={{
+                                            background: '#3b82f6',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            padding: '0.5rem 1rem',
+                                            fontSize: '14px',
+                                            fontWeight: '600',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            transition: 'background 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                          onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                        >
+                                          <span>⤢</span> Expand
+                                        </button>
+                                      </div>
+                                      <div style={{
+                                        border: '2px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        background: '#f9fafb'
+                                      }}>
+                                        <iframe
+                                          src="http://unitedtribes-visualizations-1758769416.s3-website-us-east-1.amazonaws.com/blue-note-hub.html"
+                                          style={{
+                                            width: '100%',
+                                            height: '400px',
+                                            border: 'none'
+                                          }}
+                                          title="Blue Note Records Network Visualization"
+                                        />
+                                      </div>
+                                      <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '0.5rem' }}>
+                                        Interactive network showing connections between Blue Note Records artists
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* VIDEO SEARCH RESULTS - APPEARS WITHIN ACTIVE TAB */}
+                                {!searchLoading && searchResults.length > 0 && (
+                                  <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' }}>
+                                      Search Results ({searchResults.length})
+                                    </h4>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                      {searchResults.map((video: any) => (
+                                        <div
+                                          key={video.id}
+                                          style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            background: 'white',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            transition: 'transform 0.2s, box-shadow 0.2s'
+                                          }}
+                                          onClick={() => embedVideo(video)}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                          }}
+                                        >
+                                          {video.thumbnail && (
+                                            <img
+                                              src={video.thumbnail}
+                                              alt={video.title}
+                                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                          )}
+                                          <div style={{ padding: '1rem' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1f2937' }}>
+                                              {video.title}
+                                            </p>
+                                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                              {video.channel} • {video.duration}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                               </div>
