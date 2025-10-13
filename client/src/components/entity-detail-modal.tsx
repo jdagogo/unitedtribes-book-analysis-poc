@@ -71,6 +71,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   const [showPlaylistView, setShowPlaylistView] = useState(false);
   const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
   const [showPlayerView, setShowPlayerView] = useState(false);
+  const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
 
   // Discovery modal state
   const [showDiscoveryModal, setShowDiscoveryModal] = useState(false);
@@ -78,6 +79,113 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
 
   // Generate unique video ID
   const generateVideoId = (baseId: string) => `${entity?.id || 'unknown'}-${baseId}`;
+
+  // Playlist management functions (Blue Note style)
+  const toggleIndividualSong = (song: any) => {
+    const isAdded = currentPlaylist.some(item =>
+      item.title === song.title && item.artist === song.artist
+    );
+    if (isAdded) {
+      setCurrentPlaylist(currentPlaylist.filter(item =>
+        !(item.title === song.title && item.artist === song.artist)
+      ));
+    } else {
+      setCurrentPlaylist([...currentPlaylist, song]);
+    }
+  };
+
+  const toggleAllWorks = (isWorks: boolean) => {
+    if (!videoPlaylistData?.works) return;
+    const works = videoPlaylistData.works;
+    const allAdded = works.every((work: any) =>
+      currentPlaylist.some(item => item.title === work.title && item.artist === work.artist)
+    );
+    if (allAdded) {
+      // Remove all works
+      setCurrentPlaylist(currentPlaylist.filter(item =>
+        !works.some((work: any) => work.title === item.title && work.artist === item.artist)
+      ));
+    } else {
+      // Add all works that aren't already in playlist
+      const newWorks = works.filter((work: any) =>
+        !currentPlaylist.some(item => item.title === work.title && item.artist === work.artist)
+      );
+      setCurrentPlaylist([...currentPlaylist, ...newWorks]);
+    }
+  };
+
+  const areAllWorksAdded = (isWorks: boolean) => {
+    if (!videoPlaylistData?.works || videoPlaylistData.works.length === 0) return false;
+    return videoPlaylistData.works.every((work: any) =>
+      currentPlaylist.some(item => item.title === work.title && item.artist === work.artist)
+    );
+  };
+
+  const toggleAllPlaylistTracks = (playlistName: string, tracks: any[]) => {
+    const allAdded = tracks.every((track: any) =>
+      currentPlaylist.some(item => item.title === track.title && item.artist === track.artist)
+    );
+    if (allAdded) {
+      // Remove all tracks from this playlist
+      setCurrentPlaylist(currentPlaylist.filter(item =>
+        !tracks.some((track: any) => track.title === item.title && track.artist === item.artist)
+      ));
+    } else {
+      // Add all tracks that aren't already in playlist
+      const newTracks = tracks.filter((track: any) =>
+        !currentPlaylist.some(item => item.title === track.title && item.artist === track.artist)
+      );
+      setCurrentPlaylist([...currentPlaylist, ...newTracks]);
+    }
+  };
+
+  const areAllPlaylistTracksAdded = (playlistName: string, tracks: any[]) => {
+    if (!tracks || tracks.length === 0) return false;
+    return tracks.every((track: any) =>
+      currentPlaylist.some(item => item.title === track.title && item.artist === track.artist)
+    );
+  };
+
+  const clearPlaylist = () => {
+    setCurrentPlaylist([]);
+  };
+
+  const playPlaylist = () => {
+    console.log('Playing playlist:', currentPlaylist);
+    // TODO: Implement playlist playback
+  };
+
+  // Handler for playlist button click
+  const handleShowPlaylist = async () => {
+    if (!selectedVideo) return;
+
+    const videoIdToUse = selectedVideo.id || selectedVideo.videoId;
+    console.log('📋 Fetching playlist data for:', videoIdToUse);
+
+    try {
+      // Fetch the embed HTML to extract video data
+      const response = await fetch(`/api/videos/${videoIdToUse}/embed-html`);
+      if (!response.ok) {
+        console.error('Failed to fetch video data');
+        return;
+      }
+
+      const htmlContent = await response.text();
+
+      // Extract video data from the HTML
+      const videoDataMatch = htmlContent.match(/<div id="video-data" class="hidden">\s*([\s\S]*?)\s*<\/div>/);
+      if (videoDataMatch && videoDataMatch[1]) {
+        const videoData = JSON.parse(videoDataMatch[1].trim());
+        console.log('📊 Extracted video data:', videoData);
+        setVideoPlaylistData(videoData);
+        setShowPlaylistView(true);
+      } else {
+        console.error('No video data found in embed HTML');
+      }
+    } catch (error) {
+      console.error('Error fetching playlist data:', error);
+    }
+  };
 
   // Clear active video when modal closes or entity changes
   useEffect(() => {
@@ -2475,7 +2583,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <div className="w-[85%] mx-auto">
                     <div className="flex justify-between mt-4">
                       <button
-                        onClick={() => setShowPlaylistView(true)}
+                        onClick={handleShowPlaylist}
                         style={{
                           backgroundColor: '#4a90e2',
                           color: 'white',
@@ -2936,6 +3044,153 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
         searchQuery={discoverySearchQuery}
         entityType="song"
       />
+
+      {/* Playlist Modal (Blue Note style) */}
+      {showPlaylistView && videoPlaylistData && (
+        <>
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000,
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }} onClick={() => setShowPlaylistView(false)}>
+            <div style={{
+              position: 'relative', width: '90%', maxWidth: '600px', maxHeight: '90vh',
+              background: 'white', borderRadius: '12px', padding: '1.5rem',
+              overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+            }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#000' }}>📚 Works & Playlists</h3>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{
+                    background: '#10b981', color: 'white', padding: '0.5rem 1rem',
+                    borderRadius: '6px', fontSize: '16px', fontWeight: '600'
+                  }}>
+                    🎵 Playlist: {currentPlaylist.length} tracks
+                  </div>
+                  {currentPlaylist.length > 0 && (
+                    <>
+                      <button onClick={() => { playPlaylist(); setShowPlaylistView(false); }} style={{
+                        background: '#3b82f6', color: 'white', border: 'none',
+                        borderRadius: '6px', padding: '0.5rem 1rem',
+                        cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                      }}>▶ Play All</button>
+                      <button onClick={clearPlaylist} style={{
+                        background: '#f59e0b', color: 'white', border: 'none',
+                        borderRadius: '6px', padding: '0.5rem 1rem',
+                        cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                      }}>Clear</button>
+                    </>
+                  )}
+                  <button onClick={() => setShowPlaylistView(false)} style={{
+                    background: '#ef4444', color: 'white', border: 'none',
+                    borderRadius: '6px', padding: '0.5rem 1rem',
+                    cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                  }}>✕ Close</button>
+                </div>
+              </div>
+              {videoPlaylistData.works && videoPlaylistData.works.length > 0 && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <h4 style={{ fontSize: '22px', fontWeight: '600', color: '#000' }}>
+                      🎵 Works Mentioned ({videoPlaylistData.works.length})
+                    </h4>
+                    <button onClick={() => toggleAllWorks(true)} style={{
+                      background: areAllWorksAdded(true) ? '#ef4444' : '#3b82f6',
+                      color: 'white', border: 'none', borderRadius: '6px',
+                      padding: '0.5rem 1rem', cursor: 'pointer',
+                      fontSize: '16px', fontWeight: '600'
+                    }}>
+                      {areAllWorksAdded(true) ? '- Remove All' : '+ Add All'}
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                    {videoPlaylistData.works.map((work: any, idx: number) => {
+                      const isAdded = currentPlaylist.some(item =>
+                        item.title === work.title && item.artist === work.artist
+                      );
+                      return (
+                        <div key={idx} style={{
+                          background: isAdded ? '#dcfce7' : '#f0fdf4',
+                          border: isAdded ? '2px solid #16a34a' : '2px solid #22c55e',
+                          borderRadius: '8px', padding: '0.75rem 1rem',
+                          fontSize: '18px', display: 'flex',
+                          alignItems: 'center', gap: '0.5rem',
+                          color: '#000', opacity: isAdded ? 0.8 : 1
+                        }}>
+                          <button onClick={() => toggleIndividualSong(work)} style={{
+                            background: isAdded ? '#ef4444' : '#3b82f6',
+                            color: 'white', border: 'none', borderRadius: '4px',
+                            padding: '0.25rem 0.5rem', cursor: 'pointer',
+                            fontSize: '14px', fontWeight: '600', marginRight: '0.5rem'
+                          }}>
+                            {isAdded ? '- Remove' : '+ Add'}
+                          </button>
+                          <strong>{work.title}</strong> - {work.artist}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {videoPlaylistData.playlists && videoPlaylistData.playlists.length > 0 && (
+                <div>
+                  <h4 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '1rem', color: '#000' }}>
+                    🎼 Discovery Playlists ({videoPlaylistData.playlists.length})
+                  </h4>
+                  <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
+                    {videoPlaylistData.playlists.map((playlist: any, idx: number) => (
+                      <div key={idx} style={{
+                        marginBottom: '1.5rem', background: '#faf5ff',
+                        border: '2px solid #8b5cf6', borderRadius: '8px', padding: '1rem'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                          <h5 style={{ fontSize: '20px', fontWeight: '600', color: '#000' }}>
+                            {playlist.name}
+                          </h5>
+                          <button onClick={() => toggleAllPlaylistTracks(playlist.name, playlist.tracks)} style={{
+                            background: areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '#ef4444' : '#3b82f6',
+                            color: 'white', border: 'none', borderRadius: '6px',
+                            padding: '0.4rem 0.8rem', cursor: 'pointer',
+                            fontSize: '15px', fontWeight: '600'
+                          }}>
+                            {areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '- Remove All' : '+ Add All'}
+                          </button>
+                        </div>
+                        <div style={{ fontSize: '16px', color: '#000' }}>
+                          {playlist.tracks.map((track: any, tidx: number) => {
+                            const isAdded = currentPlaylist.some(item =>
+                              item.title === track.title && item.artist === track.artist
+                            );
+                            return (
+                              <div key={tidx} style={{
+                                marginBottom: '0.5rem', display: 'flex', alignItems: 'center',
+                                gap: '0.5rem', padding: '0.25rem 0.5rem',
+                                background: isAdded ? '#dcfce7' : 'transparent', borderRadius: '4px'
+                              }}>
+                                <button onClick={() => toggleIndividualSong(track)} style={{
+                                  background: isAdded ? '#ef4444' : '#3b82f6',
+                                  color: 'white', border: 'none', borderRadius: '4px',
+                                  padding: '0.2rem 0.4rem', cursor: 'pointer',
+                                  fontSize: '12px', fontWeight: '600', opacity: 1
+                                }}>
+                                  {isAdded ? '- Remove' : '+ Add'}
+                                </button>
+                                <span style={{ opacity: isAdded ? 0.8 : 1 }}>
+                                  <strong>"{track.title}"</strong> - {track.artist}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Video Player Modal - Disabled in favor of inline video player */}
       {/* <VideoPlayerModal
