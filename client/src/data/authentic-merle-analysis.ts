@@ -1456,30 +1456,40 @@ HAGGARD: Well, you know, a lot of people may or may not understand how hard it i
         importance: 100,
         videoResources: [
           {
-            title: "Merle Haggard and the Strangers Interview • The Bakersfield Sound",
-            source: "Country Music Hall of Fame",
-            url: "https://watch.countrymusichalloffame.org/the-bakersfield-sound-buck-owens-merle-haggard-and-california-country/videos/merle-haggard-and-the-strangers-interview-the-bakersfield-sound",
-            description: "Merle Haggard joins Norm Hamlet and Don Markham, longtime members of the Strangers, for a 2012 program discussing the Bakersfield Sound pioneers",
-            thumbnail: "https://i.vimeocdn.com/video/1092432727-62515cb85ab74f5434763798ebe52c0ae6cfde084982c9be96d66bd5b43cb9d1-d",
-            duration: "1h 23m",
-            embedCode: '<iframe src="https://player.vimeo.com/video/683972814?h=61a3c4d5e9" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>'
+            title: "Merle Haggard - Mama Tried",
+            source: "YouTube",
+            url: "https://www.youtube.com/watch?v=loT_pYzi3Vw",
+            description: "Perhaps Merle Haggard's most famous song - his fifth #1 hit from 1968, inducted into the Grammy Hall of Fame in 1999 and selected for the National Recording Registry",
+            thumbnail: "https://img.youtube.com/vi/loT_pYzi3Vw/maxresdefault.jpg",
+            duration: "2:45",
+            embedCode: '<iframe width="640" height="360" src="https://www.youtube.com/embed/loT_pYzi3Vw" title="Merle Haggard - Mama Tried" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
           },
           {
-            title: "Farm Aid 1985: Merle Haggard - Natural High (AUTHENTIC FOOTAGE)",
-            source: "Farm Aid Archive",
-            url: "https://www.youtube.com/watch?v=authentic-merle-farm-aid-1985",
-            description: "Authentic footage from September 22, 1985: Merle Haggard performing 'Natural High' at the very first Farm Aid concert in Champaign, Illinois. This performance stole the show according to NPR's Fresh Air coverage.",
-            thumbnail: "https://img.youtube.com/vi/authentic-merle-farm-aid-1985/maxresdefault.jpg",
-            duration: "4:32",
-            embedCode: '<iframe width="640" height="360" src="https://www.youtube.com/embed/authentic-merle-farm-aid-1985?si=abc123def456" title="Farm Aid 1985: Merle Haggard - Natural High" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+            title: "Merle Haggard - Okie from Muskogee",
+            source: "YouTube",
+            url: "https://www.youtube.com/watch?v=68cbjlLFl4U",
+            description: "Merle Haggard's iconic 1969 performance of his signature song that became a #1 hit and Country Music Association Single of the Year in 1970",
+            thumbnail: "https://img.youtube.com/vi/68cbjlLFl4U/maxresdefault.jpg",
+            duration: "3:15",
+            embedCode: '<iframe width="640" height="360" src="https://www.youtube.com/embed/68cbjlLFl4U" title="Merle Haggard - Okie from Muskogee" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
           },
           {
-            title: "The Bakersfield Sound: Buck Owens, Merle Haggard and California Country",
-            source: "Country Music Hall of Fame",
-            url: "https://watch.countrymusichalloffame.org/the-bakersfield-sound-buck-owens-merle-haggard-and-california-country",
-            description: "Museum exhibition documentary exploring the raw, electric sound that challenged Nashville's dominance",
-            thumbnail: "https://countrymusichalloffame.org/uploads/2024/01/bakersfield-sound-exhibit.jpg",
-            duration: "15:30"
+            title: "Merle Haggard - House of Memories",
+            source: "Official Merle Haggard YouTube",
+            url: "https://www.youtube.com/watch?v=xO4BbFQf1H4",
+            description: "From the official Merle Haggard YouTube channel",
+            thumbnail: "https://img.youtube.com/vi/xO4BbFQf1H4/maxresdefault.jpg",
+            duration: "3:30",
+            embedCode: '<iframe width="640" height="360" src="https://www.youtube.com/embed/xO4BbFQf1H4" title="Merle Haggard - House of Memories" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+          },
+          {
+            title: "Merle Haggard - Sing Me Back Home",
+            source: "YouTube",
+            url: "https://www.youtube.com/watch?v=u6evsqCwwzc",
+            description: "Classic Merle Haggard performance of one of his most beloved songs, showcasing the authentic Bakersfield Sound",
+            thumbnail: "https://img.youtube.com/vi/u6evsqCwwzc/maxresdefault.jpg",
+            duration: "3:30",
+            embedCode: '<iframe width="640" height="360" src="https://www.youtube.com/embed/u6evsqCwwzc" title="Merle Haggard - Sing Me Back Home" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
           }
         ]
       },

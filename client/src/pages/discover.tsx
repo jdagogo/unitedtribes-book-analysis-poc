@@ -5,21 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Play, 
-  Search, 
-  TrendingUp, 
-  Music, 
-  Film, 
-  Book, 
-  Mic, 
-  MapPin, 
+import {
+  Play,
+  Search,
+  TrendingUp,
+  Music,
+  Film,
+  Book,
+  Mic,
+  MapPin,
   Clock,
   Zap,
   ArrowRight,
   ExternalLink,
   Database,
-  BarChart3
+  BarChart3,
+  Home
 } from "lucide-react";
 import { Link } from "wouter";
 import { partnerBooks } from "@/data/partner-media";
@@ -273,14 +274,24 @@ export default function Discover() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Media Discovery Engine
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            Navigate seamlessly between any media mention. From "San Quentin" to Johnny Cash albums, 
-            from "Nashville" to country music discovery.
-          </p>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/">
+              <Button variant="outline" size="lg" className="gap-2 text-lg px-6 py-6">
+                <Home className="h-6 w-6" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+          <div className="text-center">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              Media Discovery Engine
+            </h1>
+            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+              Navigate seamlessly between any media mention. From "San Quentin" to Johnny Cash albums,
+              from "Nashville" to country music discovery.
+            </p>
+          </div>
         </div>
 
         {/* Search Bar */}

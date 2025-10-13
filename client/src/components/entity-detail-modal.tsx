@@ -727,7 +727,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
         }
       }}
     >
-      <div className="bg-white rounded-lg max-w-5xl w-full max-h-[80vh] flex flex-col">
+      <div className="bg-white rounded-xl max-w-[1230px] w-full max-h-[80vh] flex flex-col">
         {/* Top Header - Analysis Title - MODAL STARTS HERE */}
         <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0">
           <div className="flex items-center justify-between">
@@ -821,7 +821,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                     <div key={index} className="space-y-2">
                       <h4 className="text-md font-medium text-gray-800">{video.title}</h4>
                       <p className="text-sm text-gray-600 mb-2">{video.description}</p>
-                      <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                      <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                         {(() => {
                           const videoId = generateVideoId(`multi-${index}`);
                           const isActive = activeVideoId === videoId;
@@ -861,7 +861,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                     <div key={index} className="space-y-2">
                       <h4 className="text-md font-medium text-gray-800">{version.title}</h4>
                       <p className="text-sm text-gray-600 mb-2">{version.description}</p>
-                      <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                      <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                         {(() => {
                           const videoId = generateVideoId(`version-${index}`);
                           const isActive = activeVideoId === videoId;
@@ -933,7 +933,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                       <p className="text-sm text-gray-600">The raw, authentic country sound that challenged Nashville's dominance</p>
                     </div>
                   )}
-                  <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                  <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                     {(() => {
                       const videoId = generateVideoId('main');
                       const isActive = activeVideoId === videoId;
@@ -1003,7 +1003,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">📺 Ken Burns Country Music: The Bakersfield Sound</h4>
                   <p className="text-sm text-gray-600 mt-1">Comprehensive PBS documentary coverage featuring Buck Owens and Merle Haggard</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   {(() => {
                     const videoId = generateVideoId('ken-burns');
                     const isActive = activeVideoId === videoId;
@@ -1153,7 +1153,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                       )}
                     </div>
                     
-                    <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                    <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                       {!isActive ? (
                         <div 
                           className="absolute inset-0 cursor-pointer group"
@@ -1193,16 +1193,16 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-primary">{mentions.length}</div>
-              <div className="text-sm text-gray-600">Total Mentions</div>
+              <div className="text-3xl font-bold text-primary">{mentions.length}</div>
+              <div className="text-base text-gray-600">Total Mentions</div>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-primary">{importance}%</div>
-              <div className="text-sm text-gray-600">Importance</div>
+              <div className="text-3xl font-bold text-primary">{importance}%</div>
+              <div className="text-base text-gray-600">Importance</div>
             </div>
             <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-primary capitalize">{sentiment}</div>
-              <div className="text-sm text-gray-600">Sentiment</div>
+              <div className="text-3xl font-bold text-primary capitalize">{sentiment}</div>
+              <div className="text-base text-gray-600">Sentiment</div>
             </div>
           </div>
 
@@ -1217,7 +1217,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎸 House of Memories (Buck Owens Version)</h4>
                   <p className="text-sm text-gray-600 mt-1">Buck Owens' interpretation showcasing the Bakersfield sound</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/vcNj9SX1830?rel=0&modestbranding=1`}
                     title="House of Memories - Buck Owens Version"
@@ -1236,7 +1236,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎤 House of Memories (Merle Haggard Version)</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle Haggard's signature song and autobiography title track</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/xO4BbFQf1H4?rel=0&modestbranding=1`}
                     title="House of Memories - Merle Haggard"
@@ -1258,7 +1258,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">📖 Merle's "My House Of Memories" Autobiography</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle Haggard reads from his personal autobiography sharing life stories and memories</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/PSN8N2v4oq0?rel=0&modestbranding=1`}
                     title="Merle Haggard's My House Of Memories Autobiography"
@@ -1275,7 +1275,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎸 Buck Owens Version</h4>
                   <p className="text-sm text-gray-600 mt-1">Buck Owens' interpretation showcasing the Bakersfield sound connection</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/vcNj9SX1830?rel=0&modestbranding=1`}
                     title="House of Memories - Buck Owens Version"
@@ -1297,7 +1297,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎤 Merle Haggard & Willie Nelson Duet</h4>
                   <p className="text-sm text-gray-600 mt-1">Two country legends performing together - showcasing the song's enduring cultural impact</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/5feWCmPYFeM?rel=0&modestbranding=1`}
                     title="Merle Haggard & Willie Nelson - Okie from Muskogee"
@@ -1316,7 +1316,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">📖 The Story Behind "Okie from Muskogee"</h4>
                   <p className="text-sm text-gray-600 mt-1">Documentary exploring how this cultural anthem was created and its lasting impact</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/4hxzbE0w2RA?rel=0&modestbranding=1`}
                     title="Okie from Muskogee - Story behind the hit song"
@@ -1338,7 +1338,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🚂 Original by Jimmie Rodgers</h4>
                   <p className="text-sm text-gray-600 mt-1">The original railroad classic that inspired Merle Haggard's interpretation</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/bY9pRNWOtmk?rel=0&modestbranding=1`}
                     title="Waiting For A Train - Jimmie Rodgers Original"
@@ -1361,7 +1361,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎻 Western Swing Performance</h4>
                   <p className="text-sm text-gray-600 mt-1">Bob Wills and the Texas Playboys pioneering the Western swing sound that influenced country music</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/eHJPHjb6WN4?rel=0&modestbranding=1`}
                     title="Bob Wills and the Texas Playboys"
@@ -1383,7 +1383,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎤 Willie Nelson & Merle Haggard - "Okie from Muskogee"</h4>
                   <p className="text-sm text-gray-600 mt-1">Two outlaw country legends performing Merle's cultural anthem together</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/5feWCmPYFeM?rel=0&modestbranding=1`}
                     title="Willie Nelson & Merle Haggard - Okie from Muskogee"
@@ -1405,7 +1405,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎭 Merle Haggard's Johnny Cash Story</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle tells the story of seeing Johnny Cash perform while he was imprisoned at San Quentin</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/NbovcK1HWfg?rel=0&modestbranding=1`}
                     title="Merle Haggard tells Johnny Cash San Quentin story"
@@ -1424,7 +1424,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-white">🎬 Johnny Cash Live at San Quentin 1969 - Full Concert</h4>
                   <p className="text-sm text-gray-300 mt-1">The complete historic performance that Merle Haggard witnessed as a prisoner</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/PSLsfwTbo4Q?rel=0&modestbranding=1`}
                     title="Johnny Cash live at San Quentin 1969 full concert"
@@ -1443,7 +1443,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎵 Folsom Prison Blues</h4>
                   <p className="text-sm text-gray-600 mt-1">Johnny Cash's iconic prison song that established his connection to the incarcerated</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/AeZRYhLDLeU?rel=0&modestbranding=1`}
                     title="Folsom Prison Blues"
@@ -1465,7 +1465,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-white">🎬 Johnny Cash Live at San Quentin 1969 - Full Concert</h4>
                   <p className="text-sm text-gray-300 mt-1">The complete historic performance that Merle Haggard witnessed as a prisoner</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/PSLsfwTbo4Q?rel=0&modestbranding=1`}
                     title="Johnny Cash live at San Quentin 1969 full concert"
@@ -1483,7 +1483,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎵 Folsom Prison Blues</h4>
                   <p className="text-sm text-gray-600 mt-1">Johnny Cash's iconic prison song that established his connection to the incarcerated</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/AeZRYhLDLeU?rel=0&modestbranding=1`}
                     title="Folsom Prison Blues"
@@ -1502,7 +1502,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🏛️ Merle's Personal Account</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle Haggard tells the story of witnessing this historic performance while imprisoned at San Quentin</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/NbovcK1HWfg?rel=0&modestbranding=1`}
                     title="Merle Haggard tells Johnny Cash San Quentin story"
@@ -1524,7 +1524,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">📺 The Story Of George Jones | Full Documentary</h4>
                   <p className="text-sm text-gray-600 mt-1">Complete biographical documentary covering the life and career of the country music legend</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/clxPABW6TqU?rel=0&modestbranding=1`}
                     title="The Story Of George Jones Full Documentary"
@@ -1556,7 +1556,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">📖 The Story Behind This Song</h4>
                   <p className="text-sm text-gray-600 mt-1">Discover how this masterpiece was created</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/vk4zduDNa_M?rel=0&modestbranding=1`}
                     title="The Story Behind 'He Stopped Loving Her Today'"
@@ -1578,7 +1578,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎤 Lefty Frizzell Vocal Style Demonstration</h4>
                   <p className="text-sm text-gray-600 mt-1">How Lefty Frizzell's unique vocal approach shaped Merle Haggard's singing style</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/kEv5fqEoEzw?rel=0&modestbranding=1`}
                     title="Lefty Frizzell Vocal Style Demonstration"
@@ -1595,7 +1595,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎵 Lefty Frizzell Vocal Technique Analysis</h4>
                   <p className="text-sm text-gray-600 mt-1">Deep dive into the vocal techniques that influenced generations of country singers</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/rXv1sU3JXaM?rel=0&modestbranding=1`}
                     title="Lefty Frizzell Vocal Technique Analysis"
@@ -1617,7 +1617,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🏛️ Merle Haggard's Hall of Fame Induction</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle Haggard's historic 1994 induction into the Country Music Hall of Fame</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/vw3ZFmprDYQ?rel=0&modestbranding=1`}
                     title="Merle Haggard Hall of Fame Induction 1994"
@@ -1639,7 +1639,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">📚 "My House Of Memories" Autobiography</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle Haggard reads from his HarperCollins autobiography, sharing personal life stories and memories</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/PSN8N2v4oq0?rel=0&modestbranding=1`}
                     title="Merle Haggard's My House Of Memories Autobiography"
@@ -1661,7 +1661,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎸 The Strangers - Live Performance</h4>
                   <p className="text-sm text-gray-600 mt-1">Merle Haggard's legendary backing band that helped define the Bakersfield sound with their distinctive Telecaster guitars and steel guitar arrangements</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/cZp77judvq0?rel=0&modestbranding=1`}
                     title="The Strangers - Merle Haggard's Backing Band"
@@ -1762,7 +1762,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎻 Arkansas Traveler - Traditional Folk Song</h4>
                   <p className="text-sm text-gray-600 mt-1">A foundational piece of American folk music that influenced generations of country artists including Merle Haggard, representing the storytelling tradition at the heart of country music</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/F4rOelBHAoI?rel=0&modestbranding=1`}
                     title="Arkansas Traveler - Traditional American Folk Song"
@@ -1857,7 +1857,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎤 Bonnie Owens - Country Music Performance</h4>
                   <p className="text-sm text-gray-600 mt-1">The remarkable country singer who connected Buck Owens and Merle Haggard both personally and musically, serving as a crucial bridge in the Bakersfield sound movement</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src={`https://www.youtube.com/embed/WnppTjgwpO0?rel=0&modestbranding=1`}
                     title="Bonnie Owens - Country Music Performance"
@@ -1944,7 +1944,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🎸 Tom Petty & The Heartbreakers - Farm Aid 1985</h4>
                   <p className="text-sm text-gray-600 mt-1">Historic performance at the first Farm Aid concert featuring "Refugee" and showcasing rock's support for American farmers</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src="https://www.youtube.com/embed/vKQ8_yUiIMc?rel=0&modestbranding=1"
                     title="Tom Petty and the Heartbreakers - Refugee (Live at Farm Aid 1985)"
@@ -2033,7 +2033,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <h4 className="font-medium text-gray-900">🤠 Folsom Prison Blues with Johnny Cash - Farm Aid 1985</h4>
                   <p className="text-sm text-gray-600 mt-1">Two outlaw country legends performing the ultimate prison song at the historic Farm Aid concert</p>
                 </div>
-                <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     src="https://www.youtube.com/embed/h-ajiuX7crk?rel=0&modestbranding=1"
                     title="Johnny Cash & Waylon Jennings - Folsom Prison Blues at Farm Aid 1985"
@@ -2240,100 +2240,100 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Interactive Artist Catalog */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎸 Explore Farm Aid 1985 Artists</h4>
-                  <p className="text-sm text-gray-600 mt-1">Click any artist to explore their performances and cross-media connections</p>
+                  <h4 className="text-xl font-semibold text-gray-900">🎸 Explore Farm Aid 1985 Artists</h4>
+                  <p className="text-base text-gray-600 mt-1">Click any artist to explore their performances and cross-media connections</p>
                 </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <button 
+                <div className="grid grid-cols-2 gap-3">
+                  <button
                     onClick={() => handleEntityClick({ name: "Merle Haggard", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-green-50 hover:border-green-300 transition-colors"
                   >
-                    <div className="font-medium text-green-600">🚜 Merle Haggard</div>
-                    <div className="text-gray-600 text-xs">Stole the show with "Natural High"</div>
+                    <div className="text-lg font-medium text-green-600">🚜 Merle Haggard</div>
+                    <div className="text-gray-600 text-sm">Stole the show with "Natural High"</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Willie Nelson", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
                   >
-                    <div className="font-medium text-blue-600">🎤 Willie Nelson</div>
-                    <div className="text-gray-600 text-xs">Farm Aid founder & headliner</div>
+                    <div className="text-lg font-medium text-blue-600">🎤 Willie Nelson</div>
+                    <div className="text-gray-600 text-sm">Farm Aid founder & headliner</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Bob Dylan", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-purple-50 hover:border-purple-300 transition-colors"
                   >
-                    <div className="font-medium text-purple-600">🎵 Bob Dylan</div>
-                    <div className="text-gray-600 text-xs">Folk legend & complete set</div>
+                    <div className="text-lg font-medium text-purple-600">🎵 Bob Dylan</div>
+                    <div className="text-gray-600 text-sm">Folk legend & complete set</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Neil Young", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-amber-50 hover:border-amber-300 transition-colors"
                   >
-                    <div className="font-medium text-amber-600">🎸 Neil Young</div>
-                    <div className="text-gray-600 text-xs">Rock icon & farm advocate</div>
+                    <div className="text-lg font-medium text-amber-600">🎸 Neil Young</div>
+                    <div className="text-gray-600 text-sm">Rock icon & farm advocate</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Tom Petty", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-rose-50 hover:border-rose-300 transition-colors"
                   >
-                    <div className="font-medium text-rose-600">🎤 Tom Petty</div>
-                    <div className="text-gray-600 text-xs">Heartbreakers frontman</div>
+                    <div className="text-lg font-medium text-rose-600">🎤 Tom Petty</div>
+                    <div className="text-gray-600 text-sm">Heartbreakers frontman</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Johnny Cash", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-gray-50 hover:border-gray-300 transition-colors"
                   >
-                    <div className="font-medium text-gray-600">⚫ Johnny Cash</div>
-                    <div className="text-gray-600 text-xs">Folsom Prison Blues w/ Waylon</div>
+                    <div className="text-lg font-medium text-gray-600">⚫ Johnny Cash</div>
+                    <div className="text-gray-600 text-sm">Folsom Prison Blues w/ Waylon</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Waylon Jennings", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-orange-50 hover:border-orange-300 transition-colors"
                   >
-                    <div className="font-medium text-orange-600">🤠 Waylon Jennings</div>
-                    <div className="text-gray-600 text-xs">Outlaw country legend</div>
+                    <div className="text-lg font-medium text-orange-600">🤠 Waylon Jennings</div>
+                    <div className="text-gray-600 text-sm">Outlaw country legend</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Loretta Lynn", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-pink-50 hover:border-pink-300 transition-colors"
                   >
-                    <div className="font-medium text-pink-600">👑 Loretta Lynn</div>
-                    <div className="text-gray-600 text-xs">Coal Miner's Daughter</div>
+                    <div className="text-lg font-medium text-pink-600">👑 Loretta Lynn</div>
+                    <div className="text-gray-600 text-sm">Coal Miner's Daughter</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Roy Orbison", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
                   >
-                    <div className="font-medium text-indigo-600">🕶️ Roy Orbison</div>
-                    <div className="text-gray-600 text-xs">Big O rock legend</div>
+                    <div className="text-lg font-medium text-indigo-600">🕶️ Roy Orbison</div>
+                    <div className="text-gray-600 text-sm">Big O rock legend</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "B.B. King", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-cyan-50 hover:border-cyan-300 transition-colors"
                   >
-                    <div className="font-medium text-cyan-600">🎺 B.B. King</div>
-                    <div className="text-gray-600 text-xs">Blues guitar master</div>
+                    <div className="text-lg font-medium text-cyan-600">🎺 B.B. King</div>
+                    <div className="text-gray-600 text-sm">Blues guitar master</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Dire Straits", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-orange-50 hover:border-orange-300 transition-colors"
                   >
-                    <div className="font-medium text-orange-600">🎸 Dire Straits</div>
-                    <div className="text-gray-600 text-xs">Sultans of Swing</div>
+                    <div className="text-lg font-medium text-orange-600">🎸 Dire Straits</div>
+                    <div className="text-gray-600 text-sm">Sultans of Swing</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Joni Mitchell", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-teal-50 hover:border-teal-300 transition-colors"
                   >
-                    <div className="font-medium text-teal-600">🎶 Joni Mitchell</div>
-                    <div className="text-gray-600 text-xs">Folk poetry legend</div>
+                    <div className="text-lg font-medium text-teal-600">🎶 Joni Mitchell</div>
+                    <div className="text-gray-600 text-sm">Folk poetry legend</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "The Beach Boys", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-sky-50 hover:border-sky-300 transition-colors"
                   >
-                    <div className="font-medium text-sky-600">🏄 The Beach Boys</div>
-                    <div className="text-gray-600 text-xs">California harmony</div>
+                    <div className="text-lg font-medium text-sky-600">🏄 The Beach Boys</div>
+                    <div className="text-gray-600 text-sm">California harmony</div>
                   </button>
                 </div>
               </div>

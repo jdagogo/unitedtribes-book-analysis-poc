@@ -603,7 +603,7 @@ export function PodcastPlayer({
             <CardContent className="max-h-[800px] overflow-y-auto pb-2">
               {currentMentions.length > 0 ? (
                 <div className="space-y-3">
-                  {currentMentions.map((mention, index) => {
+                  {currentMentions.slice().reverse().map((mention, index) => {
                     const entity = entitiesMap.get(mention.entityId);
                     if (!entity) return null;
 

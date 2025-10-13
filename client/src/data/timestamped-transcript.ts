@@ -20,19 +20,19 @@ export const timestampedTranscript: TimestampedSegment[] = [
     startTime: 8,
     endTime: 20,
     text: "This week marks the 40th anniversary of Farm Aid, the country music concert founded by Willie Nelson",
-    entities: ["farm-aid", "willie-nelson", "country-music"]
+    entities: ["farm-aid-1985", "willie-nelson", "country-music"]
   },
   {
     startTime: 20,
     endTime: 40,
     text: "as a fundraiser to benefit farmers. Held in Champaign, Illinois, this first gathering featured not only Willie Nelson, but such other supportive performers as Bob Dylan, Billy Joel, Bonnie Raitt, Tom Petty, B.B. King, Loretta Lynn and Roy Orbison.",
-    entities: ["farm-aid", "willie-nelson", "bob-dylan", "billy-joel", "bonnie-raitt", "tom-petty", "bb-king", "loretta-lynn", "roy-orbison"]
+    entities: ["farm-aid-1985", "willie-nelson", "bob-dylan", "billy-joel", "bonnie-raitt", "tom-petty", "bb-king", "loretta-lynn", "roy-orbison"]
   },
   {
     startTime: 40,
     endTime: 60,
     text: "Farmers still need aid, and Farm Aid has been staged annually ever since. Stealing the show at that very first Farm Aid concert in April 1985 was Merle Haggard, singing his then-new song \"Natural High.\"",
-    entities: ["farm-aid", "merle-haggard", "natural-high", "farm-aid-1985"]
+    entities: ["farm-aid-1985", "merle-haggard", "natural-high"]
   },
   {
     startTime: 60,
