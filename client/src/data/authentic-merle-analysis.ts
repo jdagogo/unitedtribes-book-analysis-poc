@@ -188,48 +188,27 @@ HAGGARD: Well, you know, a lot of people may or may not understand how hard it i
   entityAnalysis: [
     {
       entity: {
-        id: "farm-aid",
-        name: "Farm Aid",
+        id: "farm-aid-1985",
+        name: "Farm Aid 1985",
         type: "event",
-        category: "music festival",
-        description: "Country music concert founded by Willie Nelson to benefit farmers",
-        aliases: [],
+        category: "historical event",
+        description: "The inaugural Farm Aid concert held in Champaign, Illinois on September 22, 1985",
+        aliases: ["Farm Aid", "First Farm Aid", "Farm Aid 1", "Original Farm Aid"],
         sentiment: "positive",
-        importance: 85
+        importance: 90
       },
       mentionCount: 2,
       mentions: [
         {
           id: "m1",
-          entityId: "farm-aid",
+          entityId: "farm-aid-1985",
           podcastId: "merle-authentic-demo",
           timestamp: 27,
           context: "40th anniversary of Farm Aid, founded by Willie Nelson as fundraiser to benefit farmers",
           confidence: 96,
           sentiment: "positive",
           emotions: ["community", "support"]
-        }
-      ],
-      topics: ["Charity Concerts", "Agricultural Support"],
-      summary: "Landmark country music benefit concert where Haggard performed",
-      sentiment: "positive",
-      importance: 85,
-      relationships: ["farm-aid-1985"],
-      emotions: ["community", "support"]
-    },
-    {
-      entity: {
-        id: "farm-aid-1985",
-        name: "Farm Aid 1985",
-        type: "event", 
-        category: "historical event",
-        description: "The inaugural Farm Aid concert held in Champaign, Illinois on September 22, 1985",
-        aliases: ["First Farm Aid", "Farm Aid 1", "Original Farm Aid"],
-        sentiment: "positive",
-        importance: 90
-      },
-      mentionCount: 1,
-      mentions: [
+        },
         {
           id: "m1b",
           entityId: "farm-aid-1985",
@@ -241,12 +220,12 @@ HAGGARD: Well, you know, a lot of people may or may not understand how hard it i
           emotions: ["historic", "triumph"]
         }
       ],
-      topics: ["Concert History", "Musical Milestones", "Benefit Concerts"],
-      summary: "Historic inaugural concert where Merle Haggard's performance became legendary",
+      topics: ["Concert History", "Musical Milestones", "Benefit Concerts", "Charity Concerts", "Agricultural Support"],
+      summary: "Historic inaugural Farm Aid concert where Merle Haggard's performance became legendary",
       sentiment: "positive",
       importance: 90,
-      relationships: ["farm-aid", "natural-high", "merle-haggard"],
-      emotions: ["historic", "triumph"]
+      relationships: ["natural-high", "merle-haggard", "willie-nelson"],
+      emotions: ["historic", "triumph", "community", "support"]
     },
     {
       entity: {
@@ -410,7 +389,7 @@ HAGGARD: Well, you know, a lot of people may or may not understand how hard it i
       summary: "The legendary performance that became the standout moment of Farm Aid 1985",
       sentiment: "triumphant",
       importance: 92,
-      relationships: ["farm-aid", "farm-aid-1985"],
+      relationships: ["farm-aid-1985"],
       emotions: ["pride", "triumph"]
     },
     {
@@ -4231,7 +4210,7 @@ HAGGARD: Well, you know, a lot of people may or may not understand how hard it i
         { id: "oildale", name: "Oildale", category: "location", importance: 90 },
         { id: "santa-fe-railroad", name: "Santa Fe Railroad", category: "organization", importance: 75 },
         { id: "mama-tried", name: "Mama Tried", category: "song", importance: 88 },
-        { id: "san-quentin", name: "San Quentin", category: "location", importance: 82 },
+        { id: "san-quentin", name: "San Quentin State Prison", category: "location", importance: 82 },
         { id: "house-of-memories", name: "House of Memories", category: "song", importance: 90 },
         { id: "lefty-frizzell", name: "Lefty Frizzell", category: "musician", importance: 95 },
         { id: "buck-owens", name: "Buck Owens", category: "musician", importance: 85 }

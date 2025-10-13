@@ -41,10 +41,13 @@ export default function Home() {
 
   // Filter and sort entities based on search query
   const filteredEntities = searchQuery ? allEntities
-    .filter(entityData => 
+    .filter(entityData =>
       entityData.entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entityData.entity.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entityData.entity.description.toLowerCase().includes(searchQuery.toLowerCase())
+      entityData.entity.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (entityData.entity.aliases && entityData.entity.aliases.some((alias: string) =>
+        alias.toLowerCase().includes(searchQuery.toLowerCase())
+      ))
     )
     // Remove duplicates by entity ID
     .filter((entityData, index, self) => 
