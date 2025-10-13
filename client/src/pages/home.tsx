@@ -123,115 +123,13 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/chapters">
-              <Button size="lg" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                <PlayCircle className="mr-2 h-5 w-5" />
-                NEW: Listen with Perfect Sync
-              </Button>
-            </Link>
             <Link href="/discover">
               <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 <Play className="mr-2 h-5 w-5" />
                 Try the Demo
               </Button>
             </Link>
-            <Link href="/cross-media">
-              <Button size="lg" variant="outline">
-                <Link2 className="mr-2 h-5 w-5" />
-                Cross-Media Discovery
-              </Button>
-            </Link>
           </div>
-        </div>
-
-        {/* NEW: Perfect Audiobook Sync Feature */}
-        <div className="mb-16">
-          <Card className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300">
-            <CardContent className="py-8">
-              <div className="text-center mb-6">
-                <Badge className="mx-auto mb-3 bg-green-600 text-white px-4 py-1">
-                  <CheckCircle className="h-4 w-4 mr-1" />
-                  NEW FEATURE - WORKING NOW
-                </Badge>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  🎧 Perfect Audio-Text Synchronization
-                </h2>
-                <p className="text-lg text-gray-700">
-                  Experience Merle Haggard's autobiography with revolutionary word-level sync
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-6">
-                <div className="text-center">
-                  <Headphones className="h-10 w-10 mx-auto mb-2 text-emerald-600" />
-                  <p className="font-bold text-xl">4.6 Hours</p>
-                  <p className="text-gray-600">Narrated by Merle himself</p>
-                </div>
-                <div className="text-center">
-                  <BookOpen className="h-10 w-10 mx-auto mb-2 text-emerald-600" />
-                  <p className="font-bold text-xl">19 Chapters</p>
-                  <p className="text-gray-600">Navigate by life events</p>
-                </div>
-                <div className="text-center">
-                  <CheckCircle className="h-10 w-10 mx-auto mb-2 text-green-600" />
-                  <p className="font-bold text-xl">43,263 Words</p>
-                  <p className="text-gray-600">Every word perfectly synced</p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 mb-6">
-                <h3 className="font-bold text-lg mb-3">✨ What Makes This Special:</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Click Any Word to Jump</p>
-                      <p className="text-sm text-gray-600">Instant navigation to any point in the audio</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Chapter Navigation</p>
-                      <p className="text-sm text-gray-600">Jump between life events and stories</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">Real-Time Highlighting</p>
-                      <p className="text-sm text-gray-600">Words highlight as they're spoken</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                    <div>
-                      <p className="font-semibold">100% Accurate</p>
-                      <p className="text-sm text-gray-600">Using YouTube's official transcription</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-4 justify-center">
-                <Link href="/chapters">
-                  <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
-                    <PlayCircle className="mr-2 h-5 w-5" />
-                    Start Listening Now
-                  </Button>
-                </Link>
-                <Link href="/auto-sync">
-                  <Button size="lg" variant="outline">
-                    View Technical Demo
-                  </Button>
-                </Link>
-              </div>
-
-              <p className="text-center text-sm text-gray-600 mt-4">
-                This demonstrates UnitedTribes' capability to perfectly synchronize any audio content with its transcript
-              </p>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Media Hub - Direct Access */}
@@ -452,7 +350,7 @@ export default function Home() {
                       v4.5-development
                     </code>
                     <span className="text-blue-700 text-sm">
-                      | Commit: <span className="font-semibold">45ad35b</span>
+                      | Commit: <span className="font-semibold">7f77a83</span>
                     </span>
                   </div>
                 </div>
