@@ -53,7 +53,7 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [discoveryContent, setDiscoveryContent] = useState<DiscoveryContent | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'media' | 'connections'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'media' | 'connections'>('media');
   const [articleViewerData, setArticleViewerData] = useState<{ url: string; title: string; screenshot?: string; price?: number } | null>(null);
 
   useEffect(() => {

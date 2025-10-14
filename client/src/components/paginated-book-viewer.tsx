@@ -1863,28 +1863,17 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     // FIRST: Add discovery passage highlighting (using music-video style for blue background with line)
     // Do this BEFORE entity highlighting to preserve the full sentence
 
-    // Debug: Check if the text contains our target
-    if (normalizedText.includes("collages")) {
-      console.log('🎯 Found "collages" in text!');
-      console.log('📄 Full text around it:', normalizedText.substring(normalizedText.indexOf("collages") - 50, normalizedText.indexOf("collages") + 150));
-    }
-    if (normalizedText.includes("Robert's collages")) {
-      console.log('✅ Found exact "Robert\'s collages" in text!');
-    }
-    if (normalizedText.includes("show consisted")) {
-      console.log('✅ Found "show consisted" in text!');
-    }
-
-    const discoveryPassage1 = /The show consisted of Robert['']s collages that centered on freaks, but he prepared one fairly large altarpiece for the event/gi;
+    // Simpler pattern - just match the unique phrase
+    const discoveryPassage1 = /collages\s+that\s+centered\s+on\s+freaks/gi;
     let discoveryMatch1;
     while ((discoveryMatch1 = discoveryPassage1.exec(normalizedText)) !== null) {
-      console.log('DISCOVERY MATCH FOUND!', discoveryMatch1[0]);
+      console.log('✅ DISCOVERY MATCH FOUND!', discoveryMatch1[0]);
       replacements.push({
         start: discoveryMatch1.index,
         end: discoveryMatch1.index + discoveryMatch1[0].length,
-        entity: { name: 'Discovery Passage - Robert\'s Freaks Exhibition', type: 'music-video' },
+        entity: { name: 'Discovery Passage - Robert\'s Freaks Exhibition', type: 'discovery-passage' },
         match: discoveryMatch1[0],
-        type: 'music-video'
+        type: 'discovery-passage'
       });
     }
 
@@ -2113,9 +2102,12 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
         // Highlight authors with orange theme when near their books
         const authorEntity = r.entity;
         replacement = `<span class="entity-highlight entity-author author-highlight" data-entity="${authorEntity.name || authorEntity.author}" data-type="author" data-relatedbook="${authorEntity.relatedBook || ''}">${r.match}</span>`;
+      } else if (r.type === 'discovery-passage') {
+        // Visual indicator for discovery passages - purple border line
+        replacement = `<span class="entity-highlight entity-discovery" data-entity="${r.entity.name}" data-type="discovery-passage" style="color: #581C87; font-weight: 600; cursor: pointer; position: relative; border-left: 4px solid #581C87; padding-left: 8px; display: inline-block;" title="🔍 Discovery">${r.match}</span>`;
       } else if (r.type === 'music-video') {
-        // Subtle highlighting for music/video references - just bold purple text
-        replacement = `<span class="entity-highlight entity-music-video" data-entity="${r.entity.name}" data-type="music-video" style="color: #581C87; font-weight: 600; cursor: pointer; position: relative;" title="🎵 Video">${r.match}</span>`;
+        // Highlight discovery passages with left border line for visibility
+        replacement = `<span class="entity-highlight entity-music-video" data-entity="${r.entity.name}" data-type="music-video" style="color: #581C87; font-weight: 600; cursor: pointer; position: relative; border-left: 4px solid #581C87; padding-left: 8px; display: inline-block;" title="🎵 Video">${r.match}</span>`;
       } else if (r.type === 'person' || r.type === 'place') {
         // Highlight persons and places with appropriate styles
         const entityClass = r.type === 'person' ? 'entity-person' : 'entity-place';
