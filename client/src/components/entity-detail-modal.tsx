@@ -2543,9 +2543,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Farm Aid 1985 Historical Context */}
               <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🚜 Farm Aid 1985 Historical Context</h4>
+                  <h4 className="text-xl font-semibold text-gray-900">🚜 Farm Aid 1985 Historical Context</h4>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-600">🌾</span>
                     <span className="text-gray-700">Purpose: Supporting American farmers during the 1980s farm crisis</span>
@@ -2613,10 +2613,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               </div>
 
               {/* UnitedTribes Video Search */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 mb-4">
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="text-xl font-semibold text-gray-900">🔍 Search Farm Aid 1985 Videos</h4>
-                  <p className="text-base text-gray-600 mt-1">Powered by UnitedTribes Video Discovery</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
                 </div>
 
                 {/* Search Input */}
@@ -2634,7 +2633,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                         setVideoSearchResults([]);
                       }
                     }}
-                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-base"
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
                   />
                   {videoSearchQuery && (
                     <button
@@ -2780,100 +2779,100 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Interactive Artist Catalog */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="text-xl font-semibold text-gray-900">🎸 Explore Farm Aid 1985 Artists</h4>
-                  <p className="text-base text-gray-600 mt-1">Click any artist to explore their performances and cross-media connections</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎸 Explore Farm Aid 1985 Artists</h4>
+                  <p className="text-lg text-gray-700 mt-1">Click any artist to explore their performances and cross-media connections</p>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => handleEntityClick({ name: "Merle Haggard", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-green-50 hover:border-green-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-green-600">🚜 Merle Haggard</div>
-                    <div className="text-gray-600 text-sm">Stole the show with "Natural High"</div>
+                    <div className="text-xl font-semibold text-green-600">🚜 Merle Haggard</div>
+                    <div className="text-gray-700 text-base">Stole the show with "Natural High"</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Willie Nelson", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-blue-600">🎤 Willie Nelson</div>
-                    <div className="text-gray-600 text-sm">Farm Aid founder & headliner</div>
+                    <div className="text-xl font-semibold text-blue-600">🎤 Willie Nelson</div>
+                    <div className="text-gray-700 text-base">Farm Aid founder & headliner</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Bob Dylan", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-purple-50 hover:border-purple-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-purple-600">🎵 Bob Dylan</div>
-                    <div className="text-gray-600 text-sm">Folk legend & complete set</div>
+                    <div className="text-xl font-semibold text-purple-600">🎵 Bob Dylan</div>
+                    <div className="text-gray-700 text-base">Folk legend & complete set</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Neil Young", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-amber-50 hover:border-amber-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-amber-600">🎸 Neil Young</div>
-                    <div className="text-gray-600 text-sm">Rock icon & farm advocate</div>
+                    <div className="text-xl font-semibold text-amber-600">🎸 Neil Young</div>
+                    <div className="text-gray-700 text-base">Rock icon & farm advocate</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Tom Petty", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-rose-50 hover:border-rose-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-rose-600">🎤 Tom Petty</div>
-                    <div className="text-gray-600 text-sm">Heartbreakers frontman</div>
+                    <div className="text-xl font-semibold text-rose-600">🎤 Tom Petty</div>
+                    <div className="text-gray-700 text-base">Heartbreakers frontman</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Johnny Cash", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-gray-50 hover:border-gray-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-gray-600">⚫ Johnny Cash</div>
-                    <div className="text-gray-600 text-sm">Folsom Prison Blues w/ Waylon</div>
+                    <div className="text-xl font-semibold text-gray-600">⚫ Johnny Cash</div>
+                    <div className="text-gray-700 text-base">Folsom Prison Blues w/ Waylon</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Waylon Jennings", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-orange-50 hover:border-orange-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-orange-600">🤠 Waylon Jennings</div>
-                    <div className="text-gray-600 text-sm">Outlaw country legend</div>
+                    <div className="text-xl font-semibold text-orange-600">🤠 Waylon Jennings</div>
+                    <div className="text-gray-700 text-base">Outlaw country legend</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Loretta Lynn", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-pink-50 hover:border-pink-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-pink-600">👑 Loretta Lynn</div>
-                    <div className="text-gray-600 text-sm">Coal Miner's Daughter</div>
+                    <div className="text-xl font-semibold text-pink-600">👑 Loretta Lynn</div>
+                    <div className="text-gray-700 text-base">Coal Miner's Daughter</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Roy Orbison", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-indigo-600">🕶️ Roy Orbison</div>
-                    <div className="text-gray-600 text-sm">Big O rock legend</div>
+                    <div className="text-xl font-semibold text-indigo-600">🕶️ Roy Orbison</div>
+                    <div className="text-gray-700 text-base">Big O rock legend</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "B.B. King", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-cyan-50 hover:border-cyan-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-cyan-600">🎺 B.B. King</div>
-                    <div className="text-gray-600 text-sm">Blues guitar master</div>
+                    <div className="text-xl font-semibold text-cyan-600">🎺 B.B. King</div>
+                    <div className="text-gray-700 text-base">Blues guitar master</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Dire Straits", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-orange-50 hover:border-orange-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-orange-600">🎸 Dire Straits</div>
-                    <div className="text-gray-600 text-sm">Sultans of Swing</div>
+                    <div className="text-xl font-semibold text-orange-600">🎸 Dire Straits</div>
+                    <div className="text-gray-700 text-base">Sultans of Swing</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "Joni Mitchell", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-teal-50 hover:border-teal-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-teal-600">🎶 Joni Mitchell</div>
-                    <div className="text-gray-600 text-sm">Folk poetry legend</div>
+                    <div className="text-xl font-semibold text-teal-600">🎶 Joni Mitchell</div>
+                    <div className="text-gray-700 text-base">Folk poetry legend</div>
                   </button>
                   <button
                     onClick={() => handleEntityClick({ name: "The Beach Boys", category: "musician" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-sky-50 hover:border-sky-300 transition-colors"
                   >
-                    <div className="text-lg font-medium text-sky-600">🏄 The Beach Boys</div>
-                    <div className="text-gray-600 text-sm">California harmony</div>
+                    <div className="text-xl font-semibold text-sky-600">🏄 The Beach Boys</div>
+                    <div className="text-gray-700 text-base">California harmony</div>
                   </button>
                 </div>
               </div>
@@ -2886,148 +2885,310 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Merle Haggard" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Featured Performances</h3>
-              
 
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results - Hidden when video is playing */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button
+                            key={index}
+                            onClick={() => handleVideoClick(video)}
+                            className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden"
+                          >
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img
+                                src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+                                alt={video.title}
+                                className="absolute top-0 left-0 w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (
+                                <div className="text-xs text-gray-500 mt-1">{video.duration}</div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms like "Merle Haggard", "Mama Tried", or "Okie From Muskogee"</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player (Blue Note style) - Replaces search results */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  {/* Back to Search Button */}
+                  <button
+                    onClick={() => {
+                      setShowInlineVideo(false);
+                      setActiveVideoId(null);
+                      globalVideoState.clearPlaying();
+                    }}
+                    className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+
+                  {/* Video Title and Channel */}
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+
+                  {/* Video Container - Clean YouTube embed */}
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`}
+                        className="absolute top-0 left-0 w-full h-full rounded-lg"
+                        style={{ border: 'none' }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+
+                  {/* Button Container - Flush with video edges */}
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button
+                        onClick={handleShowPlaylist}
+                        style={{
+                          backgroundColor: '#4a90e2',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}
+                      >
+                        Works & Discovery Playlists
+                      </button>
+                      <button
+                        onClick={() => {}}
+                        style={{
+                          backgroundColor: '#4a90e2',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}
+                      >
+                        Video Analysis
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Cross-Media Discovery Section */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎵 Explore Merle's Complete Song Catalog</h4>
-                  <p className="text-sm text-gray-600 mt-1">Click any song mentioned in the interview to watch performances and discover related content</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎵 Explore Merle's Complete Song Catalog</h4>
+                  <p className="text-lg text-gray-700 mt-1">Click any song mentioned in the interview to watch performances and discover related content</p>
                 </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <button 
+                <div className="grid grid-cols-2 gap-3">
+                  <button
                     onClick={() => handleEntityClick({ name: "Mama Tried", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
                   >
-                    <div className="font-medium text-blue-600">🎭 Mama Tried</div>
-                    <div className="text-gray-600 text-xs">Autobiographical prison song</div>
+                    <div className="text-xl font-semibold text-blue-600">🎭 Mama Tried</div>
+                    <div className="text-gray-700 text-base">Autobiographical prison song</div>
                   </button>
                   <button 
                     onClick={() => handleEntityClick({ name: "Okie From Muskogee", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-amber-50 hover:border-amber-300 transition-colors"
                   >
-                    <div className="font-medium text-amber-600">🎸 Okie From Muskogee</div>
-                    <div className="text-gray-600 text-xs">Controversial anthem</div>
+                    <div className="text-xl font-semibold text-amber-600">🎸 Okie From Muskogee</div>
+                    <div className="text-gray-700 text-base">Controversial anthem</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Today I Started Loving You Again", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-rose-50 hover:border-rose-300 transition-colors"
                   >
-                    <div className="font-medium text-rose-600">❤️ Today I Started Loving You</div>
-                    <div className="text-gray-600 text-xs">Tender love ballad</div>
+                    <div className="text-xl font-semibold text-rose-600">❤️ Today I Started Loving You</div>
+                    <div className="text-gray-700 text-base">Tender love ballad</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "The Bottle Let Me Down", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-purple-50 hover:border-purple-300 transition-colors"
                   >
-                    <div className="font-medium text-purple-600">🍺 The Bottle Let Me Down</div>
-                    <div className="text-gray-600 text-xs">Honky-tonk classic</div>
+                    <div className="text-xl font-semibold text-purple-600">🍺 The Bottle Let Me Down</div>
+                    <div className="text-gray-700 text-base">Honky-tonk classic</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Waiting For A Train", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-yellow-50 hover:border-yellow-300 transition-colors"
                   >
-                    <div className="font-medium text-yellow-600">🚂 Waiting For A Train</div>
-                    <div className="text-gray-600 text-xs">Jimmie Rodgers tribute</div>
+                    <div className="text-xl font-semibold text-yellow-600">🚂 Waiting For A Train</div>
+                    <div className="text-gray-700 text-base">Jimmie Rodgers tribute</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "House of Memories", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-green-50 hover:border-green-300 transition-colors"
                   >
-                    <div className="font-medium text-green-600">🏠 House of Memories</div>
-                    <div className="text-gray-600 text-xs">Signature song + audiobook</div>
+                    <div className="text-xl font-semibold text-green-600">🏠 House of Memories</div>
+                    <div className="text-gray-700 text-base">Signature song + audiobook</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Sing Me Back Home", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-gray-50 hover:border-gray-300 transition-colors"
                   >
-                    <div className="font-medium text-gray-600">🎭 Sing Me Back Home</div>
-                    <div className="text-gray-600 text-xs">Prison-inspired ballad</div>
+                    <div className="text-xl font-semibold text-gray-600">🎭 Sing Me Back Home</div>
+                    <div className="text-gray-700 text-base">Prison-inspired ballad</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "If We Make It Through December", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-cyan-50 hover:border-cyan-300 transition-colors"
                   >
-                    <div className="font-medium text-cyan-600">❄️ If We Make It Through December</div>
-                    <div className="text-gray-600 text-xs">Working-class anthem</div>
+                    <div className="text-xl font-semibold text-cyan-600">❄️ If We Make It Through December</div>
+                    <div className="text-gray-700 text-base">Working-class anthem</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Lonesome Fugitive", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-slate-50 hover:border-slate-300 transition-colors"
                   >
-                    <div className="font-medium text-slate-600">🏃 Lonesome Fugitive</div>
-                    <div className="text-gray-600 text-xs">Outlaw anthem</div>
+                    <div className="text-xl font-semibold text-slate-600">🏃 Lonesome Fugitive</div>
+                    <div className="text-gray-700 text-base">Outlaw anthem</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Swinging Doors", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-orange-50 hover:border-orange-300 transition-colors"
                   >
-                    <div className="font-medium text-orange-600">🍻 Swinging Doors</div>
-                    <div className="text-gray-600 text-xs">Honky-tonk barroom life</div>
+                    <div className="text-xl font-semibold text-orange-600">🍻 Swinging Doors</div>
+                    <div className="text-gray-700 text-base">Honky-tonk barroom life</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Working Man Blues", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
                   >
-                    <div className="font-medium text-indigo-600">💼 Working Man Blues</div>
-                    <div className="text-gray-600 text-xs">Blue-collar celebration</div>
+                    <div className="text-xl font-semibold text-indigo-600">💼 Working Man Blues</div>
+                    <div className="text-gray-700 text-base">Blue-collar celebration</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Branded Man", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-red-50 hover:border-red-300 transition-colors"
                   >
-                    <div className="font-medium text-red-600">🏷️ Branded Man</div>
-                    <div className="text-gray-600 text-xs">Ex-convict stigma</div>
+                    <div className="text-xl font-semibold text-red-600">🏷️ Branded Man</div>
+                    <div className="text-gray-700 text-base">Ex-convict stigma</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Silver Wings", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-blue-50 hover:border-blue-300 transition-colors"
                   >
-                    <div className="font-medium text-blue-600">✈️ Silver Wings</div>
-                    <div className="text-gray-600 text-xs">Melancholy departure</div>
+                    <div className="text-xl font-semibold text-blue-600">✈️ Silver Wings</div>
+                    <div className="text-gray-700 text-base">Melancholy departure</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Hungry Eyes", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-teal-50 hover:border-teal-300 transition-colors"
                   >
-                    <div className="font-medium text-teal-600">👀 Hungry Eyes</div>
-                    <div className="text-gray-600 text-xs">Depression-era hardship</div>
+                    <div className="text-xl font-semibold text-teal-600">👀 Hungry Eyes</div>
+                    <div className="text-gray-700 text-base">Depression-era hardship</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Big City", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-emerald-50 hover:border-emerald-300 transition-colors"
                   >
-                    <div className="font-medium text-emerald-600">🏙️ Big City</div>
-                    <div className="text-gray-600 text-xs">Urban vs rural life</div>
+                    <div className="text-xl font-semibold text-emerald-600">🏙️ Big City</div>
+                    <div className="text-gray-700 text-base">Urban vs rural life</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Twinkle Twinkle Lucky Star", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-pink-50 hover:border-pink-300 transition-colors"
                   >
-                    <div className="font-medium text-pink-600">⭐ Twinkle Twinkle Lucky Star</div>
-                    <div className="text-gray-600 text-xs">Heartbreak classic</div>
+                    <div className="text-xl font-semibold text-pink-600">⭐ Twinkle Twinkle Lucky Star</div>
+                    <div className="text-gray-700 text-base">Heartbreak classic</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Footlights", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-violet-50 hover:border-violet-300 transition-colors"
                   >
-                    <div className="font-medium text-violet-600">🎭 Footlights</div>
-                    <div className="text-gray-600 text-xs">Show business life</div>
+                    <div className="text-xl font-semibold text-violet-600">🎭 Footlights</div>
+                    <div className="text-gray-700 text-base">Show business life</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "California Cotton Fields", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-lime-50 hover:border-lime-300 transition-colors"
                   >
-                    <div className="font-medium text-lime-600">🌾 California Cotton Fields</div>
-                    <div className="text-gray-600 text-xs">Migrant worker experience</div>
+                    <div className="text-xl font-semibold text-lime-600">🌾 California Cotton Fields</div>
+                    <div className="text-gray-700 text-base">Migrant worker experience</div>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEntityClick({ name: "Folsom Prison Blues", category: "music" })}
                     className="text-left p-3 bg-white rounded-lg border hover:bg-stone-50 hover:border-stone-300 transition-colors"
                   >
-                    <div className="font-medium text-stone-600">⛓️ Folsom Prison Blues</div>
-                    <div className="text-gray-600 text-xs">Johnny Cash classic</div>
+                    <div className="text-xl font-semibold text-stone-600">⛓️ Folsom Prison Blues</div>
+                    <div className="text-gray-700 text-base">Johnny Cash classic</div>
                   </button>
                 </div>
               </div>
@@ -3035,9 +3196,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Musical Legacy & Cross-Media Connections */}
               <div className="bg-gradient-to-r from-gold-50 to-yellow-50 border border-yellow-300 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎖️ Musical Legacy & Cross-Media Connections</h4>
+                  <h4 className="text-2xl font-bold text-gray-900">🎖️ Musical Legacy & Cross-Media Connections</h4>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-600">🏛️</span>
                     <span className="text-gray-700">Honors: 
@@ -3124,7 +3285,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
 
           {/* Mentions */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
               Mentions in Context ({mentions.length})
             </h3>
             <div className="space-y-4">
@@ -3133,34 +3294,34 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-gray-400" />
+                        <Clock className="h-5 w-5 text-gray-400" />
                         <button
                           onClick={() => onTimestampClick?.(mention.timestamp - 5)} // Jump 5 seconds before the mention
-                          className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer transition-colors"
+                          className="text-base font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer transition-colors"
                           title="Jump to audio at this timestamp (5 seconds before mention)"
                         >
                           {formatTimestamp(mention.timestamp)}
                         </button>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-sm">
                           {mention.confidence}% confidence
                         </Badge>
                         {mention.sentiment && (
-                          <Badge className={getSentimentBadgeColor(mention.sentiment)}>
+                          <Badge className={getSentimentBadgeColor(mention.sentiment) + " text-sm"}>
                             {mention.sentiment}
                           </Badge>
                         )}
                       </div>
                     </div>
-                    <p 
-                      className="text-gray-800 leading-relaxed"
+                    <p
+                      className="text-gray-800 leading-relaxed text-lg"
                       dangerouslySetInnerHTML={{ __html: `"${makeEntitiesClickable(mention.context)}"` }}
                     />
                     {mention.emotions && mention.emotions.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
                         {mention.emotions.map((emotion: string, idx: number) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
+                          <Badge key={idx} variant="secondary" className="text-sm">
                             {emotion}
                           </Badge>
                         ))}
@@ -3496,7 +3657,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                     {playlistVideos[currentTrackIndex]?.videoId ? (
                       <iframe
                         key={playlistVideos[currentTrackIndex].videoId}
-                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=0&rel=0`}
+                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1&rel=0`}
                         style={{
                           width: '100%',
                           flex: 1,
