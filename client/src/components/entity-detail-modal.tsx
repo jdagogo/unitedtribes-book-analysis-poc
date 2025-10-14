@@ -1139,12 +1139,121 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {(entity.category === 'music' || entity.category === 'musician' || entity.category === 'person' || multipleVideos) && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Listen</h3>
+
+              {/* UnitedTribes Video Search for Loretta Lynn and Roy Orbison */}
+              {(entity.name === "Loretta Lynn" || entity.name === "Roy Orbison") && (
+                <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                  <div className="mb-4">
+                    <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                  </div>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <input
+                      type="text"
+                      placeholder="Search for artists, songs, performances..."
+                      value={videoSearchQuery}
+                      onChange={(e) => {
+                        const query = e.target.value;
+                        setVideoSearchQuery(query);
+                        if (query.length > 2) {
+                          handleVideoSearch(query);
+                        } else {
+                          setVideoSearchResults([]);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && videoSearchQuery.length > 2) {
+                          handleVideoSearch(videoSearchQuery);
+                        }
+                      }}
+                      className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                    />
+                    {videoSearchQuery && (
+                      <button
+                        onClick={handleClearSearch}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        aria-label="Clear search"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
+
+                  {isSearching && (
+                    <div className="mt-4 flex items-center justify-center py-6">
+                      <Loader className="h-6 w-6 animate-spin text-green-600 mr-3" />
+                      <span className="text-lg text-gray-600">Searching UnitedTribes discovery...</span>
+                    </div>
+                  )}
+
+                  {videoSearchResults.length > 0 && (
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {videoSearchResults.map((video, index) => (
+                        <div
+                          key={index}
+                          className="bg-white rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow border border-green-200"
+                          onClick={() => {
+                            setInlineVideoId(video.id);
+                            setInlineVideoTitle(video.title);
+                            setVideoSearchResults([]);
+                            setVideoSearchQuery('');
+                          }}
+                        >
+                          <div className="flex gap-3">
+                            <img
+                              src={video.thumbnail}
+                              alt={video.title}
+                              className="w-32 h-20 object-cover rounded flex-shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h5 className="text-base font-semibold text-gray-900 line-clamp-2 mb-1">
+                                {video.title}
+                              </h5>
+                              <p className="text-sm text-gray-600">{video.channel}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {inlineVideoId && (
+                    <div className="mt-4 bg-white rounded-lg p-4 border-2 border-green-400">
+                      <div className="flex justify-between items-center mb-3">
+                        <h5 className="text-lg font-semibold text-gray-900">{inlineVideoTitle}</h5>
+                        <button
+                          onClick={() => {
+                            setInlineVideoId(null);
+                            setInlineVideoTitle('');
+                          }}
+                          className="text-gray-500 hover:text-gray-700 flex items-center gap-1 text-base"
+                        >
+                          <X className="h-4 w-4" />
+                          Close
+                        </button>
+                      </div>
+                      <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
+                        <iframe
+                          src={`https://www.youtube.com/embed/${inlineVideoId}?autoplay=1&rel=0&modestbranding=1`}
+                          title={inlineVideoTitle}
+                          className="absolute top-0 left-0 w-full h-full"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {multipleVideos ? (
                 <div className="space-y-6">
                   {multipleVideos.map((video, index) => (
                     <div key={index} className="space-y-2">
-                      <h4 className="text-md font-medium text-gray-800">{video.title}</h4>
-                      <p className="text-sm text-gray-600 mb-2">{video.description}</p>
+                      <h4 className="text-2xl font-bold text-gray-800">{video.title}</h4>
+                      <p className="text-lg text-gray-700 mb-2">{video.description}</p>
                       <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                         {(() => {
                           const videoId = generateVideoId(`multi-${index}`);
@@ -1187,8 +1296,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                 <div className="space-y-6">
                   {bothVersions.map((version, index) => (
                     <div key={index} className="space-y-2">
-                      <h4 className="text-md font-medium text-gray-800">{version.title}</h4>
-                      <p className="text-sm text-gray-600 mb-2">{version.description}</p>
+                      <h4 className="text-2xl font-bold text-gray-800">{version.title}</h4>
+                      <p className="text-lg text-gray-700 mb-2">{version.description}</p>
                       <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                         {(() => {
                           const videoId = generateVideoId(`version-${index}`);
@@ -1231,38 +1340,38 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                 <div className="space-y-2">
                   {entity.name === "The Way I Am" && (
                     <div className="mb-3">
-                      <h4 className="text-md font-medium text-gray-800">Merle Haggard & George Jones</h4>
-                      <p className="text-sm text-gray-600">Classic duet between two country music legends</p>
+                      <h4 className="text-2xl font-bold text-gray-800">Merle Haggard & George Jones</h4>
+                      <p className="text-lg text-gray-700">Classic duet between two country music legends</p>
                     </div>
                   )}
                   {entity.name === "He Stopped Loving Her Today" && (
                     <div className="mb-3">
-                      <h4 className="text-md font-medium text-gray-800">George Jones</h4>
-                      <p className="text-sm text-gray-600">Often called the greatest country song ever written</p>
+                      <h4 className="text-2xl font-bold text-gray-800">George Jones</h4>
+                      <p className="text-lg text-gray-700">Often called the greatest country song ever written</p>
                     </div>
                   )}
                   {entity.name === "The Story Behind 'He Stopped Loving Her Today'" && (
                     <div className="mb-3">
-                      <h4 className="text-md font-medium text-gray-800">📖 Behind the Song Documentary</h4>
-                      <p className="text-sm text-gray-600">The remarkable story of how this masterpiece was created</p>
+                      <h4 className="text-2xl font-bold text-gray-800">📖 Behind the Song Documentary</h4>
+                      <p className="text-lg text-gray-700">The remarkable story of how this masterpiece was created</p>
                     </div>
                   )}
                   {entity.name === "George Jones" && (
                     <div className="mb-3">
-                      <h4 className="text-md font-medium text-gray-800">🎤 Country Music Legend</h4>
-                      <p className="text-sm text-gray-600">Featuring "He Stopped Loving Her Today" - his masterpiece</p>
+                      <h4 className="text-2xl font-bold text-gray-800">🎤 Country Music Legend</h4>
+                      <p className="text-lg text-gray-700">Featuring "He Stopped Loving Her Today" - his masterpiece</p>
                     </div>
                   )}
                   {entity.name === "Okie From Muskogee" && (
                     <div className="mb-3">
-                      <h4 className="text-md font-medium text-gray-800">🎵 Merle Haggard's Anthem</h4>
-                      <p className="text-sm text-gray-600">The cultural touchstone that defined American working-class values</p>
+                      <h4 className="text-2xl font-bold text-gray-800">🎵 Merle Haggard's Anthem</h4>
+                      <p className="text-lg text-gray-700">The cultural touchstone that defined American working-class values</p>
                     </div>
                   )}
                   {entity.name === "Bakersfield Sound" && (
                     <div className="mb-3">
-                      <h4 className="text-md font-medium text-gray-800">🎵 Revolutionary Musical Movement</h4>
-                      <p className="text-sm text-gray-600">The raw, authentic country sound that challenged Nashville's dominance</p>
+                      <h4 className="text-2xl font-bold text-gray-800">🎵 Revolutionary Musical Movement</h4>
+                      <p className="text-lg text-gray-700">The raw, authentic country sound that challenged Nashville's dominance</p>
                     </div>
                   )}
                   <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
