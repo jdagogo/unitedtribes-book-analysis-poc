@@ -125,6 +125,8 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [page17DiscoveryExpanded, setPage17DiscoveryExpanded] = useState(false);
   const [defaultDiscoveryExpanded, setDefaultDiscoveryExpanded] = useState(false);
   const [defaultDiscoveryTab, setDefaultDiscoveryTab] = useState<'music'>('music');
+  const [page7PreloadedVideos, setPage7PreloadedVideos] = useState<any[]>([]);
+  const [page8PreloadedVideos, setPage8PreloadedVideos] = useState<any[]>([]);
   const [page9PreloadedVideos, setPage9PreloadedVideos] = useState<any[]>([]);
 
   // Book modal state
@@ -306,6 +308,98 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       }
     };
     loadPage1Videos();
+  }, []);
+
+  // Preload page 7 featured videos
+  useEffect(() => {
+    const loadPage7Videos = async () => {
+      if (page7PreloadedVideos.length === 0) {
+        try {
+          const [response1, response2, response3, response4] = await Promise.all([
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Giant Steps')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Blue Train Session')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Saint')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('taking on')}`)
+          ]);
+
+          const videos = [];
+
+          if (response1.ok) {
+            const data1 = await response1.json();
+            const results1 = data1.results || [];
+            if (results1.length > 0) {
+              videos.push(results1[0]);
+            }
+          }
+
+          if (response2.ok) {
+            const data2 = await response2.json();
+            const results2 = data2.results || [];
+            if (results2.length > 0) {
+              videos.push(results2[0]);
+            }
+          }
+
+          if (response3.ok) {
+            const data3 = await response3.json();
+            const results3 = data3.results || [];
+            if (results3.length > 0) {
+              videos.push(results3[0]);
+            }
+          }
+
+          if (response4.ok) {
+            const data4 = await response4.json();
+            const results4 = data4.results || [];
+            if (results4.length > 0) {
+              videos.push(results4[0]);
+            }
+          }
+
+          setPage7PreloadedVideos(videos);
+        } catch (error) {
+          console.error('Failed to preload page 7 videos:', error);
+        }
+      }
+    };
+    loadPage7Videos();
+  }, []);
+
+  // Preload page 8 featured videos
+  useEffect(() => {
+    const loadPage8Videos = async () => {
+      if (page8PreloadedVideos.length === 0) {
+        try {
+          const [response1, response2] = await Promise.all([
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Straight')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Original')}`)
+          ]);
+
+          const videos = [];
+
+          if (response1.ok) {
+            const data1 = await response1.json();
+            const results1 = data1.results || [];
+            if (results1.length > 0) {
+              videos.push(results1[0]);
+            }
+          }
+
+          if (response2.ok) {
+            const data2 = await response2.json();
+            const results2 = data2.results || [];
+            if (results2.length > 0) {
+              videos.push(results2[0]);
+            }
+          }
+
+          setPage8PreloadedVideos(videos);
+        } catch (error) {
+          console.error('Failed to preload page 8 videos:', error);
+        }
+      }
+    };
+    loadPage8Videos();
   }, []);
 
   // Preload page 9 featured videos
@@ -5362,7 +5456,44 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
                           {discoveryTab === 'featured' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Featured content coming soon...</p>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {page8PreloadedVideos.map((video: any, idx: number) => (
+                                  <div
+                                    key={idx}
+                                    onClick={() => embedVideo(video)}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'scale(1.02)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'scale(1)';
+                                    }}
+                                  >
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
+                                        {video.title}
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           )}
                           {discoveryTab === 'read' && (
@@ -8119,7 +8250,44 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                           <div style={{ padding: discoveryTab === 'music' ? '0' : '1rem', background: '#f9fafb', borderRadius: '8px' }}>
                           {discoveryTab === 'featured' && (
                             <div>
-                              <p style={{ fontSize: '14px', color: '#6b7280' }}>Featured content coming soon...</p>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {page7PreloadedVideos.map((video: any, idx: number) => (
+                                  <div
+                                    key={idx}
+                                    onClick={() => embedVideo(video)}
+                                    style={{
+                                      cursor: 'pointer',
+                                      borderRadius: '8px',
+                                      overflow: 'hidden',
+                                      background: 'white',
+                                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                      transition: 'transform 0.2s, box-shadow 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform = 'scale(1.02)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform = 'scale(1)';
+                                    }}
+                                  >
+                                    {video.thumbnail && (
+                                      <img
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        style={{ width: '100%', height: 'auto', display: 'block' }}
+                                      />
+                                    )}
+                                    <div style={{ padding: '1rem' }}>
+                                      <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
+                                        {video.title}
+                                      </p>
+                                      <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                        {video.channel} • {video.duration}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           )}
                           {discoveryTab === 'read' && (
