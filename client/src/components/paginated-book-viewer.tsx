@@ -1863,16 +1863,58 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
     // FIRST: Add discovery passage highlighting (using music-video style for blue background with line)
     // Do this BEFORE entity highlighting to preserve the full sentence
 
-    // Simpler pattern - just match the unique phrase
+    // Discovery passage 1: Robert's collages exhibition
     const discoveryPassage1 = /collages\s+that\s+centered\s+on\s+freaks/gi;
     let discoveryMatch1;
     while ((discoveryMatch1 = discoveryPassage1.exec(normalizedText)) !== null) {
-      console.log('✅ DISCOVERY MATCH FOUND!', discoveryMatch1[0]);
+      console.log('✅ DISCOVERY MATCH FOUND (Freaks Exhibition):', discoveryMatch1[0]);
       replacements.push({
         start: discoveryMatch1.index,
         end: discoveryMatch1.index + discoveryMatch1[0].length,
         entity: { name: 'Discovery Passage - Robert\'s Freaks Exhibition', type: 'discovery-passage' },
         match: discoveryMatch1[0],
+        type: 'discovery-passage'
+      });
+    }
+
+    // Discovery passage 2: Edie Sedgwick death announcement
+    const discoveryPassage2 = /Edie\s+Sedgwick\s+had\s+died/gi;
+    let discoveryMatch2;
+    while ((discoveryMatch2 = discoveryPassage2.exec(normalizedText)) !== null) {
+      console.log('✅ DISCOVERY MATCH FOUND (Edie Sedgwick):', discoveryMatch2[0]);
+      replacements.push({
+        start: discoveryMatch2.index,
+        end: discoveryMatch2.index + discoveryMatch2[0].length,
+        entity: { name: 'Discovery Passage - Edie Sedgwick', type: 'discovery-passage' },
+        match: discoveryMatch2[0],
+        type: 'discovery-passage'
+      });
+    }
+
+    // Discovery passage 3: Encouragement to do a reading
+    const discoveryPassage3 = /you\s+do\s+a\s+reading/gi;
+    let discoveryMatch3;
+    while ((discoveryMatch3 = discoveryPassage3.exec(normalizedText)) !== null) {
+      console.log('✅ DISCOVERY MATCH FOUND (Poetry Reading):', discoveryMatch3[0]);
+      replacements.push({
+        start: discoveryMatch3.index,
+        end: discoveryMatch3.index + discoveryMatch3[0].length,
+        entity: { name: 'Discovery Passage - Poetry Reading', type: 'discovery-passage' },
+        match: discoveryMatch3[0],
+        type: 'discovery-passage'
+      });
+    }
+
+    // Discovery passage 4: Jann Wenner at Rolling Stone
+    const discoveryPassage4 = /Jann\s+Wenner\s+at\s+Rolling\s+Stone/gi;
+    let discoveryMatch4;
+    while ((discoveryMatch4 = discoveryPassage4.exec(normalizedText)) !== null) {
+      console.log('✅ DISCOVERY MATCH FOUND (Jann Wenner):', discoveryMatch4[0]);
+      replacements.push({
+        start: discoveryMatch4.index,
+        end: discoveryMatch4.index + discoveryMatch4[0].length,
+        entity: { name: 'Discovery Passage - Jann Wenner', type: 'discovery-passage' },
+        match: discoveryMatch4[0],
         type: 'discovery-passage'
       });
     }
