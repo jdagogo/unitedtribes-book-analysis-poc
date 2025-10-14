@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { X, ArrowLeft, Clock, MapPin, Globe, Play, ExternalLink, Search, XCircle, Sparkles } from "lucide-react";
+import { X, ArrowLeft, Clock, MapPin, Globe, Play, ExternalLink, Search, XCircle, Sparkles, Loader } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,6 +57,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   const [videoSearchQuery, setVideoSearchQuery] = useState<string>("");
   const [videoSearchResults, setVideoSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [inlineVideoId, setInlineVideoId] = useState<string | null>(null);
+  const [inlineVideoTitle, setInlineVideoTitle] = useState<string>("");
 
   // Video player modal state
   const [showVideoPlayerModal, setShowVideoPlayerModal] = useState(false);
@@ -1142,110 +1144,102 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
 
               {/* UnitedTribes Video Search for Loretta Lynn and Roy Orbison */}
               {(entity.name === "Loretta Lynn" || entity.name === "Roy Orbison") && (
-                <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
-                  <div className="mb-4">
-                    <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
-                  </div>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <input
-                      type="text"
-                      placeholder="Search for artists, songs, performances..."
-                      value={videoSearchQuery}
-                      onChange={(e) => {
-                        const query = e.target.value;
-                        setVideoSearchQuery(query);
-                        if (query.length > 2) {
-                          handleVideoSearch(query);
-                        } else {
-                          setVideoSearchResults([]);
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && videoSearchQuery.length > 2) {
-                          handleVideoSearch(videoSearchQuery);
-                        }
-                      }}
-                      className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
-                    />
-                    {videoSearchQuery && (
-                      <button
-                        onClick={handleClearSearch}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                        aria-label="Clear search"
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    )}
-                  </div>
-
-                  {isSearching && (
-                    <div className="mt-4 flex items-center justify-center py-6">
-                      <Loader className="h-6 w-6 animate-spin text-green-600 mr-3" />
-                      <span className="text-lg text-gray-600">Searching UnitedTribes discovery...</span>
+                <>
+                  <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                    <div className="mb-4">
+                      <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
                     </div>
-                  )}
-
-                  {videoSearchResults.length > 0 && (
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {videoSearchResults.map((video, index) => (
-                        <div
-                          key={index}
-                          className="bg-white rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow border border-green-200"
-                          onClick={() => {
-                            setInlineVideoId(video.id);
-                            setInlineVideoTitle(video.title);
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <input
+                        type="text"
+                        placeholder="Search for artists, songs, performances..."
+                        value={videoSearchQuery}
+                        onChange={(e) => {
+                          setVideoSearchQuery(e.target.value);
+                          if (e.target.value.length > 2) {
+                            handleVideoSearch(e.target.value);
+                          } else {
                             setVideoSearchResults([]);
-                            setVideoSearchQuery('');
-                          }}
+                          }
+                        }}
+                        className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                      />
+                      {videoSearchQuery && (
+                        <button
+                          onClick={handleClearSearch}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                          aria-label="Clear search"
                         >
-                          <div className="flex gap-3">
-                            <img
-                              src={video.thumbnail}
-                              alt={video.title}
-                              className="w-32 h-20 object-cover rounded flex-shrink-0"
-                            />
-                            <div className="flex-1 min-w-0">
-                              <h5 className="text-base font-semibold text-gray-900 line-clamp-2 mb-1">
-                                {video.title}
-                              </h5>
-                              <p className="text-sm text-gray-600">{video.channel}</p>
-                            </div>
+                          <XCircle className="h-6 w-6" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Video Search Results */}
+                  {!showInlineVideo && (
+                    <>
+                      {isSearching && (
+                        <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                          <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                        </div>
+                      )}
+                      {!isSearching && videoSearchResults.length > 0 && (
+                        <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                          <div className="text-sm text-gray-600 mb-3">
+                            Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            {videoSearchResults.map((video: any, index: number) => (
+                              <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                                  <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                                </div>
+                                <div className="p-3">
+                                  <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                                  <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                                  {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                                </div>
+                              </button>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      )}
+                      {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                        <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                          <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                          <div className="text-sm">Try different search terms</div>
+                        </div>
+                      )}
+                    </>
                   )}
 
-                  {inlineVideoId && (
-                    <div className="mt-4 bg-white rounded-lg p-4 border-2 border-green-400">
-                      <div className="flex justify-between items-center mb-3">
-                        <h5 className="text-lg font-semibold text-gray-900">{inlineVideoTitle}</h5>
-                        <button
-                          onClick={() => {
-                            setInlineVideoId(null);
-                            setInlineVideoTitle('');
-                          }}
-                          className="text-gray-500 hover:text-gray-700 flex items-center gap-1 text-base"
-                        >
-                          <X className="h-4 w-4" />
-                          Close
-                        </button>
+                  {/* Inline Video Player */}
+                  {showInlineVideo && selectedVideo && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                        <ArrowLeft className="h-5 w-5" />
+                        Back to Search
+                      </button>
+                      <div className="mb-3">
+                        <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                        <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
                       </div>
-                      <div className="relative w-full bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
-                        <iframe
-                          src={`https://www.youtube.com/embed/${inlineVideoId}?autoplay=1&rel=0&modestbranding=1`}
-                          title={inlineVideoTitle}
-                          className="absolute top-0 left-0 w-full h-full"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        />
+                      <div className="w-[85%] mx-auto">
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                          <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                        </div>
+                      </div>
+                      <div className="w-[85%] mx-auto">
+                        <div className="flex justify-between mt-4">
+                          <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                          <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                        </div>
                       </div>
                     </div>
                   )}
-                </div>
+                </>
               )}
 
               {multipleVideos ? (
