@@ -1585,12 +1585,108 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Buck Owens" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Related Performances</h3>
-              
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Buck Owens Version */}
               <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎸 House of Memories (Buck Owens Version)</h4>
-                  <p className="text-sm text-gray-600 mt-1">Buck Owens' interpretation showcasing the Bakersfield sound</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎸 House of Memories (Buck Owens Version)</h4>
+                  <p className="text-lg text-gray-700 mt-1">Buck Owens' interpretation showcasing the Bakersfield sound</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1608,8 +1704,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Merle Haggard Version */}
               <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎤 House of Memories (Merle Haggard Version)</h4>
-                  <p className="text-sm text-gray-600 mt-1">Merle Haggard's signature song and autobiography title track</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎤 House of Memories (Merle Haggard Version)</h4>
+                  <p className="text-lg text-gray-700 mt-1">Merle Haggard's signature song and autobiography title track</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1753,10 +1849,175 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Willie Nelson" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Cross-Artist Collaboration</h3>
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results - Hidden when video is playing */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button
+                            key={index}
+                            onClick={() => handleVideoClick(video)}
+                            className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden"
+                          >
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img
+                                src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+                                alt={video.title}
+                                className="absolute top-0 left-0 w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (
+                                <div className="text-xs text-gray-500 mt-1">{video.duration}</div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms like "Willie Nelson", "Farm Aid", or "On The Road Again"</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player (Blue Note style) - Replaces search results */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  {/* Back to Search Button */}
+                  <button
+                    onClick={() => {
+                      setShowInlineVideo(false);
+                      setActiveVideoId(null);
+                      globalVideoState.clearPlaying();
+                    }}
+                    className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+
+                  {/* Video Title and Channel */}
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+
+                  {/* Video Container - Clean YouTube embed */}
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`}
+                        className="absolute top-0 left-0 w-full h-full rounded-lg"
+                        style={{ border: 'none' }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+
+                  {/* Button Container - Flush with video edges */}
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button
+                        onClick={handleShowPlaylist}
+                        style={{
+                          backgroundColor: '#4a90e2',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}
+                      >
+                        Works & Discovery Playlists
+                      </button>
+                      <button
+                        onClick={() => {}}
+                        style={{
+                          backgroundColor: '#4a90e2',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}
+                      >
+                        Video Analysis
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎤 Willie Nelson & Merle Haggard - "Okie from Muskogee"</h4>
-                  <p className="text-sm text-gray-600 mt-1">Two outlaw country legends performing Merle's cultural anthem together</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎤 Willie Nelson & Merle Haggard - "Okie from Muskogee"</h4>
+                  <p className="text-lg text-gray-700 mt-1">Two outlaw country legends performing Merle's cultural anthem together</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1835,10 +2096,107 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Johnny Cash" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Historic San Quentin Performance</h3>
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-gradient-to-r from-black to-gray-800 border border-gray-300 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-white">🎬 Johnny Cash Live at San Quentin 1969 - Full Concert</h4>
-                  <p className="text-sm text-gray-300 mt-1">The complete historic performance that Merle Haggard witnessed as a prisoner</p>
+                  <h4 className="text-2xl font-bold text-white">🎬 Johnny Cash Live at San Quentin 1969 - Full Concert</h4>
+                  <p className="text-lg text-gray-300 mt-1">The complete historic performance that Merle Haggard witnessed as a prisoner</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1855,8 +2213,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               
               <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎵 Folsom Prison Blues</h4>
-                  <p className="text-sm text-gray-600 mt-1">Johnny Cash's iconic prison song that established his connection to the incarcerated</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎵 Folsom Prison Blues</h4>
+                  <p className="text-lg text-gray-700 mt-1">Johnny Cash's iconic prison song that established his connection to the incarcerated</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1874,8 +2232,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Connection to Merle Haggard</h3>
               <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🏛️ Merle's Personal Account</h4>
-                  <p className="text-sm text-gray-600 mt-1">Merle Haggard tells the story of witnessing this historic performance while imprisoned at San Quentin</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🏛️ Merle's Personal Account</h4>
+                  <p className="text-lg text-gray-700 mt-1">Merle Haggard tells the story of witnessing this historic performance while imprisoned at San Quentin</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1894,10 +2252,107 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "George Jones" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Complete Biography</h3>
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">📺 The Story Of George Jones | Full Documentary</h4>
-                  <p className="text-sm text-gray-600 mt-1">Complete biographical documentary covering the life and career of the country music legend</p>
+                  <h4 className="text-2xl font-bold text-gray-900">📺 The Story Of George Jones | Full Documentary</h4>
+                  <p className="text-lg text-gray-700 mt-1">Complete biographical documentary covering the life and career of the country music legend</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -1914,11 +2369,11 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Cross-Artist Interpretations</h3>
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎵 Merle Haggard's Version</h4>
-                  <p className="text-sm text-gray-600 mt-1">Merle Haggard's interpretation of George Jones' masterpiece</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎵 Merle Haggard's Version</h4>
+                  <p className="text-lg text-gray-700 mt-1">Merle Haggard's interpretation of George Jones' masterpiece</p>
                 </div>
                 <div className="p-4 bg-gray-100 rounded-lg text-center">
-                  <p className="text-sm text-gray-600">Merle Haggard version available - shows how this classic song transcends individual artists</p>
+                  <p className="text-lg text-gray-700">Merle Haggard version available - shows how this classic song transcends individual artists</p>
                 </div>
               </div>
             </div>
@@ -2227,10 +2682,107 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Bonnie Owens" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Bakersfield Music Bridge</h3>
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎤 Bonnie Owens - Country Music Performance</h4>
-                  <p className="text-sm text-gray-600 mt-1">The remarkable country singer who connected Buck Owens and Merle Haggard both personally and musically, serving as a crucial bridge in the Bakersfield sound movement</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎤 Bonnie Owens - Country Music Performance</h4>
+                  <p className="text-lg text-gray-700 mt-1">The remarkable country singer who connected Buck Owens and Merle Haggard both personally and musically, serving as a crucial bridge in the Bakersfield sound movement</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -2244,8 +2796,8 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                   />
                 </div>
                 <div className="mt-4 pt-4 border-t border-rose-200">
-                  <h5 className="font-medium text-gray-900 mb-2">Musical Connections & Personal History</h5>
-                  <div className="space-y-2 text-sm">
+                  <h5 className="text-2xl font-bold text-gray-900 mb-2">Musical Connections & Personal History</h5>
+                  <div className="space-y-2 text-lg">
                     <div className="flex items-center gap-2">
                       <span className="text-rose-600">💕</span>
                       <span className="text-gray-700">Personal connections: Former wife of 
@@ -2312,12 +2864,108 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Tom Petty" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Rock Legend & Farm Aid Pioneer</h3>
-              
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Featured Farm Aid Performance */}
               <div className="bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎸 Tom Petty & The Heartbreakers - Farm Aid 1985</h4>
-                  <p className="text-sm text-gray-600 mt-1">Historic performance at the first Farm Aid concert featuring "Refugee" and showcasing rock's support for American farmers</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🎸 Tom Petty & The Heartbreakers - Farm Aid 1985</h4>
+                  <p className="text-lg text-gray-700 mt-1">Historic performance at the first Farm Aid concert featuring "Refugee" and showcasing rock's support for American farmers</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -2336,9 +2984,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Cross-Media Discovery & Cultural Context */}
               <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎵 Farm Aid & Cultural Impact</h4>
+                  <h4 className="text-2xl font-bold text-gray-900">🎵 Farm Aid & Cultural Impact</h4>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-green-600">🚜</span>
                     <span className="text-gray-700">Historic support: Featured performer at the inaugural 
@@ -2401,12 +3049,108 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Waylon Jennings" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Outlaw Country Pioneer</h3>
-              
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Featured Farm Aid Performance */}
               <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-lg p-4 mb-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🤠 Folsom Prison Blues with Johnny Cash - Farm Aid 1985</h4>
-                  <p className="text-sm text-gray-600 mt-1">Two outlaw country legends performing the ultimate prison song at the historic Farm Aid concert</p>
+                  <h4 className="text-2xl font-bold text-gray-900">🤠 Folsom Prison Blues with Johnny Cash - Farm Aid 1985</h4>
+                  <p className="text-lg text-gray-700 mt-1">Two outlaw country legends performing the ultimate prison song at the historic Farm Aid concert</p>
                 </div>
                 <div className="relative w-[90%] mx-auto bg-black rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: '56.25%' }}>
                   <iframe
@@ -2424,9 +3168,9 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
               {/* Cross-Media Discovery & Musical Context */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎸 Outlaw Country Connections</h4>
+                  <h4 className="text-2xl font-bold text-gray-900">🎸 Outlaw Country Connections</h4>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-orange-600">🤝</span>
                     <span className="text-gray-700">Outlaw movement pioneer alongside 
@@ -2482,15 +3226,111 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
           {entity.name === "Bob Dylan" && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Folk Legend & Farm Aid Performer</h3>
-              
+
+              {/* UnitedTribes Video Search */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                <div className="mb-4">
+                  <h4 className="text-2xl font-bold text-gray-900">🔍 Search UnitedTribes AI-Enhanced Discovery</h4>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, songs, performances..."
+                    value={videoSearchQuery}
+                    onChange={(e) => {
+                      setVideoSearchQuery(e.target.value);
+                      if (e.target.value.length > 2) {
+                        handleVideoSearch(e.target.value);
+                      } else {
+                        setVideoSearchResults([]);
+                      }
+                    }}
+                    className="w-full pl-10 pr-12 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  />
+                  {videoSearchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <XCircle className="h-6 w-6" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Video Search Results */}
+              {!showInlineVideo && (
+                <>
+                  {isSearching && (
+                    <div className="bg-white border border-green-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="animate-pulse">Searching UnitedTribes video library...</div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchResults.length > 0 && (
+                    <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                      <div className="text-sm text-gray-600 mb-3">
+                        Found {videoSearchResults.length} video{videoSearchResults.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        {videoSearchResults.map((video: any, index: number) => (
+                          <button key={index} onClick={() => handleVideoClick(video)} className="flex flex-col bg-white rounded-lg border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all text-left overflow-hidden">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                              <img src={video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`} alt={video.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="p-3">
+                              <div className="text-lg font-bold mb-1 line-clamp-2" style={{ color: '#1e40af' }}>{video.title}</div>
+                              <div className="text-base font-semibold line-clamp-1" style={{ color: '#1f2937' }}>{video.channel}</div>
+                              {video.duration && (<div className="text-xs text-gray-500 mt-1">{video.duration}</div>)}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!isSearching && videoSearchQuery.length > 2 && videoSearchResults.length === 0 && (
+                    <div className="bg-white border border-orange-200 rounded-lg p-6 mb-4 text-center text-gray-600">
+                      <div className="text-orange-600 font-medium mb-1">No videos found</div>
+                      <div className="text-sm">Try different search terms</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Inline Video Player */}
+              {showInlineVideo && selectedVideo && (
+                <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
+                  <button onClick={() => { setShowInlineVideo(false); setActiveVideoId(null); globalVideoState.clearPlaying(); }} className="flex items-center gap-2 mb-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    <ArrowLeft className="h-5 w-5" />
+                    Back to Search
+                  </button>
+                  <div className="mb-3">
+                    <h3 className="text-lg font-bold mb-1" style={{ color: '#1e40af' }}>{selectedVideo.title}</h3>
+                    <p className="text-base font-semibold" style={{ color: '#1f2937' }}>{selectedVideo.channel}</p>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                      <iframe src={`https://www.youtube.com/embed/${selectedVideo.videoId || selectedVideo.id}?autoplay=0&modestbranding=1&rel=0`} className="absolute top-0 left-0 w-full h-full rounded-lg" style={{ border: 'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                    </div>
+                  </div>
+                  <div className="w-[85%] mx-auto">
+                    <div className="flex justify-between mt-4">
+                      <button onClick={handleShowPlaylist} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Works & Discovery Playlists</button>
+                      <button onClick={() => {}} style={{ backgroundColor: '#4a90e2', color: 'white', padding: '8px 16px', borderRadius: '4px', fontSize: '14px', fontWeight: '600', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#357abd'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4a90e2'}>Video Analysis</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Multiple videos handled by getMultipleVideos function */}
 
               {/* Cross-Media Discovery & Cultural Context */}
               <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4">
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-900">🎸 Folk Rock Legacy</h4>
+                  <h4 className="text-2xl font-bold text-gray-900">🎸 Folk Rock Legacy</h4>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-green-600">🚜</span>
                     <span className="text-gray-700">Farm Aid support: Performed full set at the inaugural 
