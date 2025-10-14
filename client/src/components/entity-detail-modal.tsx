@@ -74,6 +74,13 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
   const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
   const [videoAnalysisContent, setVideoAnalysisContent] = useState<string>('');
 
+  // Playlist player state (for Play All functionality)
+  const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
+  const [playlistVideos, setPlaylistVideos] = useState<any[]>([]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [loadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
+  const [savedVideoEmbedHtml, setSavedVideoEmbedHtml] = useState<string>('');
+
   // Discovery modal state
   const [showDiscoveryModal, setShowDiscoveryModal] = useState(false);
   const [discoverySearchQuery, setDiscoverySearchQuery] = useState<string>("");
@@ -151,9 +158,64 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
     setCurrentPlaylist([]);
   };
 
-  const playPlaylist = () => {
-    console.log('Playing playlist:', currentPlaylist);
-    // TODO: Implement playlist playback
+  const playPlaylist = async () => {
+    if (currentPlaylist.length === 0) return;
+
+    // Temporarily clear and restore video HTML to stop it from playing
+    // This pauses the video without breaking the player view
+    const currentHtml = videoEmbedHtml;
+    setSavedVideoEmbedHtml(currentHtml);
+    setVideoEmbedHtml('');
+
+    // Restore after a brief moment so the player container stays visible
+    setTimeout(() => {
+      setVideoEmbedHtml(currentHtml);
+    }, 100);
+
+    setLoadingPlaylistVideos(true);
+    setShowPlaylistPlayer(true);
+    setCurrentTrackIndex(0);
+
+    // Search YouTube for each track in the playlist
+    const videosPromises = currentPlaylist.map(async (track) => {
+      try {
+        const response = await fetch(
+          `/api/youtube/search-track?song=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
+        );
+        const data = await response.json();
+
+        console.log(`Response for ${track.title}:`, data);
+
+        // Handle response from our YouTube search endpoint
+        if (data.videoId) {
+          console.log(`✓ Found video for ${track.title}: ${data.videoId}`);
+          return {
+            ...track,
+            videoId: data.videoId,
+            videoTitle: data.title || track.title,
+            channelTitle: data.channel || track.artist,
+            thumbnail: `https://img.youtube.com/vi/${data.videoId}/hqdefault.jpg`
+          };
+        } else {
+          console.log(`✗ No videoId in response for ${track.title}:`, data);
+        }
+      } catch (error) {
+        console.error(`Failed to find video for ${track.title} by ${track.artist}:`, error);
+      }
+
+      // Return track with no video if search fails
+      return {
+        ...track,
+        videoId: null,
+        videoTitle: `${track.title} - ${track.artist}`,
+        channelTitle: track.artist,
+        thumbnail: null
+      };
+    });
+
+    const videos = await Promise.all(videosPromises);
+    setPlaylistVideos(videos);
+    setLoadingPlaylistVideos(false);
   };
 
   // Handler for playlist button click
@@ -2693,7 +2755,7 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                         Works & Discovery Playlists
                       </button>
                       <button
-                        onClick={handleShowAnalysis}
+                        onClick={() => {}}
                         style={{
                           backgroundColor: '#4a90e2',
                           color: 'white',
@@ -3276,6 +3338,317 @@ export function EntityDetailModal({ entity, mentions, isOpen, onClose, onBack, o
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Playlist Player Modal (Blue Note style) */}
+      {showPlaylistPlayer && (
+        <>
+          {/* Modal Background Overlay */}
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            zIndex: 10000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }} onClick={() => {
+            setShowPlaylistPlayer(false);
+            setPlaylistVideos([]);
+            setCurrentTrackIndex(0);
+            // Restore the saved video HTML
+            if (savedVideoEmbedHtml) {
+              setVideoEmbedHtml(savedVideoEmbedHtml);
+            }
+          }}>
+            {/* Modal Content */}
+            <div style={{
+              position: 'relative',
+              width: '95%',
+              maxWidth: '1400px',
+              height: '90vh',
+              background: '#1a1a1a',
+              borderRadius: '12px',
+              padding: '1.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+            }} onClick={(e) => e.stopPropagation()}>
+
+              {/* Header */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem',
+                borderBottom: '2px solid #333',
+                paddingBottom: '1rem'
+              }}>
+                <h2 style={{
+                  fontSize: '28px',
+                  fontWeight: 'bold',
+                  color: '#fff'
+                }}>
+                  🎵 Playing Playlist ({currentPlaylist.length} tracks)
+                </h2>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{
+                    background: '#10b981',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                    fontWeight: '600'
+                  }}>
+                    Track {currentTrackIndex + 1} of {playlistVideos.length}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowPlaylistPlayer(false);
+                      setPlaylistVideos([]);
+                      setCurrentTrackIndex(0);
+                      // Restore the saved video HTML
+                      if (savedVideoEmbedHtml) {
+                        setVideoEmbedHtml(savedVideoEmbedHtml);
+                      }
+                    }}
+                    style={{
+                      background: '#ef4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.5rem 1rem',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    ✕ Close
+                  </button>
+                </div>
+              </div>
+
+              {/* Loading State */}
+              {loadingPlaylistVideos && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  color: '#fff',
+                  fontSize: '24px'
+                }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ marginBottom: '1rem' }}>🔍 Searching YouTube for tracks...</div>
+                    <div style={{ fontSize: '16px', color: '#888' }}>This may take a few seconds</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Main Content Area */}
+              {!loadingPlaylistVideos && playlistVideos.length > 0 && (
+                <div style={{
+                  display: 'flex',
+                  gap: '1.5rem',
+                  flex: 1,
+                  overflow: 'hidden'
+                }}>
+                  {/* Left Side - Video Player */}
+                  <div style={{
+                    flex: '1 1 70%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}>
+                    {/* Current Track Info */}
+                    <div style={{
+                      background: '#2a2a2a',
+                      padding: '1rem',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }}>
+                      <div style={{ fontSize: '14px', color: '#888', marginBottom: '0.5rem' }}>
+                        Now Playing
+                      </div>
+                      <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#fff', marginBottom: '0.25rem' }}>
+                        {playlistVideos[currentTrackIndex]?.title}
+                      </div>
+                      <div style={{ fontSize: '22px', color: '#10b981', fontWeight: '600' }}>
+                        {playlistVideos[currentTrackIndex]?.artist}
+                      </div>
+                      {playlistVideos[currentTrackIndex]?.videoTitle && (
+                        <div style={{ fontSize: '16px', color: '#6b7280', marginTop: '0.75rem', fontStyle: 'italic' }}>
+                          YouTube: {playlistVideos[currentTrackIndex].videoTitle}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* YouTube Video Embed */}
+                    {playlistVideos[currentTrackIndex]?.videoId ? (
+                      <iframe
+                        key={playlistVideos[currentTrackIndex].videoId}
+                        src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=0&rel=0`}
+                        style={{
+                          width: '100%',
+                          flex: 1,
+                          border: 'none',
+                          borderRadius: '8px',
+                          background: '#000'
+                        }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: '#2a2a2a',
+                        borderRadius: '8px',
+                        color: '#888'
+                      }}>
+                        <div style={{ textAlign: 'center' }}>
+                          <div style={{ fontSize: '24px', marginBottom: '1rem' }}>❌ Video not found</div>
+                          <div>Could not find a YouTube video for this track</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Player Controls */}
+                    <div style={{
+                      display: 'flex',
+                      gap: '1rem',
+                      justifyContent: 'center',
+                      padding: '1rem',
+                      background: '#2a2a2a',
+                      borderRadius: '8px'
+                    }}>
+                      <button
+                        onClick={() => setCurrentTrackIndex(Math.max(0, currentTrackIndex - 1))}
+                        disabled={currentTrackIndex === 0}
+                        style={{
+                          background: currentTrackIndex === 0 ? '#555' : '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '0.75rem 1.5rem',
+                          cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer',
+                          fontSize: '16px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        ⏮ Previous
+                      </button>
+                      <button
+                        onClick={() => setCurrentTrackIndex(Math.min(playlistVideos.length - 1, currentTrackIndex + 1))}
+                        disabled={currentTrackIndex === playlistVideos.length - 1}
+                        style={{
+                          background: currentTrackIndex === playlistVideos.length - 1 ? '#555' : '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '0.75rem 1.5rem',
+                          cursor: currentTrackIndex === playlistVideos.length - 1 ? 'not-allowed' : 'pointer',
+                          fontSize: '16px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Next ⏭
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right Side - Playlist */}
+                  <div style={{
+                    flex: '0 0 30%',
+                    background: '#2a2a2a',
+                    borderRadius: '8px',
+                    padding: '1rem',
+                    overflowY: 'auto'
+                  }}>
+                    <h3 style={{
+                      fontSize: '22px',
+                      fontWeight: 'bold',
+                      color: '#fff',
+                      marginBottom: '1rem',
+                      borderBottom: '1px solid #444',
+                      paddingBottom: '0.5rem'
+                    }}>
+                      Playlist Tracks
+                    </h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {playlistVideos.map((video, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => setCurrentTrackIndex(idx)}
+                          style={{
+                            background: idx === currentTrackIndex ? '#3b82f6' : '#333',
+                            padding: '0.75rem',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            border: idx === currentTrackIndex ? '2px solid #60a5fa' : '2px solid transparent'
+                          }}
+                        >
+                          <div style={{
+                            fontSize: '14px',
+                            color: '#888',
+                            marginBottom: '0.25rem'
+                          }}>
+                            Track {idx + 1}
+                          </div>
+                          <div style={{
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                            color: '#fff',
+                            marginBottom: '0.25rem',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {video.title}
+                          </div>
+                          <div style={{
+                            fontSize: '18px',
+                            fontWeight: '600',
+                            color: '#10b981',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {video.artist}
+                          </div>
+                          {video.videoId && (
+                            <div style={{
+                              fontSize: '14px',
+                              color: idx === currentTrackIndex ? '#bfdbfe' : '#888',
+                              marginTop: '0.5rem'
+                            }}>
+                              ✓ Video found
+                            </div>
+                          )}
+                          {video.error && (
+                            <div style={{
+                              fontSize: '14px',
+                              color: '#f87171',
+                              marginTop: '0.5rem'
+                            }}>
+                              ✗ No video
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}

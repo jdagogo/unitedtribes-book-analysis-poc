@@ -396,5 +396,85 @@
     "cachedAt": "2025-10-13T21:43:41.710Z",
     "song": "Somewhere",
     "artist": "Bill Charlap Trio"
+  },
+  "ring of fire|johnny cash": {
+    "videoId": "b-zNQA5Xi4Q",
+    "title": "Johnny Cash - Ring Of Fire (Live)",
+    "channel": "JohnnyCashVEVO",
+    "cachedAt": "2025-10-13T23:56:05.434Z",
+    "song": "Ring of Fire",
+    "artist": "Johnny Cash"
+  },
+  "sing me back home|merle haggard": {
+    "videoId": "W-ofzciulJU",
+    "title": "Sing Me Back Home",
+    "channel": "Merle Haggard - Topic",
+    "cachedAt": "2025-10-13T23:56:05.453Z",
+    "song": "Sing Me Back Home",
+    "artist": "Merle Haggard"
+  },
+  "folsom prison blues|johnny cash": {
+    "videoId": "AeZRYhLDLeU",
+    "title": "Johnny Cash - Folsom Prison Blues (Official Audio)",
+    "channel": "JohnnyCashVEVO",
+    "cachedAt": "2025-10-13T23:56:05.533Z",
+    "song": "Folsom Prison Blues",
+    "artist": "Johnny Cash"
+  },
+  "i'm old fashioned|john coltrane": {
+    "videoId": "eMqOA7qN9B4",
+    "title": "I&#39;m Old Fashioned (Remastered 2003/Rudy Van Gelder Edition)",
+    "channel": "John Coltrane - Topic",
+    "cachedAt": "2025-10-14T00:01:19.949Z",
+    "song": "I'm Old Fashioned",
+    "artist": "John Coltrane"
+  },
+  "locomotion|john coltrane": {
+    "videoId": "tOAldzgQ9nY",
+    "title": "Locomotion (Remastered 2003/Rudy Van Gelder Edition)",
+    "channel": "John Coltrane - Topic",
+    "cachedAt": "2025-10-14T00:01:19.991Z",
+    "song": "Locomotion",
+    "artist": "John Coltrane"
+  },
+  "lazy bird|john coltrane": {
+    "videoId": "7Nm_c5Vb6kY",
+    "title": "Lazy Bird (Remastered 2003/Rudy Van Gelder Edition)",
+    "channel": "John Coltrane - Topic",
+    "cachedAt": "2025-10-14T00:01:20.032Z",
+    "song": "Lazy Bird",
+    "artist": "John Coltrane"
+  },
+  "cornbread|lee morgan": {
+    "videoId": "98IWJDnmSxU",
+    "title": "Cornbread",
+    "channel": "Lee Morgan - Topic",
+    "cachedAt": "2025-10-14T00:11:57.694Z",
+    "song": "Cornbread",
+    "artist": "Lee Morgan"
+  },
+  "speak no evil|wayne shorter": {
+    "videoId": "fvRkGglLe-U",
+    "title": "Wayne Shorter - Speak No Evil",
+    "channel": "pideloo",
+    "cachedAt": "2025-10-14T00:11:57.706Z",
+    "song": "Speak No Evil",
+    "artist": "Wayne Shorter"
+  },
+  "song for my father|horace silver": {
+    "videoId": "mKf1x3CALAE",
+    "title": "Song For My Father",
+    "channel": "Horace Silver - Topic",
+    "cachedAt": "2025-10-14T00:11:57.719Z",
+    "song": "Song for My Father",
+    "artist": "Horace Silver"
+  },
+  "the cat walk|donald byrd": {
+    "videoId": "ztTW1bqNE54",
+    "title": "Donald Byrd - The Cat Walk",
+    "channel": "JazzNationZ",
+    "cachedAt": "2025-10-14T00:11:57.811Z",
+    "song": "The Cat Walk",
+    "artist": "Donald Byrd"
   }
 }

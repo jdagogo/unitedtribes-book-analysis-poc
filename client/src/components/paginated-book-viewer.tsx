@@ -3440,30 +3440,36 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       }}
                                     >
                                       <div style={{
-                                        fontSize: '12px',
+                                        fontSize: '16px',
                                         color: '#888',
                                         marginBottom: '0.25rem'
                                       }}>
                                         Track {idx + 1}
                                       </div>
                                       <div style={{
-                                        fontSize: '18px',
+                                        fontSize: '22px',
                                         fontWeight: 'bold',
                                         color: '#fff',
-                                        marginBottom: '0.25rem'
+                                        marginBottom: '0.25rem',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
                                       }}>
                                         {video.title}
                                       </div>
                                       <div style={{
-                                        fontSize: '16px',
+                                        fontSize: '20px',
                                         fontWeight: '600',
-                                        color: '#10b981'
+                                        color: '#10b981',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
                                       }}>
                                         {video.artist}
                                       </div>
                                       {video.videoId && (
                                         <div style={{
-                                          fontSize: '12px',
+                                          fontSize: '16px',
                                           color: idx === currentTrackIndex ? '#bfdbfe' : '#888',
                                           marginTop: '0.5rem'
                                         }}>
@@ -3472,7 +3478,7 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                                       )}
                                       {video.error && (
                                         <div style={{
-                                          fontSize: '12px',
+                                          fontSize: '16px',
                                           color: '#f87171',
                                           marginTop: '0.5rem'
                                         }}>
