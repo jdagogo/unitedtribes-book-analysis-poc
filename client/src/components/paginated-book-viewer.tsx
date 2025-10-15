@@ -125,6 +125,9 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
   const [page17DiscoveryExpanded, setPage17DiscoveryExpanded] = useState(false);
   const [defaultDiscoveryExpanded, setDefaultDiscoveryExpanded] = useState(false);
   const [defaultDiscoveryTab, setDefaultDiscoveryTab] = useState<'music'>('music');
+  const [page6PreloadedVideos, setPage6PreloadedVideos] = useState<any[]>([]);
+  const [page6WatchVideos, setPage6WatchVideos] = useState<any[]>([]);
+  const [page6MusicVideos, setPage6MusicVideos] = useState<any[]>([]);
   const [page7PreloadedVideos, setPage7PreloadedVideos] = useState<any[]>([]);
   const [page8PreloadedVideos, setPage8PreloadedVideos] = useState<any[]>([]);
   const [page9PreloadedVideos, setPage9PreloadedVideos] = useState<any[]>([]);
@@ -308,6 +311,144 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
       }
     };
     loadPage1Videos();
+  }, []);
+
+  // Preload page 6 featured videos
+  useEffect(() => {
+    const loadPage6Videos = async () => {
+      if (page6PreloadedVideos.length === 0) {
+        try {
+          const [response1, response2, response3, response4] = await Promise.all([
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Producing The Rolling Stones')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Bill Charlap')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Norah Jones')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('The Real McCoy')}`)
+          ]);
+
+          const videos = [];
+
+          if (response1.ok) {
+            const data1 = await response1.json();
+            const results1 = data1.results || [];
+            if (results1.length > 0) {
+              videos.push(results1[0]);
+            }
+          }
+
+          if (response2.ok) {
+            const data2 = await response2.json();
+            const results2 = data2.results || [];
+            if (results2.length > 0) {
+              videos.push(results2[0]);
+            }
+          }
+
+          if (response3.ok) {
+            const data3 = await response3.json();
+            const results3 = data3.results || [];
+            if (results3.length > 0) {
+              videos.push(results3[0]);
+            }
+          }
+
+          if (response4.ok) {
+            const data4 = await response4.json();
+            const results4 = data4.results || [];
+            if (results4.length > 0) {
+              videos.push(results4[0]);
+            }
+          }
+
+          setPage6PreloadedVideos(videos);
+        } catch (error) {
+          console.error('Failed to preload page 6 videos:', error);
+        }
+      }
+    };
+    loadPage6Videos();
+  }, []);
+
+  // Preload page 6 watch tab videos
+  useEffect(() => {
+    const loadPage6WatchVideos = async () => {
+      if (page6WatchVideos.length === 0) {
+        try {
+          const [response1] = await Promise.all([
+            fetch(`/api/youtube/search?q=${encodeURIComponent('IDFA')}`)
+          ]);
+
+          const videos = [];
+
+          if (response1.ok) {
+            const data1 = await response1.json();
+            const results1 = data1.results || [];
+            if (results1.length > 0) {
+              videos.push(results1[0]);
+            }
+          }
+
+          setPage6WatchVideos(videos);
+        } catch (error) {
+          console.error('Failed to preload page 6 watch videos:', error);
+        }
+      }
+    };
+    loadPage6WatchVideos();
+  }, []);
+
+  // Preload page 6 music tab videos
+  useEffect(() => {
+    const loadPage6MusicVideos = async () => {
+      if (page6MusicVideos.length === 0) {
+        try {
+          const [response1, response2, response3, response4] = await Promise.all([
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Trombone Shorty')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Unboxes')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Iggy')}`),
+            fetch(`/api/youtube/search?q=${encodeURIComponent('Paul Cornish')}`)
+          ]);
+
+          const videos = [];
+
+          if (response1.ok) {
+            const data1 = await response1.json();
+            const results1 = data1.results || [];
+            if (results1.length > 0) {
+              videos.push(results1[0]);
+            }
+          }
+
+          if (response2.ok) {
+            const data2 = await response2.json();
+            const results2 = data2.results || [];
+            if (results2.length > 0) {
+              videos.push(results2[0]);
+            }
+          }
+
+          if (response3.ok) {
+            const data3 = await response3.json();
+            const results3 = data3.results || [];
+            if (results3.length > 0) {
+              videos.push(results3[0]);
+            }
+          }
+
+          if (response4.ok) {
+            const data4 = await response4.json();
+            const results4 = data4.results || [];
+            if (results4.length > 0) {
+              videos.push(results4[0]);
+            }
+          }
+
+          setPage6MusicVideos(videos);
+        } catch (error) {
+          console.error('Failed to preload page 6 music videos:', error);
+        }
+      }
+    };
+    loadPage6MusicVideos();
   }, []);
 
   // Preload page 7 featured videos
@@ -11515,23 +11656,285 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                               {/* Tab Content */}
                               <div style={{ padding: '1rem' }}>
                                 {discoveryTab === 'featured' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Featured content coming soon...
+                                  <div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                      {page6PreloadedVideos.map((video: any, idx: number) => (
+                                        <div
+                                          key={idx}
+                                          onClick={() => embedVideo(video)}
+                                          style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            background: 'white',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            transition: 'transform 0.2s, box-shadow 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1.02)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1)';
+                                          }}
+                                        >
+                                          {video.thumbnail && (
+                                            <img
+                                              src={video.thumbnail}
+                                              alt={video.title}
+                                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                          )}
+                                          <div style={{ padding: '1rem' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
+                                              {video.title}
+                                            </p>
+                                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                              {video.channel} • {video.duration}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                                 {discoveryTab === 'read' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Reading recommendations coming soon...
+                                  <div>
+                                    <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem' }}>📚 Related Books & Audio</h4>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: '1.5rem' }}>
+
+                                      {/* Kansas City Lightning */}
+                                      <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                        <img
+                                          src="https://www.harpercollins.com/cdn/shop/files/9780062005618_1618c813-096a-4f49-bebe-775d51820fcc.jpg?v=1759161105&width=350"
+                                          alt="Kansas City Lightning"
+                                          style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                        />
+                                        <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>Kansas City Lightning</h5>
+                                        <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>by Stanley Crouch</p>
+                                        <button
+                                          onClick={async () => {
+                                            setCurrentBookUrl('https://www.harpercollins.com/products/kansas-city-lightning-stanley-crouch?variant=40974806220834');
+                                            setCurrentBookId('kansas-city-lightning');
+
+                                            // Preload the video for the modal
+                                            try {
+                                              const video = {
+                                                id: 'stanely_crouch_on_kansas_city_lightning_the_rise_a',
+                                                title: 'Stanley Crouch on "Kansas City Lightning: The Rise and Times of Charlie Parker"'
+                                              };
+
+                                              const response = await fetch(`/api/videos/${video.id}/embed-html`);
+                                              if (response.ok) {
+                                                const htmlContent = await response.text();
+                                                setBookModalVideoHtml(htmlContent);
+                                                setBookModalVideoData(video);
+                                              }
+                                            } catch (error) {
+                                              console.error('Error loading video for modal:', error);
+                                            }
+
+                                            setShowBookModal(true);
+                                          }}
+                                          style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: '#00563f',
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontWeight: '600',
+                                            fontSize: '14px',
+                                            cursor: 'pointer'
+                                          }}
+                                        >
+                                          Buy on HarperCollins
+                                        </button>
+                                      </div>
+
+                                      {/* Strange Fruit */}
+                                      <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                        <img
+                                          src="https://www.harpercollins.com/cdn/shop/products/9780060959562_743f3505-1385-4671-8d13-ff7266b59fa3.jpg?v=1699295481&width=350"
+                                          alt="Strange Fruit"
+                                          style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                        />
+                                        <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>Strange Fruit</h5>
+                                        <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>by David Margolick</p>
+                                        <button
+                                          onClick={() => {
+                                            setCurrentBookUrl('https://www.harpercollins.com/products/strange-fruit-david-margolickdavid-margolick?variant=41176753209378');
+                                            setShowBookModal(true);
+                                          }}
+                                          style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: '#00563f',
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontWeight: '600',
+                                            fontSize: '14px',
+                                            cursor: 'pointer'
+                                          }}
+                                        >
+                                          Buy on HarperCollins
+                                        </button>
+                                      </div>
+
+                                      {/* The Jazzmen */}
+                                      <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                        <img
+                                          src="https://www.harpercollins.com/cdn/shop/files/9780063444867_5591af52-3546-420e-9c1c-01e009614e19.jpg?v=1759274524&width=350"
+                                          alt="The Jazzmen"
+                                          style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                        />
+                                        <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>The Jazzmen</h5>
+                                        <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>by Larry Tye</p>
+                                        <button
+                                          onClick={() => {
+                                            setCurrentBookUrl('https://www.harpercollins.com/products/the-jazzmen-larry-tye?variant=43110379749410');
+                                            setShowBookModal(true);
+                                          }}
+                                          style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: '#00563f',
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontWeight: '600',
+                                            fontSize: '14px',
+                                            cursor: 'pointer'
+                                          }}
+                                        >
+                                          Buy on HarperCollins
+                                        </button>
+                                      </div>
+
+                                      {/* Dexter Gordon Book from Amazon */}
+                                      <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                        <img
+                                          src="https://m.media-amazon.com/images/I/71IrtNbSGFL._SY522_.jpg"
+                                          alt="Sophisticated Giant: Dexter Gordon"
+                                          style={{ width: '100%', height: 'auto', aspectRatio: '2/3', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.75rem', backgroundColor: '#f3f4f6' }}
+                                        />
+                                        <h5 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>Sophisticated Giant</h5>
+                                        <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '0.75rem' }}>The Life of Dexter Gordon</p>
+                                        <button
+                                          onClick={() => {
+                                            setCurrentBookUrl('https://www.amazon.com/exec/obidos/ASIN/0520280644/wnycorg-20/');
+                                            setShowBookModal(true);
+                                          }}
+                                          style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            padding: '0.75rem',
+                                            background: '#ff9900',
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            fontWeight: '600',
+                                            fontSize: '14px',
+                                            cursor: 'pointer'
+                                          }}
+                                        >
+                                          Buy on Amazon
+                                        </button>
+                                      </div>
+
+                                    </div>
                                   </div>
                                 )}
                                 {discoveryTab === 'watch' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Video content coming soon...
+                                  <div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                      {page6WatchVideos.map((video: any, idx: number) => (
+                                        <div
+                                          key={idx}
+                                          onClick={() => embedVideo(video)}
+                                          style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            background: 'white',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            transition: 'transform 0.2s, box-shadow 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1.02)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1)';
+                                          }}
+                                        >
+                                          {video.thumbnail && (
+                                            <img
+                                              src={video.thumbnail}
+                                              alt={video.title}
+                                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                          )}
+                                          <div style={{ padding: '1rem' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
+                                              {video.title}
+                                            </p>
+                                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                              {video.channel} • {video.duration}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                                 {discoveryTab === 'music' && (
-                                  <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                                    Music content coming soon...
+                                  <div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                      {page6MusicVideos.map((video: any, idx: number) => (
+                                        <div
+                                          key={idx}
+                                          onClick={() => embedVideo(video)}
+                                          style={{
+                                            cursor: 'pointer',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            background: 'white',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                            transition: 'transform 0.2s, box-shadow 0.2s'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1.02)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'scale(1)';
+                                          }}
+                                        >
+                                          {video.thumbnail && (
+                                            <img
+                                              src={video.thumbnail}
+                                              alt={video.title}
+                                              style={{ width: '100%', height: 'auto', display: 'block' }}
+                                            />
+                                          )}
+                                          <div style={{ padding: '1rem' }}>
+                                            <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
+                                              {video.title}
+                                            </p>
+                                            <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                              {video.channel} • {video.duration}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                                 {discoveryTab === 'explorer' && (

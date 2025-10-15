@@ -350,10 +350,10 @@ export default function Home() {
                       <span className="font-bold text-blue-900">Current Development:</span>
                     </div>
                     <code className="bg-blue-200 px-3 py-1 rounded font-mono text-sm text-blue-900 font-bold">
-                      v4.5-development
+                      v4.5.1-development
                     </code>
                     <span className="text-blue-700 text-sm">
-                      | Commit: <span className="font-semibold">ef7e185</span>
+                      | Commit: <span className="font-semibold">4f933c6</span>
                     </span>
                   </div>
                 </div>
@@ -363,10 +363,10 @@ export default function Home() {
                       <span className="font-bold text-emerald-900">Stable Rollback:</span>
                     </div>
                     <code className="bg-emerald-200 px-3 py-1 rounded font-mono text-sm text-emerald-900 font-bold">
-                      v4.4-STABLE-CHECKPOINT
+                      v4.5-STABLE-ROLLBACK
                     </code>
                     <span className="text-emerald-700 text-sm">
-                      | Commit: <span className="font-semibold">59ee77d</span>
+                      | Commit: <span className="font-semibold">ef7e185</span>
                     </span>
                   </div>
                 </div>
