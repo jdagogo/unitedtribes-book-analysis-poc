@@ -4,6 +4,8 @@ import path from 'path';
 import https from 'https';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { extractWorks } from '../utils/extractWorks';
+import { extractDiscoveryPlaylist } from '../utils/extractDiscoveryPlaylist';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -250,8 +252,33 @@ router.get('/videos/:videoname', async (req, res) => {
       ? fs.readFileSync(transcriptPath, 'utf-8')
       : null;
 
+    // Parse works and playlists from analysis (same as embed endpoint)
+    let works = [];
+    let playlists = [];
+
+    if (analysis) {
+      works = extractWorks(analysis);
+      const discoveryCategories = extractDiscoveryPlaylist(analysis);
+
+      // Convert discovery categories to playlists format
+      playlists = discoveryCategories.map(category => ({
+        name: category.title,
+        tracks: category.songs.map(song => ({
+          title: song.title,
+          artist: song.artist
+        }))
+      }));
+    }
+
+    // Add works and playlists to metadata
+    const enrichedMetadata = {
+      ...metadata,
+      works,
+      playlists
+    };
+
     return res.json({
-      metadata,
+      metadata: enrichedMetadata,
       analysis,
       transcript
     });

@@ -56,10 +56,56 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
   const [activeTab, setActiveTab] = useState<'overview' | 'media' | 'connections'>('media');
   const [articleViewerData, setArticleViewerData] = useState<{ url: string; title: string; screenshot?: string; price?: number } | null>(null);
 
+  // Video search state
+  const [searchQuery, setSearchQuery] = useState(selectedText);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [videoEmbedHtml, setVideoEmbedHtml] = useState<string>('');
+  const [showPlaylistView, setShowPlaylistView] = useState(false);
+  const [videoPlaylistData, setVideoPlaylistData] = useState<any>(null);
+  const [savedVideoEmbedHtml, setSavedVideoEmbedHtml] = useState<string>('');
+  const [currentPlaylist, setCurrentPlaylist] = useState<any[]>([]);
+  const [addedWorksModal, setAddedWorksModal] = useState<Set<string>>(new Set());
+  const [addedPlaylistsByName, setAddedPlaylistsByName] = useState<Map<string, Set<string>>>(new Map());
+  const [showPlaylistPlayer, setShowPlaylistPlayer] = useState(false);
+  const [loadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
+  const [playlistVideos, setPlaylistVideos] = useState<any[]>([]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const videoIframeRef = React.useRef<HTMLIFrameElement>(null);
+
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 10);
     fetchDiscoveryContent();
   }, []);
+
+  // Listen for messages from iframe to trigger playlist modal
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      console.log('📨 Message received:', event.data, 'from origin:', event.origin);
+
+      // Check if event.data is an object with a type property
+      if (event.data && typeof event.data === 'object' && event.data.type === 'SHOW_PLAYLIST_DATA' && selectedVideo?.id) {
+        console.log('🎵 Received SHOW_PLAYLIST_DATA message from iframe');
+        if (videoEmbedHtml) {
+          setSavedVideoEmbedHtml(videoEmbedHtml);
+          setVideoEmbedHtml('');
+        }
+        fetchPlaylistData(selectedVideo.id);
+      } else if (event.data && typeof event.data === 'object' && event.data.type === 'CLOSE_PLAYLIST_DATA') {
+        console.log('🎵 Received CLOSE_PLAYLIST_DATA message from iframe');
+        setShowPlaylistView(false);
+        if (savedVideoEmbedHtml) {
+          setVideoEmbedHtml(savedVideoEmbedHtml);
+          setSavedVideoEmbedHtml('');
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [selectedVideo, videoEmbedHtml, savedVideoEmbedHtml]);
 
   const fetchDiscoveryContent = async () => {
     setIsLoading(true);
@@ -143,6 +189,233 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
     }
   };
 
+  // Embed video player
+  const embedVideo = async (video: any) => {
+    setSearchLoading(true);
+    setSearchError(null);
+
+    try {
+      console.log('🎬 Video object:', video);
+      console.log(`🎬 Embedding video ID: ${video.id}`);
+
+      // Fetch the embed HTML from our local endpoint
+      const response = await fetch(
+        `/api/videos/${video.id}/embed-html`
+      );
+
+      console.log('📡 Response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Error response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // The API returns HTML directly as text, not JSON
+      const htmlContent = await response.text();
+      console.log('📺 Received HTML length:', htmlContent.length);
+
+      if (htmlContent) {
+        setVideoEmbedHtml(htmlContent);
+        setSelectedVideo(video);
+        console.log('✅ Video embedded successfully');
+      } else {
+        throw new Error('No embed HTML received');
+      }
+    } catch (error) {
+      console.error('❌ Error embedding video:', error);
+      setSearchError(`Failed to load video player: ${error.message}`);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Playlist management functions
+  const getItemKey = (item: any): string => {
+    return JSON.stringify({ title: item.title, artist: item.artist });
+  };
+
+  const addToPlaylist = (track: any) => {
+    setCurrentPlaylist(prev => [...prev, track]);
+  };
+
+  const clearPlaylist = () => {
+    setCurrentPlaylist([]);
+  };
+
+  const toggleIndividualSong = (item: any) => {
+    const itemKey = getItemKey(item);
+    const isInPlaylist = currentPlaylist.some(playlistItem => getItemKey(playlistItem) === itemKey);
+
+    if (isInPlaylist) {
+      setCurrentPlaylist(prev => prev.filter(playlistItem => getItemKey(playlistItem) !== itemKey));
+    } else {
+      addToPlaylist(item);
+    }
+  };
+
+  const toggleAllWorks = () => {
+    if (!videoPlaylistData?.works) return;
+
+    const allWorksAdded = videoPlaylistData.works.every((work: any) =>
+      addedWorksModal.has(getItemKey(work))
+    );
+
+    if (allWorksAdded) {
+      const newSet = new Set(addedWorksModal);
+      videoPlaylistData.works.forEach((work: any) => {
+        const key = getItemKey(work);
+        if (newSet.has(key)) {
+          newSet.delete(key);
+          setCurrentPlaylist(prev => prev.filter(item => getItemKey(item) !== key));
+        }
+      });
+      setAddedWorksModal(newSet);
+    } else {
+      const newSet = new Set(addedWorksModal);
+      videoPlaylistData.works.forEach((work: any) => {
+        const key = getItemKey(work);
+        if (!newSet.has(key)) {
+          newSet.add(key);
+          addToPlaylist(work);
+        }
+      });
+      setAddedWorksModal(newSet);
+    }
+  };
+
+  const toggleAllPlaylistTracks = (playlistName: string, tracks: any[]) => {
+    if (!tracks || tracks.length === 0) return;
+
+    const currentPlaylistTracks = addedPlaylistsByName.get(playlistName) || new Set();
+    const allTracksAdded = tracks.every((track: any) =>
+      currentPlaylistTracks.has(getItemKey(track))
+    );
+
+    if (allTracksAdded) {
+      const newPlaylistMap = new Map(addedPlaylistsByName);
+      const newTrackSet = new Set(currentPlaylistTracks);
+
+      tracks.forEach((track: any) => {
+        const key = getItemKey(track);
+        if (newTrackSet.has(key)) {
+          newTrackSet.delete(key);
+          setCurrentPlaylist(prev => prev.filter(item => getItemKey(item) !== key));
+        }
+      });
+
+      newPlaylistMap.set(playlistName, newTrackSet);
+      setAddedPlaylistsByName(newPlaylistMap);
+    } else {
+      const newPlaylistMap = new Map(addedPlaylistsByName);
+      const newTrackSet = new Set(currentPlaylistTracks);
+
+      tracks.forEach((track: any) => {
+        const key = getItemKey(track);
+        if (!newTrackSet.has(key)) {
+          newTrackSet.add(key);
+          addToPlaylist(track);
+        }
+      });
+
+      newPlaylistMap.set(playlistName, newTrackSet);
+      setAddedPlaylistsByName(newPlaylistMap);
+    }
+  };
+
+  const areAllWorksAdded = (): boolean => {
+    if (!videoPlaylistData?.works) return false;
+    return videoPlaylistData.works.every((work: any) =>
+      addedWorksModal.has(getItemKey(work))
+    );
+  };
+
+  const areAllPlaylistTracksAdded = (playlistName: string, tracks: any[]): boolean => {
+    if (!tracks || tracks.length === 0) return false;
+    const currentPlaylistTracks = addedPlaylistsByName.get(playlistName) || new Set();
+    return tracks.every((track: any) =>
+      currentPlaylistTracks.has(getItemKey(track))
+    );
+  };
+
+  const fetchPlaylistData = async (videoId: string) => {
+    try {
+      console.log(`🎵 Fetching playlist data for: ${videoId}`);
+
+      const response = await fetch(`/api/youtube/videos/${videoId}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      const playlists = (data.metadata?.playlists || []).map((playlist: any) => ({
+        ...playlist,
+        tracks: playlist.tracks || playlist.songs || []
+      }));
+
+      const playlistData = {
+        works: data.metadata?.works || [],
+        playlists: playlists,
+        analysis: data.analysis || null
+      };
+
+      setVideoPlaylistData(playlistData);
+      setShowPlaylistView(true);
+    } catch (error) {
+      console.error('Error fetching playlist data:', error);
+      setSearchError(`Failed to load playlist data: ${error.message}`);
+    }
+  };
+
+  const playPlaylist = async () => {
+    if (currentPlaylist.length === 0) return;
+
+    const currentHtml = videoEmbedHtml;
+    setSavedVideoEmbedHtml(currentHtml);
+    setVideoEmbedHtml('');
+
+    setTimeout(() => {
+      setVideoEmbedHtml(currentHtml);
+    }, 100);
+
+    setLoadingPlaylistVideos(true);
+    setShowPlaylistPlayer(true);
+    setCurrentTrackIndex(0);
+
+    const videosPromises = currentPlaylist.map(async (track) => {
+      try {
+        const response = await fetch(
+          `/api/youtube/search-track?song=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist)}`
+        );
+        const data = await response.json();
+
+        if (data.videoId) {
+          return {
+            ...track,
+            videoId: data.videoId,
+            videoTitle: data.title || track.title,
+            channelTitle: data.channel || track.artist,
+            thumbnail: `https://img.youtube.com/vi/${data.videoId}/hqdefault.jpg`
+          };
+        }
+      } catch (error) {
+        console.error(`Failed to find video for ${track.title}:`, error);
+      }
+
+      return {
+        ...track,
+        videoId: null,
+        videoTitle: `${track.title} - ${track.artist}`
+      };
+    });
+
+    const videos = await Promise.all(videosPromises);
+    setPlaylistVideos(videos);
+    setLoadingPlaylistVideos(false);
+  };
+
   return (
     <>
       {/* Backdrop */}
@@ -164,9 +437,9 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <div className="bg-white rounded-3xl shadow-2xl w-[960px] max-w-[90vw] max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="bg-white rounded-3xl shadow-2xl w-[1200px] max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-8 pt-8 pb-6">
+          <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 px-8 pt-4 pb-6">
             <button
               onClick={handleClose}
               className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
@@ -229,18 +502,18 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                   <button
                     onClick={() => setActiveTab('connections')}
                     className={`px-7 py-3.5 rounded-full text-[18px] font-semibold transition-all duration-300 transform hover:scale-105 ${
-                      activeTab === 'connections' 
-                        ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30' 
+                      activeTab === 'connections'
+                        ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
                     }`}
                   >
-                    🔗 Connections
+                    🎬 UnitedTribes Video Search
                   </button>
                 </div>
               </div>
 
               {/* Tab Content */}
-              <div className="flex-1 overflow-y-auto px-8 py-6">
+              <div className="flex-1 overflow-y-auto px-8 py-4">
                 {/* Overview Tab */}
                 {activeTab === 'overview' && (
                   <div className="space-y-6">
@@ -776,25 +1049,211 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                   </div>
                 )}
 
-                {/* Connections Tab */}
+                {/* UnitedTribes Video Search Tab */}
                 {activeTab === 'connections' && (
-                  <div className="space-y-4">
-                    {discoveryContent.connections?.map((connection, index) => (
-                      <div key={index} className="bg-gradient-to-r from-indigo-50 to-white rounded-xl p-5 border border-indigo-200">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h6 className="font-semibold text-gray-900 text-xl">{connection.name}</h6>
-                            <p className="text-indigo-600 text-base mt-1">{connection.relationship}</p>
-                            {connection.significance && (
-                              <p className="text-indigo-700 text-base mt-2 leading-relaxed">
-                                {connection.significance}
-                              </p>
-                            )}
-                          </div>
-                          <ChevronRight className="text-indigo-400" size={20} />
+                  <div>
+                    {videoEmbedHtml && selectedVideo ? (
+                      /* Video Player View */
+                      <div style={{ position: 'relative' }}>
+                        <button onClick={() => {
+                          setVideoEmbedHtml('');
+                          setSelectedVideo(null);
+                        }} style={{
+                          position: 'absolute',
+                          top: '2px',
+                          left: '2px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '3px',
+                          background: '#3b82f6',
+                          border: '1px solid #2563eb',
+                          borderRadius: '3px',
+                          padding: '3px 5px',
+                          cursor: 'pointer',
+                          fontSize: '9px',
+                          fontWeight: '700',
+                          color: 'white',
+                          transition: 'all 0.2s',
+                          zIndex: 10,
+                          lineHeight: '1'
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = '#2563eb'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = '#3b82f6'; }}>
+                          ← Back
+                        </button>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <iframe
+                            ref={videoIframeRef}
+                            srcDoc={videoEmbedHtml}
+                            style={{
+                              width: '80%',
+                              height: '650px',
+                              border: 'none'
+                            }}
+                            title={selectedVideo.title}
+                            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation allow-popups-to-escape-sandbox"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          />
                         </div>
                       </div>
-                    ))}
+                    ) : (
+                      /* Search View */
+                      <div>
+                        {/* Search Form */}
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          if (searchQuery.trim()) {
+                            setSearchLoading(true);
+                            setSearchError(null);
+                            fetch(`/api/youtube/search?q=${encodeURIComponent(searchQuery)}`)
+                              .then(res => res.json())
+                              .then(data => {
+                                setSearchResults(data.results || []);
+                                setSearchLoading(false);
+                              })
+                              .catch(err => {
+                                setSearchError('Failed to search videos');
+                                setSearchLoading(false);
+                              });
+                          }
+                        }} style={{ marginBottom: '1.5rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div style={{ position: 'relative', flex: 1 }}>
+                              <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search UnitedTribes videos..."
+                                style={{
+                                  width: '100%',
+                                  padding: '0.75rem',
+                                  paddingRight: searchQuery ? '3rem' : '0.75rem',
+                                  fontSize: '20px',
+                                  fontWeight: '600',
+                                  border: '2px solid #3b82f6',
+                                  borderRadius: '8px',
+                                  outline: 'none',
+                                  color: '#1e40af',
+                                  transition: 'border-color 0.2s, box-shadow 0.2s'
+                                }}
+                                onFocus={(e) => {
+                                  e.currentTarget.style.borderColor = '#2563eb';
+                                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                                }}
+                                onBlur={(e) => {
+                                  e.currentTarget.style.borderColor = '#3b82f6';
+                                  e.currentTarget.style.boxShadow = 'none';
+                                }}
+                              />
+                              {searchQuery && (
+                                <button
+                                  onClick={() => setSearchQuery('')}
+                                  style={{
+                                    position: 'absolute',
+                                    right: '0.5rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: '#3b82f6',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    width: '24px',
+                                    height: '24px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    color: 'white',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    transition: 'background-color 0.2s'
+                                  }}
+                                  onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                                  onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
+                                  type="button"
+                                >
+                                  ✕
+                                </button>
+                              )}
+                            </div>
+                            <button
+                              type="submit"
+                              disabled={searchLoading || !searchQuery.trim()}
+                              style={{
+                                padding: '0.75rem 1.5rem',
+                                background: searchLoading ? '#9ca3af' : '#3b82f6',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '8px',
+                                fontSize: '16px',
+                                fontWeight: '600',
+                                cursor: searchLoading || !searchQuery.trim() ? 'not-allowed' : 'pointer'
+                              }}
+                            >
+                              {searchLoading ? 'Searching...' : 'Search'}
+                            </button>
+                          </div>
+                        </form>
+
+                        {/* Search Error */}
+                        {searchError && (
+                          <div style={{
+                            padding: '1rem',
+                            background: '#fee2e2',
+                            border: '1px solid #fca5a5',
+                            borderRadius: '8px',
+                            color: '#991b1b',
+                            marginBottom: '1rem'
+                          }}>
+                            {searchError}
+                          </div>
+                        )}
+
+                        {/* Search Results */}
+                        {searchResults.length > 0 && (
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                            {searchResults.map((video: any, idx: number) => (
+                              <div
+                                key={idx}
+                                onClick={() => embedVideo(video)}
+                                style={{
+                                  cursor: 'pointer',
+                                  borderRadius: '8px',
+                                  overflow: 'hidden',
+                                  background: 'white',
+                                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                  transition: 'transform 0.2s, box-shadow 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1.02)';
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1)';
+                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                                }}
+                              >
+                                {video.thumbnail && (
+                                  <img
+                                    src={video.thumbnail}
+                                    alt={video.title}
+                                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                                  />
+                                )}
+                                <div style={{ padding: '1rem' }}>
+                                  <p style={{ fontSize: '18px', fontWeight: '700', marginBottom: '0.5rem', lineHeight: '1.4', color: '#1e40af' }}>
+                                    {video.title}
+                                  </p>
+                                  <p style={{ fontSize: '16px', color: '#1f2937', fontWeight: '600' }}>
+                                    {video.channel} • {video.duration}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -807,7 +1266,19 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
                   </div>
                   <button
                     onClick={handleClose}
-                    className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors text-lg font-semibold text-white"
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      background: '#3b82f6',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}
                   >
                     Close
                   </button>
@@ -827,6 +1298,360 @@ export const DiscoveryCard: React.FC<DiscoveryCardProps> = ({
           price={articleViewerData.price}
           onClose={() => setArticleViewerData(null)}
         />
+      )}
+
+      {/* Playlist Modal */}
+      {showPlaylistView && videoPlaylistData && (
+        <>
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)', zIndex: 10000,
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }} onClick={() => {
+            setShowPlaylistView(false);
+            if (savedVideoEmbedHtml) {
+              setVideoEmbedHtml(savedVideoEmbedHtml);
+              setSavedVideoEmbedHtml('');
+            }
+          }}>
+            <div style={{
+              position: 'relative', width: '90%', maxWidth: '600px', maxHeight: '90vh',
+              background: 'white', borderRadius: '12px', padding: '1.5rem',
+              overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+            }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#000' }}>📚 Works & Playlists</h3>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{
+                    background: '#10b981', color: 'white', padding: '0.5rem 1rem',
+                    borderRadius: '6px', fontSize: '16px', fontWeight: '600'
+                  }}>
+                    🎵 Playlist: {currentPlaylist.length} tracks
+                  </div>
+                  {currentPlaylist.length > 0 && (
+                    <>
+                      <button onClick={() => { playPlaylist(); setShowPlaylistView(false); }} style={{
+                        background: '#3b82f6', color: 'white', border: 'none',
+                        borderRadius: '6px', padding: '0.5rem 1rem',
+                        cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                      }}>▶ Play All</button>
+                      <button onClick={clearPlaylist} style={{
+                        background: '#f59e0b', color: 'white', border: 'none',
+                        borderRadius: '6px', padding: '0.5rem 1rem',
+                        cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                      }}>Clear</button>
+                    </>
+                  )}
+                  <button onClick={() => {
+                    setShowPlaylistView(false);
+                    if (savedVideoEmbedHtml) {
+                      setVideoEmbedHtml(savedVideoEmbedHtml);
+                      setSavedVideoEmbedHtml('');
+                    }
+                  }} style={{
+                    background: '#ef4444', color: 'white', border: 'none',
+                    borderRadius: '6px', padding: '0.5rem 1rem',
+                    cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                  }}>✕ Close</button>
+                </div>
+              </div>
+              {videoPlaylistData.works && videoPlaylistData.works.length > 0 && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <h4 style={{ fontSize: '22px', fontWeight: '600', color: '#000' }}>
+                      🎵 Works Mentioned ({videoPlaylistData.works.length})
+                    </h4>
+                    <button onClick={() => toggleAllWorks()} style={{
+                      background: areAllWorksAdded() ? '#ef4444' : '#3b82f6',
+                      color: 'white', border: 'none', borderRadius: '6px',
+                      padding: '0.5rem 1rem', cursor: 'pointer',
+                      fontSize: '16px', fontWeight: '600'
+                    }}>
+                      {areAllWorksAdded() ? '- Remove All' : '+ Add All'}
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                    {videoPlaylistData.works.map((work: any, idx: number) => {
+                      const isAdded = currentPlaylist.some(item =>
+                        item.title === work.title && item.artist === work.artist
+                      );
+                      return (
+                        <div key={idx} style={{
+                          background: isAdded ? '#dcfce7' : '#f0fdf4',
+                          border: isAdded ? '2px solid #16a34a' : '2px solid #22c55e',
+                          borderRadius: '8px', padding: '0.75rem 1rem',
+                          fontSize: '18px', display: 'flex',
+                          alignItems: 'center', gap: '0.5rem',
+                          color: '#000', opacity: isAdded ? 0.8 : 1
+                        }}>
+                          <button onClick={() => toggleIndividualSong(work)} style={{
+                            background: isAdded ? '#ef4444' : '#3b82f6',
+                            color: 'white', border: 'none', borderRadius: '4px',
+                            padding: '0.25rem 0.5rem', cursor: 'pointer',
+                            fontSize: '14px', fontWeight: '600', marginRight: '0.5rem'
+                          }}>
+                            {isAdded ? '- Remove' : '+ Add'}
+                          </button>
+                          <strong>{work.title}</strong> - {work.artist}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {videoPlaylistData.playlists && videoPlaylistData.playlists.length > 0 && (
+                <div>
+                  <h4 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '1rem', color: '#000' }}>
+                    🎼 Discovery Playlists ({videoPlaylistData.playlists.length})
+                  </h4>
+                  <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
+                    {videoPlaylistData.playlists.map((playlist: any, idx: number) => (
+                      <div key={idx} style={{
+                        marginBottom: '1.5rem', background: '#faf5ff',
+                        border: '2px solid #8b5cf6', borderRadius: '8px', padding: '1rem'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                          <h5 style={{ fontSize: '20px', fontWeight: '600', color: '#000' }}>
+                            {playlist.name}
+                          </h5>
+                          <button onClick={() => toggleAllPlaylistTracks(playlist.name, playlist.tracks)} style={{
+                            background: areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '#ef4444' : '#3b82f6',
+                            color: 'white', border: 'none', borderRadius: '6px',
+                            padding: '0.4rem 0.8rem', cursor: 'pointer',
+                            fontSize: '15px', fontWeight: '600'
+                          }}>
+                            {areAllPlaylistTracksAdded(playlist.name, playlist.tracks) ? '- Remove All' : '+ Add All'}
+                          </button>
+                        </div>
+                        <div style={{ fontSize: '16px', color: '#000' }}>
+                          {playlist.tracks.map((track: any, tidx: number) => {
+                            const isAdded = currentPlaylist.some(item =>
+                              item.title === track.title && item.artist === track.artist
+                            );
+                            return (
+                              <div key={tidx} style={{
+                                marginBottom: '0.5rem', display: 'flex', alignItems: 'center',
+                                gap: '0.5rem', padding: '0.25rem 0.5rem',
+                                background: isAdded ? '#dcfce7' : 'transparent', borderRadius: '4px'
+                              }}>
+                                <button onClick={() => toggleIndividualSong(track)} style={{
+                                  background: isAdded ? '#ef4444' : '#3b82f6',
+                                  color: 'white', border: 'none', borderRadius: '4px',
+                                  padding: '0.2rem 0.4rem', cursor: 'pointer',
+                                  fontSize: '12px', fontWeight: '600', opacity: 1
+                                }}>
+                                  {isAdded ? '- Remove' : '+ Add'}
+                                </button>
+                                <span style={{ opacity: isAdded ? 0.8 : 1 }}>
+                                  <strong>"{track.title}"</strong> - {track.artist}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Playlist Player Modal */}
+      {showPlaylistPlayer && (
+        <>
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)', zIndex: 10000,
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }} onClick={() => {
+            setShowPlaylistPlayer(false);
+            setPlaylistVideos([]);
+            setCurrentTrackIndex(0);
+            if (savedVideoEmbedHtml) {
+              setVideoEmbedHtml(savedVideoEmbedHtml);
+            }
+          }}>
+            <div style={{
+              position: 'relative', width: '95%', maxWidth: '1400px', height: '90vh',
+              background: '#1a1a1a', borderRadius: '12px', padding: '1.5rem',
+              display: 'flex', flexDirection: 'column', boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+            }} onClick={(e) => e.stopPropagation()}>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                marginBottom: '1rem', borderBottom: '2px solid #333', paddingBottom: '1rem'
+              }}>
+                <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: 'white', margin: 0 }}>
+                  🎵 Playlist Player ({playlistVideos.length} videos)
+                </h2>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{
+                    background: '#4ade80', color: 'white', padding: '0.5rem 1rem',
+                    borderRadius: '6px', fontSize: '16px', fontWeight: '600'
+                  }}>
+                    Track {currentTrackIndex + 1} of {playlistVideos.length}
+                  </div>
+                  <button onClick={() => {
+                    setShowPlaylistPlayer(false);
+                    setPlaylistVideos([]);
+                    setCurrentTrackIndex(0);
+                    if (savedVideoEmbedHtml) {
+                      setVideoEmbedHtml(savedVideoEmbedHtml);
+                    }
+                  }} style={{
+                    background: '#ef4444', color: 'white', border: 'none',
+                    borderRadius: '6px', padding: '0.5rem 1rem',
+                    cursor: 'pointer', fontSize: '16px', fontWeight: '600'
+                  }}>✕ Close Player</button>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flex: 1, gap: '1rem', overflow: 'hidden' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                  {loadingPlaylistVideos ? (
+                    <div style={{
+                      flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: '#2a2a2a', borderRadius: '8px'
+                    }}>
+                      <div style={{ textAlign: 'center', color: '#fff' }}>
+                        <div style={{ fontSize: '24px', marginBottom: '1rem' }}>⏳ Loading videos...</div>
+                        <div>Searching YouTube for playlist tracks</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {playlistVideos[currentTrackIndex]?.videoId ? (
+                        <iframe key={playlistVideos[currentTrackIndex].videoId}
+                          src={`https://www.youtube.com/embed/${playlistVideos[currentTrackIndex].videoId}?autoplay=1&rel=0`}
+                          style={{
+                            width: '100%', flex: 1, border: 'none',
+                            borderRadius: '8px', background: '#000'
+                          }}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen />
+                      ) : (
+                        <div style={{
+                          flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          background: '#2a2a2a', borderRadius: '8px', color: '#888'
+                        }}>
+                          <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '24px', marginBottom: '1rem' }}>❌ Video not found</div>
+                            <div>Could not find a YouTube video for this track</div>
+                          </div>
+                        </div>
+                      )}
+                      <div style={{
+                        display: 'flex', gap: '1rem', justifyContent: 'center',
+                        padding: '1rem', background: '#2a2a2a', borderRadius: '8px'
+                      }}>
+                        <button onClick={() => setCurrentTrackIndex(Math.max(0, currentTrackIndex - 1))}
+                          disabled={currentTrackIndex === 0} style={{
+                            background: currentTrackIndex === 0 ? '#555' : '#3b82f6',
+                            color: 'white', border: 'none', borderRadius: '6px',
+                            padding: '0.75rem 1.5rem',
+                            cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer',
+                            fontSize: '16px', fontWeight: '600'
+                          }}>⏮ Previous</button>
+                        <button onClick={() => setCurrentTrackIndex(Math.min(playlistVideos.length - 1, currentTrackIndex + 1))}
+                          disabled={currentTrackIndex === playlistVideos.length - 1} style={{
+                            background: currentTrackIndex === playlistVideos.length - 1 ? '#555' : '#3b82f6',
+                            color: 'white', border: 'none', borderRadius: '6px',
+                            padding: '0.75rem 1.5rem',
+                            cursor: currentTrackIndex === playlistVideos.length - 1 ? 'not-allowed' : 'pointer',
+                            fontSize: '16px', fontWeight: '600'
+                          }}>Next ⏭</button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Right Side - Playlist */}
+                <div style={{
+                  flex: '0 0 30%',
+                  background: '#2a2a2a',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  overflowY: 'auto'
+                }}>
+                  <h3 style={{
+                    fontSize: '22px',
+                    fontWeight: 'bold',
+                    color: '#fff',
+                    marginBottom: '1rem',
+                    borderBottom: '1px solid #444',
+                    paddingBottom: '0.5rem'
+                  }}>
+                    Playlist Tracks
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {playlistVideos.map((video, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => setCurrentTrackIndex(idx)}
+                        style={{
+                          background: idx === currentTrackIndex ? '#3b82f6' : '#333',
+                          padding: '0.75rem',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          border: idx === currentTrackIndex ? '2px solid #60a5fa' : '2px solid transparent'
+                        }}
+                      >
+                        <div style={{
+                          fontSize: '14px',
+                          color: '#888',
+                          marginBottom: '0.25rem'
+                        }}>
+                          Track {idx + 1}
+                        </div>
+                        <div style={{
+                          fontSize: '20px',
+                          fontWeight: 'bold',
+                          color: '#fff',
+                          marginBottom: '0.25rem',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>
+                          {video.title}
+                        </div>
+                        <div style={{
+                          fontSize: '18px',
+                          fontWeight: '600',
+                          color: '#10b981',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>
+                          {video.artist}
+                        </div>
+                        {video.videoId && (
+                          <div style={{
+                            fontSize: '14px',
+                            color: idx === currentTrackIndex ? '#bfdbfe' : '#888',
+                            marginTop: '0.5rem'
+                          }}>
+                            ✓ Video found
+                          </div>
+                        )}
+                        {!video.videoId && (
+                          <div style={{
+                            fontSize: '14px',
+                            color: '#f87171',
+                            marginTop: '0.5rem'
+                          }}>
+                            ✗ No video
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </>
   );

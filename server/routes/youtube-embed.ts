@@ -430,10 +430,10 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
       </div>
 
       <div class="controls-bar">
-        <button class="btn" onclick="toggleWorksDisplay()" id="playlist-btn">
+        <button class="btn" id="playlist-btn">
           Works & Discovery Playlists ▼
         </button>
-        <button class="btn" onclick="toggleAnalysisDisplay()" id="analysis-btn">
+        <button class="btn" id="analysis-btn">
           Video Analysis ▼
         </button>
       </div>
@@ -445,7 +445,7 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
           <p class="analysis-hint">Click timestamps to jump to specific moments</p>
           <div class="analysis-text">
             ${analysis ? analysis
-              .replace(/\[([^\]]+)\]/g, '<button class="timestamp-button" onclick="jumpToTime(\'$1\')">$1</button>')
+              .replace(/\[([^\]]+)\]/g, '<button class="timestamp-button" data-timestamp="$1">$1</button>')
               .replace(/^## (.+)$/gm, '<h2>$1</h2>')
               .replace(/^### (.+)$/gm, '<h3>$1</h3>')
               .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
@@ -473,7 +473,7 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
 
         <!-- Analysis Content -->
         <div class="analysis-text" id="analysis-text">
-          ${analysis ? analysis.replace(/\[([^\]]+)\]/g, '<button class="timestamp-button" onclick="jumpToTime(\'$1\')">$1</button>') : 'No analysis available for this video.'}
+          ${analysis ? analysis.replace(/\[([^\]]+)\]/g, '<button class="timestamp-button" data-timestamp="$1">$1</button>') : 'No analysis available for this video.'}
         </div>
       </div>
     </div>
@@ -763,6 +763,39 @@ router.get('/videos/:videoname/embed-html', async (req, res) => {
         type: 'EMBED_LOADED',
         videoId: '${videoname}'
       }, '*');
+
+      // Attach event listeners programmatically (inline onclick doesn't work in sandboxed iframes)
+      console.log('🎯 Attaching event listeners to buttons');
+
+      const playlistBtn = document.getElementById('playlist-btn');
+      const analysisBtn = document.getElementById('analysis-btn');
+
+      if (playlistBtn) {
+        playlistBtn.addEventListener('click', toggleWorksDisplay);
+        console.log('✅ Playlist button listener attached');
+      } else {
+        console.error('❌ Could not find playlist-btn element');
+      }
+
+      if (analysisBtn) {
+        analysisBtn.addEventListener('click', toggleAnalysisDisplay);
+        console.log('✅ Analysis button listener attached');
+      } else {
+        console.error('❌ Could not find analysis-btn element');
+      }
+
+      // Add event delegation for timestamp buttons
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.classList && target.classList.contains('timestamp-button')) {
+          const timestamp = target.getAttribute('data-timestamp');
+          if (timestamp) {
+            console.log('🕐 Timestamp button clicked:', timestamp);
+            jumpToTime(timestamp);
+          }
+        }
+      });
+      console.log('✅ Timestamp button delegation attached');
     });
   </script>
 </body>
