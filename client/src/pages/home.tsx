@@ -353,7 +353,7 @@ export default function Home() {
                       v4.5.1-development
                     </code>
                     <span className="text-blue-700 text-sm">
-                      | Commit: <span className="font-semibold">593775a</span>
+                      | Commit: <span className="font-semibold">60372b1</span>
                     </span>
                   </div>
                 </div>
