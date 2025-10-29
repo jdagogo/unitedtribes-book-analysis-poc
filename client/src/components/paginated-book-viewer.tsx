@@ -12237,27 +12237,6 @@ export const PaginatedBookViewer: React.FC<PaginatedBookViewerProps> = ({ transc
                         onMouseLeave={(e) => { e.currentTarget.style.background = '#f3f4f6'; }}>
                           ← Back to Search
                         </button>
-                        <button onClick={() => {
-                          console.log('🎵 Playlist button clicked - stopping video');
-                          // Save current video and clear it to stop playback
-                          if (videoEmbedHtml) {
-                            console.log('✅ Saving and clearing video HTML');
-                            setSavedVideoEmbedHtml(videoEmbedHtml);
-                            setVideoEmbedHtml('');
-                          }
-                          if (selectedVideo?.id) {
-                            fetchPlaylistData(selectedVideo.id);
-                          }
-                        }} style={{
-                          background: '#8b5cf6', color: 'white', border: 'none',
-                          borderRadius: '6px', padding: '0.5rem 1rem',
-                          cursor: 'pointer', fontSize: '14px', fontWeight: '500',
-                          transition: 'all 0.2s'
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.background = '#7c3aed'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = '#8b5cf6'; }}>
-                          📚 Works & Discovery Playlists
-                        </button>
                       </div>
 
                       {showPlaylistView && videoPlaylistData && (
